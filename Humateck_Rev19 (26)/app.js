@@ -195,8 +195,6 @@ async function updateVideoLocalizations(videoId, existingVideo, mergedLocalizati
   if (!res.ok) throw new Error(data.error?.message || "videos.update 실패");
   return data;
 }
-
-
 async function sendLocalizations() {
   $("deliveryLog").value = "";
   if (!accessToken) { alert("먼저 구글 승인을 진행해 주세요."); return; }
@@ -206,36 +204,28 @@ async function sendLocalizations() {
   const finalText = ($("finalOutput")?.value || "").trim();
   const items = parseFinalText(finalText);
   if (!items.length) { alert("제미나이 최종본을 붙여넣어 주세요."); return; }
-
   log(`대상 videoId: ${videoId}`);
   log(`파싱된 언어 수: ${items.length}`);
-
   const startTime = Date.now();
   const elapsedTimer = setInterval(() => {
     const sec = Math.floor((Date.now() - startTime) / 1000);
     if ($("elapsedTime")) $("elapsedTime").textContent = `등록소요시간: ${sec}초`;
   }, 500);
-
   try {
     const existing = await fetchVideo(videoId);
     const defaultLang = existing.snippet?.defaultLanguage || "en";
     log(`기존 localizations 수: ${Object.keys(existing.localizations || {}).length}`);
-
     const newMap = {};
     items.forEach(item => {
       if (item.code && item.code.toLowerCase() !== defaultLang.toLowerCase()) {
         newMap[item.code] = { title: item.title || "", description: item.description || "" };
       }
     });
-
     if (!Object.keys(newMap).length) throw new Error("전송할 번역 언어가 없습니다.");
-
     const merged = Object.assign({}, existing.localizations || {}, newMap);
     log(`전송 언어 수: ${Object.keys(newMap).length}`);
-
     await updateVideoLocalizations(videoId, existing, merged);
     log("videos.update 전송 완료");
-
     const verify = await fetchVideo(videoId);
     log(`사후확인 localizations 수: ${Object.keys(verify.localizations || {}).length}`);
     log("실등록 성공");
@@ -249,5 +239,259 @@ async function sendLocalizations() {
     if ($("elapsedTime")) $("elapsedTime").textContent = `등록소요시간: ${sec}초`;
   }
 }
+function setProgress(percent, text) {
+  if ($("progressBar")) $("progressBar").style.width = `${percent}%`;
+  if ($("progressPercent")) $("progressPercent").textContent = `${percent}%`;
+  if ($("progressText")) $("progressText").textContent = text;
+}
 
-;
+// 커스텀 확인 모달
+function showSubmitModal(onConfirm) {
+  const modal = $("submitConfirmModal");
+  if (!modal) { onConfirm(); return; }
+  modal.classList.remove("hidden");
+  $("submitModalOkBtn").onclick = () => { modal.classList.add("hidden"); onConfirm(); };
+  $("submitModalCancelBtn").onclick = () => modal.classList.add("hidden");
+}
+
+async function sendLocalizations() {
+  $("deliveryLog").value = "";
+  if (!accessToken) {
+    alert("아직 구글 승인을 받지 않으셨습니다. (최초 1회) 구글 승인 받으러 가기 버튼을 눌러 주세요.");
+    $("openOauthGuideBtn")?.click();
+    return;
+  }
+  const videoUrl = ($("videoUrl")?.value || "").trim();
+  const videoId = extractVideoId(videoUrl);
+  if (!videoId) { alert("유튜브 영상 주소에서 videoId를 찾지 못했습니다."); return; }
+  const items = parseFinalText(($("finalOutput")?.value || "").trim());
+  if (!items.length) { alert("제미나이 최종본을 붙여넣어 주세요."); return; }
+
+  log("전체 발송 시작");
+  log(`번역 항목 수: ${items.length}개`);
+  if (items.length < 10) {
+    alert(`번역 데이터가 너무 적습니다 (${items.length}개). 제미나이 최종본을 다시 확인해 주세요.`);
+    return;
+  }
+  log(`대상 videoId: ${videoId}`);
+  setProgress(5, `0 / ${ACTIVE_TOTAL_COUNT}`);
+  const startTime = Date.now();
+  const elapsedTimer = setInterval(() => {
+    const sec = Math.floor((Date.now() - startTime) / 1000);
+    if ($("elapsedTime")) $("elapsedTime").textContent = `등록소요시간: ${sec}초`;
+  }, 500);
+
+  try {
+    const existing = await fetchVideo(videoId);
+    setProgress(25, "조회 완료");
+    const newMap = buildLocalizationMap(items);
+    const merged = Object.assign({}, existing.localizations || {}, newMap);
+    setProgress(55, "전송 준비 완료");
+    await updateVideoLocalizations(videoId, existing, merged);
+    setProgress(85, "전송 완료");
+    await fetchVideo(videoId);
+    log("실등록 성공");
+    setProgress(100, `${ACTIVE_TOTAL_COUNT} / ${ACTIVE_TOTAL_COUNT}`);
+  } catch (e) {
+    log(`실등록 실패: ${e.message}`);
+    alert(`실등록 실패: ${e.message}`);
+  } finally {
+    clearInterval(elapsedTimer);
+    const totalSec = Math.floor((Date.now() - startTime) / 1000);
+    if ($("elapsedTime")) $("elapsedTime").textContent = `등록소요시간: ${totalSec}초`;
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  configureModeFromQuery();
+  const params = new URLSearchParams(location.search);
+  const subscriber = params.get("subscriber") === "1";
+  const plan = params.get("plan") || "monthly70";
+
+  const PLAN_LABEL_MAP = {
+    monthly30: "30개국 / 16,500원 / 월",
+    monthly50: "50개국 / 25,000원 / 월",
+    monthly70: "70개국 / 32,500원 / 월",
+    annual70:  "70개국 / 292,500원 / 년",
+  };
+  if ($("currentPlanName")) {
+    if (subscriber) {
+      const prof = SUBSCRIBER_PROFILE_DEMO[plan] || SUBSCRIBER_PROFILE_DEMO.monthly70;
+      $("currentPlanName").textContent = prof.label;
+      if ($("upgradeBtn")) $("upgradeBtn").classList.remove("hidden");
+      if ($("monthlySignupBtn")) $("monthlySignupBtn").classList.add("hidden");
+      if ($("sendOrderBtn")) $("sendOrderBtn").textContent = "유튜브 자막 등록하기";
+      if ($("contractDateText")) {
+        $("contractDateText").textContent = prof.status === "cancelled"
+          ? `구독취소 예정 · 종료일: ${prof.endDate}`
+          : `자동연장일: ${prof.renewDate}`;
+      }
+    } else if (!IS_TRIAL_MODE && plan && PLAN_LABEL_MAP[plan]) {
+      $("currentPlanName").textContent = PLAN_LABEL_MAP[plan];
+      if ($("contractDateText")) $("contractDateText").textContent = `선택 플랜: ${ACTIVE_TOTAL_COUNT}개국`;
+      if ($("upgradeBtn")) $("upgradeBtn").classList.add("hidden");
+    }
+  }
+
+  if ($("trialModeInfoBox") && IS_TRIAL_MODE) {
+    $("trialModeInfoBox").classList.remove("hidden");
+    if ($("currentPlanName")) $("currentPlanName").textContent = "30개국 / 무료/ 7일";
+    if ($("upgradeBtn")) $("upgradeBtn").classList.add("hidden");
+    if ($("monthlySignupBtn")) $("monthlySignupBtn").classList.remove("hidden");
+    if (IS_MOCK_MODE) {
+      $("trialModeInfoText").textContent = "현재는 30개국 / 7일간 무료체험의 '유튜브채널 모의등록' 모드입니다.";
+      $("trialModeActionRow").innerHTML = '<span class="muted" style="align-self:center;">실제 유튜브 등록체험을 원하실 경우</span><a class="btn btn-light" href="order.html?trial=1&count=30&mock=0&mode=chat">유튜브채널 실등록 바로 가기</a>';
+      if ($("youtubeFaqBox")) $("youtubeFaqBox").classList.add("hidden");
+      if ($("openOauthGuideBtn")) $("openOauthGuideBtn").classList.add("hidden");
+    } else {
+      $("trialModeInfoText").textContent = "현재는 30개국 / 7일간 무료체험의 '유튜브 채널 실등록' 모드입니다.";
+      $("trialModeActionRow").innerHTML = '<span class="muted" style="align-self:center;">모의 유튜브 등록체험을 원하실 경우</span><a class="btn btn-light" href="order.html?trial=1&count=30&mock=1&mode=chat">유튜브채널 모의등록 바로 가기</a>';
+      if ($("youtubeFaqBox")) $("youtubeFaqBox").classList.remove("hidden");
+      if ($("openOauthGuideBtn")) $("openOauthGuideBtn").classList.remove("hidden");
+    }
+    if ($("sendOrderBtn")) $("sendOrderBtn").textContent = "유튜브 자막 등록하기";
+  }
+  if ($("youtubeFaqBox") && !IS_TRIAL_MODE) $("youtubeFaqBox").classList.remove("hidden");
+
+  $("cmd1") && ($("cmd1").value = CMD1);
+  $("cmd2") && ($("cmd2").value = CMD2);
+  $("cmd3") && ($("cmd3").value = CMD3);
+  $("cmd4") && ($("cmd4").value = CMD4);
+  $("cmd5") && ($("cmd5").value = CMD5);
+  setProgress(0, `0 / ${ACTIVE_TOTAL_COUNT}`);
+
+  $("upgradeBtn")?.addEventListener("click", () => {
+    location.href = "plans.html#annual";
+  });
+
+  $("openOauthGuideBtn")?.addEventListener("click", () => $("oauthGuideModal")?.classList.remove("hidden"));
+  $("closeOauthGuideBtn")?.addEventListener("click", () => $("oauthGuideModal")?.classList.add("hidden"));
+  $("oauthGuideBackdrop")?.addEventListener("click", () => $("oauthGuideModal")?.classList.add("hidden"));
+  $("holdGuideBtn")?.addEventListener("click", () => $("holdGuideBox")?.classList.toggle("open"));
+  // 우측 패널 직접 승인
+  $("oauthStartBtnSide")?.addEventListener("click", () => {
+    const clientId = ($("clientIdSideInput")?.value || "").trim();
+    if (!clientId) { alert("OAuth 클라이언트 ID를 입력해 주세요."); return; }
+    if ($("clientIdInput")) $("clientIdInput").value = clientId;
+    const tc = google.accounts.oauth2.initTokenClient({
+      client_id: clientId,
+      scope: YT_SCOPE,
+      callback: (resp) => {
+        if (resp && resp.access_token) {
+          accessToken = resp.access_token;
+          if ($("authStatusSide")) $("authStatusSide").value = "구글 승인 완료\nAccess Token 수신 완료";
+          if ($("authStatus")) $("authStatus").value = "구글 승인 완료\nAccess Token 수신 완료";
+        } else {
+          if ($("authStatusSide")) $("authStatusSide").value = "구글 승인 실패 또는 취소";
+        }
+      }
+    });
+    tc.requestAccessToken({ prompt: "consent" });
+  });
+
+  $("channelCheckBtnSide")?.addEventListener("click", async () => {
+    if (!accessToken) { alert("아직 구글 승인을 받지 않으셨습니다."); return; }
+    try {
+      const res = await fetch("https://www.googleapis.com/youtube/v3/channels?part=snippet&mine=true", { headers: { Authorization: `Bearer ${accessToken}` } });
+      const data = await res.json();
+      const item = data.items && data.items[0];
+      if (!item) throw new Error("채널 정보를 찾지 못했습니다.");
+      const msg = `구글 승인 완료\n채널 연결 확인됨\n채널명: ${item.snippet.title}\n채널 ID: ${item.id}`;
+      if ($("authStatusSide")) $("authStatusSide").value = msg;
+      if ($("authStatus")) $("authStatus").value = msg;
+    } catch (e) {
+      if ($("authStatusSide")) $("authStatusSide").value = `채널 연결 확인 실패\n${e.message}`;
+    }
+  });
+  $("copySideIdToModalBtn")?.addEventListener("click", () => {
+    if ($("clientIdSideInput")?.value && $("clientIdInput")) $("clientIdInput").value = $("clientIdSideInput").value;
+    $("openOauthGuideBtn")?.click();
+  });
+  $("oauthDirectApproveBtn")?.addEventListener("click", () => {
+    $("openOauthGuideBtn")?.click();
+    if ($("authStatus")) $("authStatus").value = "구글 승인 완료";
+  });
+
+  $("submitBtn")?.addEventListener("click", () => {
+    showSubmitModal(() => {
+      $("promptOutput").value = buildPrompt();
+      $("copyPromptBtn")?.classList.remove("hidden");
+      $("copyWarning")?.classList.remove("hidden");
+      $("commandBlock")?.classList.remove("hidden");
+      copied = false;
+      $("chatTranslateBtn")?.classList.add("hidden");
+    });
+  });
+
+  $("resetBtn")?.addEventListener("click", () => {
+    ["videoUrl","titleInput","descInput","promptOutput","finalOutput","deliveryLog"].forEach(id => { if ($(id)) $(id).value = ""; });
+    $("copyPromptBtn")?.classList.add("hidden");
+    $("copyWarning")?.classList.add("hidden");
+    $("commandBlock")?.classList.add("hidden");
+    $("chatTranslateBtn")?.classList.add("hidden");
+    setProgress(0, `0 / ${ACTIVE_TOTAL_COUNT}`);
+    copied = false;
+  });
+
+  $("copyPromptBtn")?.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText($("promptOutput").value);
+      copied = true;
+      $("chatTranslateBtn")?.classList.remove("hidden");
+      $("copyWarning").textContent = "제미나이 번역의뢰문 복사가 완료되었습니다.";
+    } catch { alert("복사에 실패했습니다."); }
+  });
+
+  $("chatTranslateBtn")?.addEventListener("click", () => {
+    if (!copied) { alert("먼저 제미나이 번역의뢰문 복사를 눌러 주세요."); return; }
+    window.open("https://gemini.google.com/", "_blank", "noopener,noreferrer");
+    alert("챗 번역 새 탭을 열었습니다. 복사한 의뢰문과 아래 명령어를 순서대로 붙여넣어 주세요.");
+  });
+
+  document.querySelectorAll(".mini-copy").forEach(btn => btn.addEventListener("click", async () => {
+    const target = $(btn.dataset.copy);
+    if (!target) return;
+    try {
+      await navigator.clipboard.writeText(target.value);
+      const old = btn.textContent;
+      btn.textContent = "복사 완료";
+      setTimeout(() => btn.textContent = old, 1200);
+    } catch { alert("명령어 복사에 실패했습니다."); }
+  }));
+
+  $("copyFinalBtn")?.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(($("finalOutput").value || "").trim());
+      alert("최종본이 복사되었습니다.");
+    } catch { alert("최종본 복사에 실패했습니다."); }
+  });
+
+  $("oauthStartBtn")?.addEventListener("click", () => {
+    if (!initTokenClient()) return;
+    tokenClient.requestAccessToken({ prompt: "consent" });
+  });
+
+  $("channelCheckBtn")?.addEventListener("click", async () => {
+    if (!accessToken) { alert("아직 구글 승인을 받지 않으셨습니다."); $("openOauthGuideBtn")?.click(); return; }
+    try {
+      const res = await fetch("https://www.googleapis.com/youtube/v3/channels?part=snippet&mine=true", { headers: { Authorization: `Bearer ${accessToken}` } });
+      const data = await res.json();
+      const item = data.items && data.items[0];
+      if (!item) throw new Error("채널 정보를 찾지 못했습니다.");
+      $("authStatus").value = `구글 승인 완료\n채널 연결 확인됨\n채널명: ${item.snippet.title}\n채널 ID: ${item.id}`;
+    } catch (e) { $("authStatus").value = `채널 연결 확인 실패\n${e.message}`; }
+  });
+
+  $("sendOrderBtn")?.addEventListener("click", async () => {
+    if (IS_TRIAL_MODE && IS_MOCK_MODE) {
+      $("deliveryLog").value = "";
+      log("모의 유튜브 채널 등록 시작");
+      log(`입력 언어: ${ACTIVE_TOTAL_COUNT}개`);
+      setProgress(30, `10 / ${ACTIVE_TOTAL_COUNT}`);
+      setTimeout(() => { setProgress(65, `20 / ${ACTIVE_TOTAL_COUNT}`); }, 300);
+      setTimeout(() => { setProgress(100, `${ACTIVE_TOTAL_COUNT} / ${ACTIVE_TOTAL_COUNT}`); log("모의 등록 완료"); location.href = "trial_mock_result.html"; }, 650);
+      return;
+    }
+    await sendLocalizations();
+  });
+});
