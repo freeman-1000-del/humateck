@@ -31,7 +31,7 @@
 <section id="cancelPanel" class="bottom-panel card"><div class="bottom-menu-grid"><div class="menu-tile"><h4>구독취소</h4><div class="muted">이미 결제된 구독기간에 대한 환불은 불가하며, 현재 계약 종료일까지는 계속 이용 가능합니다.</div></div></div></section>
 <section id="csPanel" class="bottom-panel card"><div class="bottom-menu-grid"><div class="menu-tile"><h4>FAQ</h4><div class="faq-item"><div class="faq-q">Q. 이 설정은 매번 해야 하나요?</div><div class="muted">A. 아닙니다. 원칙적으로 처음 한 번만 연결하시면 됩니다.</div></div><div class="faq-item"><div class="faq-q">Q. 유튜브 채널이 여러 개인데요?</div><div class="muted">A. 자막을 실제로 등록할 채널을 선택해 주세요.</div></div><div class="faq-item"><div class="faq-q">Q. 왜 승인 과정이 필요한가요?</div><div class="muted">A. 고객님의 채널에 등록해도 된다는 허락을 받는 과정입니다.</div></div></div><div class="menu-tile"><h4>고객과의 대화창</h4><div class="chat-box"><div class="chat-log" id="customerChatLog"><div class="chat-bubble-bot">안녕하세요. 무엇이 어려우신가요? 간단히 남겨 주세요.</div></div><div class="chat-input-row"><textarea id="customerChatInput" placeholder="예: OAuth 클라이언트 ID를 어디서 찾는지 모르겠습니다."></textarea><button type="button" class="btn btn-primary" id="customerChatSendBtn">보내기</button></div></div></div></div></section>
 </div><script src="app.js"></script>
-<script>
+<script>A
 document.getElementById('settingsToggleBtn').addEventListener('click', function() {
   document.getElementById('settingsDropdown').classList.toggle('hidden');
 });
@@ -313,4 +313,12 @@ document.addEventListener('click', function(e) {
 })();
 </script>
 
+
+<!-- 정책 푸터 -->
+<div style="text-align:center;padding:24px 16px;border-top:1px solid #1a2e4a;margin-top:40px;">
+  <a href="terms_ko.html" style="color:#8aa0b8;font-size:12px;margin:0 12px;text-decoration:none;">이용약관</a>
+  <a href="privacy_ko.html" style="color:#8aa0b8;font-size:12px;margin:0 12px;text-decoration:none;">개인정보처리방침</a>
+  <a href="refund_ko.html" style="color:#8aa0b8;font-size:12px;margin:0 12px;text-decoration:none;">환불정책</a>
+  <br><span style="color:#4a6a8a;font-size:11px;margin-top:8px;display:block;">© 2026 Humateck. All rights reserved.</span>
+</div>
 </body>
