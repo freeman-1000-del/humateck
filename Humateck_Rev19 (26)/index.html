@@ -39,6 +39,19 @@ document.addEventListener('click', function(e) {
   var wrap = document.querySelector('.settings-dropdown-wrap');
   if (wrap && !wrap.contains(e.target)) document.getElementById('settingsDropdown').classList.add('hidden');
 });
+
+// 패널 토글
+document.querySelectorAll('[data-panel]').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var panelId = this.getAttribute('data-panel');
+    document.querySelectorAll('.bottom-panel').forEach(function(p) {
+      p.classList.remove('open');
+    });
+    var target = document.getElementById(panelId);
+    if (target) target.classList.add('open');
+    document.getElementById('settingsDropdown').classList.add('hidden');
+  });
+});
 </script>
 
 <!-- ── 로그인 모달 ── -->
