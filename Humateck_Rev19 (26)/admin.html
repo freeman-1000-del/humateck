@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Humateck | 관리자</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#0b1929; color:#fff; font-family:'Segoe UI',sans-serif; padding:24px; }
+h1 { color:#c8a84b; margin-bottom:24px; font-size:22px; }
+h2 { color:#c8a84b; margin:20px 0 12px; font-size:16px; }
+.login-box { max-width:320px; margin:80px auto; text-align:center; }
+.login-box input { width:100%; padding:12px 16px; border-radius:8px; border:1px solid #2a3f5f; background:#13294d; color:#fff; font-size:15px; margin-bottom:12px; }
+.btn { padding:10px 20px; border-radius:8px; border:none; cursor:pointer; font-size:14px; font-weight:700; }
+.btn-gold { background:#c8a84b; color:#0b1929; }
+.btn-blue { background:#1e90ff; color:#fff; }
+.btn-red  { background:#e74c3c; color:#fff; }
+.btn-sm { padding:6px 12px; font-size:12px; border-radius:6px; }
+table { width:100%; border-collapse:collapse; font-size:13px; }
+th { background:#13294d; padding:10px 12px; text-align:left; color:#c8a84b; }
+td { padding:10px 12px; border-bottom:1px solid #1a2e4a; vertical-align:middle; }
+tr:hover td { background:#0f2040; }
+select { background:#13294d; color:#fff; border:1px solid #2a3f5f; padding:4px 8px; border-radius:4px; font-size:12px; }
+.badge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; }
+.badge-active { background:#27ae60; color:#fff; }
+.badge-inactive { background:#555; color:#ccc; }
+.msg { padding:10px 16px; border-radius:8px; margin:12px 0; font-size:13px; }
+.msg-ok  { background:#1a4a2e; color:#2ecc71; }
+.msg-err { background:#4a1a1a; color:#e74c3c; }
+.topbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; }
+.stat-box { display:flex; gap:16px; margin-bottom:24px; }
+.stat { background:#13294d; border-radius:10px; padding:16px 24px; text-align:center; }
+.stat-num { font-size:28px; font-weight:900; color:#c8a84b; }
+.stat-label { font-size:12px; color:#8aa0b8; margin-top:4px; }
+</style>
+</head>
+<body>
+
+<!-- 로그인 화면 -->
+<div id="loginBox" class="login-box">
+  <h1>🔐 관리자 로그인</h1>
+  <input type="text" id="adminPw" placeholder="관리자 비밀번호" value="">
+  <button class="btn btn-gold" style="width:100%" onclick="checkAdmin()">입장</button>
+  <div id="loginMsg" style="margin-top:12px;color:#e74c3c;font-size:13px;"></div>
+</div>
+
+<!-- 관리자 패널 -->
+<div id="adminPanel" style="display:none;">
+  <div class="topbar">
+    <h1>🛠 Humateck 관리자 패널</h1>
+    <button class="btn btn-sm" style="background:#2a3f5f;color:#fff;" onclick="logout()">로그아웃</button>
+  </div>
+
+  <!-- 통계 -->
+  <div class="stat-box">
+    <div class="stat"><div class="stat-num" id="totalUsers">-</div><div class="stat-label">전체 회원</div></div>
+    <div class="stat"><div class="stat-num" id="activeUsers">-</div><div class="stat-label">활성 구독</div></div>
+    <div class="stat"><div class="stat-num" id="inactiveUsers">-</div><div class="stat-label">미구독</div></div>
+  </div>
+
+  <div id="adminMsg"></div>
+
+  <!-- 회원 목록 -->
+  <h2>👥 회원 목록</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>이름</th>
+        <th>이메일</th>
+        <th>플랜</th>
+        <th>구독상태</th>
+        <th>플랜 변경</th>
+        <th>상태 변경</th>
+        <th>저장</th>
+      </tr>
+    </thead>
+    <tbody id="userTable"></tbody>
+  </table>
+</div>
+
+<script>
+const SUPABASE_URL  = 'https://agxxpcgxgggkcdqvwmvg.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFneHhwY2d4Z2dna2NkcXZ3bXZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2MzA0MzAsImV4cCI6MjA5MTIwNjQzMH0.lmbWyY3sxfowqA_2L4PKp2_VOyxm4dBdZIW43aLxM-0';
+const SB = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+const ADMIN_PW = '8517';
+
+const PLANS = {
+  '': '(없음)',
+  monthly30: '30개국/월',
+  monthly50: '50개국/월',
+  monthly70: '70개국/월',
+  annual70:  '70개국/년',
+};
+
+function checkAdmin() {
+  const pw = document.getElementById('adminPw').value;
+  if (pw === ADMIN_PW) {
+    document.getElementById('loginBox').style.display = 'none';
+    document.getElementById('adminPanel').style.display = 'block';
+    loadUsers();
+  } else {
+    document.getElementById('loginMsg').textContent = '비밀번호가 틀렸습니다.';
+  }
+}
+
+document.getElementById('adminPw').addEventListener('keydown', e => {
+  if (e.key === 'Enter') checkAdmin();
+});
+
+function logout() {
+  document.getElementById('loginBox').style.display = 'block';
+  document.getElementById('adminPanel').style.display = 'none';
+  document.getElementById('adminPw').value = '';
+}
+
+async function loadUsers() {
+  const { data, error } = await SB.from('profiles').select('*').order('created_at', { ascending: false });
+  if (error) { showMsg('회원 로드 실패: ' + error.message, false); return; }
+
+  const total    = data.length;
+  const active   = data.filter(u => u.plan_status === 'active').length;
+  const inactive = total - active;
+
+  document.getElementById('totalUsers').textContent   = total;
+  document.getElementById('activeUsers').textContent  = active;
+  document.getElementById('inactiveUsers').textContent = inactive;
+
+  const tbody = document.getElementById('userTable');
+  tbody.innerHTML = data.map(u => `
+    <tr id="row-${u.id}">
+      <td>${u.name || '-'}</td>
+      <td>${u.email}</td>
+      <td>
+        <select id="plan-${u.id}">
+          ${Object.entries(PLANS).map(([v,l]) => `<option value="${v}" ${u.plan===v?'selected':''}>${l}</option>`).join('')}
+        </select>
+      </td>
+      <td><span class="badge ${u.plan_status==='active'?'badge-active':'badge-inactive'}" id="status-badge-${u.id}">${u.plan_status==='active'?'활성':'미구독'}</span></td>
+      <td>
+        <select id="status-${u.id}">
+          <option value="active"   ${u.plan_status==='active'?'selected':''}>활성</option>
+          <option value="inactive" ${u.plan_status!=='active'?'selected':''}>미구독</option>
+        </select>
+      </td>
+      <td><button class="btn btn-gold btn-sm" onclick="saveUser('${u.id}')">저장</button></td>
+    </tr>
+  `).join('');
+}
+
+async function saveUser(id) {
+  const plan   = document.getElementById('plan-' + id).value;
+  const status = document.getElementById('status-' + id).value;
+
+  const { error } = await SB.from('profiles').update({
+    plan: plan || null,
+    plan_status: status
+  }).eq('id', id);
+
+  if (error) {
+    showMsg('저장 실패: ' + error.message, false);
+  } else {
+    showMsg('저장 완료!', true);
+    const badge = document.getElementById('status-badge-' + id);
+    badge.textContent  = status === 'active' ? '활성' : '미구독';
+    badge.className = 'badge ' + (status === 'active' ? 'badge-active' : 'badge-inactive');
+    loadUsers();
+  }
+}
+
+function showMsg(text, ok) {
+  const el = document.getElementById('adminMsg');
+  el.className = 'msg ' + (ok ? 'msg-ok' : 'msg-err');
+  el.textContent = text;
+  setTimeout(() => el.textContent = '', 3000);
+}
+</script>
+</body>
+</html>
