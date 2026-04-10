@@ -254,53 +254,6 @@ function showSubmitModal(onConfirm) {
   $("submitModalCancelBtn").onclick = () => modal.classList.add("hidden");
 }
 
-async function sendLocalizations() {
-  $("deliveryLog").value = "";
-  if (!accessToken) {
-    alert("아직 구글 승인을 받지 않으셨습니다. (최초 1회) 구글 승인 받으러 가기 버튼을 눌러 주세요.");
-    $("openOauthGuideBtn")?.click();
-    return;
-  }
-  const videoUrl = ($("videoUrl")?.value || "").trim();
-  const videoId = extractVideoId(videoUrl);
-  if (!videoId) { alert("유튜브 영상 주소에서 videoId를 찾지 못했습니다."); return; }
-  const items = parseFinalText(($("finalOutput")?.value || "").trim());
-  if (!items.length) { alert("제미나이 최종본을 붙여넣어 주세요."); return; }
-
-  log("전체 발송 시작");
-  log(`번역 항목 수: ${items.length}개`);
-  if (items.length < 10) {
-    alert(`번역 데이터가 너무 적습니다 (${items.length}개). 제미나이 최종본을 다시 확인해 주세요.`);
-    return;
-  }
-  log(`대상 videoId: ${videoId}`);
-  setProgress(5, `0 / ${ACTIVE_TOTAL_COUNT}`);
-  const startTime = Date.now();
-  const elapsedTimer = setInterval(() => {
-    const sec = Math.floor((Date.now() - startTime) / 1000);
-    if ($("elapsedTime")) $("elapsedTime").textContent = `등록소요시간: ${sec}초`;
-  }, 500);
-
-  try {
-    const existing = await fetchVideo(videoId);
-    setProgress(25, "조회 완료");
-    const newMap = buildLocalizationMap(items);
-    const merged = Object.assign({}, existing.localizations || {}, newMap);
-    setProgress(55, "전송 준비 완료");
-    await updateVideoLocalizations(videoId, existing, merged);
-    setProgress(85, "전송 완료");
-    await fetchVideo(videoId);
-    log("실등록 성공");
-    setProgress(100, `${ACTIVE_TOTAL_COUNT} / ${ACTIVE_TOTAL_COUNT}`);
-  } catch (e) {
-    log(`실등록 실패: ${e.message}`);
-    alert(`실등록 실패: ${e.message}`);
-  } finally {
-    clearInterval(elapsedTimer);
-    const totalSec = Math.floor((Date.now() - startTime) / 1000);
-    if ($("elapsedTime")) $("elapsedTime").textContent = `등록소요시간: ${totalSec}초`;
-  }
-}
 
 document.addEventListener("DOMContentLoaded", () => {
   configureModeFromQuery();
