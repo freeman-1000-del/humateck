@@ -50,13 +50,15 @@ function parseFinalText(text) {
     if (mode === "desc") cur.description += (cur.description ? "\n" : "") + line;
   }
   if (cur) items.push(cur);
-  return items;
+  return items.filter(x => x.code && x.title);
 }
 
-function buildLocalizationMap(items) {
+function buildLocalizationMap(items, defaultLanguage) {
   const map = {};
   items.forEach(item => {
-    if (item.code) map[item.code] = { title: item.title || "", description: item.description || "" };
+    if (item.code && item.code.toLowerCase() !== (defaultLanguage || "en").toLowerCase()) {
+      map[item.code] = { title: item.title || "", description: item.description || "" };
+    }
   });
   return map;
 }
@@ -128,7 +130,7 @@ async function sendLocalizations() {
     log("기존 localizations 수: " + Object.keys(existing.localizations || {}).length);
     setProgress(30, "전송 준비...");
 
-    const newMap = buildLocalizationMap(items);
+    const newMap = buildLocalizationMap(items, existing.snippet?.defaultLanguage);
     const merged = Object.assign({}, existing.localizations || {}, newMap);
     log("전송 언어 수: " + Object.keys(newMap).length);
     setProgress(55, "전송 중...");
