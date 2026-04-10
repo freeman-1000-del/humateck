@@ -413,14 +413,12 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   $("submitBtn")?.addEventListener("click", () => {
-    showSubmitModal(() => {
-      $("promptOutput").value = buildPrompt();
-      $("copyPromptBtn")?.classList.remove("hidden");
-      $("copyWarning")?.classList.remove("hidden");
-      $("commandBlock")?.classList.remove("hidden");
-      copied = false;
-      $("chatTranslateBtn")?.classList.add("hidden");
-    });
+    $("promptOutput").value = buildPrompt();
+    $("copyPromptBtn")?.classList.remove("hidden");
+    $("copyWarning")?.classList.remove("hidden");
+    $("commandBlock")?.classList.remove("hidden");
+    copied = false;
+    $("chatTranslateBtn")?.classList.add("hidden");
   });
 
   $("resetBtn")?.addEventListener("click", () => {
