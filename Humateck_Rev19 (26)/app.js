@@ -1,4 +1,3 @@
-
 const COUNTRY_GUIDE_LIST = [["ko","South Korea"],["en-US","United States"],["en-GB","United Kingdom"],["es","Spain"],["fr","France"],["de","Germany"],["pt","Portugal"],["it","Italy"],["ja","Japan"],["zh-CN","China (Simplified)"],["zh-TW","China (Traditional)"],["ar","Saudi Arabia"],["hi","India"],["ru","Russia"],["nl","Netherlands"],["pl","Poland"],["tr","Turkey"],["sv","Sweden"],["da","Denmark"],["fi","Finland"],["cs","Czech Republic"],["ro","Romania"],["hu","Hungary"],["el","Greece"],["th","Thailand"],["id","Indonesia"],["ms","Malaysia"],["vi","Vietnam"],["uk","Ukraine"],["fa","Iran"],["af","South Africa"],["sq","Albania"],["am","Ethiopia"],["hy","Armenia"],["az","Azerbaijan"],["be","Belarus"],["bn","Bangladesh"],["bs","Bosnia and Herzegovina"],["bg","Bulgaria"],["hr","Croatia"],["et","Estonia"],["ka","Georgia"],["ht","Haiti"],["is","Iceland"],["ga","Ireland"],["kn","India (Kannada)"],["kk","Kazakhstan"],["km","Cambodia"],["rw","Rwanda"],["lv","Latvia"],["lt","Lithuania"],["mk","North Macedonia"],["ml","India (Malayalam)"],["mt","Malta"],["mr","India (Marathi)"],["mn","Mongolia"],["my","Myanmar"],["ne","Nepal"],["pa","India (Punjabi)"],["sr","Serbia"],["sk","Slovakia"],["sw","Kenya"],["tl","Philippines"],["ta","India (Tamil)"],["te","India (Telugu)"],["yo","Nigeria"],["zu","South Africa (Zulu)"],["ca","Catalonia"],["gl","Galicia"],["eu","Basque Country"]];
 const COUNTRY_GUIDE_LIST_15 = COUNTRY_GUIDE_LIST.slice(0, 15);
 const COUNTRY_GUIDE_LIST_30 = COUNTRY_GUIDE_LIST.slice(0, 30);
@@ -109,23 +108,23 @@ function extractVideoId(url) {
 }
 
 function parseFinalText(text) {
-  const lines = (text || "").replace(/\r/g, "").replace(/```[a-z]*/g, "").replace(/```/g, "").split("\n");
+  const lines = (text || "").replace(/\r/g, "").split("\n");
   const items = [];
+  let cur = null;
+  let mode = null;
   for (const raw of lines) {
-    const line = raw.trim();
-    if (!line || !line.includes("|")) continue;
-    const parts = line.split("|").map(p => p.trim());
-    if (parts.length < 2) continue;
-    // 첫 필드에서 숫자+점 제거, 괄호 제거
-    let code = parts[0].replace(/^\d+[\s\.\)\-]+/, "").replace(/\s*\(.*?\)/, "").trim().split(/\s+/)[0];
-    if (!code || !/^[a-zA-Z]{2,5}(-[a-zA-Z]{2,4})?$/.test(code)) continue;
-    code = code.toLowerCase();
-    const title = parts[1] || "";
-    const desc = parts.slice(2, parts.length - 1).join(" ") || "";
-    if (!title) continue;
-    items.push({ code, title, description: desc });
+    const line = raw.trimEnd();
+    const cc = line.match(/^Country Code:\s*(.+)$/i);
+    if (cc) { if (cur) items.push(cur); cur = { code: cc[1].trim(), title: "", description: "" }; mode = null; continue; }
+    if (!cur) continue;
+    const ti = line.match(/^Title:\s*(.*)$/i);
+    if (ti) { cur.title = ti[1].trim(); mode = null; continue; }
+    if (/^Description:\s*$/i.test(line)) { mode = "description"; continue; }
+    if (/^Country Name:\s*/i.test(line) || /^Number:\s*/i.test(line) || /^Nmber:\s*/i.test(line)) continue;
+    if (mode === "description") cur.description += (cur.description ? "\n" : "") + line;
   }
-  return items;
+  if (cur) items.push(cur);
+  return items.filter(x => x.code && x.title);
 }
 
 function buildLocalizationMap(items) {
