@@ -1,51 +1,9 @@
-// sender.js v2 — 대수술판
+// sender.js — 성공본 기반
 
 const YT_SCOPE = "https://www.googleapis.com/auth/youtube";
+const DEFAULT_VIDEO_LANGUAGE = "en";
 let accessToken = null;
 const $ = id => document.getElementById(id);
-
-// ── 줄바꿈 정규화 후 파싱 ──
-function parseToLocalizationMap(raw) {
-  // 모든 줄바꿈 통일
-  const text = raw.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
-  const lines = text.split("\n");
-  const map = {};
-  let code = null, title = "", desc = "", descMode = false;
-
-  function flush() {
-    if (code) map[code] = { title: title.trim(), description: desc.trim() };
-  }
-
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i].trimEnd();
-
-    // Country Code 발견 → 이전 블록 저장 후 새 블록 시작
-    const ccMatch = line.match(/^Country Code:\s*(.+)$/i);
-    if (ccMatch) {
-      flush();
-      code = ccMatch[1].trim();
-      title = ""; desc = ""; descMode = false;
-      continue;
-    }
-
-    if (!code) continue;
-
-    // Title
-    const tiMatch = line.match(/^Title:\s*(.*)$/i);
-    if (tiMatch) { title = tiMatch[1].trim(); descMode = false; continue; }
-
-    // Description 시작
-    if (/^Description:\s*$/i.test(line)) { descMode = true; continue; }
-
-    // 무시할 줄
-    if (/^(Country Name|Number|Nmber):\s*/i.test(line)) continue;
-
-    // Description 내용 수집
-    if (descMode) desc += (desc ? "\n" : "") + line;
-  }
-  flush();
-  return map;
-}
 
 function log(msg) {
   const box = $("deliveryLog");
@@ -57,7 +15,7 @@ function log(msg) {
 function setProgress(pct, text) {
   if ($("progressBar"))     $("progressBar").style.width = pct + "%";
   if ($("progressPercent")) $("progressPercent").textContent = pct + "%";
-  if ($("progressText"))    $("progressText").textContent = text;
+  if ($("progressText"))    $("progressText").textContent = text || "";
 }
 
 function extractVideoId(url) {
@@ -72,9 +30,130 @@ function extractVideoId(url) {
   return null;
 }
 
+function parseFinalText(text) {
+  const lines = text.replace(/\r\n/g, "\n").replace(/\r/g, "\n").split("\n");
+  const items = [];
+  let cur = null, mode = null;
+  for (const raw of lines) {
+    const line = raw.trimEnd();
+    const cc = line.match(/^Country Code:\s*(.+)$/i);
+    if (cc) {
+      if (cur) items.push(cur);
+      cur = { code: cc[1].trim(), title: "", description: "" };
+      mode = null; continue;
+    }
+    if (!cur) continue;
+    const ti = line.match(/^Title:\s*(.*)$/i);
+    if (ti) { cur.title = ti[1].trim(); mode = null; continue; }
+    if (/^Description:\s*$/i.test(line)) { mode = "desc"; continue; }
+    if (/^(Country Name|Number|Nmber):\s*/i.test(line)) continue;
+    if (mode === "desc") cur.description += (cur.description ? "\n" : "") + line;
+  }
+  if (cur) items.push(cur);
+  return items;
+}
+
+function buildLocalizationMap(items) {
+  const map = {};
+  items.forEach(item => {
+    if (item.code) map[item.code] = { title: item.title || "", description: item.description || "" };
+  });
+  return map;
+}
+
+async function fetchVideo(videoId) {
+  const res = await fetch(
+    "https://www.googleapis.com/youtube/v3/videos?part=snippet,localizations&id=" + encodeURIComponent(videoId),
+    { headers: { Authorization: "Bearer " + accessToken } }
+  );
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error?.message || "videos.list 실패");
+  const item = data.items?.[0];
+  if (!item) throw new Error("대상 영상을 찾지 못했습니다.");
+  return item;
+}
+
+async function updateVideoLocalizations(videoId, existingVideo, mergedLocalizations) {
+  const snippet = existingVideo.snippet || {};
+  const defaultLanguage = snippet.defaultLanguage || DEFAULT_VIDEO_LANGUAGE;
+
+  if (!snippet.title)      throw new Error("기존 영상의 snippet.title을 찾지 못했습니다.");
+  if (!snippet.categoryId) throw new Error("기존 영상의 snippet.categoryId를 찾지 못했습니다.");
+
+  const body = {
+    id: videoId,
+    snippet: {
+      title: snippet.title,
+      categoryId: snippet.categoryId,
+      defaultLanguage: defaultLanguage
+    },
+    localizations: mergedLocalizations
+  };
+
+  const res = await fetch(
+    "https://www.googleapis.com/youtube/v3/videos?part=snippet,localizations",
+    {
+      method: "PUT",
+      headers: { Authorization: "Bearer " + accessToken, "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    }
+  );
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error?.message || "videos.update 실패");
+  return data;
+}
+
+async function sendLocalizations() {
+  $("deliveryLog").value = "";
+
+  if (!accessToken) { alert("먼저 구글 승인을 받아주세요."); return; }
+
+  const videoId = extractVideoId(($("videoUrl")?.value || "").trim());
+  if (!videoId) { alert("유튜브 영상 주소를 확인해 주세요."); return; }
+
+  const items = parseFinalText(($("finalOutput")?.value || "").trim());
+  if (!items.length) { alert("제미나이 최종본을 붙여넣어 주세요."); return; }
+
+  log("대상 videoId: " + videoId);
+  log("파싱된 언어 수: " + items.length);
+  setProgress(10, "조회 중...");
+
+  const start = Date.now();
+  const timer = setInterval(() => {
+    if ($("elapsedTime")) $("elapsedTime").textContent = "등록소요시간: " + Math.floor((Date.now()-start)/1000) + "초";
+  }, 500);
+
+  try {
+    const existing = await fetchVideo(videoId);
+    log("기존 localizations 수: " + Object.keys(existing.localizations || {}).length);
+    setProgress(30, "전송 준비...");
+
+    const newMap = buildLocalizationMap(items);
+    const merged = Object.assign({}, existing.localizations || {}, newMap);
+    log("전송 언어 수: " + Object.keys(newMap).length);
+    setProgress(55, "전송 중...");
+
+    await updateVideoLocalizations(videoId, existing, merged);
+    setProgress(80, "확인 중...");
+
+    const verify = await fetchVideo(videoId);
+    const confirmed = Object.keys(verify.localizations || {}).length;
+    log("사후확인 localizations 수: " + confirmed);
+    log("실등록 성공");
+    setProgress(100, confirmed + " / " + confirmed);
+
+  } catch(e) {
+    log("실등록 실패: " + e.message);
+    alert("실등록 실패: " + e.message);
+    setProgress(0, "");
+  } finally {
+    clearInterval(timer);
+    if ($("elapsedTime")) $("elapsedTime").textContent = "등록소요시간: " + Math.floor((Date.now()-start)/1000) + "초";
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
 
-  // ── OAuth 우측패널 ──
   $("oauthStartBtnSide")?.addEventListener("click", () => {
     const clientId = ($("clientIdSideInput")?.value || "").trim();
     if (!clientId) { alert("OAuth 클라이언트 ID를 입력해 주세요."); return; }
@@ -103,7 +182,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }).requestAccessToken({ prompt: "consent" });
   });
 
-  // ── 채널 확인 ──
   async function checkChannel() {
     if (!accessToken) { alert("먼저 구글 승인을 받아주세요."); return; }
     try {
@@ -115,72 +193,20 @@ document.addEventListener("DOMContentLoaded", () => {
       if ($("authStatusSide")) $("authStatusSide").value = msg;
       if ($("authStatus"))     $("authStatus").value = msg;
     } catch(e) {
-      if ($("authStatusSide")) $("authStatusSide").value = "채널 연결 확인 실패\n" + e.message;
-      if ($("authStatus"))     $("authStatus").value = "채널 연결 확인 실패\n" + e.message;
+      const msg = "채널 연결 확인 실패\n" + e.message;
+      if ($("authStatusSide")) $("authStatusSide").value = msg;
+      if ($("authStatus"))     $("authStatus").value = msg;
     }
   }
+
   $("channelCheckBtnSide")?.addEventListener("click", checkChannel);
   $("channelCheckBtn")?.addEventListener("click",     checkChannel);
 
-  // ── 모달 ──
   $("openOauthGuideBtn")?.addEventListener("click",  () => $("oauthGuideModal")?.classList.remove("hidden"));
   $("closeOauthGuideBtn")?.addEventListener("click", () => $("oauthGuideModal")?.classList.add("hidden"));
   $("oauthGuideBackdrop")?.addEventListener("click", () => $("oauthGuideModal")?.classList.add("hidden"));
 
-  // ── YouTube 자막 등록 ──
   $("sendOrderBtn")?.addEventListener("click", async () => {
-    if (!accessToken) { alert("먼저 구글 승인을 받아주세요."); return; }
-
-    const videoId = extractVideoId(($("videoUrl")?.value || "").trim());
-    if (!videoId) { alert("유튜브 영상 주소를 확인해 주세요."); return; }
-
-    const rawText = ($("finalOutput")?.value || "");
-    const locMap  = parseToLocalizationMap(rawText);
-    const count   = Object.keys(locMap).length;
-
-    if (count === 0) {
-      alert("번역 데이터를 읽지 못했습니다.\n제미나이 최종본을 다시 붙여넣어 주세요.");
-      return;
-    }
-
-    $("deliveryLog").value = "";
-    log("발송 시작 — " + count + "개 언어");
-    log("대상 videoId: " + videoId);
-    setProgress(30, "전송 중...");
-
-    const start = Date.now();
-    const timer = setInterval(() => {
-      if ($("elapsedTime")) $("elapsedTime").textContent = "등록소요시간: " + Math.floor((Date.now()-start)/1000) + "초";
-    }, 500);
-
-    try {
-      const res = await fetch("https://www.googleapis.com/youtube/v3/videos?part=localizations", {
-        method: "PUT",
-        headers: {
-          Authorization: "Bearer " + accessToken,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ id: videoId, localizations: locMap })
-      });
-
-      const data = await res.json();
-
-      if (!res.ok || data.error) {
-        throw new Error(data.error?.message || "전송 실패 (HTTP " + res.status + ")");
-      }
-
-      const confirmed = Object.keys(data.localizations || {}).length;
-      log("등록 성공 — YouTube 확인 " + confirmed + "개");
-      setProgress(100, confirmed + " / " + confirmed);
-
-    } catch(e) {
-      log("등록 실패: " + e.message);
-      alert("등록 실패: " + e.message);
-      setProgress(0, "0 / " + count);
-    } finally {
-      clearInterval(timer);
-      const sec = Math.floor((Date.now()-start)/1000);
-      if ($("elapsedTime")) $("elapsedTime").textContent = "등록소요시간: " + sec + "초";
-    }
+    await sendLocalizations();
   });
 });
