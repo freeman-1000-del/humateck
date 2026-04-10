@@ -27,11 +27,11 @@
 <section id="servicePanel" class="bottom-panel card"><div class="bottom-menu-grid"><div class="menu-tile"><h4>서비스</h4><div class="muted">유튜브 크리에이터의 단시간 자막 번역 및 등록을 돕는 글로벌 서비스입니다.</div></div></div></section>
 <section id="pricePanel" class="bottom-panel card"><div class="bottom-menu-grid"><div class="menu-tile"><h4>30개국</h4><div class="muted">16,500원 / 월</div></div><div class="menu-tile"><h4>50개국</h4><div class="muted">25,000원 / 월</div></div><div class="menu-tile"><h4>70개국</h4><div class="muted">32,500원 / 월</div></div><div class="menu-tile"><h4>70개국 연간</h4><div class="muted">292,500원 / 년</div></div></div></section>
 <section id="accountPanel" class="bottom-panel card"><div class="bottom-menu-grid"><div class="menu-tile"><h4>구독자 계정</h4><div class="muted">활성 구독회원은 로그인 후 바로 주문페이지로 진입합니다.</div></div></div></section>
-<section id="policyPanel" class="bottom-panel card"><div class="bottom-menu-grid"><div class="menu-tile"><h4>정책</h4><div class="muted">배송버튼은 고객 승인본에 대해 어떠한 검수나 차단도 하지 않으며, 승인된 내용 그대로 발송됩니다.</div><div class="faq-item"><div class="faq-q">가장 중요한 주의사항</div><div class="muted">여러 채널의 유튜브 자막을 등록하시려는 경우, 채널당 한 개씩의 OAuth 설정이 필요합니다.<br>별도의 설정 비용은 부과되지 않습니다.</div></div><div class="faq-item"><div class="faq-q">OpenAI API 안내</div><div class="muted">OpenAI API 자동번역 주문은 고객님 본인의 OpenAI API를 연결하는 방식입니다. 처음에는 조금 낯설 수 있지만, 보통 처음 한 번만 연결해 두면 됩니다. 사용량에 따라 OpenAI 측 비용이 발생할 수 있습니다.</div></div></div></div></section>
+<section id="policyPanel" class="bottom-panel card"><div class="bottom-menu-grid"><div class="menu-tile"><h4>정책</h4><div class="faq-item"><a href="terms_ko.html" style="color:#c8a84b;font-weight:700;text-decoration:none;">📄 이용약관</a></div><div class="faq-item"><a href="privacy_ko.html" style="color:#c8a84b;font-weight:700;text-decoration:none;">🔒 개인정보처리방침</a></div><div class="faq-item"><a href="refund_ko.html" style="color:#c8a84b;font-weight:700;text-decoration:none;">💰 환불정책</a></div></div></div></section>
 <section id="cancelPanel" class="bottom-panel card"><div class="bottom-menu-grid"><div class="menu-tile"><h4>구독취소</h4><div class="muted">이미 결제된 구독기간에 대한 환불은 불가하며, 현재 계약 종료일까지는 계속 이용 가능합니다.</div></div></div></section>
 <section id="csPanel" class="bottom-panel card"><div class="bottom-menu-grid"><div class="menu-tile"><h4>FAQ</h4><div class="faq-item"><div class="faq-q">Q. 이 설정은 매번 해야 하나요?</div><div class="muted">A. 아닙니다. 원칙적으로 처음 한 번만 연결하시면 됩니다.</div></div><div class="faq-item"><div class="faq-q">Q. 유튜브 채널이 여러 개인데요?</div><div class="muted">A. 자막을 실제로 등록할 채널을 선택해 주세요.</div></div><div class="faq-item"><div class="faq-q">Q. 왜 승인 과정이 필요한가요?</div><div class="muted">A. 고객님의 채널에 등록해도 된다는 허락을 받는 과정입니다.</div></div></div><div class="menu-tile"><h4>고객과의 대화창</h4><div class="chat-box"><div class="chat-log" id="customerChatLog"><div class="chat-bubble-bot">안녕하세요. 무엇이 어려우신가요? 간단히 남겨 주세요.</div></div><div class="chat-input-row"><textarea id="customerChatInput" placeholder="예: OAuth 클라이언트 ID를 어디서 찾는지 모르겠습니다."></textarea><button type="button" class="btn btn-primary" id="customerChatSendBtn">보내기</button></div></div></div></div></section>
 </div><script src="app.js"></script>
-<script>A
+<script>
 document.getElementById('settingsToggleBtn').addEventListener('click', function() {
   document.getElementById('settingsDropdown').classList.toggle('hidden');
 });
@@ -313,12 +313,4 @@ document.addEventListener('click', function(e) {
 })();
 </script>
 
-
-<!-- 정책 푸터 -->
-<div style="text-align:center;padding:24px 16px;border-top:1px solid #1a2e4a;margin-top:40px;">
-  <a href="terms_ko.html" style="color:#8aa0b8;font-size:12px;margin:0 12px;text-decoration:none;">이용약관</a>
-  <a href="privacy_ko.html" style="color:#8aa0b8;font-size:12px;margin:0 12px;text-decoration:none;">개인정보처리방침</a>
-  <a href="refund_ko.html" style="color:#8aa0b8;font-size:12px;margin:0 12px;text-decoration:none;">환불정책</a>
-  <br><span style="color:#4a6a8a;font-size:11px;margin-top:8px;display:block;">© 2026 Humateck. All rights reserved.</span>
-</div>
 </body>
