@@ -112,8 +112,11 @@ async function sendToYouTube() {
 
   const rawText = ($("finalOutput")?.value || "").trim();
   const locMap  = parseToLocalizationMap(rawText);
+  const keyCount = Object.keys(locMap).length;
 
   log("전체 발송 시작");
+  log(`파싱된 언어 수: ${keyCount}개`);
+  if (keyCount === 0) { alert("번역 데이터가 없습니다. 제미나이 최종본을 붙여넣어 주세요."); return; }
   log(`대상 videoId: ${videoId}`);
   setProgress(10, "전송 중...");
 
