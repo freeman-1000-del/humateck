@@ -170,22 +170,9 @@ async function fetchVideo(videoId) {
 }
 
 async function updateVideoLocalizations(videoId, existingVideo, mergedLocalizations) {
-  // 언어코드 정규화: YouTube 허용 형식만 통과
-  const cleanMap = {};
-  for (const [code, val] of Object.entries(mergedLocalizations)) {
-    const normalized = code.trim().replace(/_/g, "-");
-    if (!normalized) continue;
-    cleanMap[normalized] = {
-      title: (val.title || "").trim(),
-      description: (val.description || "").trim()
-    };
-  }
-  if (Object.keys(cleanMap).length === 0) {
-    throw new Error("전송할 번역 데이터가 없습니다. 제미나이 최종본을 확인해 주세요.");
-  }
   const body = {
     id: videoId,
-    localizations: cleanMap
+    localizations: mergedLocalizations
   };
   const res = await fetch("https://www.googleapis.com/youtube/v3/videos?part=localizations", {
     method: "PUT",
@@ -193,11 +180,7 @@ async function updateVideoLocalizations(videoId, existingVideo, mergedLocalizati
     body: JSON.stringify(body)
   });
   const data = await res.json();
-  if (!res.ok) {
-    const reason = data?.error?.errors?.[0]?.reason || "";
-    const msg = data?.error?.message || "videos.update 실패";
-    throw new Error(`등록 실패 (${reason}): ${msg}`);
-  }
+  if (!res.ok) throw new Error(data.error?.message || "videos.update 실패");
   return data;
 }
 
@@ -230,11 +213,6 @@ async function sendLocalizations() {
   if (!items.length) { alert("제미나이 최종본을 붙여넣어 주세요."); return; }
 
   log("전체 발송 시작");
-  log(`번역 항목 수: ${items.length}개`);
-  if (items.length < 10) {
-    alert(`번역 데이터가 너무 적습니다 (${items.length}개). 제미나이 최종본을 다시 확인해 주세요.`);
-    return;
-  }
   log(`대상 videoId: ${videoId}`);
   setProgress(5, `0 / ${ACTIVE_TOTAL_COUNT}`);
   const startTime = Date.now();
@@ -247,11 +225,14 @@ async function sendLocalizations() {
     const existing = await fetchVideo(videoId);
     setProgress(25, "조회 완료");
     const newMap = buildLocalizationMap(items);
+    alert(`파싱 결과: ${items.length}개 항목, newMap: ${Object.keys(newMap).length}개`);
+    if (Object.keys(newMap).length === 0) {
+      throw new Error("번역 데이터 파싱 실패 — 제미나이 최종본을 다시 붙여넣어 주세요.");
+    }
     const merged = Object.assign({}, existing.localizations || {}, newMap);
     setProgress(55, "전송 준비 완료");
     await updateVideoLocalizations(videoId, existing, merged);
     setProgress(85, "전송 완료");
-    await fetchVideo(videoId);
     log("실등록 성공");
     setProgress(100, `${ACTIVE_TOTAL_COUNT} / ${ACTIVE_TOTAL_COUNT}`);
   } catch (e) {
