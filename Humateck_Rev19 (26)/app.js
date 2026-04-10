@@ -217,13 +217,14 @@ async function sendLocalizations() {
     log(`기존 localizations 수: ${Object.keys(existing.localizations || {}).length}`);
     const newMap = {};
     items.forEach(item => {
-      if (item.code && item.code.toLowerCase() !== defaultLang.toLowerCase()) {
+      if (item.code) {
         newMap[item.code] = { title: item.title || "", description: item.description || "" };
       }
     });
     if (!Object.keys(newMap).length) throw new Error("전송할 번역 언어가 없습니다.");
     const merged = Object.assign({}, existing.localizations || {}, newMap);
     log(`전송 언어 수: ${Object.keys(newMap).length}`);
+    log(`전송 언어 코드: ${Object.keys(newMap).join(', ')}`);
     await updateVideoLocalizations(videoId, existing, merged);
     log("videos.update 전송 완료");
     const verify = await fetchVideo(videoId);
