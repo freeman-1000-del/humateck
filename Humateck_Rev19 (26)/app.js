@@ -1,3 +1,12 @@
+// ============================================================
+// ⚠️ 경고 1순위 — "en" (영어 디폴트) 절대 사용 금지
+// YouTube 영상에 defaultLanguage: "en" 이 한 번 박제되면
+// 해당 영상의 en 계열 자막이 영구적으로 비어버리는 재앙 발생.
+// 코드 어디에도 "en" 을 기본값으로 쓰지 말 것.
+// 전송 시 영상의 defaultLanguage 는 무조건 제외할 것.
+// 이 주석을 절대 삭제하지 말 것.
+// ============================================================
+
 const COUNTRY_GUIDE_LIST = [["ko","South Korea"],["en-US","United States"],["en-GB","United Kingdom"],["es","Spain"],["fr","France"],["de","Germany"],["pt","Portugal"],["it","Italy"],["ja","Japan"],["zh-CN","China (Simplified)"],["zh-TW","China (Traditional)"],["ar","Saudi Arabia"],["hi","India"],["ru","Russia"],["nl","Netherlands"],["pl","Poland"],["tr","Turkey"],["sv","Sweden"],["da","Denmark"],["fi","Finland"],["cs","Czech Republic"],["ro","Romania"],["hu","Hungary"],["el","Greece"],["th","Thailand"],["id","Indonesia"],["ms","Malaysia"],["vi","Vietnam"],["uk","Ukraine"],["fa","Iran"],["af","South Africa"],["sq","Albania"],["am","Ethiopia"],["hy","Armenia"],["az","Azerbaijan"],["be","Belarus"],["bn","Bangladesh"],["bs","Bosnia and Herzegovina"],["bg","Bulgaria"],["hr","Croatia"],["et","Estonia"],["ka","Georgia"],["ht","Haiti"],["is","Iceland"],["ga","Ireland"],["kn","India (Kannada)"],["kk","Kazakhstan"],["km","Cambodia"],["rw","Rwanda"],["lv","Latvia"],["lt","Lithuania"],["mk","North Macedonia"],["ml","India (Malayalam)"],["mt","Malta"],["mr","India (Marathi)"],["mn","Mongolia"],["my","Myanmar"],["ne","Nepal"],["pa","India (Punjabi)"],["sr","Serbia"],["sk","Slovakia"],["sw","Kenya"],["tl","Philippines"],["ta","India (Tamil)"],["te","India (Telugu)"],["yo","Nigeria"],["zu","South Africa (Zulu)"],["ca","Catalonia"],["gl","Galicia"],["eu","Basque Country"]];
 const COUNTRY_GUIDE_LIST_15 = COUNTRY_GUIDE_LIST.slice(0, 15);
 const COUNTRY_GUIDE_LIST_30 = COUNTRY_GUIDE_LIST.slice(0, 30);
@@ -5,7 +14,7 @@ const COUNTRY_GUIDE_LIST_50 = COUNTRY_GUIDE_LIST.slice(0, 50);
 const TRIAL_COUNTRY_GUIDE_LIST_30 = COUNTRY_GUIDE_LIST_30;
 const CUSTOMER_TOTAL_COUNT = 70;
 const YT_SCOPE = "https://www.googleapis.com/auth/youtube";
-const DEFAULT_VIDEO_LANGUAGE = "en";
+const DEFAULT_VIDEO_LANGUAGE = "";
 
 let ACTIVE_COUNTRY_GUIDE_LIST = COUNTRY_GUIDE_LIST;
 let ACTIVE_TOTAL_COUNT = CUSTOMER_TOTAL_COUNT;
@@ -171,7 +180,7 @@ async function fetchVideo(videoId) {
 
 async function updateVideoLocalizations(videoId, existingVideo, mergedLocalizations) {
   const existingSnippet = existingVideo.snippet || {};
-  const defaultLanguage = existingSnippet.defaultLanguage || "en";
+  const defaultLanguage = existingSnippet.defaultLanguage || "";
   if (!existingSnippet.title) throw new Error("기존 영상의 snippet.title을 찾지 못했습니다.");
   if (!existingSnippet.categoryId) throw new Error("기존 영상의 snippet.categoryId를 찾지 못했습니다.");
   const body = {
@@ -213,7 +222,7 @@ async function sendLocalizations() {
   }, 500);
   try {
     const existing = await fetchVideo(videoId);
-    const defaultLang = existing.snippet?.defaultLanguage || "en";
+    const defaultLang = existing.snippet?.defaultLanguage || "";
     log(`기존 localizations 수: ${Object.keys(existing.localizations || {}).length}`);
     const newMap = {};
     items.forEach(item => {
