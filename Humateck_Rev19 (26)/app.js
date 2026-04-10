@@ -124,7 +124,7 @@ function parseFinalText(text) {
     if (mode === "description") cur.description += (cur.description ? "\n" : "") + line;
   }
   if (cur) items.push(cur);
-  return items;
+  return items.filter(x => x.code && x.title);
 }
 
 function buildLocalizationMap(items) {
