@@ -6,6 +6,10 @@
 <title>Humateck 주문페이지</title>
 <link rel="stylesheet" href="style.css">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
+<style>
+#chatTranslateBtn:not(.hidden){animation:blinkBlue 1s infinite;}
+@keyframes blinkBlue{0%,100%{background:#1a73e8;}50%{background:#4a9eff;}}
+</style>
 </head>
 <body>
 <a href="index.html" class="go-home-link">첫 페이지로</a>
@@ -62,7 +66,7 @@
   </div>
   <div style="display:flex;flex-direction:column;align-items:flex-start;gap:6px;">
     <button id="copyPromptBtn" class="primary hidden">제미나이 번역의뢰문 복사</button>
-    <button id="chatTranslateBtn" class="light hidden">챗번역하러 가기</button>
+    <button id="chatTranslateBtn" class="hidden" style="background:#1a73e8;color:#fff;border:none;padding:10px 20px;border-radius:8px;font-weight:700;cursor:pointer;animation:none;">챗번역하러 가기</button>
     <div id="copyWarning" class="copy-warning hidden">※ 먼저 제미나이 번역의뢰문 복사 버튼을 눌러 주세요.</div>
   </div>
   <textarea id="promptOutput" rows="18" placeholder="제출하기를 누르면 현재 구독 플랜에 맞는 제미나이 번역의뢰문이 생성됩니다."></textarea>
@@ -323,7 +327,7 @@
   </div>
   <div style="display:flex;flex-direction:column;align-items:flex-start;gap:6px;">
     <button id="copyPromptBtn" class="primary hidden">제미나이 번역의뢰문 복사</button>
-    <button id="chatTranslateBtn" class="light hidden">챗번역하러 가기</button>
+    <button id="chatTranslateBtn" class="hidden" style="background:#1a73e8;color:#fff;border:none;padding:10px 20px;border-radius:8px;font-weight:700;cursor:pointer;animation:none;">챗번역하러 가기</button>
     <div id="copyWarning" class="copy-warning hidden">※ 먼저 제미나이 번역의뢰문 복사 버튼을 눌러 주세요.</div>
   </div>
   <textarea id="promptOutput" rows="18" placeholder="제출하기를 누르면 현재 구독 플랜에 맞는 제미나이 번역의뢰문이 생성됩니다."></textarea>

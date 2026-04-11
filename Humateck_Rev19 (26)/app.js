@@ -379,7 +379,7 @@ document.addEventListener("DOMContentLoaded", () => {
     showSubmitModal(() => {
       $("promptOutput").value = buildPrompt();
       $("copyPromptBtn")?.classList.remove("hidden");
-      $("copyWarning")?.classList.remove("hidden");
+      $("copyWarning")?.classList.add("hidden");
       $("commandBlock")?.classList.remove("hidden");
       copied = false;
       $("chatTranslateBtn")?.classList.add("hidden");
