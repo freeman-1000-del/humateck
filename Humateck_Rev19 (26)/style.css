@@ -17,7 +17,7 @@ a{text-decoration:none;color:inherit}
 .plan-price{font-size:30px;font-weight:900;line-height:1.2}.plan-price small{font-size:14px;color:#617087}.plan-start-btn{padding:12px 14px;white-space:nowrap;flex:0 0 auto}
 .plan-desc{margin-top:12px;min-height:84px;font-size:15px;line-height:1.85;color:#374152}
 .block,.notice-box,.help-box{margin-top:18px;background:#f8fafc;border:1px solid var(--line);border-radius:14px;padding:14px 16px}.block-title,.notice-strong{font-size:15px;font-weight:800;margin-bottom:8px;color:#111}.help-text,.muted{font-size:14px;line-height:1.85;color:var(--muted);white-space:pre-line}
-.bottom-trigger-wrap{margin-top:22px;display:flex;justify-content:center;gap:10px;flex-wrap:wrap}.bottom-trigger{background:var(--navy2);color:#fff;border:1px solid rgba(255,255,255,.12)}.bottom-panel{display:none;margin-top:8px;max-height:300px;overflow-y:auto}.bottom-panel.open{display:block}
+.bottom-trigger-wrap{margin-top:22px;display:flex;justify-content:center;gap:10px;flex-wrap:wrap}.bottom-trigger{background:var(--navy2);color:#fff;border:1px solid rgba(255,255,255,.12)}.bottom-panel{display:none;margin-top:14px}.bottom-panel.open{display:block}
 .bottom-menu-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.menu-tile{background:#fff;color:var(--text);border:1px solid var(--line);border-radius:16px;padding:16px}.menu-tile h4{margin:0 0 8px;font-size:18px}
 .faq-item{border-top:1px solid #e7edf4;padding-top:12px;margin-top:12px}.faq-q{font-weight:800;color:#1f2430;margin-bottom:6px}
 .chat-box{border:1px solid var(--line);border-radius:14px;background:#fff;padding:14px}.chat-log{height:180px;overflow:auto;border:1px solid var(--line);border-radius:10px;padding:12px;background:#fafafa;color:#1f2430}
@@ -305,3 +305,17 @@ input[type="text"],textarea{width:100%;border:1px solid #d8dfe8;border-radius:10
   transition:background .15s;
 }
 .user-dropdown-item:hover { background:#f4f9fd; }
+
+/* 텍스트박스 진회색 배경 */
+textarea, input[type="text"], input[type="url"], input[type="email"], input[type="password"] {
+  background:#13294d !important;
+  color:#ffffff !important;
+  border:1px solid #2a4a6a !important;
+}
+textarea::placeholder, input::placeholder {
+  color:#6a8aaa !important;
+}
+textarea:focus, input:focus {
+  outline:none !important;
+  border-color:#f5c518 !important;
+}
