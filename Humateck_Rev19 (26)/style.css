@@ -306,16 +306,23 @@ input[type="text"],textarea{width:100%;border:1px solid #d8dfe8;border-radius:10
 }
 .user-dropdown-item:hover { background:#f4f9fd; }
 
-/* 텍스트박스 진회색 배경 */
+
+/* ── 전체 페이지 공통 스타일 ── */
+/* 텍스트박스 배경 진회색 */
 textarea, input[type="text"], input[type="url"], input[type="email"], input[type="password"] {
-  background:#13294d !important;
-  color:#ffffff !important;
-  border:1px solid #2a4a6a !important;
+  background: #13294d !important;
+  color: #ffffff !important;
+  border: 1px solid #2a4a6a !important;
 }
 textarea::placeholder, input::placeholder {
-  color:#6a8aaa !important;
+  color: #6a8aaa !important;
 }
 textarea:focus, input:focus {
-  outline:none !important;
-  border-color:#f5c518 !important;
+  outline: none !important;
+  border-color: #f5c518 !important;
+  box-shadow: 0 0 0 2px rgba(245,197,24,0.15) !important;
+}
+textarea[readonly] {
+  background: #0e1e33 !important;
+  color: #cdd8e8 !important;
 }
