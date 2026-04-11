@@ -43,29 +43,71 @@
       <div class="muted">답) 유튜브 스튜디오 메뉴 상단의 '세부정보'를 눌러 스튜디오 우측 '자막'칸의 '동영상 언어 설정'을 확인하십시오. 작성하신 언어와 '동영상 언어 설정'이 일치하지 않으면 등록 시 유튜브의 거부로 설명란이 공백으로 남게 됩니다.</div>
     </div>
     <div id="faqMoreBox" class="hidden">
-      <div class="faq-item">
-        <div class="faq-q">2. <span style="color:#f5c518;font-weight:600;">문)</span> 유튜브 자막 등록하기를 누르니 다음과 같은 팝업 메시지가 뜹니다.<br>초기 영상 조회 실패: The request cannot be completed because you have exceeded your quota.</div>
-        <div class="muted">답) 유튜브 자막등록 일일 API 무료할당량이 초과된 경우입니다. 다음날 할당량이 다시 충전될 때까지 기다렸다가 다시 시도하시기 바랍니다.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q">3. <span style="color:#f5c518;font-weight:600;">문)</span> 유튜브 자막 등록하기를 누르니 '유튜브 영상 주소에서 videoId를 찾지 못했습니다.' 라는 메시지가 뜹니다.</div>
-        <div class="muted">답) 유튜브 주소를 잘못 입력하신 경우입니다. 반드시 유튜브 동영상(스튜디오 ×)의 주소를 그대로 복사하여 붙여 넣어 주시기 바랍니다.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q">4. <span style="color:#f5c518;font-weight:600;">문)</span> 구글 OAuth 설정이 무엇인가요? 그리고, 사용시마다 설정해야 하나요?</div>
-        <div class="muted">답) 내 유튜브 채널에 자막을 등록해도 좋다고 구글에 허락받는 연결 과정입니다. 처음 1회만 설정하시면 됩니다. 자세한 설정방법은 '중요설정 길잡이'를 참조하시기 바랍니다.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q">5. <span style="color:#f5c518;font-weight:600;">문)</span> 저는 여러 채널을 운영하고 있습니다. OAuth 설정을 단 한번만 받아도 되나요?</div>
-        <div class="muted">답) 구글의 정책상, 보유하신 채널당 한 번씩의 설정이 필요합니다.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q">6. <span style="color:#f5c518;font-weight:600;">문)</span> YouTube Data API 할당량이란 무엇인가요?</div>
-        <div class="muted">답) 유튜브가 하루 제한량을 설정하는데 이를 API 할당량이라고 합니다. 한 프로젝트에 기본적으로 일일 10,000단위가 주어지며, 일일 할당량은 태평양 표준시(PT) 자정에 재설정됩니다.</div>
-      </div>
+      <div class="faq-item"><div class="faq-q">2. <span style="color:#f5c518;font-weight:600;">문)</span> 유튜브 자막 등록하기를 누르니 할당량 초과 메시지가 뜹니다.</div><div class="muted">답) 유튜브 자막등록 일일 API 무료할당량이 초과된 경우입니다. 다음날 할당량이 다시 충전될 때까지 기다렸다가 다시 시도하시기 바랍니다.</div></div>
+      <div class="faq-item"><div class="faq-q">3. <span style="color:#f5c518;font-weight:600;">문)</span> '유튜브 영상 주소에서 videoId를 찾지 못했습니다.' 메시지가 뜹니다.</div><div class="muted">답) 유튜브 주소를 잘못 입력하신 경우입니다. 반드시 유튜브 동영상(스튜디오 ×)의 주소를 그대로 복사하여 붙여 넣어 주시기 바랍니다.</div></div>
+      <div class="faq-item"><div class="faq-q">4. <span style="color:#f5c518;font-weight:600;">문)</span> 구글 OAuth 설정이 무엇인가요? 사용시마다 설정해야 하나요?</div><div class="muted">답) 내 유튜브 채널에 자막을 등록해도 좋다고 구글에 허락받는 연결 과정입니다. 처음 1회만 설정하시면 됩니다.</div></div>
+      <div class="faq-item"><div class="faq-q">5. <span style="color:#f5c518;font-weight:600;">문)</span> 여러 채널을 운영 중입니다. OAuth 설정을 단 한번만 받아도 되나요?</div><div class="muted">답) 구글의 정책상, 보유하신 채널당 한 번씩의 설정이 필요합니다.</div></div>
+      <div class="faq-item"><div class="faq-q">6. <span style="color:#f5c518;font-weight:600;">문)</span> YouTube Data API 할당량이란 무엇인가요?</div><div class="muted">답) 유튜브가 하루 제한량을 설정하는데 이를 API 할당량이라고 합니다. 기본적으로 일일 10,000단위가 주어지며, 태평양 표준시(PT) 자정에 재설정됩니다.</div></div>
     </div>
-    <div style="margin-top:10px;">
-      <button onclick="document.getElementById('faqMoreBox').classList.toggle('hidden');this.textContent=this.textContent.includes('자세히')? '접기 ▲' : '자세히 알아보기 ▼'" style="background:none;border:1px solid #c8a84b;color:#c8a84b;padding:4px 14px;border-radius:6px;font-size:12px;cursor:pointer;">자세히 알아보기 ▼</button>
+    <div style="margin-top:10px;"><button onclick="var b=document.getElementById('faqMoreBox');b.classList.toggle('hidden');this.textContent=b.classList.contains('hidden')?'자세히 알아보기 ▼':'접기 ▲'" style="background:none;border:1px solid #c8a84b;color:#c8a84b;padding:4px 14px;border-radius:6px;font-size:12px;cursor:pointer;">자세히 알아보기 ▼</button></div>
+  </div>
+</aside>
+
+<!-- ── 중앙 패널 ── -->
+<main class="panel center">
+  <div class="notice-box trial-mode-box hidden" id="trialModeInfoBox"><div class="notice-strong">무료체험 안내</div><p class="help-text" id="trialModeInfoText"></p><div class="row" id="trialModeActionRow" class="trial-action-box"></div></div>
+  <div class="center-topbar">
+    <h1 id="centerTitle">제미나이 번역의뢰문</h1>
+    <button type="button" id="openOauthGuideBtn" class="primary blink-soft">중요설정 길잡이</button>
+  </div>
+  <div style="display:flex;flex-direction:column;align-items:flex-start;gap:6px;">
+    <button id="copyPromptBtn" class="primary hidden">제미나이 번역의뢰문 복사</button>
+    <button id="chatTranslateBtn" class="light hidden">챗번역하러 가기</button>
+    <div id="copyWarning" class="copy-warning hidden">※ 먼저 제미나이 번역의뢰문 복사 버튼을 눌러 주세요.</div>
+  </div>
+  <textarea id="promptOutput" rows="18" placeholder="제출하기를 누르면 현재 구독 플랜에 맞는 제미나이 번역의뢰문이 생성됩니다."></textarea>
+  <div id="commandBlock" class="block hidden">
+    <div class="block-title">고객 복사 붙여넣기 명령 순서</div>
+    <p class="help-text">제미나이 대화창에 아래 순서대로 붙여넣어 주세요.</p>
+    <div class="cmd-item"><div class="cmd-head"><strong>명령 1</strong><button class="mini-copy" data-copy="cmd1">복사</button></div><textarea id="cmd1" rows="3" readonly></textarea></div>
+    <div class="cmd-item"><div class="cmd-head"><strong>명령 2</strong><button class="mini-copy" data-copy="cmd2">복사</button></div><textarea id="cmd2" rows="3" readonly></textarea></div>
+    <div class="cmd-item"><div class="cmd-head"><strong>명령 3</strong><button class="mini-copy" data-copy="cmd3">복사</button></div><textarea id="cmd3" rows="3" readonly></textarea></div>
+    <div class="cmd-item"><div class="cmd-head"><strong>명령 4</strong><button class="mini-copy" data-copy="cmd4">복사</button></div><textarea id="cmd4" rows="3" readonly></textarea></div>
+    <div class="cmd-item"><div class="cmd-head"><strong>명령 5</strong><button class="mini-copy" data-copy="cmd5">복사</button></div><textarea id="cmd5" rows="2" readonly></textarea></div>
+  </div>
+  <div class="block"><div class="block-title">최종본 붙여넣기</div><textarea id="finalOutput" rows="16" placeholder="제미나이 최종 번역본 또는 보류언어 수정본을 이곳에 붙여 넣으세요."></textarea></div>
+  <div class="block">
+    <div class="block-title">유튜브 등록</div>
+    <div class="row" id="deliveryButtonRow"><button id="copyFinalBtn" class="light">최종본 복사</button><button id="sendOrderBtn" class="primary">유튜브 자막 등록하기</button></div>
+    <div class="progress-wrap">
+      <div class="progress-head"><strong>등록사항 진행현황</strong><span id="progressText">0 / 70</span></div>
+      <div class="progress-bar-bg"><div id="progressBar" class="progress-bar-fill"></div></div>
+      <div class="progress-meta"><span id="progressPercent">0%</span><span id="elapsedTime">등록소요시간: 0초</span></div>
+    </div>
+    <textarea id="deliveryLog" rows="12" readonly placeholder="실등록 결과가 여기에 표시됩니다."></textarea>
+  </div>
+</main>
+
+<!-- ── 우측 패널 ── -->
+<aside class="panel right">
+  <h2>상태 / 안내</h2>
+  <div class="notice-box quick-guide-box">
+    <div class="notice-strong">빠른 안내</div>
+    <p class="help-text quick-guide-text">OAuth 설정은 처음 한 번만 하시면 됩니다. 반드시 중앙 상단의 '중요설정 길잡이' 버튼을 눌러 순서를 확인하신 후 진행해 주세요.</p>
+    <p class="help-text quick-guide-text">여러 채널의 유튜브 자막을 등록하시려는 경우, <span style="color:#f5c518;font-weight:600;">채널당 한 개씩의 OAuth 설정이 필요합니다.</span><br>별도의 설정 비용은 부과되지 않습니다.</p>
+    <p class="help-text quick-guide-text">OpenAI API 자동번역 주문은 고객님 본인의 OpenAI API를 연결하는 방식이며, 사용량에 따라 <span style="color:#f5c518;font-weight:600;">OpenAI 측 비용이 발생할 수 있습니다.</span></p>
+    <div class="block">
+      <div class="block-title">OAuth 클라이언트 ID 입력</div>
+      <input id="clientIdSideInput" type="password" style="display:block;width:90%;margin:8px auto 0;" placeholder="Google Cloud의 웹 애플리케이션용 OAuth 클라이언트 ID">
+      <div class="help-box" style="margin-top:10px;">
+        <div class="muted">1) 본 ID번호를 타인에게 노출하지 마십시오.</div>
+        <div class="muted">2) 본 ID는 중앙화면 상단 '중요설정 길잡이'에 따라 구글의 승인을 받으신 후 당사의 서버에 마스킹처리 후 안전 보관을 원칙으로 합니다(개인보관 가능).</div>
+      </div>
+      <div class="row" style="margin-top:10px;">
+        <button type="button" id="oauthStartBtnSide" class="btn btn-primary">구글 승인 시작</button>
+        <button type="button" id="channelCheckBtnSide" class="btn btn-light">채널 연결 확인</button>
+      </div>
+      <textarea id="authStatusSide" rows="3" readonly placeholder="승인 상태가 여기에 표시됩니다." style="margin-top:8px;"></textarea>
     </div>
   </div>
 
