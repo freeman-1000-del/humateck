@@ -223,7 +223,6 @@ async function sendLocalizations() {
   try {
     const existing = await fetchVideo(videoId);
     const defaultLang = existing.snippet?.defaultLanguage || "";
-    log(`기존 localizations 수: ${Object.keys(existing.localizations || {}).length}`);
     const newMap = {};
     items.forEach(item => {
       if (item.code && item.code.toLowerCase() !== defaultLang.toLowerCase()) {
@@ -233,11 +232,10 @@ async function sendLocalizations() {
     if (!Object.keys(newMap).length) throw new Error("전송할 번역 언어가 없습니다.");
     const merged = Object.assign({}, existing.localizations || {}, newMap);
     log(`전송 언어 수: ${Object.keys(newMap).length}`);
-    log(`전송 언어 코드: ${Object.keys(newMap).join(", ")}`);
     await updateVideoLocalizations(videoId, existing, merged);
     log("videos.update 전송 완료");
     const verify = await fetchVideo(videoId);
-    log(`사후확인 localizations 수: ${Object.keys(verify.localizations || {}).length}`);
+    log(`실등록 언어수: ${Object.keys(verify.localizations || {}).length - 1}개`);
     log("실등록 성공");
     setProgress(100, `${ACTIVE_TOTAL_COUNT} / ${ACTIVE_TOTAL_COUNT}`);
   } catch(e) {
