@@ -52,14 +52,14 @@ function log(msg) {
 }
 
 function setStatus(text) {
-  if ($("promptOutput")) $("promptOutput").value = text;
+  if ($("autoStatus")) $("autoStatus").value = text;
 }
 
 function setAutoBusy(isBusy) {
   autoTranslateInFlight = isBusy;
   if ($("submitBtn")) {
     $("submitBtn").disabled = isBusy;
-    $("submitBtn").textContent = isBusy ? "AUTO 번역 진행 중..." : "제출하기";
+    $("submitBtn").textContent = isBusy ? "자동번역 진행 중..." : "제출하기";
   }
 }
 
@@ -189,7 +189,7 @@ async function sendLocalizations() {
   const finalText = ($("finalOutput")?.value || "").trim();
   const items = parseFinalText(finalText);
   if (!items.length) {
-    alert("AUTO 번역결과가 비어 있습니다. 먼저 제출하기를 눌러 주세요.");
+    alert("자동번역 결과가 비어 있습니다. 먼저 제출하기를 눌러 주세요.");
     return;
   }
   log(`대상 videoId: ${videoId}`);
@@ -231,8 +231,8 @@ async function requestAutoTranslation(title, description) {
     })
   });
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.error || `AUTO 번역 호출 실패 (${res.status})`);
-  if (!data.finalText) throw new Error("AUTO 번역 응답에 finalText가 없습니다.");
+  if (!res.ok) throw new Error(data.error || `자동번역 호출 실패 (${res.status})`);
+  if (!data.finalText) throw new Error("자동번역 응답에 finalText가 없습니다.");
   return data;
 }
 
@@ -251,7 +251,7 @@ async function startAutoTranslation() {
   }
 
   setAutoBusy(true);
-  setStatus(`OpenAI AUTO 번역 진행 중...\n대상 언어 수: ${ACTIVE_TOTAL_COUNT}개`);
+  setStatus(`자동번역 진행 중...\n대상 언어 수: ${ACTIVE_TOTAL_COUNT}개`);
   if ($("finalOutput")) $("finalOutput").value = "";
 
   try {
@@ -259,13 +259,13 @@ async function startAutoTranslation() {
     if ($("finalOutput")) $("finalOutput").value = data.finalText || "";
     const items = parseFinalText(data.finalText || "");
     const countText = items.length ? `${items.length}개 언어 생성 완료` : "응답 생성 완료";
-    setStatus(`OpenAI AUTO 번역 완료\n${countText}${data.model ? `\n모델: ${data.model}` : ""}`);
+    setStatus(`자동번역 완료\n${countText}${data.model ? `\n모델: ${data.model}` : ""}`);
     if (!items.length) {
-      throw new Error("AUTO 번역 결과 형식을 읽지 못했습니다. 서버 응답을 확인해 주세요.");
+      throw new Error("자동번역 결과 형식을 읽지 못했습니다. 서버 응답을 확인해 주세요.");
     }
   } catch (e) {
-    setStatus(`OpenAI AUTO 번역 실패\n${e.message}`);
-    alert(`AUTO 번역 실패: ${e.message}`);
+    setStatus(`자동번역 실패\n${e.message}`);
+    alert(`자동번역 실패: ${e.message}`);
   } finally {
     setAutoBusy(false);
   }
@@ -304,12 +304,8 @@ document.addEventListener("DOMContentLoaded", () => {
     annual70:  "70개국 / 292,500원 / 년"
   };
 
-  if ($("centerTitle")) $("centerTitle").textContent = "AUTO 번역결과";
-  if ($("copyPromptBtn")) $("copyPromptBtn").classList.add("hidden");
-  if ($("chatTranslateBtn")) $("chatTranslateBtn").classList.add("hidden");
-  if ($("copyWarning")) $("copyWarning").classList.add("hidden");
-  if ($("commandBlock")) $("commandBlock").classList.add("hidden");
-  setStatus("제출하기를 누르면 OpenAI AUTO 번역이 진행됩니다.");
+  if ($("centerTitle")) $("centerTitle").textContent = "최종번역본";
+  setStatus("제출하기를 누르면 자동번역이 진행됩니다.");
 
   if ($("currentPlanName")) {
     if (subscriber) {
@@ -348,7 +344,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if ($("youtubeFaqBox") && !IS_TRIAL_MODE) $("youtubeFaqBox").classList.remove("hidden");
 
   $("upgradeBtn")?.addEventListener("click", () => {
-    location.href = `${ROOT_PREFIX}plans.html#annual`;
+    location.href = `${ROOT_PREFIX}plans_auto.html#annual`;
   });
 
   $("openOauthGuideBtn")?.addEventListener("click", () => $("oauthGuideModal")?.classList.remove("hidden"));
@@ -397,8 +393,8 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   $("resetBtn")?.addEventListener("click", () => {
-    ["videoUrl", "titleInput", "descInput", "promptOutput", "finalOutput", "deliveryLog"].forEach((id) => { if ($(id)) $(id).value = ""; });
-    setStatus("제출하기를 누르면 OpenAI AUTO 번역이 진행됩니다.");
+    ["videoUrl", "titleInput", "descInput", "autoStatus", "finalOutput", "deliveryLog"].forEach((id) => { if ($(id)) $(id).value = ""; });
+    setStatus("제출하기를 누르면 자동번역이 진행됩니다.");
     setAutoBusy(false);
   });
 

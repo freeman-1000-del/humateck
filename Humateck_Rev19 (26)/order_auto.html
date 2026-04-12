@@ -6,14 +6,10 @@
 <title>Humateck 주문페이지</title>
 <link rel="stylesheet" href="style.css">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
-<style>
-#chatTranslateBtn:not(.hidden){animation:blinkBlue 1s infinite;}
-@keyframes blinkBlue{0%,100%{background:#1a73e8;}50%{background:#4a9eff;}}
-</style>
 </head>
 <body>
 <a href="index.html" class="go-home-link">첫 페이지로</a>
-<a class="go-home-link" href="plans.html" style="top:52px;">전체플랜 확인</a>
+<a class="go-home-link" href="plans_auto.html" style="top:52px;">전체플랜 확인</a>
 <div class="page-wrap"><div class="app-shell">
 
 <!-- ── 좌측 패널 ── -->
@@ -62,25 +58,14 @@
 <main class="panel center">
   <div class="notice-box trial-mode-box hidden" id="trialModeInfoBox"><div class="notice-strong">무료체험 안내</div><p class="help-text" id="trialModeInfoText"></p><div class="row" id="trialModeActionRow" class="trial-action-box"></div></div>
   <div class="center-topbar">
-    <h1 id="centerTitle">AUTO 번역결과</h1>
+    <h1 id="centerTitle">최종번역본</h1>
     <button type="button" id="openOauthGuideBtn" class="primary blink-soft">중요설정 길잡이</button>
   </div>
-  <div style="display:flex;flex-direction:column;align-items:flex-start;gap:6px;">
-    <button id="copyPromptBtn" class="primary hidden">AUTO 번역 시작</button>
-    <button id="chatTranslateBtn" class="hidden" style="background:#1a73e8;color:#fff;border:none;padding:10px 20px;border-radius:8px;font-weight:700;cursor:pointer;animation:none;">AUTO 번역 진행</button>
-    <div id="copyWarning" class="copy-warning hidden">※ 제출 후 OpenAI AUTO 번역 결과가 자동으로 아래에 채워집니다.</div>
+  <div class="block">
+    <div class="block-title"><span style="color:#f5c518;font-weight:600;">자동번역 상태</span></div>
+    <textarea id="autoStatus" rows="4" readonly placeholder="제출하기를 누르면 자동번역이 시작됩니다."></textarea>
   </div>
-  <textarea id="promptOutput" rows="18" placeholder="제출하기를 누르면 OpenAI AUTO 번역이 진행되며, 진행상태가 여기에 표시됩니다."></textarea>
-  <div id="commandBlock" class="block hidden" style="display:none;">
-    <div class="block-title"><span style="color:#f5c518;font-weight:600;">고객 복사 붙여넣기 명령 순서</span></div>
-    <p class="help-text">제미나이 대화창에 아래 순서대로 붙여넣어 주세요.</p>
-    <div class="cmd-item"><div class="cmd-head"><strong>명령 1</strong><button class="mini-copy" data-copy="cmd1">복사</button></div><textarea id="cmd1" rows="3" readonly></textarea></div>
-    <div class="cmd-item"><div class="cmd-head"><strong>명령 2</strong><button class="mini-copy" data-copy="cmd2">복사</button></div><textarea id="cmd2" rows="3" readonly></textarea></div>
-    <div class="cmd-item"><div class="cmd-head"><strong>명령 3</strong><button class="mini-copy" data-copy="cmd3">복사</button></div><textarea id="cmd3" rows="3" readonly></textarea></div>
-    <div class="cmd-item"><div class="cmd-head"><strong>명령 4</strong><button class="mini-copy" data-copy="cmd4">복사</button></div><textarea id="cmd4" rows="3" readonly></textarea></div>
-    <div class="cmd-item"><div class="cmd-head"><strong>명령 5</strong><button class="mini-copy" data-copy="cmd5">복사</button></div><textarea id="cmd5" rows="2" readonly></textarea></div>
-  </div>
-  <div class="block"><div class="block-title"><span style="color:#f5c518;font-weight:600;">번역결과</span></div><textarea id="finalOutput" rows="16" placeholder="제출하기를 누르면 OpenAI AUTO 번역 결과가 이곳에 자동으로 입력됩니다."></textarea></div>
+  <div class="block"><div class="block-title"><span style="color:#f5c518;font-weight:600;">최종번역본</span></div><textarea id="finalOutput" rows="16" placeholder="제출하기를 누르면 최종번역본이 이곳에 자동으로 입력됩니다."></textarea></div>
   <div class="block">
     <div class="block-title"><span style="color:#f5c518;font-weight:600;">유튜브 등록</span></div>
     <div class="row" id="deliveryButtonRow"><button id="copyFinalBtn" class="light">최종본 복사</button><button id="sendOrderBtn" class="primary">유튜브 자막 등록하기</button></div>
@@ -121,8 +106,8 @@
       <p class="help-text">접수측에 의해 오류로 반환된 언어는 아래 절차에 따라 처리해 주시기 바랍니다.</p>
       <ol class="help-text" style="margin-left:18px;">
         <li>'보류사유복사' 버튼을 눌러 내용을 복사해 주세요.</li>
-        <li>번역을 담당한 해당 제미나이 대화창에 그대로 붙여넣어 주세요.</li>
-        <li>제미나이의 답변 내용을 확인하시고, 이상 유무를 검수해 주세요.</li>
+        <li>보류 사유를 확인한 뒤 해당 언어의 문구를 수정해 주세요.</li>
+        <li>수정된 내용을 최종 확인해 주세요.</li>
         <li>이상이 없을 경우 수정된 내용을 복사해 주세요.</li>
         <li>'보류언어 재배송' 버튼을 눌러 붙여넣어 주세요.</li>
         <li>최종 확인 후 배송을 진행해 주세요.</li>
