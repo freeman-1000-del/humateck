@@ -214,7 +214,6 @@ async function sendLocalizations() {
   const items = parseFinalText(finalText);
   if (!items.length) { alert("제미나이 최종본을 붙여넣어 주세요."); return; }
   log(`대상 videoId: ${videoId}`);
-  log(`파싱된 언어 수: ${items.length}`);
   const startTime = Date.now();
   const elapsedTimer = setInterval(() => {
     const sec = Math.floor((Date.now() - startTime) / 1000);
@@ -235,7 +234,7 @@ async function sendLocalizations() {
     await updateVideoLocalizations(videoId, existing, merged);
     log("videos.update 전송 완료");
     const verify = await fetchVideo(videoId);
-    log(`실등록 언어수: ${Object.keys(verify.localizations || {}).length - 1}개`);
+    log(`실등록 언어수: ${Object.keys(newMap).length}개`);
     log("실등록 성공");
     setProgress(100, `${ACTIVE_TOTAL_COUNT} / ${ACTIVE_TOTAL_COUNT}`);
   } catch(e) {
