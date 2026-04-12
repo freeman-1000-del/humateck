@@ -1,65 +1,119 @@
-<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Humateck AUTO 주문페이지</title><link rel="stylesheet" href="style.css">
-<style>
-#requestAutoBtn[disabled], #copyOrderBtn[disabled], #copyFinalBtn[disabled]{opacity:.45;cursor:not-allowed}
-.auto-order-box{margin-top:14px;background:#fff;border:1px solid #dfe6ef;border-radius:14px;padding:14px}
-.auto-order-header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px}
-.auto-order-meta{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
-.auto-meta-item{background:#f8fafc;border:1px solid #e4e9f0;border-radius:12px;padding:10px 12px}
-.auto-targets{width:100%;border:1px solid #d8dfe8;border-radius:10px;padding:12px;font-size:14px;line-height:1.7;background:#fff;resize:vertical}
-.order-status-box{background:#f8fafc;border:1px solid #e4e9f0;border-radius:14px;padding:12px 14px;margin-bottom:14px}
-.status-good{color:#0b6b3a;font-weight:700}.status-bad{color:#9b0000;font-weight:700}.status-warn{color:#8a5a00;font-weight:700}
-</style>
-</head><body>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Humateck AUTO 주문페이지</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    #requestAutoBtn:not(.hidden){animation:blinkBlue 1s infinite;}
+    @keyframes blinkBlue{0%,100%{background:#1a73e8;}50%{background:#4a9eff;}}
+    .status-good{color:#0a7a2f;font-weight:700}
+    .status-bad{color:#b00020;font-weight:700}
+    .status-warn{color:#8a5b00;font-weight:700}
+    .compact-output{min-height:220px;white-space:pre-wrap}
+  </style>
+</head>
+<body>
 <a href="index.html" class="go-home-link">첫 페이지로</a>
 <a class="go-home-link" href="plans_auto.html" style="top:52px;">AUTO 플랜 확인</a>
-<div class="page-wrap"><div class="app-shell">
-<aside class="panel left">
-  <h2>주문 입력</h2>
-  <div class="block">
-    <div class="block-title">현재 구독 플랜</div>
-    <div class="current-plan-box">
-      <div><div id="currentPlanName" class="plan-name">70개국 / 32,500원 / 월</div><div id="contractDateText" class="help-text">선택 플랜 기준 주문서가 생성됩니다.</div></div>
-      <button id="upgradeBtn" class="primary upgrade-inline-btn">플랜 다시 선택</button>
-    </div>
+
+<div class="page-wrap">
+  <div class="app-shell">
+
+    <aside class="panel left">
+      <h2>AUTO 주문 입력</h2>
+
+      <div class="block">
+        <div class="block-title">현재 선택 플랜</div>
+        <div class="current-plan-box">
+          <div>
+            <div id="currentPlanName" class="plan-name">70개국 / 32,500원 / 월</div>
+            <div id="contractDateText" class="help-text">선택 플랜: 70개국</div>
+          </div>
+          <button id="upgradeBtn" class="primary upgrade-inline-btn">플랜 다시 선택</button>
+        </div>
+      </div>
+
+      <label>유튜브 영상 주소</label>
+      <input id="videoUrl" type="text" placeholder="https://www.youtube.com/watch?v=...">
+
+      <label>원문 제목</label>
+      <textarea id="titleInput" rows="3" placeholder="제목을 입력해 주세요."></textarea>
+
+      <label>원문 설명문</label>
+      <textarea id="descInput" rows="10" placeholder="설명문을 입력해 주세요."></textarea>
+
+      <div class="row">
+        <button id="submitBtn" class="primary">제출하기</button>
+        <button id="resetBtn" class="light">초기화</button>
+      </div>
+
+      <div class="notice-box">
+        <div class="notice-strong">AUTO 주문 안내</div>
+        <div class="help-text">
+제출하기를 누르면 먼저 AUTO 주문서가 생성됩니다.
+국가코드 목록, 제목, 설명문을 확인하신 후 자동번역 요청 버튼을 눌러 주십시오.
+        </div>
+      </div>
+    </aside>
+
+    <main class="panel center">
+      <div class="center-topbar">
+        <h1 id="centerTitle">AUTO 주문서</h1>
+        <button id="copyOrderBtn" class="btn btn-light hidden">주문서 복사</button>
+      </div>
+
+      <div class="block">
+        <div class="block-title">자동번역 상태</div>
+        <div id="autoStatusText" class="muted">제출하기를 누르면 플랜에 맞는 AUTO 주문서가 먼저 생성됩니다.</div>
+      </div>
+
+      <label>AUTO 주문서</label>
+      <textarea id="orderSheetOutput" class="compact-output" rows="20" readonly placeholder="여기에 AUTO 주문서가 표시됩니다."></textarea>
+
+      <div class="row" style="margin-top:12px;">
+        <button id="requestAutoBtn" class="btn btn-secondary" disabled>자동번역 요청하기</button>
+      </div>
+
+      <label style="margin-top:20px;">최종번역본</label>
+      <textarea id="finalOutput" rows="20" readonly placeholder="자동번역 요청 후 여기 표시됩니다."></textarea>
+      <div class="row" style="margin-top:12px;">
+        <button id="copyFinalBtn" class="btn btn-light hidden">최종번역본 복사</button>
+      </div>
+    </main>
+
+    <aside class="panel right">
+      <h2>AUTO 주문 확인</h2>
+
+      <div class="block">
+        <div class="block-title">플랜 정보</div>
+        <div class="help-text">플랜: <span id="orderPlanText">monthly70</span></div>
+        <div class="help-text">요청 국가 수: <span id="orderCountText">70개국</span></div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">원문 제목</div>
+        <textarea id="orderTitleOutput" rows="4" readonly></textarea>
+      </div>
+
+      <div class="block">
+        <div class="block-title">원문 설명문</div>
+        <textarea id="orderDescOutput" rows="10" readonly></textarea>
+      </div>
+
+      <div class="notice-box">
+        <div class="notice-strong">안내</div>
+        <div class="help-text">
+고객 확인용 주문서는 간단한 국가코드 목록 중심으로 표시됩니다.
+실제 번역 결과는 아래 최종번역본 칸에 자세히 표시됩니다.
+        </div>
+      </div>
+    </aside>
+
   </div>
-  <label>유튜브 영상 주소</label>
-  <input id="videoUrl" type="text" placeholder="https://www.youtube.com/watch?v=...">
-  <label>원문 제목</label>
-  <textarea id="titleInput" rows="3" placeholder="제목을 입력해 주세요."></textarea>
-  <label>원문 설명문</label>
-  <textarea id="descInput" rows="10" placeholder="설명문을 입력해 주세요."></textarea>
-  <div class="row"><button id="submitBtn" class="primary">제출하기</button><button id="resetBtn" class="light">초기화</button></div>
-  <div class="notice-box"><div class="notice-strong">AUTO 주문 안내</div>
-    <p class="help-text">제출하기를 누르면 곧바로 OpenAI로 전송하지 않고, 먼저 플랜에 맞는 국가코드 목록과 원문 제목/설명문이 포함된 AUTO 주문서를 생성합니다.</p>
-    <p class="help-text">주문서를 고객이 확인한 뒤에만 자동번역 요청 버튼을 눌러 다음 단계로 넘어갑니다.</p>
-  </div>
-</aside>
-<main class="panel center">
-  <div class="center-topbar"><h1 id="centerTitle">AUTO 주문서</h1><div class="row"><button type="button" id="copyOrderBtn" class="primary hidden">AUTO 주문서 복사</button><button type="button" id="copyFinalBtn" class="light hidden">최종본 복사</button></div></div>
-  <div id="autoStatusBox" class="order-status-box"><div class="notice-strong">주문 상태</div><div id="autoStatusText" class="muted">제출하기를 누르면 플랜에 맞는 AUTO 주문서가 먼저 생성됩니다.</div></div>
-  <div class="auto-order-box">
-    <div class="auto-order-header"><div class="block-title"><span style="color:#f5c518;font-weight:600;">AUTO 주문서 확인</span></div><div class="muted" id="targetCountText">요청 대상: 70개국</div></div>
-    <div class="auto-order-meta">
-      <div class="auto-meta-item"><div class="notice-strong">플랜</div><div id="orderPlanText" class="muted">monthly70</div></div>
-      <div class="auto-meta-item"><div class="notice-strong">요청 국가 수</div><div id="orderCountText" class="muted">70개국</div></div>
-    </div>
-    <div class="block" style="margin-top:0;"><div class="block-title">요청 국가코드 / 국가명</div><textarea id="orderTargetsOutput" class="auto-targets" rows="12" readonly placeholder="플랜에 맞는 국가코드 목록이 여기에 표시됩니다."></textarea></div>
-    <div class="block"><div class="block-title">원문 제목</div><textarea id="orderTitleOutput" rows="4" readonly placeholder="제목이 여기에 표시됩니다."></textarea></div>
-    <div class="block"><div class="block-title">원문 설명문</div><textarea id="orderDescOutput" rows="10" readonly placeholder="설명문이 여기에 표시됩니다."></textarea></div>
-    <div class="block"><div class="block-title">주문서 전체</div><textarea id="orderSheetOutput" rows="20" readonly placeholder="제출하기를 누르면 AUTO 주문서가 생성됩니다."></textarea></div>
-  </div>
-  <div class="block"><div class="block-title"><span style="color:#f5c518;font-weight:600;">자동번역 요청</span></div><div class="row"><button id="requestAutoBtn" class="primary" disabled>자동번역 요청하기</button></div><textarea id="finalOutput" rows="16" placeholder="자동번역 결과가 여기에 표시됩니다." readonly></textarea></div>
-</main>
-<aside class="panel right">
-  <h2>상태 / 안내</h2>
-  <div class="notice-box"><div class="notice-strong">진행 순서</div>
-    <p class="help-text">1) 플랜이 국가코드 목록을 결정합니다.</p>
-    <p class="help-text">2) 고객이 제목과 설명문을 입력합니다.</p>
-    <p class="help-text">3) 제출하기를 누르면 AUTO 주문서가 먼저 생성됩니다.</p>
-    <p class="help-text">4) 고객이 주문서를 확인한 뒤 자동번역 요청을 진행합니다.</p>
-  </div>
-  <div class="notice-box"><div class="notice-strong">현재 단계</div><p class="help-text">이 화면은 제미나이 의뢰문 대신 AUTO 주문서를 먼저 보여 준 뒤, 확인 후 OpenAI 자동번역을 요청하는 실험용 통로입니다.</p></div>
-</aside>
-</div></div>
+</div>
+
 <script src="app_auto.js"></script>
-</body></html>
+</body>
+</html>
