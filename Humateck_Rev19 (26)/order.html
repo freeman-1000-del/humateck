@@ -261,8 +261,8 @@
 </div></div>
 
 <!-- 제출 확인 모달 -->
-<div id="submitConfirmModal" class="oauth-modal hidden"><div class="oauth-modal-backdrop" id="submitModalBackdrop"></div><div class="oauth-modal-dialog" style="max-width:560px;"><div class="oauth-modal-header"><h2>제출 전 확인</h2></div><div class="oauth-modal-body" style="padding:20px 24px;">
-<p style="font-size:15px;font-weight:800;color:#f5c518;margin-bottom:12px;">⚠️ <span style="color:#ff4444;">필수!</span> 제출 전 확인사항</p>
+<div id="submitConfirmModal" class="oauth-modal hidden"><div class="oauth-modal-backdrop" id="submitModalBackdrop"></div><div class="oauth-modal-dialog" style="max-width:560px;"><div class="oauth-modal-body" style="padding:20px 24px;">
+<p style="font-size:15px;font-weight:800;color:#f5c518;margin-bottom:17px;">⚠️ <span style="color:#ff4444;">필수!</span> 제출 전 확인사항</p>
 <p style="font-size:14px;line-height:1.8;color:#1f2430;">자막등록하시려는 채널의 <span style="color:#c00;font-weight:700;">동영상언어</span>가 작성하신 제목과 설명문의 언어와 <span style="color:#c00;font-weight:700;">일치되도록 설정하셨나요?</span></p>
 <p style="font-size:13px;line-height:1.8;color:#1f2430;margin-top:10px;">이것이 일치하지 않은 상태로 번역물을 생성하여 등록 시, 유튜브 시스템 정책상 <strong>'원문 없음'</strong>으로 처리되어 다음과 같은 번거로운 일이 생깁니다.</p>
 <ol style="font-size:13px;line-height:1.9;color:#1f2430;margin:10px 0 10px 18px;">
@@ -271,7 +271,35 @@
 </ol>
 <p style="font-size:13px;font-weight:800;color:#f5c518;margin-top:12px;">동영상 언어설정 확인 방법</p>
 <p style="font-size:12px;line-height:1.8;color:#444;">유튜브 스튜디오 좌측 상단 <strong>'세부정보'</strong> 클릭 → 스튜디오 맨 우측 <strong>'자막'</strong> 클릭 → 새 창 좌측 맨위에 표시된 언어 확인 → (설정이 불일치할 경우) 페이지 좌측 중앙의 <span style="color:#f5c518;font-weight:700;">'동영상 언어 수정'</span>을 눌러 번역원문 언어로 수정</p>
-<div class="row" style="justify-content:center;gap:12px;margin-top:20px;"><button id="submitModalOkBtn" class="btn btn-primary">확인, 계속 진행</button><button id="submitModalCancelBtn" class="btn btn-light">취소</button></div></div></div></div>
+<div class="row" style="justify-content:center;gap:12px;margin-top:20px;"><button id="submitModalOkBtn" class="btn btn-primary">확인, 계속 진행</button>$("#check_noView").on("click", function(){ //다시보지않기 체크박스 클릭시
+   if($(this).is(":checked")){    //체크되었다면
+    $.cookie("main_0001_Cookie", "Y", 365);   //365일 후 만료되는 main_0001_Cookie라는 이름의 Y값을 같은 쿠키를 생성 
+   }
+   window.close();  //윈도우 팝업을 닫음
+  });
+
+ 
+
+
+
+​... 
+
+
+
+
+
+if ($.cookie("main_0001_Cookie") != "Y") {  //쿠키 값이 Y가 아니면(체크하지 않았다면) 
+
+          var options = {
+               "sizeW" : "550",
+               "sizeH" : "700",
+              "target" : "main_0001_16",
+              "action" : "main_0001_16.act"  
+         }; 
+
+         sp.winPop("frm", options); //팝업실행
+
+}<button id="submitModalCancelBtn" class="btn btn-light">취소</button></div></div></div></div>
 
 <!-- ── 좌측 패널 ── -->
 <script src="app.js"></script>
