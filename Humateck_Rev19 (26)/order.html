@@ -79,7 +79,7 @@
     <div class="cmd-item"><div class="cmd-head"><strong>명령 4</strong><button class="mini-copy" data-copy="cmd4">복사</button></div><textarea id="cmd4" rows="3" readonly></textarea></div>
     <div class="cmd-item"><div class="cmd-head"><strong>명령 5</strong><button class="mini-copy" data-copy="cmd5">복사</button></div><textarea id="cmd5" rows="2" readonly></textarea></div>
   </div>
-  <div class="block"><div class="block-title">최종본 붙여넣기</div><textarea id="finalOutput" rows="16" placeholder="제미나이 최종 번역본 또는 보류언어 수정본을 이곳에 붙여 넣으세요."></textarea></div>
+  <div class="block"><div class="block-title">최종본 붙여넣기</div><textarea id="finalOutput" rows="16" placeholder="제미나이 최종 번역본을 이곳에 붙여 넣으세요."></textarea></div>
   <div class="block">
     <div class="block-title">유튜브 등록</div>
     <div class="row" id="deliveryButtonRow"><button id="copyFinalBtn" class="light">최종본 복사</button><button id="sendOrderBtn" class="primary">유튜브 자막 등록하기</button></div>
@@ -131,7 +131,8 @@
 </div></div>
 
 <!-- 중요설정 길잡이 모달 -->
-<div id="oauthGuideModal" class="oauth-modal hidden"><div class="oauth-modal-backdrop" id="oauthGuideBackdrop"></div><div class="oauth-modal-dialog"><div class="oauth-modal-header"><h2>중요설정 길잡이</h2><button type="button" id="closeOauthGuideBtn" class="oauth-close-btn">닫기</button></div>
+<div id="oauthGuideModal" class="oauth-modal hidden"><div class="oauth-modal-backdrop" id="oauthGuideBackdrop"></div>
+<div class="oauth-modal-dialog"><div class="oauth-modal-header"><h2>중요설정 길잡이 <span style="color:#f5c518;font-weight:600;">(처음 사용자를 위한 구글 OAuth 승인방법)</span></h2><button type="button" id="closeOauthGuideBtn" class="oauth-close-btn">닫기</button></div>
 <div class="oauth-modal-body">
   <div class="oauth-intro-box">
     <p class="oauth-intro-text">처음에는 조금 낯설 수 있습니다.<br>하지만 이 설정은 <strong>처음 한 번만</strong> 하시면 됩니다.</p>
