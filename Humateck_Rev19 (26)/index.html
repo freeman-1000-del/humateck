@@ -1,8 +1,71 @@
-<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Humateck | 첫페이지</title><link rel="stylesheet" href="style.css">
-<script>if(!sessionStorage.getItem("ht_admin"))location.href="coming_soon.html";</script>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Humateck | 독립 입구 테스트</title>
+<link rel="stylesheet" href="style.css">
+<script>
+if(!sessionStorage.getItem("ht_admin")) location.href="coming_soon.html";
+</script>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-inner" style="width:100%;box-sizing:border-box;justify-content:center;">
+    <img src="FINAL_LOGO01.png" alt="Humateck 로고" class="brand-logo-image">
+  </div>
+</div>
 
+<div class="page-wrap">
+  <section class="card">
+    <div class="hero-copy">
+      <div class="eyebrow">하나의 마당, 서로 다른 두 집</div>
+      <div class="headline">번역 주문 통로 선택</div>
+      <div class="headline-sub">각 집은 서로 완전히 별개의 경로로 이동합니다.</div>
+    </div>
+    <div style="text-align:center;margin-top:18px;">
+      <img src="hero_image.jpg" alt="대표 배너 이미지" style="width:57%;max-width:900px;border-radius:12px;">
+    </div>
+  </section>
 
-    
+  <section class="grid-2" style="margin-top:22px;align-items:stretch;">
+    <article class="plan-card recommended" style="border:3px solid #e8bf2e; min-height:100%;">
+      <div class="badge" style="position:absolute;top:16px;right:16px;">집 1</div>
+      <h2 style="margin:0 0 12px;font-size:28px;">고품질 AI 챗번역 집</h2>
+      <div class="plan-desc">이 집 안에서는 기존 챗번역 방식만 사용합니다.<br>플랜 선택부터 주문까지 기존 집 안에서만 이동합니다.</div>
+      <div class="help-box">
+        <div class="notice-strong">이 집의 울타리 안 경로</div>
+        <div class="muted">plans.html → order.html</div>
+      </div>
+      <div class="row" style="margin-top:18px;">
+        <a class="btn btn-primary" href="plans.html?mode=chat" style="flex:1;text-align:center;">챗번역 집으로 들어가기</a>
+      </div>
+      <div class="row" style="margin-top:10px;">
+        <a class="btn btn-light" href="order.html?subscriber=1&count=70&plan=monthly70&mode=chat" style="flex:1;text-align:center;">기존 챗번역 회원 바로가기</a>
+      </div>
+    </article>
 
+    <article class="plan-card" style="border:3px solid #13294d; min-height:100%;">
+      <div class="badge" style="position:absolute;top:16px;right:16px;">집 2</div>
+      <h2 style="margin:0 0 12px;font-size:28px;">OpenAI AUTO 집</h2>
+      <div class="plan-desc">이 집 안에서는 OpenAI 자동번역 방식만 사용합니다.<br>플랜 선택부터 주문까지 AUTO 집 안에서만 이동합니다.</div>
+      <div class="help-box">
+        <div class="notice-strong">이 집의 울타리 안 경로</div>
+        <div class="muted">plans_auto.html → order_auto.html</div>
+      </div>
+      <div class="row" style="margin-top:18px;">
+        <a class="btn btn-secondary" href="plans_auto.html?mode=auto" style="flex:1;text-align:center;">AUTO 집으로 들어가기</a>
+      </div>
+      <div class="row" style="margin-top:10px;">
+        <a class="btn btn-light" href="order_auto.html?subscriber=1&count=70&plan=monthly70&mode=auto" style="flex:1;text-align:center;">기존 AUTO 회원 바로가기</a>
+      </div>
+    </article>
+  </section>
 
+  <section class="card" style="margin-top:22px;text-align:center;">
+    <div class="notice-strong">구조 원칙</div>
+    <div class="muted">두 집은 같은 마당 위에 있지만, 각자의 문으로 들어간 뒤에는 서로의 파일과 경로를 타지 않습니다.</div>
+  </section>
+</div>
 </body>
+</html>
