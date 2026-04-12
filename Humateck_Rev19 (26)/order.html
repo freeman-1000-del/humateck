@@ -279,27 +279,12 @@
   });
 
  
-
-
-
-​... 
-
-
-
-
-
-if ($.cookie("main_0001_Cookie") != "Y") {  //쿠키 값이 Y가 아니면(체크하지 않았다면) 
-
-          var options = {
-               "sizeW" : "550",
-               "sizeH" : "700",
-              "target" : "main_0001_16",
-              "action" : "main_0001_16.act"  
-         }; 
-
-         sp.winPop("frm", options); //팝업실행
-
-}<button id="submitModalCancelBtn" class="btn btn-light">취소</button></div></div></div></div>
+<form name="pop_form">
+        <div id="check" ><input type="checkbox" name="chkbox" value="checkbox" id='chkbox' >
+        <label for="chkbox">&nbsp&nbsp오늘 하루동안 보지 않기</label></div>
+		<div id="close" ><a href="javascript:closePop();">닫기</a></div>    
+		</form>
+	</div>
 
 <!-- ── 좌측 패널 ── -->
 <script src="app.js"></script>
