@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Humateck OAuth Popup</title>
+  <link rel="stylesheet" href="oauth_popup.css" />
+</head>
+<body>
+  <div class="shell">
+    <div class="card">
+      <div class="eyebrow">Chrome Extension OAuth Popup</div>
+      <h1>Google OAuth 인증</h1>
+      <p class="desc">구글이 제공하는 공식 인증환경에서 직접 인증을 진행합니다. 비밀번호를 휴마텍 홈페이지에 입력하지 않습니다.</p>
+
+      <div class="notice">
+        <strong>안내</strong>
+        <span>이 팝업은 크롬 확장판 내부에서 직접 인증을 진행하기 위한 예제입니다.</span>
+      </div>
+
+      <div class="status" id="statusBox">아직 인증을 시작하지 않았습니다.</div>
+
+      <div class="btn-row">
+        <button class="btn btn-gold" id="oauthStartBtn">Google OAuth 시작</button>
+        <button class="btn btn-dark" id="closeBtn">닫기</button>
+      </div>
+
+      <div class="help">
+        Google OAuth Client ID는 manifest.json 의 <code>oauth2.client_id</code> 에 실제 값으로 넣어 주셔야 합니다.
+      </div>
+    </div>
+  </div>
+
+  <script src="oauth_popup.js"></script>
+</body>
+</html>
