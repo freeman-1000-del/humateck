@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Humateck Order Popup Demo</title>
+  <style>
+    :root{
+      --bg:#090909; --panel:#151515; --panel2:#1c1c1c; --line:rgba(255,255,255,.1);
+      --text:#f4f4f4; --muted:#cfcfcf; --gold:#d6b16a; --gold2:#f0ddb2; --warn:#ffcf72;
+      --shadow:0 18px 50px rgba(0,0,0,.35); --radius:22px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:linear-gradient(180deg,#060606 0%,#0d0d0d 100%);color:var(--text);font-family:Arial,"Malgun Gothic",sans-serif}
+    .wrap{max-width:1180px;margin:0 auto;padding:26px 22px 60px}
+    .grid{display:grid;grid-template-columns:1.08fr .92fr;gap:18px}
+    .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow)}
+    h1{margin:0 0 10px;font-size:34px}
+    h2{margin:0 0 10px;font-size:26px;color:var(--gold2)}
+    p{margin:0;color:var(--muted);line-height:1.8}
+    .tag{display:inline-block;padding:8px 12px;border-radius:999px;background:#1f1a11;color:var(--gold2);font-size:13px;font-weight:800;margin-bottom:14px}
+    label{display:block;margin:16px 0 8px;font-weight:800}
+    textarea,input[type=text]{width:100%;padding:13px 14px;border-radius:16px;border:1px solid rgba(255,255,255,.12);background:#101010;color:#f5f5f5;font-size:14px}
+    textarea{min-height:110px;resize:vertical}
+    .btn-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
+    .btn{border:none;border-radius:16px;padding:14px 20px;font-size:15px;font-weight:900;cursor:pointer}
+    .btn-gold{background:var(--gold);color:#101010}
+    .btn-dark{background:var(--panel2);color:#fff;border:1px solid var(--line)}
+    .reason-list{display:grid;gap:12px;margin-top:16px}
+    .reason{background:var(--panel2);border:1px solid var(--line);border-radius:18px;padding:16px}
+    .reason strong{display:block;color:var(--warn);margin-bottom:6px}
+    .status{margin-top:16px;padding:14px 16px;border-radius:16px;background:#111;border:1px solid var(--line);color:var(--muted)}
+    .status.ok{border-color:rgba(83,222,129,.35);background:rgba(83,222,129,.08);color:#dff8e8}
+    .status.bad{border-color:rgba(255,130,130,.35);background:rgba(255,130,130,.08);color:#ffd9d9}
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.72);padding:20px;z-index:20}
+    .modal.open{display:flex}
+    .modal-box{width:min(560px,100%);background:#111;border:1px solid var(--line);border-radius:24px;padding:24px;box-shadow:var(--shadow)}
+    .modal-box h3{margin:0 0 12px;color:var(--gold2);font-size:26px}
+    .modal-box p{margin:0;color:var(--muted);line-height:1.8}
+    .modal-actions{display:flex;justify-content:flex-end;margin-top:18px}
+    @media (max-width:900px){.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="grid">
+      <section class="card">
+        <div class="tag">Google OAuth는 크롬 팝업 연동 처리</div>
+        <h1>주문페이지 시안</h1>
+        <p>홈페이지에서 OAuth를 직접 처리하지 않고, 크롬 확장판 팝업을 띄워 고객이 공식 인증환경에서 직접 인증하도록 유도하는 시안입니다.</p>
+
+        <label>유튜브 영상 주소</label>
+        <input type="text" placeholder="https://www.youtube.com/watch?v=..." />
+
+        <label>원문 제목</label>
+        <textarea placeholder="제목을 입력해 주세요."></textarea>
+
+        <label>원문 설명문</label>
+        <textarea placeholder="설명문을 입력해 주세요."></textarea>
+
+        <div class="btn-row">
+          <button class="btn btn-gold" id="oauthPopupBtn">크롬 팝업으로 Google 인증하기</button>
+          <button class="btn btn-dark">배송 절차 이어가기</button>
+        </div>
+
+        <div class="status" id="oauthStatus">아직 인증 결과를 받지 않았습니다.</div>
+      </section>
+
+      <aside class="card">
+        <h2>왜 이렇게 바꾸나요?</h2>
+        <div class="reason-list">
+          <div class="reason">
+            <strong>1. 홈페이지는 인증을 직접 처리하지 않습니다.</strong>
+            <p>홈페이지는 안내와 입력 보조만 담당하고, 실제 OAuth는 크롬 확장판이 처리합니다.</p>
+          </div>
+          <div class="reason">
+            <strong>2. 고객은 공식 인증환경에서 직접 인증합니다.</strong>
+            <p>구글이 제공하는 공식 흐름 안에서 고객이 직접 인증하고, 인증 책임과 통제권을 유지합니다.</p>
+          </div>
+          <div class="reason">
+            <strong>3. 휴마텍은 최종 배송대행만 담당합니다.</strong>
+            <p>휴마텍은 고객이 승인한 결과물의 최종 배송단계에만 집중합니다.</p>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <div class="modal" id="oauthGuideModal">
+    <div class="modal-box">
+      <h3>크롬 팝업 연동 안내</h3>
+      <p>Google OAuth 인증은 크롬 확장판 팝업에서 직접 진행됩니다.<br><br>공식 인증환경에서 직접 인증을 완료한 뒤 배송 절차를 이어서 진행해 주십시오.</p>
+      <div class="modal-actions">
+        <button class="btn btn-gold" id="oauthGuideConfirmBtn">확인</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const HUMATECK_EXTENSION_BASE_URL = "chrome-extension://PUT_YOUR_EXTENSION_ID_HERE";
+
+    const oauthPopupBtn = document.getElementById('oauthPopupBtn');
+    const oauthGuideModal = document.getElementById('oauthGuideModal');
+    const oauthGuideConfirmBtn = document.getElementById('oauthGuideConfirmBtn');
+    const oauthStatus = document.getElementById('oauthStatus');
+
+    function openChromeOAuthPopup() {
+      const origin = window.location.origin;
+      const popupUrl = `${HUMATECK_EXTENSION_BASE_URL}/oauth_popup.html?origin=${encodeURIComponent(origin)}`;
+      const width = 500;
+      const height = 720;
+      const left = Math.max(0, (window.screen.width - width) / 2);
+      const top = Math.max(0, (window.screen.height - height) / 2);
+
+      const popup = window.open(
+        popupUrl,
+        "humateck_google_oauth",
+        `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
+      );
+
+      if (!popup) {
+        oauthStatus.className = "status bad";
+        oauthStatus.textContent = "크롬 확장판 팝업을 열 수 없습니다. 확장판 설치 상태 또는 팝업 차단 설정을 확인해 주세요.";
+      } else {
+        oauthStatus.className = "status";
+        oauthStatus.textContent = "크롬 확장판 팝업을 열었습니다. 공식 인증환경에서 직접 인증을 진행해 주세요.";
+      }
+    }
+
+    oauthPopupBtn.addEventListener('click', () => {
+      oauthGuideModal.classList.add('open');
+    });
+
+    oauthGuideConfirmBtn.addEventListener('click', () => {
+      oauthGuideModal.classList.remove('open');
+      openChromeOAuthPopup();
+    });
+
+    oauthGuideModal.addEventListener('click', (e) => {
+      if (e.target === oauthGuideModal) oauthGuideModal.classList.remove('open');
+    });
+
+    window.addEventListener('message', (event) => {
+      if (event.data && event.data.type === 'HUMATECK_OAUTH_SUCCESS') {
+        oauthStatus.className = "status ok";
+        oauthStatus.textContent = "Google OAuth 인증이 완료되었습니다. 이제 배송 절차를 이어서 진행할 수 있습니다.";
+      }
+    });
+  </script>
+</body>
+</html>
