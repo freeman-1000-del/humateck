@@ -98,19 +98,19 @@
     <p class="help-text quick-guide-text"><span style="color:#ffffff;font-weight:600;"><span style="color:#f5c518;font-weight:600;">1)</span> 본 서비스를 이용하기 위한 <span style="color:#f5c518;font-weight:600;">필수 첫단계</span>는 <span style="color:#f5c518;font-weight:600;">구글 OAuth 승인 설정</span>입니다. 
     <p class="help-text quick-guide-text"><span style="color:#ffffff;font-weight:600;">중앙 상단의 <span style="color:#f5c518;font-weight:600;">'중요설정 길잡이'</span>의 상세 안내에 따라 설정을 진행해 주세요.</p>
     <p class="help-text quick-guide-text"><span style="color:#ffffff;font-weight:600;"><span style="color:#f5c518;font-weight:600;">2)</span> 여러 채널의 유튜브 자막을 등록하시려는 경우, <span style="color:#f5c518;font-weight:600;">채널당 한 개씩의 OAuth 설정이 필요</span>합니다.<br>별도의 설정 비용은 부과되지 않습니다.</p>
-    <p class="help-text quick-guide-text"><span style="color:#ffffff;font-weight:600;"><span style="color:#f5c518;font-weight:600;">3)</span> OpenAI API 자동번역 주문은 고객님 본인의 OpenAI API를 연결하는 방식이며, 사용량에 따라 <span style="color:#f5c518;font-weight:600;">OpenAI 측 비용이 발생</span>할 수 있습니다.</p>
+    <p class="help-text quick-guide-text"><span style="color:#ffffff;font-weight:600;"><span style="color:#f5c518;font-weight:600;">3)</span> Google OAuth 인증은 홈페이지에서 직접 처리하지 않고, <span style="color:#f5c518;font-weight:600;">크롬 확장판 팝업</span>에서 직접 진행합니다.</p>
     <div class="block">
-      <div class="block-title">OAuth 클라이언트 ID 입력</div>
-      <input id="clientIdSideInput" type="password" style="display:block;width:90%;margin:8px auto 0;" placeholder="Google Cloud의 웹 애플리케이션용 OAuth 클라이언트 ID">
+      <div class="block-title">Google OAuth 인증</div>
       <div class="help-box" style="margin-top:10px;">
-        <div class="muted">1) 본 ID번호를 타인에게 노출하지 마십시오.</div>
-        <div class="muted">2) 본 ID는 중앙화면 상단 '중요설정 길잡이'에 따라 구글의 승인을 받으신 후 당사의 서버에 마스킹처리 후 안전 보관을 원칙으로 합니다(개인보관 가능).</div>
+        <div class="muted">Google OAuth 인증은 크롬 확장판 팝업에서 직접 진행됩니다.</div>
+        <div class="muted">고객님은 구글이 제공하는 공식 인증환경에서 직접 인증한 뒤 배송 절차를 이어서 진행합니다.</div>
       </div>
+      <input id="clientIdSideInput" type="hidden" value="">
       <div class="row" style="margin-top:10px;">
-        <button type="button" id="oauthStartBtnSide" class="btn btn-primary">구글 승인 시작</button>
-        <button type="button" id="channelCheckBtnSide" class="btn btn-light">채널 연결 확인</button>
+        <button type="button" id="oauthStartBtnSide" class="btn btn-primary">크롬 팝업으로 Google 인증하기</button>
+        <button type="button" id="channelCheckBtnSide" class="btn btn-light">인증 상태 확인</button>
       </div>
-      <textarea id="authStatusSide" rows="3" readonly placeholder="승인 상태가 여기에 표시됩니다." style="margin-top:8px;"></textarea>
+      <textarea id="authStatusSide" rows="3" readonly placeholder="인증 상태가 여기에 표시됩니다." style="margin-top:8px;">아직 인증 결과를 받지 않았습니다.</textarea>
     </div>
   </div>
 
@@ -228,41 +228,39 @@
   </div>
 
   <div class="oauth-step-card">
-    <h3>11단계. 주문페이지로 돌아와 주세요</h3>
+    <h3>11단계. 주문페이지에서 크롬 팝업으로 인증해 주세요</h3>
     <p>이제 다시 Humateck 주문페이지로 돌아오세요.</p>
     <ol>
-      <li><strong>OAuth 클라이언트 ID</strong> 입력칸에 방금 복사한 값을 붙여넣어 주세요.</li>
-      <li><strong>구글 승인 시작</strong> 버튼을 누르세요.</li>
+      <li><strong>크롬 팝업으로 Google 인증하기</strong> 버튼을 눌러 주세요.</li>
+      <li>안내 팝업을 확인한 뒤, <strong>크롬 확장판 팝업</strong>에서 인증을 진행해 주세요.</li>
       <li>구글 화면이 열리면 <strong>실제로 등록할 유튜브 채널</strong>을 선택해 주세요.</li>
-      <li>승인 후 <strong>채널 연결 확인</strong> 버튼을 눌러 주세요.</li>
+      <li>인증 후 주문페이지로 돌아와 배송 절차를 이어서 진행해 주세요.</li>
     </ol>
     <div class="block">
-      <div class="block-title"><span style="color:#f5c518;font-weight:600;">OAuth 클라이언트 ID 입력</span></div>
-      <input id="clientIdInput" type="password" placeholder="Google Cloud의 웹 애플리케이션용 OAuth 클라이언트 ID">
-      <div class="oauth-inline-actions">
-        <button type="button" class="oauth-action-btn" id="oauthStartBtn">구글 승인 시작</button>
-        <button type="button" class="oauth-action-btn" id="channelCheckBtn">채널 연결 확인</button>
-      </div>
-      <textarea id="authStatus" rows="4" readonly placeholder="승인 상태가 여기에 표시됩니다."></textarea>
+      <div class="block-title"><span style="color:#f5c518;font-weight:600;">크롬 팝업 연동 안내</span></div>
       <div class="help-box" style="margin-top:10px;">
-        <div class="muted">1) 본 ID번호를 타인에게 노출하지 마십시오.</div>
-        <div class="muted">2) 본 ID는 중앙화면 상단 '중요설정 길잡이'에 따라 구글의 승인을 받으신 후 당사의 서버에 마스킹처리 후 안전 보관을 원칙으로 합니다(개인보관 가능).</div>
+        <div class="muted">Google OAuth 인증은 홈페이지에서 직접 처리하지 않고 크롬 확장판 팝업에서 직접 진행됩니다.</div>
+        <div class="muted">고객님은 구글이 제공하는 공식 인증환경에서 직접 인증을 완료한 뒤 배송 절차를 이어서 진행합니다.</div>
+      </div>
+      <input id="clientIdInput" type="hidden" value="">
+      <div class="oauth-inline-actions">
+        <button type="button" class="oauth-action-btn" id="oauthStartBtn">크롬 팝업으로 Google 인증하기</button>
+        <button type="button" class="oauth-action-btn" id="channelCheckBtn">인증 상태 확인</button>
+      </div>
+      <textarea id="authStatus" rows="4" readonly placeholder="인증 상태가 여기에 표시됩니다.">아직 인증 결과를 받지 않았습니다.</textarea>
+      <div class="help-box" style="margin-top:10px;">
+        <div class="muted">OAuth 인증은 크롬 확장판 팝업에서 직접 진행됩니다.</div>
       </div>
     </div>
   </div>
-
-  <div class="oauth-step-card warning-card">
-    <h3>가장 중요한 주의사항</h3>
-    <p class="oauth-warning-text">여러 채널의 유튜브 자막을 등록하시려는 경우, <span style="color:#f5c518;font-weight:600;">채널당 한 개씩의 OAuth 설정이 필요합니다</span>.</p>
-    <p>별도의 설정 비용은 부과되지 않습니다.</p>
-  </div>
-
-  <div class="oauth-step-card summary-card">
-    <h3>정말 쉬운 한 줄 요약</h3>
-    <p><strong>Branding에서 채널명과 이메일 적기 → Target에서 테스트 사용자 넣기 → client에서 승인 연결용 번호 만들기 → YouTube API 켜기 → 주문페이지로 돌아와 승인하기</strong></p>
-  </div>
 </div>
 </div></div>
+
+<div id="oauthPopupGuideModal" class="oauth-modal hidden"><div class="oauth-modal-backdrop" id="oauthPopupGuideBackdrop"></div><div class="oauth-modal-dialog" style="max-width:560px;"><div class="oauth-modal-body" style="padding:20px 24px;">
+<p style="font-size:22px;font-weight:800;color:#f5c518;margin-bottom:12px;">크롬 팝업 연동 안내</p>
+<p style="font-size:14px;line-height:1.8;color:#1f2430;">Google OAuth 인증은 크롬 확장판 팝업에서 직접 진행됩니다.<br><br>공식 인증환경에서 직접 인증을 완료한 뒤 배송 절차를 이어서 진행해 주십시오.</p>
+<div class="row" style="justify-content:center;gap:12px;margin-top:20px;"><button id="oauthPopupGuideOkBtn" class="btn btn-primary">확인</button><button id="oauthPopupGuideCloseBtn" class="btn btn-light">닫기</button></div>
+</div></div></div>
 
 <!-- 제출 확인 모달 -->
 <div id="submitConfirmModal" class="oauth-modal hidden"><div class="oauth-modal-backdrop" id="submitModalBackdrop"></div><div class="oauth-modal-dialog" style="max-width:560px;"><div class="oauth-modal-body" style="padding:20px 24px;">
@@ -280,5 +278,100 @@
 
 <!-- ── 좌측 패널 ── -->
 <script src="app.js"></script>
+<script>
+(function(){
+  const HUMATECK_EXTENSION_BASE_URL = "chrome-extension://PUT_YOUR_EXTENSION_ID_HERE";
+
+  const guideModal = document.getElementById('oauthPopupGuideModal');
+  const guideBackdrop = document.getElementById('oauthPopupGuideBackdrop');
+  const guideOkBtn = document.getElementById('oauthPopupGuideOkBtn');
+  const guideCloseBtn = document.getElementById('oauthPopupGuideCloseBtn');
+
+  const sideStartBtn = document.getElementById('oauthStartBtnSide');
+  const sideCheckBtn = document.getElementById('channelCheckBtnSide');
+  const sideStatus = document.getElementById('authStatusSide');
+
+  const modalStartBtn = document.getElementById('oauthStartBtn');
+  const modalCheckBtn = document.getElementById('channelCheckBtn');
+  const modalStatus = document.getElementById('authStatus');
+
+  let pendingTrigger = null;
+
+  function setStatuses(text, type){
+    [sideStatus, modalStatus].forEach(function(el){
+      if(!el) return;
+      el.value = text;
+      el.classList.remove('ok','bad');
+      if(type) el.classList.add(type);
+    });
+  }
+
+  function openGuide(trigger){
+    pendingTrigger = trigger || null;
+    if(guideModal) guideModal.classList.remove('hidden');
+  }
+
+  function closeGuide(){
+    if(guideModal) guideModal.classList.add('hidden');
+  }
+
+  function openChromeOAuthPopup(){
+    const popupUrl = `${HUMATECK_EXTENSION_BASE_URL}/oauth_popup.html?origin=${encodeURIComponent(window.location.origin)}`;
+    const width = 500;
+    const height = 720;
+    const left = Math.max(0, (window.screen.width - width) / 2);
+    const top = Math.max(0, (window.screen.height - height) / 2);
+    const popup = window.open(popupUrl, 'humateck_google_oauth', `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`);
+    if (!popup) {{
+      setStatuses('크롬 확장판 팝업을 열 수 없습니다. 확장판 설치 상태 또는 팝업 차단 설정을 확인해 주세요.', 'bad');
+    }} else {{
+      setStatuses('크롬 확장판 팝업을 열었습니다. 공식 인증환경에서 직접 인증을 진행해 주세요.');
+    }}
+  }
+
+  function intercept(btn, triggerName){
+    if(!btn) return;
+    btn.addEventListener('click', function(e){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      openGuide(triggerName);
+    }, true);
+  }
+
+  intercept(sideStartBtn, 'side');
+  intercept(modalStartBtn, 'modal');
+
+  if(sideCheckBtn){
+    sideCheckBtn.addEventListener('click', function(e){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      setStatuses('인증 완료 후 크롬 팝업에서 돌아오면 이곳에 상태가 표시됩니다.');
+    }, true);
+  }
+  if(modalCheckBtn){
+    modalCheckBtn.addEventListener('click', function(e){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      setStatuses('인증 완료 후 크롬 팝업에서 돌아오면 이곳에 상태가 표시됩니다.');
+    }, true);
+  }
+
+  if(guideOkBtn){
+    guideOkBtn.addEventListener('click', function(){
+      closeGuide();
+      openChromeOAuthPopup();
+    });
+  }
+  if(guideCloseBtn){ guideCloseBtn.addEventListener('click', closeGuide); }
+  if(guideBackdrop){ guideBackdrop.addEventListener('click', closeGuide); }
+
+  window.addEventListener('message', function(event){
+    if(event.data && event.data.type === 'HUMATECK_OAUTH_SUCCESS'){
+      setStatuses('Google OAuth 인증이 완료되었습니다. 이제 배송 절차를 이어서 진행할 수 있습니다.', 'ok');
+    }
+  });
+})();
+</script>
+
 </body>
 </html>
