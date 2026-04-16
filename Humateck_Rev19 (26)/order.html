@@ -11,8 +11,8 @@
 @keyframes blinkBlue{0%,100%{background:#1a73e8;}50%{background:#4a9eff;}}
 @keyframes blinkYellow{0%,100%{opacity:1;}50%{opacity:.35;}}
 .cmd7-wrap{position:relative;}
-.cmd7-wrap textarea{padding-bottom:46px;}
-.cmd7-guide{position:absolute;left:12px;right:12px;bottom:10px;color:#ffe066;font-size:12px;font-weight:900;line-height:1.55;animation:blinkYellow 1s infinite;pointer-events:none;text-shadow:0 0 6px rgba(255,224,102,.35);}
+.cmd7-wrap textarea{padding-bottom:26px;}
+.cmd7-guide{position:absolute;left:12px;right:12px;bottom:4px;color:#ffe066;font-size:12px;font-weight:900;line-height:1.4;animation:blinkYellow 1s infinite;pointer-events:none;text-shadow:0 0 6px rgba(255,224,102,.35);}
 .progress-card{margin-top:12px;padding:12px;border:1px solid #d7c27a;border-radius:10px;background:#fffaf0;}
 .progress-track{height:12px;background:#e9edf4;border-radius:999px;overflow:hidden;margin-bottom:10px;}
 .progress-bar{height:100%;width:0%;background:#1a73e8;transition:width .25s ease;}
@@ -129,7 +129,7 @@
         <div class="cmd-item">
           <div class="cmd-head"><strong>명령 7</strong><button class="mini-copy" data-copy="cmd7">복사</button></div>
           <div class="cmd7-wrap">
-            <textarea id="cmd7" rows="4" readonly></textarea>
+            <textarea id="cmd7" rows="3" readonly></textarea>
             <div class="cmd7-guide">⚠️ 반드시 7번 명령('아래로 이동해 줘.') 위 마지막 번역문 끝의 <span style="background:#2a4f7c;padding:1px 6px;border-radius:4px;font-size:12px;font-weight:900;">⧉</span>(대답 복사) 버튼을 누르신 후 아래에 붙여넣기 하세요!</div>
           </div>
         </div>
@@ -169,7 +169,6 @@
     <p class="help-text quick-guide-text"><span style="color:#ffffff;font-weight:600;">중앙 상단의 <span style="color:#f5c518;font-weight:600;">'중요설정 길잡이'</span>의 상세 안내에 따라 설정을 진행해 주세요.</p>
     <p class="help-text quick-guide-text"><span style="color:#ffffff;font-weight:600;"><span style="color:#f5c518;font-weight:600;">2)</span> 여러 채널의 유튜브 자막을 등록하시려는 경우, <span style="color:#f5c518;font-weight:600;">채널당 한 개씩의 OAuth 설정이 필요</span>합니다.<br>별도의 설정 비용은 부과되지 않습니다.</p>
     <p class="help-text quick-guide-text"><span style="color:#ffffff;font-weight:600;"><span style="color:#f5c518;font-weight:600;">3)</span> Google OAuth 인증은 홈페이지에서 직접 처리하지 않고, <span style="color:#f5c518;font-weight:600;">크롬 확장판 팝업</span>에서 직접 진행합니다.</p>
-
         <div class="block">
           <div class="block-title">Google OAuth 인증</div>
           <input id="clientIdSideInput" type="hidden" value="">
