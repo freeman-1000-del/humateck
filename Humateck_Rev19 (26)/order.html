@@ -326,6 +326,9 @@ let IS_MOCK_MODE = false;
 let copied = false;
 let tokenClient = null;
 let accessToken = null;
+const AUTH_TOKEN_KEY = "humateck_oauth_access_token";
+const AUTH_TOKEN_EXPIRES_KEY = "humateck_oauth_access_token_expires";
+
 
 function configureModeFromQuery() {
   const params = new URLSearchParams(location.search);
@@ -424,6 +427,80 @@ function extractVideoId(url) {
   return null;
 }
 
+
+function saveAccessToken(token, expiresInSeconds) {
+  if (!token) return;
+  accessToken = token;
+  try {
+    sessionStorage.setItem(AUTH_TOKEN_KEY, token);
+    const ttl = Number(expiresInSeconds || 3300);
+    const expiresAt = Date.now() + Math.max(60, ttl - 60) * 1000;
+    sessionStorage.setItem(AUTH_TOKEN_EXPIRES_KEY, String(expiresAt));
+  } catch (e) {}
+}
+
+function clearSavedAccessToken() {
+  accessToken = null;
+  try {
+    sessionStorage.removeItem(AUTH_TOKEN_KEY);
+    sessionStorage.removeItem(AUTH_TOKEN_EXPIRES_KEY);
+  } catch (e) {}
+}
+
+function restoreSavedAccessToken() {
+  if (accessToken) return accessToken;
+  try {
+    const token = sessionStorage.getItem(AUTH_TOKEN_KEY);
+    const expiresAtRaw = sessionStorage.getItem(AUTH_TOKEN_EXPIRES_KEY);
+    const expiresAt = expiresAtRaw ? Number(expiresAtRaw) : 0;
+    if (!token) return null;
+    if (expiresAt && Date.now() >= expiresAt) {
+      clearSavedAccessToken();
+      return null;
+    }
+    accessToken = token;
+    return token;
+  } catch (e) {
+    return null;
+  }
+}
+
+function extractAccessTokenFromMessage(data) {
+  const candidates = [
+    data?.access_token,
+    data?.accessToken,
+    data?.token,
+    data?.oauth?.access_token,
+    data?.oauth?.accessToken,
+    data?.payload?.access_token,
+    data?.payload?.accessToken,
+    data?.payload?.token,
+    data?.detail?.access_token,
+    data?.detail?.accessToken,
+    data?.detail?.token
+  ];
+  return candidates.find((v) => typeof v === "string" && v.trim()) || "";
+}
+
+function extractExpiresInFromMessage(data) {
+  const candidates = [
+    data?.expires_in,
+    data?.expiresIn,
+    data?.oauth?.expires_in,
+    data?.oauth?.expiresIn,
+    data?.payload?.expires_in,
+    data?.payload?.expiresIn,
+    data?.detail?.expires_in,
+    data?.detail?.expiresIn
+  ];
+  const value = candidates.find((v) => v !== undefined && v !== null && !Number.isNaN(Number(v)));
+  return value ? Number(value) : 3300;
+}
+
+function ensureAccessTokenReady() {
+  return restoreSavedAccessToken();
+}
+
 function initTokenClient() {
   const clientId = (($("clientIdSideInput")?.value || $("clientIdInput")?.value) || "").trim();
   if (!clientId) {
@@ -437,9 +514,9 @@ function initTokenClient() {
     scope: YT_SCOPE,
     callback: (resp) => {
       if (resp && resp.access_token) {
-        accessToken = resp.access_token;
-        if ($("authStatus")) $("authStatus").value = "구글 승인 완료\nAccess Token 수신 완료";
-        if ($("authStatusSide")) $("authStatusSide").value = "구글 승인 완료\nAccess Token 수신 완료";
+        saveAccessToken(resp.access_token, resp.expires_in);
+        if ($("authStatus")) $("authStatus").value = "크롬 팝업 승인 반영 완료\n바로 진행 가능합니다.";
+        if ($("authStatusSide")) $("authStatusSide").value = "크롬 팝업 승인 반영 완료\n바로 진행 가능합니다.";
       } else {
         if ($("authStatus")) $("authStatus").value = "구글 승인 실패 또는 취소";
         if ($("authStatusSide")) $("authStatusSide").value = "구글 승인 실패 또는 취소";
@@ -454,7 +531,13 @@ async function fetchVideo(videoId) {
     headers: { Authorization: `Bearer ${accessToken}` }
   });
   const data = await res.json();
-  if (!res.ok) throw new Error(data.error?.message || "videos.list 실패");
+  if (!res.ok) {
+    if (res.status === 401 || res.status === 403) {
+      clearSavedAccessToken();
+      setStatuses("크롬 팝업 승인 정보가 만료되었거나 확인되지 않습니다.\n다시 인증해 주세요.", "bad");
+    }
+    throw new Error(data.error?.message || "videos.list 실패");
+  }
   const item = data.items && data.items[0];
   if (!item) throw new Error("대상 영상을 찾지 못했습니다.");
   return item;
@@ -482,14 +565,22 @@ async function updateVideoLocalizations(videoId, existingVideo, mergedLocalizati
     body: JSON.stringify(body)
   });
   const data = await res.json();
-  if (!res.ok) throw new Error(data.error?.message || "videos.update 실패");
+  if (!res.ok) {
+    if (res.status === 401 || res.status === 403) {
+      clearSavedAccessToken();
+      setStatuses("크롬 팝업 승인 정보가 만료되었거나 확인되지 않습니다.\n다시 인증해 주세요.", "bad");
+    }
+    throw new Error(data.error?.message || "videos.update 실패");
+  }
   return data;
 }
 
 async function sendLocalizations() {
   $("deliveryLog").value = "";
+  ensureAccessTokenReady();
   if (!accessToken) {
-    alert("먼저 구글 승인을 진행해 주세요.");
+    setStatuses("크롬 팝업 승인이 필요합니다.\n'크롬 팝업으로 Google 인증하기' 버튼을 눌러 주세요.", "bad");
+    $("oauthPopupGuideModal")?.classList.remove("hidden");
     return;
   }
 
@@ -585,6 +676,9 @@ function openChromeOAuthPopup() {
 
 document.addEventListener("DOMContentLoaded", () => {
   configureModeFromQuery();
+  if (restoreSavedAccessToken()) {
+    setStatuses("이전에 받은 크롬 팝업 승인 정보가 반영되었습니다.\n바로 진행 가능합니다.", "ok");
+  }
 
   $("cmd1") && ($("cmd1").value = CMD1);
   $("cmd2") && ($("cmd2").value = CMD2);
@@ -661,6 +755,7 @@ document.addEventListener("DOMContentLoaded", () => {
   [$("channelCheckBtnSide"), $("channelCheckBtn")].forEach((btn) => {
     btn?.addEventListener("click", async (e) => {
       e.preventDefault();
+      ensureAccessTokenReady();
       if (!accessToken) {
         setStatuses("크롬 팝업 인증 전입니다.\n인증 완료 후 다시 확인해 주세요.");
         return;
@@ -743,8 +838,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   window.addEventListener("message", (event) => {
-    if (event.data && event.data.type === "HUMATECK_OAUTH_SUCCESS") {
-      setStatuses("Google OAuth 인증이 완료되었습니다. 이제 배송 절차를 이어서 진행할 수 있습니다.", "ok");
+    const messageData = event.data || {};
+    const receivedToken = extractAccessTokenFromMessage(messageData);
+    if (receivedToken) {
+      saveAccessToken(receivedToken, extractExpiresInFromMessage(messageData));
+    }
+    if (messageData && messageData.type === "HUMATECK_OAUTH_SUCCESS") {
+      if (ensureAccessTokenReady()) {
+        setStatuses("크롬 팝업 승인 반영 완료\n바로 진행 가능합니다.", "ok");
+      } else {
+        setStatuses("Google OAuth 인증이 완료되었습니다. 이제 배송 절차를 이어서 진행할 수 있습니다.", "ok");
+      }
     }
   });
 
