@@ -320,6 +320,8 @@ document.addEventListener("DOMContentLoaded", () => {
   $("cmd3") && ($("cmd3").value = CMD3);
   $("cmd4") && ($("cmd4").value = CMD4);
   $("cmd5") && ($("cmd5").value = CMD5);
+  $("cmd6") && ($("cmd6").value = CMD6);
+  $("cmd7") && ($("cmd7").value = CMD7);
   setProgress(0, `0 / ${ACTIVE_TOTAL_COUNT}`);
 
   $("upgradeBtn")?.addEventListener("click", () => {
