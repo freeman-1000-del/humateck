@@ -11,7 +11,7 @@
 @keyframes blinkBlue{0%,100%{background:#1a73e8;}50%{background:#4a9eff;}}
 @keyframes blinkYellow{0%,100%{opacity:1;}50%{opacity:.35;}}
 .cmd7-wrap{position:relative;}
-.cmd7-wrap textarea{padding-bottom:74px;}
+.cmd7-wrap textarea{padding-bottom:46px;}
 .cmd7-guide{position:absolute;left:12px;right:12px;bottom:10px;color:#ffe066;font-size:12px;font-weight:900;line-height:1.55;animation:blinkYellow 1s infinite;pointer-events:none;text-shadow:0 0 6px rgba(255,224,102,.35);}
 .progress-card{margin-top:12px;padding:12px;border:1px solid #d7c27a;border-radius:10px;background:#fffaf0;}
 .progress-track{height:12px;background:#e9edf4;border-radius:999px;overflow:hidden;margin-bottom:10px;}
@@ -129,7 +129,7 @@
         <div class="cmd-item">
           <div class="cmd-head"><strong>명령 7</strong><button class="mini-copy" data-copy="cmd7">복사</button></div>
           <div class="cmd7-wrap">
-            <textarea id="cmd7" rows="5" readonly></textarea>
+            <textarea id="cmd7" rows="4" readonly></textarea>
             <div class="cmd7-guide">⚠️ 반드시 7번 명령('아래로 이동해 줘.') 위 마지막 번역문 끝의 <span style="background:#2a4f7c;padding:1px 6px;border-radius:4px;font-size:12px;font-weight:900;">⧉</span>(대답 복사) 버튼을 누르신 후 아래에 붙여넣기 하세요!</div>
           </div>
         </div>
@@ -176,7 +176,7 @@
             <button type="button" id="oauthStartBtnSide" class="btn btn-primary">크롬 팝업으로 Google 인증하기</button>
             <button type="button" id="channelCheckBtnSide" class="btn btn-light">인증 상태 확인</button>
           </div>
-          <textarea id="authStatusSide" rows="3" readonly placeholder="인증 상태가 여기에 표시됩니다." style="margin-top:8px;">아직 인증 결과를 받지 않았습니다.</textarea>
+          <textarea id="authStatusSide" rows="3" readonly placeholder="인증 상태가 여기에 표시됩니다." style="margin-top:8px;">크롬 팝업 인증 전입니다.\n'크롬 팝업으로 Google 인증하기' 버튼을 눌러 주세요.</textarea>
         </div>
       </div>
 
@@ -260,7 +260,7 @@
           <button type="button" class="oauth-action-btn" id="oauthStartBtn">크롬 팝업으로 Google 인증하기</button>
           <button type="button" class="oauth-action-btn" id="channelCheckBtn">인증 상태 확인</button>
         </div>
-        <textarea id="authStatus" rows="4" readonly placeholder="인증 상태가 여기에 표시됩니다.">아직 인증 결과를 받지 않았습니다.</textarea>
+        <textarea id="authStatus" rows="4" readonly placeholder="인증 상태가 여기에 표시됩니다.">크롬 팝업 인증 전입니다.\n'크롬 팝업으로 Google 인증하기' 버튼을 눌러 주세요.</textarea>
       </div>
     </div>
   </div>
@@ -662,7 +662,7 @@ document.addEventListener("DOMContentLoaded", () => {
     btn?.addEventListener("click", async (e) => {
       e.preventDefault();
       if (!accessToken) {
-        setStatuses("아직 구글 승인을 받지 않으셨습니다.");
+        setStatuses("크롬 팝업 인증 전입니다.\n인증 완료 후 다시 확인해 주세요.");
         return;
       }
       try {
@@ -741,11 +741,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  if ($("oauthStartBtn") || $("oauthStartBtnSide")) {
-    if (initTokenClient()) {
-      // ready
-    }
-  }
 
   window.addEventListener("message", (event) => {
     if (event.data && event.data.type === "HUMATECK_OAUTH_SUCCESS") {
