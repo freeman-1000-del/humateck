@@ -74,8 +74,6 @@ const CMD4 = "국가명이 삭제되었는지 다시 검수하고, 타언어 혼
 const CMD5 = "number를 붙여 전체 번역 코드수를 집계해 봐.";
 const CMD6 = "전체 숫자가 맞으면 number를 모두 지우고, 타언어 혼입, 문맥의 부자연스러움, 기타 문제를 마지막으로 꼼꼼히 검수해 줘.";
 const CMD7 = "아래로 이동해 줘.";  
-⚠️ 반드시 7번 명령('아래로 이동해 줘.') 위 마지막 번역문 끝의 <span style="background:#2a4f7c;padding:1px 6px;border-radius:4px;font-size:12px;font-weight:900;">⧉</span>
-      (대답 복사) 버튼을 누르신 후 아래에 붙여넣기 하세요!   
 
 const PROMPT_TEMPLATE = `제미나이 의뢰문\n\n안녕 제미나이!\n아래 제목과 설명문을 {activeCount}개 국가 세트에 맞춰 자연스럽게 현지화 번역해 줘.\n처음부터 끝까지 중간에 끊지 말고 계속 번역해 줘.\n\n[원문]\nTitle: {title}\n\nDescription:\n{desc}\n\n[출력 형식]\nNumber: 순번\nCountry Code: 언어코드\nCountry Name: 영어 국가명\nTitle: 번역된 제목\nDescription:\n번역된 설명문\n\n[핵심 원칙]\n1. 처음부터 끝까지 절대 끊지 말고 계속 번역해 줘.\n2. 작업내용 설명, 머리말, 맺음말, 해설문은 넣지 말아 줘.\n3. 아래 대응표의 Country Code와 Country Name을 그대로 사용할 것\n4. 블록 순서는 절대 바꾸지 말 것\n5. 각 블록은 반드시 Country Code로 시작할 것\n6. Description의 문단 구조와 줄바꿈은 원문 흐름을 유지할 것\n7. 제목, 설명문 외의 군소리, 키워드 줄, 해시태그, 코드블록, HTML은 넣지 말 것\n8. 작업이 끝났으면 아래로 이동해 줘.\n\n[Country Code / Country Name 대응표]\n{countryGuide}\n\n[반드시 사용할 언어코드 및 순서]\n{codeList}\n`;
 
