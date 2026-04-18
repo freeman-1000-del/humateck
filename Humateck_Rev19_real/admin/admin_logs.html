@@ -81,7 +81,7 @@
 
         body.innerHTML = rows.map(r => `
           <tr>
-            <td>${(r.created_at || '').replace('T', ' ').slice(0, 19)}</td>
+            <td>${r.created_at ? new Date(r.created_at).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }) : ''}</td>
             <td>${r.source || ''}</td>
             <td>${r.page_name || ''}</td>
             <td>${r.event_name || ''}</td>
