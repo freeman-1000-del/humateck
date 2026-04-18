@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<!--
+============================================================
+⚠️ 절대 금지 지침 / 다음 담당자 필독
+------------------------------------------------------------
+이 시스템은 배송 시스템이다. 번역기, 검수기, 품질판단기, 거부기가 아니다.
+사용자 명시 승인 없이는 아래 항목을 절대 추가, 복구, 변경하지 말 것.
+
+[절대 금지]
+1) 검수 로직 추가 금지
+2) 자체 판단 로직 추가 금지
+3) 자체 거부 / 반려 / 차단 / 보류 / 감점 / 제외 로직 추가 금지
+4) 형식검사 실패 문구, 번역문 점검 문구, 자체 오류판정 문구 추가 금지
+5) 불필요한 오류 표시 로직 추가 금지
+6) defaultLanguage 비교 후 1개 빼기 같은 임의 제외 로직 금지
+7) 직등록, 외부 번역문 즉시등록, 별도 검수탭 복구 금지
+8) 유튜브/구글 응답 순화, 해석, 대체 문구 출력 금지
+9) 협의되지 않은 문구, 구조, 위치, 버튼명, 흐름 변경 금지
+10) 속도를 죽이는 순차전송, 과도한 검증, 파싱 강화 금지
+11) Country Code 개수 기준 표시 원칙 임의 변경 금지
+12) "사용자를 위해 고쳤다"는 이유로 구조를 뜯어고치는 행위 금지
+
+[허용 범위]
+- 배송에 꼭 필요한 최소 연결
+- 크롬 팝업 승인 연결
+- 유튜브/구글이 실제로 돌려준 원문 오류 표시
+- 사용자가 명시 승인한 수정만 반영
+
+한 줄 원칙:
+우리는 배송만 한다. 검수하지 않는다. 자체 판단하지 않는다. 거부하지 않는다. 불필요한 오류를 만들지 않는다.
+============================================================
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Humateck Order</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#0b1929; color:#fff; font-family:'Segoe UI',sans-serif; font-size:13px; }
+.header { background:#13294d; padding:8px 16px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #2a3f5f; }
+.logo-img { height:18px; width:auto; }
+.version { color:#dbe6f4; font-size:12px; font-weight:700; margin-top:4px; line-height:1.5; }
+.oauth-header-btn { background:#e67e22; color:#fff; border:none; padding:6px 12px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; transition:all 0.2s; white-space:nowrap; }
+.oauth-header-btn:hover { opacity:0.85; }
+.oauth-header-btn:active { transform:scale(0.95); }
+.header-link-btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:8px 10px;border-radius:999px;text-decoration:none;font-size:11px;
+  font-weight:900;white-space:nowrap;box-shadow:0 6px 14px rgba(0,0,0,.16);
+}
+.header-link-btn.guide{background:#f5c518;color:#0b1929;}
+.header-link-btn.faq{background:#1e90ff;color:#fff;}
+.header-link-btn.notice{background:#2a3f5f;color:#fff;}
+.order-main-title{
+  background:#0d1f35;border-bottom:1px solid #2a3f5f;padding:12px 16px;
+  color:#eef4fb;font-size:20px;font-weight:900;line-height:1.35;
+}
+.plan-btns{
+  display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;
+}
+.plan-btn.plan-wide{grid-column:1 / -1;}
+.plan-btn{
+  width:100%;padding:10px 8px;border-radius:8px;border:2px solid #2a3f5f;
+  background:#13294d;color:#eef4fb;cursor:pointer;font-size:11px;font-weight:800;
+  transition:all .2s;text-align:center;
+}
+.plan-btn .plan-label{display:block;font-size:12px;font-weight:900;line-height:1.35;}
+.plan-btn .plan-price{display:block;font-size:10px;font-weight:800;line-height:1.45;margin-top:4px;color:#f5c518;}
+.plan-btn:active { transform:scale(0.95); opacity:0.8; }
+.plan-btn.active { border-color:#c8a84b; color:#fff; background:#1a2e4a; }
+.plan-btn.active .plan-price{color:#ffe38a;}
+.plan-btn.locked-off{
+  opacity:.35;border-color:#223754;color:#6e87a3;background:#0f223d;pointer-events:none;
+}
+
+
+.btn { width:100%; padding:10px; border-radius:8px; border:none; cursor:pointer; font-size:12px; font-weight:700; margin-bottom:8px; transition:all 0.2s; }
+.btn:hover { opacity:0.85; }
+.btn:active { transform:scale(0.95) !important; opacity:0.8; }
+.btn-gold   { background:#c8a84b; color:#0b1929; }
+.btn-gray   { background:#2a3f5f; color:#fff; }
+.btn-green  { background:#27ae60; color:#fff; }
+.btn-blue   { background:#1e90ff; color:#fff; }
+.btn-copied { background:#27ae60 !important; color:#fff !important; transform:scale(0.97); }
+@keyframes flash { 0%{opacity:1} 50%{opacity:0.5} 100%{opacity:1} }
+.btn-flash { animation:flash 0.3s ease; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+.blink-warn { color:#f39c12; font-size:11px; font-weight:700; line-height:1.6; margin-top:8px; padding:8px 10px; background:#1a2e4a; border-radius:6px; border:1px solid #f39c12; animation:blink 1.5s ease-in-out infinite; }
+.status { padding:8px 12px; border-radius:6px; font-size:12px; margin-bottom:8px; }
+.status-ok   { background:#1a4a2e; color:#2ecc71; }
+.status-err  { background:#4a1a1a; color:#e74c3c; }
+.status-info { background:#1a2e4a; color:#5dade2; }
+input, textarea { width:100%; padding:8px 12px; border-radius:6px; border:1px solid #2a3f5f; background:#13294d; color:#fff; font-size:12px; margin-bottom:8px; font-family:'Segoe UI',sans-serif; }
+textarea { resize:none; }
+.step { background:#13294d; border-radius:8px; padding:9px 12px; margin-bottom:8px; border-left:3px solid #c8a84b; }
+.step-num { color:#f5c518; font-weight:900; font-size:12px; }
+.step-txt { color:#eef4fb; font-size:13px; font-weight:800; margin-top:3px; line-height:1.45; }
+.plan-btns { display:flex; gap:6px; margin-bottom:8px; }
+.plan-btn { flex:1; padding:8px 4px; border-radius:6px; border:2px solid #2a3f5f; background:#13294d; color:#8aa0b8; cursor:pointer; font-size:11px; font-weight:700; transition:all 0.2s; }
+.plan-btn:active { transform:scale(0.95); opacity:0.8; }
+.plan-btn.active { border-color:#c8a84b; color:#c8a84b; background:#1a2e4a; }
+.progress-bar { width:100%; height:6px; background:#1a2e4a; border-radius:3px; margin:8px 0; overflow:hidden; }
+.progress-fill { height:100%; background:#c8a84b; border-radius:3px; transition:width 0.3s; }
+.lang-count { background:#c8a84b; color:#0b1929; border-radius:20px; padding:2px 8px; font-size:11px; font-weight:700; }
+.tab-content { display:none; padding:12px 16px; }
+.tab-content.active { display:block; }
+.dadal-box { background:#0f2040; border-radius:8px; padding:10px 12px; margin-bottom:8px; border:1px solid #2a3f5f; }
+.dadal-title { color:#c8a84b; font-size:11px; font-weight:700; margin-bottom:8px; }
+.dadal-btn { width:100%; padding:8px 10px; border-radius:6px; border:none; cursor:pointer; font-size:11px; font-weight:600; margin-bottom:6px; text-align:left; background:#1a3a5c; color:#8aa0b8; transition:all 0.2s; line-height:1.5; }
+.dadal-btn:hover { background:#2a4f7c; color:#fff; }
+.dadal-btn:active { transform:scale(0.97); opacity:0.8; }
+.dadal-btn.btn-copied { background:#27ae60 !important; color:#fff !important; }
+.dadal-num { color:#c8a84b; margin-right:4px; font-weight:900; }
+.link-btn { width:100%; padding:9px; border-radius:6px; border:1px solid #2a3f5f; background:#13294d; color:#5dade2; cursor:pointer; font-size:11px; font-weight:700; margin-bottom:6px; text-align:left; transition:all 0.2s; }
+.link-btn:hover { background:#1a3a5c; color:#fff; }
+.link-btn:active { transform:scale(0.97); opacity:0.8; }
+.member-card { background:#13294d; border-radius:8px; padding:10px 12px; margin-bottom:8px; border:1px solid #2a3f5f; }
+.member-email { color:#c8a84b; font-size:12px; font-weight:700; }
+.member-info { color:#8aa0b8; font-size:11px; margin-top:4px; }
+.badge { display:inline-block; padding:2px 8px; border-radius:20px; font-size:10px; font-weight:700; }
+.badge-active { background:#27ae60; color:#fff; }
+.badge-inactive { background:#555; color:#ccc; }
+.badge-trial { background:#e67e22; color:#fff; }
+.stat-row { display:flex; gap:8px; margin-bottom:12px; }
+.stat { flex:1; background:#13294d; border-radius:8px; padding:10px; text-align:center; }
+.stat-num { font-size:22px; font-weight:900; color:#c8a84b; }
+.stat-label { font-size:10px; color:#8aa0b8; margin-top:2px; }
+.guide-box { background:#0f2040; border-radius:8px; padding:10px 12px; margin-bottom:10px; border-left:3px solid #f5c518; }
+.guide-box-title { color:#f5c518; font-size:11px; font-weight:700; margin-bottom:7px; }
+.guide-item { color:#ccc; font-size:11px; line-height:1.7; margin-bottom:5px; }
+.guide-item span { color:#f5c518; font-weight:700; }
+.format-hint { background:#0f2040; border-radius:6px; padding:7px 10px; margin-bottom:6px; border:1px solid #2a3f5f; font-size:10px; color:#8aa0b8; line-height:1.6; }
+.result-section { background:#0d1f35; border-radius:8px; padding:10px 12px; margin-top:6px; border:1px solid #1a2e4a; }
+.result-title { color:#c8a84b; font-size:11px; font-weight:700; margin-bottom:6px; }
+
+.oauth-top-warn { background:#1a2e4a; border:1px solid #f39c12; border-radius:8px; padding:10px 12px; margin-bottom:10px; animation:blink 1.5s ease-in-out infinite; }
+.oauth-top-warn .warn-title { color:#ffd166; font-size:11px; font-weight:900; line-height:1.6; margin-bottom:8px; }
+.oauth-top-warn .warn-sub { color:#d9e2ef; font-size:11px; line-height:1.6; margin-bottom:8px; }
+.oauth-inline-btn { width:100%; padding:9px 10px; border:none; border-radius:6px; background:#e67e22; color:#fff; font-size:12px; font-weight:800; cursor:pointer; }
+.oauth-inline-btn:hover { opacity:0.88; }
+.oauth-inline-btn:active { transform:scale(0.97); opacity:0.82; }
+.oauth-register-box { background:#1a2e4a; border:1px solid #f39c12; border-radius:8px; padding:10px 12px; margin-top:8px; margin-bottom:8px; }
+.oauth-register-msg { color:#ffd166; font-size:11px; font-weight:900; line-height:1.7; margin-bottom:8px; }
+.oauth-register-sub { color:#d9e2ef; font-size:11px; line-height:1.6; margin-bottom:8px; }
+.hidden { display:none !important; }
+
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <img src="FINAL_LOGO01.png" class="logo-img" alt="Humateck">
+    <div class="version">YouTube Multilingual Subtitle Registration</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;">
+    <a class="header-link-btn guide" href="https://www.humateck.com/index.html" target="_blank" rel="noopener">구글OAuth 중요설정 길잡이</a>
+    <a class="header-link-btn faq" href="https://www.humateck.com/index.html#csPanel" target="_blank" rel="noopener">FAQ</a>
+    <a class="header-link-btn notice" href="https://www.humateck.com/index.html" target="_blank" rel="noopener">고객 공지사항</a>
+  </div>
+</div>
+<div id="statusMsg" style="padding:0 16px;margin-top:8px;"></div>
+<div class="tab" id="tab-members">회원</div>
+  <div class="tab" id="tab-payment">결제</div>
+  <div class="tab" id="tab-trial">무료체험</div>
+</div>
+
+<div class="order-main-title">AI 챗번역</div>
+<div id="statusMsg" style="padding:0 16px;margin-top:8px;"></div>
+
+<!-- ═══════════════════════════════════════ 번역 탭 ═══ -->
+<div class="tab-content active" id="content-translate">
+
+  
+<div class="step"><div class="step-num">STEP 1</div><div class="step-txt">번역 국가수를 선택하세요.</div></div>
+  <div class="plan-btns">
+    <button class="plan-btn plan-wide" id="planFree">
+      <span class="plan-label">무료</span>
+      <span class="plan-price">7일 체험</span>
+    </button>
+    <button class="plan-btn" id="plan30">
+      <span class="plan-label">30개국</span>
+      <span class="plan-price">16,500원 / 월</span>
+    </button>
+    <button class="plan-btn active" id="plan50">
+      <span class="plan-label">50개국</span>
+      <span class="plan-price">25,000원 / 월</span>
+    </button>
+    <button class="plan-btn" id="plan70">
+      <span class="plan-label">70개국</span>
+      <span class="plan-price">32,500원 / 월</span>
+    </button>
+    <button class="plan-btn" id="plan70annual">
+      <span class="plan-label">70개국 연간</span>
+      <span class="plan-price">292,500원 / 년</span>
+    </button>
+  </div>
+
+
+  <div id="oauthTopWarn" class="oauth-top-warn">
+    <div class="warn-title">⚠️ 먼저 구글 팝업 승인을 받아 주세요. 입력을 다 끝내고 막판에 멈추면 매우 불편합니다.</div>
+    <div class="warn-sub">영상 주소를 넣기 전에 먼저 승인해 두시면 마지막 등록 단계에서 헛수고가 생기지 않습니다.</div>
+    <button class="oauth-inline-btn" id="btnOAuthInlineTop">구글 OAuth 승인 받기</button>
+  </div>
+
+  <div class="step"><div class="step-num">STEP 2</div><div class="step-txt">YouTube URL 입력 (영상 주소 복붙)</div></div>
+  <input type="text" id="inputUrl" placeholder="https://www.youtube.com/watch?v=...">
+  <div id="extractedId" style="color:#4a6a8a;font-size:11px;margin-bottom:8px;"></div>
+
+  <div class="step"><div class="step-num">STEP 3</div><div class="step-txt">제목 & 설명문 입력 (복붙)</div></div>
+  <input type="text" id="inputTitle" placeholder="영상 제목을 여기에 붙여넣기">
+  <textarea id="inputDesc" rows="3" placeholder="영상 설명문을 여기에 붙여넣기..."></textarea>
+
+  <div class="step"><div class="step-num">STEP 4</div><div class="step-txt">Gemini 번역 의뢰문 생성 & 복사</div></div>
+  <button class="btn btn-gold" id="btnGenerate">📋 Generate Translation Request</button>
+  <textarea id="generatedRequest" rows="3" style="font-size:10px;color:#8aa0b8;" placeholder="번역 의뢰문이 여기에 생성됩니다..." readonly></textarea>
+  <button class="btn btn-blue" id="btnCopy">📋 Copy to Clipboard</button>
+  <button class="btn btn-gray" id="btnGemini">✨ Open Gemini</button>
+
+  <div class="step"><div class="step-num">STEP 5</div><div class="step-txt">Gemini에 순서대로 복사 붙여넣기</div></div>
+  <div class="dadal-box">
+    <div class="dadal-title">📌 복사 붙여넣기 (Gemini 품질 향상)</div>
+    <button class="dadal-btn" id="dadal1"><span class="dadal-num">1.</span>타언어 혼입, 문맥의 부자연스러움, 기타 문제를 자동으로 꼼꼼이 검수해 줘.</button>
+    <button class="dadal-btn" id="dadal2"><span class="dadal-num">2.</span>Number: 와 Country Name: 줄만 삭제해 줘. 중요: 나머지 형식은 지금처럼 그대로 유지할 것(Country Code:, Title:, Description:)</button>
+    <button class="dadal-btn" id="dadal3"><span class="dadal-num">3.</span>타언어 혼입, 문맥의 부자연스러움, 기타 문제를 한 번 더 검수해 줘. 형식은 그대로 유지해 줘.</button>
+    <button class="dadal-btn" id="dadal4"><span class="dadal-num">4.</span>국가명이 삭제되었는지 다시 검수하고, 타언어 혼입, 문맥의 부자연스러움, 기타 문제를 다시 한 번 꼼꼼이 검수해 줘.</button>
+    <button class="dadal-btn" id="dadal5"><span class="dadal-num">5.</span>number를 붙여 전체 번역 코드수를 집계해 봐.</button>
+    <button class="dadal-btn" id="dadal6"><span class="dadal-num">6.</span>전체 숫자가 맞으면 number를 모두 지우고, 타언어 혼입, 문맥의 부자연스러움, 기타 문제를 마지막으로 꼼꼼이 검수해 줘.</button>
+    <button class="dadal-btn" id="dadal7"><span class="dadal-num">7.</span>아래로 이동해 줘.</button>
+    <div class="blink-warn">
+      ⚠️ 반드시 7번 명령('아래로 이동해 줘.') 위 마지막 번역문 끝의
+      <span style="background:#2a4f7c;padding:1px 6px;border-radius:4px;font-size:12px;font-weight:900;">⧉</span>
+      (대답 복사) 버튼을 누르신 후 아래에 붙여넣기 하세요!
+    </div>
+  </div>
+
+  <div class="step"><div class="step-num">STEP 6</div><div class="step-txt">번역 결과 붙여넣기</div></div>
+  <textarea id="translationResultMain" rows="4" placeholder="Gemini 최종 번역 결과를 여기에 붙여넣기..."></textarea>
+
+  <button class="btn btn-green" id="btnGotoRegister" style="font-size:13px;font-weight:900;">✅ 확인 및 유튜브 등록하기</button>
+
+  <div class="oauth-register-box hidden" id="registerOAuthBox">
+    <div class="oauth-register-msg">아래 절차를 먼저 진행하시기 바랍니다.</div>
+    <div class="oauth-register-sub">1. 구글OAuth승인을 받으세요<br>2. 영상 주소, 제목, 설명문을 채워 주세요.</div>
+    <button class="oauth-inline-btn" id="btnOAuthInlineRegister">OAuth 승인 받기</button>
+  </div>
+
+  <!-- 번역 탭 등록 결과 (인라인) -->
+  <div class="result-section" id="translateResultSection" style="display:none;">
+    <div class="result-title">📊 등록 결과</div>
+    <div id="translateProgressBox">
+      <div class="progress-bar"><div class="progress-fill" id="translateProgressFill" style="width:0%"></div></div>
+      <div style="text-align:center;color:#c8a84b;font-size:11px;margin-top:4px;" id="translateProgressTxt">등록 중...</div>
+    </div>
+    <textarea id="translateDeliveryLog" rows="6" readonly style="margin-top:8px;font-size:11px;color:#8aa0b8;" placeholder="등록 결과가 여기에 표시됩니다..."></textarea>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════ 회원 탭 ═══ -->
+<div class="tab-content" id="content-members">
+  <div style="color:#c8a84b;font-size:13px;font-weight:700;margin-bottom:12px;">👥 회원 관리</div>
+  <div class="stat-row">
+    <div class="stat"><div class="stat-num" id="statTotal">-</div><div class="stat-label">전체 회원</div></div>
+    <div class="stat"><div class="stat-num" id="statActive">-</div><div class="stat-label">활성 구독</div></div>
+    <div class="stat"><div class="stat-num" id="statInactive">-</div><div class="stat-label">미구독</div></div>
+  </div>
+  <button class="btn btn-blue" id="btnLoadMembers">🔄 회원 목록 불러오기</button>
+  <div id="memberList"></div>
+  <button class="link-btn" id="linkSupabase">🔗 Supabase 대시보드 열기</button>
+</div>
+
+<!-- ═══════════════════════════════════════ 결제 탭 ═══ -->
+<div class="tab-content" id="content-payment">
+  <div style="color:#c8a84b;font-size:13px;font-weight:700;margin-bottom:12px;">💳 결제 관리</div>
+  <div style="background:#13294d;border-radius:10px;padding:24px;text-align:center;margin-bottom:12px;">
+    <div style="font-size:32px;margin-bottom:8px;">🚧</div>
+    <div style="color:#c8a84b;font-weight:700;margin-bottom:6px;">결제 시스템 준비 중</div>
+    <div style="color:#8aa0b8;font-size:11px;line-height:1.6;">Paddle 결제 시스템 연동 예정입니다.<br>서비스 오픈 시 업데이트됩니다.</div>
+  </div>
+  <button class="link-btn" id="linkPaddle">🔗 Paddle 대시보드 열기</button>
+</div>
+
+<!-- ═══════════════════════════════════════ 무료체험 탭 ═══ -->
+<div class="tab-content" id="content-trial">
+  <div style="color:#c8a84b;font-size:13px;font-weight:700;margin-bottom:12px;">🎁 무료체험 관리 (7일)</div>
+  <div class="stat-row">
+    <div class="stat"><div class="stat-num" id="statTrialActive">-</div><div class="stat-label">체험 중</div></div>
+    <div class="stat"><div class="stat-num" id="statTrialExpired">-</div><div class="stat-label">만료</div></div>
+    <div class="stat"><div class="stat-num" id="statTrialConverted">-</div><div class="stat-label">전환</div></div>
+  </div>
+  <button class="btn btn-blue" id="btnLoadTrials">🔄 체험 현황 불러오기</button>
+  <div id="trialList"></div>
+</div>
+
+<div style="padding:8px 16px;text-align:center;border-top:1px solid #1a2e4a;margin-top:8px;">
+  <a href="https://humateck.com" target="_blank" style="color:#4a6a8a;font-size:10px;">humateck.com</a>
+</div>
+
+
+
+
+<script src="sidepanel_order.js"></script>
+</body>
+</html>
