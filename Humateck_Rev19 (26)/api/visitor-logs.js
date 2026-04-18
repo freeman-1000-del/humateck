@@ -1,6 +1,6 @@
 export default async function handler(req, res) {
-  const SUPABASE_URL = process.env.SUPABASE_URL;
-  const SUPABASE_SERVICE_ROLE = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const SUPABASE_URL = 'https://ajvytoyblrtecxuazqm.supabase.co';
+    const SUPABASE_ANON = 'sb_publishable_cmn9eVnnvaAjXVJWa6bRQA_qrb1xglQ';
 
   if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE) {
     return res.status(500).json({ error: 'Missing Supabase env vars' });
