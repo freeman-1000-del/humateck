@@ -18,19 +18,21 @@
     th,td { padding:10px 12px; border-bottom:1px solid rgba(255,255,255,.08); text-align:left; font-size:13px; white-space:nowrap; }
     th { color:#f5c518; }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
   <div class="wrap">
     <div class="title">Humateck 관리자 로그</div>
+
     <div class="card">
       <div class="muted">홈페이지와 크롬의 외부 방문자 유입, 무료체험 클릭, 플랜 클릭, 주문화면 구경, 로그인/회원가입 클릭 로그를 보는 기본 화면입니다.</div>
       <button class="btn" id="loadLogsBtn" type="button">로그 불러오기</button>
     </div>
+
     <div class="card">
       <div class="muted">상태</div>
       <div class="mono" id="statusBox">대기 중</div>
     </div>
+
     <div class="card table-wrap">
       <table>
         <thead>
@@ -50,36 +52,34 @@
   </div>
 
   <script>
-    const SUPABASE_URL = 'https://ajvytoyblrtecxuazqm.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_cmn9eVnnvaAjXVJWa6bRQA_qrb1xglQ';
-    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
     async function loadLogs() {
       const statusBox = document.getElementById('statusBox');
       const body = document.getElementById('logBody');
+
       statusBox.textContent = '불러오는 중...';
       body.innerHTML = '<tr><td colspan="5">불러오는 중...</td></tr>';
 
       try {
-        const { data, error } = await sb
-          .from('visitor_logs')
-          .select('source,page_name,event_name,detail,created_at')
-          .order('created_at', { ascending: false })
-          .limit(100);
+        const res = await fetch('/api/visitor-logs');
+        const text = await res.text();
 
-        if (error) {
-          statusBox.textContent = '오류: ' + (error.message || JSON.stringify(error));
-          body.innerHTML = '<tr><td colspan="5">오류 발생</td></tr>';
+        statusBox.textContent = `HTTP ${res.status} ${res.statusText}`;
+
+        let rows = [];
+        try {
+          rows = JSON.parse(text);
+        } catch (e) {
+          body.innerHTML = '<tr><td colspan="5">응답 파싱 실패</td></tr>';
+          statusBox.textContent += '\n' + text;
           return;
         }
 
-        statusBox.textContent = '정상 응답';
-        if (!Array.isArray(data) || !data.length) {
+        if (!Array.isArray(rows) || !rows.length) {
           body.innerHTML = '<tr><td colspan="5">로그 없음</td></tr>';
           return;
         }
 
-        body.innerHTML = data.map(r => `
+        body.innerHTML = rows.map(r => `
           <tr>
             <td>${(r.created_at || '').replace('T', ' ').slice(0, 19)}</td>
             <td>${r.source || ''}</td>
@@ -90,7 +90,7 @@
         `).join('');
       } catch (e) {
         statusBox.textContent = '예외: ' + String(e);
-        body.innerHTML = '<tr><td colspan="5">예외 발생</td></tr>';
+        body.innerHTML = '<tr><td colspan="5">로그 불러오기 실패</td></tr>';
       }
     }
 
