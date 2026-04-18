@@ -1,7 +1,4 @@
 <!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Humateck | 첫페이지</title><link rel="stylesheet" href="style.css">
-<script>if(!sessionStorage.getItem("ht_admin"))location.href="coming_soon.html";</script>
-
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script></head><body><div class="topbar"><div class="topbar-inner" style="width:100%;box-sizing:border-box;"><img src="FINAL_LOGO01.png" alt="Humateck 로고" class="brand-logo-image"><div class="topbar-auth" id="topbarAuth" style="display:flex;gap:8px;margin-left:auto;"><button class="btn btn-light btn-sm" id="loginModalBtn">로그인</button>
 <div class="user-icon-wrap hidden" id="userIconWrap">
   <button class="user-avatar-btn" id="userAvatarBtn">
@@ -18,7 +15,7 @@
     <button class="user-dropdown-item" id="goOrderFromIcon">📋 주문 페이지</button>
     <button class="user-dropdown-item" id="logoutBtn">🚪 로그아웃</button>
   </div>
-</div><button class="btn btn-primary btn-sm" id="signupModalBtn">가입하기</button></div></div></div>
+</div><button class="btn btn-primary btn-sm" id="signupModalBtn" type="button" disabled style="opacity:.55;cursor:not-allowed;">구독회원 가입 준비중</button></div></div></div>
 <div class="page-wrap">
 <section class="card"><div class="hero-copy"><div class="eyebrow">번역부터 등록까지 빠르고 편한 전세계 유튜브 크리에이터들의 번역노동 해방 솔루션</div><div class="headline">등록시간 1초, 초고속 글로벌 고품질자막 등록서비스(유튜브)</div><div class="headline-sub">번역은 고객 맞춤, 배송은 휴마텍이.</div></div><div style="text-align:center;margin-top:18px;"><img src="hero_image.jpg" alt="대표 배너 이미지" style="width:35%;max-width:600px;border-radius:12px;"></div></section><br>
 <div style="text-align:center;font-size:18px;font-weight:700;color:#cdd8e8;margin:18px 0 8px;"><span style="color:#f5c518;font-weight:600;">이제는 번역품질을 주문자가 직접 결정하는 시대입니다.</span><br><br></div>
@@ -29,7 +26,7 @@
 <div class="muted">유튜브 API를 사용 (할당량 범위 내 무료)합니다.</div>
 <div class="muted">고객님은 맞춤번역을, Humateck은 1초 등록을 책임집니다.</div>
 </div>
-<div style="margin-top:16px; display:flex; justify-content:center; gap:12px; flex-wrap:wrap;" >
+<div style="margin-top:16px;" >
 <a class="btn btn-primary" href="plans.html?mode=chat">번역 플랜 보러 가기</a>
 <a class="btn btn-primary" href="trial_choice.html">무료체험 하기</a>
 <a class="btn btn-primary" href="order.html?subscriber=1&count=70&plan=monthly70&mode=chat">기존 구독회원 바로가기</a></div></article></section>
@@ -291,7 +288,7 @@ document.querySelectorAll('[data-panel]').forEach(function(btn) {
   const openModal  = () => signupModal.classList.remove('hidden');
   const closeModal = () => signupModal.classList.add('hidden');
 
-  signupBtn?.addEventListener('click', openModal);
+  signupBtn?.addEventListener('click', (e) => { e.preventDefault(); alert('구독회원 가입은 회원/결제 연동 점검 중입니다.'); });
   signupClose?.addEventListener('click', closeModal);
   cancelBtn?.addEventListener('click', closeModal);
   signupModal?.addEventListener('click', e => { if(e.target===signupModal) closeModal(); });
