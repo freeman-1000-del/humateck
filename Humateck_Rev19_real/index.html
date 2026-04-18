@@ -27,9 +27,9 @@
 <div class="muted">고객님은 맞춤번역을, Humateck은 1초 등록을 책임집니다.</div>
 </div>
 <div style="margin-top:16px;display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;">
-<a class="btn btn-primary" href="plans.html?mode=chat">번역 플랜 보러 가기</a>
-<a class="btn btn-primary" href="trial_choice.html">무료체험 하기</a>
-<a class="btn btn-primary" href="order.html?subscriber=1&count=70&plan=monthly70&mode=chat">기존 구독회원 바로가기</a></div></article></section>
+<a class="btn btn-primary" id="btnPlanCenter" href="plans.html?mode=chat">번역 플랜 보러 가기</a>
+<a class="btn btn-primary" id="btnTrialCenter" href="trial_choice.html">무료체험 하기</a>
+<a class="btn btn-primary" id="btnSubscriberCenter" href="order.html?subscriber=1&count=70&plan=monthly70&mode=chat">기존 구독회원 바로가기</a></div></article></section>
 
 <div style="text-align:center;padding:12px 0;"><a href="terms_ko.html" style="color:#cdd8e8;font-size:13px;font-weight:700;margin:0 16px;text-decoration:none;border-bottom:1px solid #c8a84b;padding-bottom:2px;">📄 이용약관</a><a href="privacy_ko.html" style="color:#cdd8e8;font-size:13px;font-weight:700;margin:0 16px;text-decoration:none;border-bottom:1px solid #c8a84b;padding-bottom:2px;">🔒 개인정보처리방침</a><a href="refund_ko.html" style="color:#cdd8e8;font-size:13px;font-weight:700;margin:0 16px;text-decoration:none;border-bottom:1px solid #c8a84b;padding-bottom:2px;">💰 환불정책</a></div>
 <section class="bottom-trigger-wrap" style="justify-content:flex-end;"><div class="settings-dropdown-wrap"><button class="btn bottom-trigger settings-toggle-btn" id="settingsToggleBtn">⚙ 설정</button><div class="settings-dropdown hidden" id="settingsDropdown"><button class="btn bottom-trigger" data-panel="servicePanel">서비스</button><button class="btn bottom-trigger" data-panel="pricePanel">구독 요금</button><button class="btn bottom-trigger" data-panel="accountPanel">구독자 계정</button><button class="btn bottom-trigger" data-panel="cancelPanel">구독취소</button><button class="btn bottom-trigger" data-panel="csPanel">고객센터</button></div></div></section>
@@ -334,4 +334,5 @@ document.querySelectorAll('[data-panel]').forEach(function(btn) {
 </script>
 
 
+<script src="index_log.js"></script>
 </body>
