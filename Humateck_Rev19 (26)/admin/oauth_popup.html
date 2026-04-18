@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<!--
+============================================================
+⚠️ 절대 금지 지침 / 다음 담당자 필독
+------------------------------------------------------------
+이 시스템은 배송 시스템이다. 번역기, 검수기, 품질판단기, 거부기가 아니다.
+사용자 명시 승인 없이는 아래 항목을 절대 추가, 복구, 변경하지 말 것.
+
+[절대 금지]
+1) 검수 로직 추가 금지
+2) 자체 판단 로직 추가 금지
+3) 자체 거부 / 반려 / 차단 / 보류 / 감점 / 제외 로직 추가 금지
+4) 형식검사 실패 문구, 번역문 점검 문구, 자체 오류판정 문구 추가 금지
+5) 불필요한 오류 표시 로직 추가 금지
+6) defaultLanguage 비교 후 1개 빼기 같은 임의 제외 로직 금지
+7) 직등록, 외부 번역문 즉시등록, 별도 검수탭 복구 금지
+8) 유튜브/구글 응답 순화, 해석, 대체 문구 출력 금지
+9) 협의되지 않은 문구, 구조, 위치, 버튼명, 흐름 변경 금지
+10) 속도를 죽이는 순차전송, 과도한 검증, 파싱 강화 금지
+11) Country Code 개수 기준 표시 원칙 임의 변경 금지
+12) "사용자를 위해 고쳤다"는 이유로 구조를 뜯어고치는 행위 금지
+
+[허용 범위]
+- 배송에 꼭 필요한 최소 연결
+- 크롬 팝업 승인 연결
+- 유튜브/구글이 실제로 돌려준 원문 오류 표시
+- 사용자가 명시 승인한 수정만 반영
+
+한 줄 원칙:
+우리는 배송만 한다. 검수하지 않는다. 자체 판단하지 않는다. 거부하지 않는다. 불필요한 오류를 만들지 않는다.
+============================================================
+-->
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Humateck - Google OAuth 인증</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#0b1929; color:#fff; font-family:'Segoe UI',sans-serif; font-size:13px; padding:20px; min-height:100vh; }
+.header { text-align:center; margin-bottom:16px; padding-bottom:14px; border-bottom:1px solid #2a3f5f; }
+.logo-img { height:28px; width:auto; margin-bottom:6px; }
+.title { color:#c8a84b; font-size:15px; font-weight:900; margin-bottom:3px; }
+.subtitle { color:#4a6a8a; font-size:11px; }
+.warn-box { background:#1a2e4a; border:1px solid #e67e22; border-radius:6px; padding:10px 12px; margin-bottom:12px; color:#e67e22; font-size:11px; line-height:1.6; }
+.guide-toggle-btn { width:100%; padding:10px 14px; border-radius:8px; border:2px solid #c8a84b; background:#13294d; color:#c8a84b; cursor:pointer; font-size:12px; font-weight:700; margin-bottom:10px; text-align:left; transition:all 0.2s; display:flex; justify-content:space-between; align-items:center; }
+.guide-toggle-btn:hover { background:#1a2e4a; }
+.guide-toggle-btn:active { transform:scale(0.98); }
+.guide-toggle-btn .arrow { transition:transform 0.3s; display:inline-block; }
+.guide-toggle-btn.open .arrow { transform:rotate(180deg); }
+.guide-content { display:none; margin-bottom:12px; }
+.guide-content.open { display:block; }
+.guide-intro { background:#13294d; border-radius:8px; padding:12px; margin-bottom:10px; color:#ccc; font-size:11px; line-height:1.7; }
+.guide-intro strong { color:#c8a84b; }
+.guide-highlight { color:#f5c518; font-weight:700; }
+.guide-step { background:#0f2040; border-radius:8px; padding:12px 14px; margin-bottom:8px; border-left:3px solid #1e90ff; }
+.guide-step h3 { color:#1e90ff; font-size:12px; font-weight:700; margin-bottom:6px; }
+.guide-step p { color:#ccc; font-size:11px; line-height:1.7; margin-bottom:4px; }
+.guide-step ul { color:#ccc; font-size:11px; line-height:1.7; margin-left:16px; }
+.guide-step ul li { margin-bottom:2px; }
+.guide-link-btn { display:inline-block; padding:6px 12px; border-radius:6px; background:#1e90ff; color:#fff; font-size:11px; font-weight:700; cursor:pointer; border:none; margin-top:6px; transition:all 0.2s; }
+.guide-link-btn:hover { opacity:0.85; }
+.guide-link-btn:active { transform:scale(0.97); }
+.copy-box { background:#13294d; border:1px solid #c8a84b; border-radius:6px; padding:8px 12px; font-size:11px; color:#c8a84b; font-weight:700; margin:8px 0; word-break:break-all; }
+.divider { border:none; border-top:1px solid #2a3f5f; margin:14px 0; }
+.input-label { color:#8aa0b8; font-size:11px; margin-bottom:4px; margin-top:10px; }
+input { width:100%; padding:9px 12px; border-radius:6px; border:1px solid #2a3f5f; background:#13294d; color:#fff; font-size:12px; margin-bottom:10px; font-family:'Segoe UI',sans-serif; }
+input:focus { outline:none; border-color:#c8a84b; }
+.btn { width:100%; padding:11px; border-radius:8px; border:none; cursor:pointer; font-size:13px; font-weight:700; margin-bottom:8px; transition:all 0.2s; }
+.btn:active { transform:scale(0.95); opacity:0.8; }
+.btn-gold { background:#c8a84b; color:#0b1929; }
+.btn-blue { background:#1e90ff; color:#fff; }
+.btn-gray { background:#2a3f5f; color:#fff; }
+.status { padding:10px 12px; border-radius:6px; font-size:12px; margin-bottom:10px; line-height:1.6; }
+.status-ok   { background:#1a4a2e; color:#2ecc71; border:1px solid #27ae60; }
+.status-err  { background:#4a1a1a; color:#e74c3c; border:1px solid #e74c3c; }
+.status-info { background:#1a2e4a; color:#5dade2; border:1px solid #1e90ff; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <img src="FINAL_LOGO01.png" class="logo-img" alt="Humateck">
+  <div class="title">🔐 Google OAuth 인증</div>
+  <div class="subtitle">채널당 1회 설정 | 사용 시마다 인증</div>
+</div>
+
+<div id="statusMsg"></div>
+
+<div class="warn-box">
+  ⚠️ OAuth Client ID는 고객님이 직접 관리합니다.<br>
+  인증 토큰은 이 세션 메모리에만 보관되며<br>
+  어디에도 저장되거나 전송되지 않습니다.
+</div>
+
+<!-- 중요설정 길잡이 -->
+<button class="guide-toggle-btn" id="guideToggleBtn">
+  <span>📌 중요설정 길잡이 (처음 사용자 필독)</span>
+  <span class="arrow">▼</span>
+</button>
+
+<div class="guide-content" id="guideContent">
+
+  <div class="guide-intro">
+    처음에는 조금 낯설 수 있습니다.<br>
+    하지만 이 설정은 <strong>처음 한 번만</strong> 하시면 됩니다.<br><br>
+    쉽게 말하면, <span class="guide-highlight">내 유튜브 채널에 자막을 등록해도 좋다고 구글에 허락받는 연결 과정</span>입니다.<br>
+    너무 어렵게 생각하지 마세요. 아래 순서대로 천천히 따라 하시면 됩니다.
+  </div>
+
+  <div class="guide-step">
+    <h3>1단계. Google Cloud로 이동해 주세요</h3>
+    <p>먼저 아래 버튼으로 들어가 주세요.</p>
+    <button class="guide-link-btn" id="linkStep1">Google Cloud로 이동</button>
+    <p style="margin-top:6px;">들어가시면 왼쪽에 여러 메뉴가 보입니다.</p>
+  </div>
+
+  <div class="guide-step">
+    <h3>2단계. 왼쪽에서 <span class="guide-highlight">Branding</span>을 눌러 주세요</h3>
+    <p>구글이 "이 앱은 누구 것이고, 어떤 이름으로 보여줄까?"를 정하는 곳입니다.</p>
+    <ul>
+      <li><strong>App name</strong>에 <span class="guide-highlight">반드시 자막을 등록하려는 채널명</span>을 적어 주세요.</li>
+      <li><strong>User support email</strong>에 대표 이메일주소를 적어 주세요.</li>
+      <li><strong>Developer contact information</strong>에도 대표 이메일주소를 적어 주세요.</li>
+    </ul>
+    <button class="guide-link-btn" id="linkStep2">Branding 가기</button>
+  </div>
+
+  <div class="guide-step">
+    <h3>3단계. 왼쪽에서 <span class="guide-highlight">Target</span>을 눌러 주세요</h3>
+    <p>누가 이 앱을 사용할지 정하는 곳입니다.</p>
+    <ul>
+      <li><strong>Posting status</strong>, <strong>User type</strong>, <strong>Test users</strong>가 보이면 제대로 들어오신 것입니다.</li>
+    </ul>
+  </div>
+
+  <div class="guide-step">
+    <h3>4단계. <span class="guide-highlight">Posting status</span> 확인</h3>
+    <p>처음에는 보통 <strong>Testing</strong>으로 보입니다.<br>
+    테스트하는 사람만 사용할 수 있는 상태라는 뜻입니다.</p>
+  </div>
+
+  <div class="guide-step">
+    <h3>5단계. <span class="guide-highlight">User type</span> 확인</h3>
+    <p>보통 <strong>external</strong>로 보입니다.<br>
+    일반 구글 계정도 사용할 수 있는 형태입니다.</p>
+  </div>
+
+  <div class="guide-step">
+    <h3>6단계. <span class="guide-highlight">Test users</span> 추가</h3>
+    <p>실제로 인증 테스트를 진행할<br>
+    <span class="guide-highlight">본인 구글 이메일주소</span>를 넣어 주세요.</p>
+  </div>
+
+  <div class="guide-step">
+    <h3>7단계. 왼쪽에서 <span class="guide-highlight">client</span>를 눌러 주세요</h3>
+    <p>OAuth Client ID를 만드는 곳입니다.</p>
+    <button class="guide-link-btn" id="linkStep7">client 가기</button>
+  </div>
+
+  <div class="guide-step">
+    <h3>8단계. <span class="guide-highlight">Create Client</span> 클릭</h3>
+    <p><strong>Application type</strong>에서 반드시<br>
+    <span class="guide-highlight">Web application</span>을 선택해 주세요.</p>
+    <p style="margin-top:6px;"><strong>⚠️ 중요 — Authorized redirect URIs 에 아래 주소를 반드시 추가해 주세요!</strong></p>
+    <div class="copy-box" id="redirectUri">https://kpjbakonoghmklnnnomgbendjcjiehml.chromiumapp.org/</div>
+    <button class="guide-link-btn" id="btnCopyRedirect">📋 주소 복사</button>
+  </div>
+
+  <div class="guide-step">
+    <h3>9단계. OAuth Client ID 복사</h3>
+    <p>설정 완료 후 만들어진<br>
+    <span class="guide-highlight">OAuth Client ID</span>를 복사하세요.<br>
+    이 값을 아래 입력창에 붙여넣기 하시면 됩니다.</p>
+  </div>
+
+  <div class="guide-step">
+    <h3>10단계. YouTube API 켜기</h3>
+    <ul>
+      <li><strong>YouTube Data API v3</strong>를 찾아 클릭해 주세요.</li>
+      <li><strong>사용</strong> 또는 <strong>Enable</strong> 버튼을 눌러 주세요.</li>
+      <li>이미 켜져 있으면 그대로 두시면 됩니다.</li>
+    </ul>
+    <button class="guide-link-btn" id="linkStep10">YouTube API 가기</button>
+  </div>
+
+  <div class="guide-step">
+    <h3>11단계. 아래에서 Client ID 입력 후 인증 시작!</h3>
+    <p>9단계에서 복사한 OAuth Client ID를<br>
+    아래 입력창에 붙여넣고<br>
+    <span class="guide-highlight">Google OAuth 인증 시작</span> 버튼을 눌러 주세요.</p>
+  </div>
+
+</div>
+
+<hr class="divider">
+
+<div style="color:#f5c518;font-size:18px;font-weight:900;text-align:center;margin:10px 0 14px;">🔐 Google OAuth 인증</div>
+
+<div class="input-label">OAuth Client ID <span style="color:#e74c3c;">*</span></div>
+<input type="password" id="oauthClientId" placeholder="9단계에서 복사한 Client ID를 붙여넣기 하세요" autocomplete="off">
+
+<button class="btn btn-gold" id="btnAuth">🔐 Google OAuth 인증 시작</button>
+<button class="btn btn-blue" id="btnCheckChannel" style="display:none;">✅ 연결된 채널 확인</button>
+<button class="btn btn-gray" id="btnClose">✕ 닫기</button>
+
+<script src="oauth_popup.js"></script>
+</body>
+</html>
