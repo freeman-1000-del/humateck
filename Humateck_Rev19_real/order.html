@@ -27,7 +27,7 @@
 - 사용자가 명시 승인한 수정만 반영
 
 한 줄 원칙:
-우리는 배송만 한다. 검수하지 않는다. 절대 자체 판단하지 않는다. 거부하지 않는다. 불필요한 오류를 만들지 않는다.
+우리는 배송만 한다. 검수하지 않는다. 자체 판단하지 않는다. 거부하지 않는다. 불필요한 오류를 만들지 않는다.
 ============================================================
 -->
 <html lang="ko">
@@ -278,12 +278,6 @@
       </div>
 
       <div class="oauth-step-card">
-        <h3>7단계. YouTube API를 켜 주세요</h3>
-        <p><a class="oauth-link-btn" href="https://console.cloud.google.com/apis/library/youtube.googleapis.com?project=fourth-cedar-489307-b1" target="_blank" rel="noopener noreferrer">YouTube API 가기</a></p>
-        <p><strong>YouTube Data API v3</strong>의 사용 버튼을 눌러 주세요. 이미 켜져 있으면 그대로 두시면 됩니다.</p>
-      </div>
-
-      <div class="oauth-step-card">
         <h3>8단계. 주문페이지에서 크롬 팝업으로 인증해 주세요</h3>
         <p>구글의 공식 인증환경에서 직접 인증을 진행한 뒤 배송 절차를 이어서 진행해 주세요.</p>
         <input id="clientIdInput" type="hidden" value="">
@@ -291,6 +285,7 @@
           <button type="button" class="oauth-action-btn" id="oauthStartBtn">크롬 팝업으로 Google 인증하기</button>
           <button type="button" class="oauth-action-btn" id="channelCheckBtn">인증 상태 확인</button>
         </div>
+
         <textarea id="authStatus" rows="4" readonly placeholder="인증 상태가 여기에 표시됩니다.">크롬 팝업 인증 전입니다.\n'크롬 팝업으로 Google 인증하기' 버튼을 눌러 주세요.</textarea>
       </div>
     </div>
