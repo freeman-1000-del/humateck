@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Humateck 관리자 로그</title>
+  <style>
+    * { box-sizing:border-box; }
+    body { margin:0; background:#0b1929; color:#fff; font-family:'Segoe UI',sans-serif; }
+    .wrap { max-width:1200px; margin:0 auto; padding:24px; }
+    .title { font-size:28px; font-weight:900; color:#c8a84b; margin-bottom:12px; }
+    .card { background:#13294d; border:1px solid #2a3f5f; border-radius:14px; padding:18px; margin-bottom:16px; }
+    .btn { display:inline-flex; align-items:center; justify-content:center; padding:10px 14px; border-radius:10px; background:#c8a84b; color:#0b1929; text-decoration:none; font-weight:900; border:none; cursor:pointer; }
+    .table-wrap { overflow:auto; }
+    .muted { color:#b9cce0; font-size:13px; line-height:1.7; }
+    .mono { font-family:Consolas,monospace; font-size:12px; white-space:pre-wrap; line-height:1.6; color:#dce8f6; }
+    table { width:100%; border-collapse:collapse; margin-top:12px; }
+    th,td { padding:10px 12px; border-bottom:1px solid rgba(255,255,255,.08); text-align:left; font-size:13px; white-space:nowrap; }
+    th { color:#f5c518; }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <div class="wrap">
+    <div class="title">Humateck 관리자 로그</div>
+    <div class="card">
+      <div class="muted">홈페이지와 크롬의 외부 방문자 유입, 무료체험 클릭, 플랜 클릭, 주문화면 구경, 로그인/회원가입 클릭 로그를 보는 기본 화면입니다.</div>
+      <button class="btn" id="loadLogsBtn" type="button">로그 불러오기</button>
+    </div>
+    <div class="card">
+      <div class="muted">상태</div>
+      <div class="mono" id="statusBox">대기 중</div>
+    </div>
+    <div class="card table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>시간</th>
+            <th>source</th>
+            <th>page_name</th>
+            <th>event_name</th>
+            <th>detail</th>
+          </tr>
+        </thead>
+        <tbody id="logBody">
+          <tr><td colspan="5">불러오기 전</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://ajvytoyblrtecxuazqm.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_cmn9eVnnvaAjXVJWa6bRQA_qrb1xglQ';
+    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    async function loadLogs() {
+      const statusBox = document.getElementById('statusBox');
+      const body = document.getElementById('logBody');
+      statusBox.textContent = '불러오는 중...';
+      body.innerHTML = '<tr><td colspan="5">불러오는 중...</td></tr>';
+
+      try {
+        const { data, error } = await sb
+          .from('visitor_logs')
+          .select('source,page_name,event_name,detail,created_at')
+          .order('created_at', { ascending: false })
+          .limit(100);
+
+        if (error) {
+          statusBox.textContent = '오류: ' + (error.message || JSON.stringify(error));
+          body.innerHTML = '<tr><td colspan="5">오류 발생</td></tr>';
+          return;
+        }
+
+        statusBox.textContent = '정상 응답';
+        if (!Array.isArray(data) || !data.length) {
+          body.innerHTML = '<tr><td colspan="5">로그 없음</td></tr>';
+          return;
+        }
+
+        body.innerHTML = data.map(r => `
+          <tr>
+            <td>${(r.created_at || '').replace('T', ' ').slice(0, 19)}</td>
+            <td>${r.source || ''}</td>
+            <td>${r.page_name || ''}</td>
+            <td>${r.event_name || ''}</td>
+            <td>${r.detail || ''}</td>
+          </tr>
+        `).join('');
+      } catch (e) {
+        statusBox.textContent = '예외: ' + String(e);
+        body.innerHTML = '<tr><td colspan="5">예외 발생</td></tr>';
+      }
+    }
+
+    document.getElementById('loadLogsBtn').addEventListener('click', loadLogs);
+  </script>
+</body>
+</html>
