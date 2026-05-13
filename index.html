@@ -1,0 +1,64 @@
+create table if not exists public.subscribers (
+  id uuid primary key default gen_random_uuid(),
+  email text not null,
+  paypal_subscription_id text unique,
+  paypal_plan_id text,
+  plan_code text not null,
+  plan_name text not null,
+  country_limit integer not null,
+  status text not null default 'inactive',
+  started_at timestamptz,
+  current_period_end timestamptz,
+  cancelled_at timestamptz,
+  last_payment_at timestamptz,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create table if not exists public.paypal_webhook_events (
+  id uuid primary key default gen_random_uuid(),
+  paypal_event_id text,
+  event_type text,
+  paypal_subscription_id text,
+  status text not null,
+  note text,
+  raw_payload jsonb,
+  created_at timestamptz default now()
+);
+
+alter table public.subscribers enable row level security;
+alter table public.paypal_webhook_events enable row level security;
+
+create index if not exists subscribers_email_idx on public.subscribers (lower(email));
+create index if not exists subscribers_status_idx on public.subscribers (status);
+create index if not exists subscribers_subscription_idx on public.subscribers (paypal_subscription_id);
+create index if not exists paypal_webhook_events_subscription_idx on public.paypal_webhook_events (paypal_subscription_id);
+create index if not exists paypal_webhook_events_event_type_idx on public.paypal_webhook_events (event_type);
+
+create or replace function public.is_active_subscriber(user_email text)
+returns table (
+  is_active boolean,
+  plan_code text,
+  plan_name text,
+  country_limit integer,
+  status text,
+  current_period_end timestamptz
+)
+language sql
+security definer
+as $$
+  select
+    (
+      s.status = 'active'
+      and s.current_period_end > now()
+    ) as is_active,
+    s.plan_code,
+    s.plan_name,
+    s.country_limit,
+    s.status,
+    s.current_period_end
+  from public.subscribers s
+  where lower(s.email) = lower(user_email)
+  order by s.current_period_end desc
+  limit 1;
+$$;
