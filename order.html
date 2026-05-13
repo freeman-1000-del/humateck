@@ -1012,6 +1012,37 @@ input,textarea{font-size:16px!important;}
 }
 </style>
 
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+<style>
+/* Humateck_New009 EN OAuth Client ID masked input restore */
+#googleClientIdInput{
+  margin-bottom:16px!important;
+}
+.oauthPanelBelow label[for="googleClientIdInput"]{
+  display:block!important;
+  color:#ffd95a!important;
+  font-weight:900!important;
+  margin-top:12px!important;
+}
+</style>
+
+
+<style>
+/* Humateck_New010 registration result restore */
+#deliveryResultCard,
+#deliveryResultCard *{
+  writing-mode:horizontal-tb!important;
+  white-space:normal!important;
+  text-align:left!important;
+}
+#deliveryLog{
+  min-height:150px!important;
+  white-space:pre-wrap!important;
+  line-height:1.65!important;
+}
+</style>
+
 </head>
 <body>
 
@@ -1203,8 +1234,10 @@ Please keep the format as it is.</textarea>
       <div class="oauthPanelBelow">
         <h2>Google OAuth Setup Guide</h2>
         <p>This website provides OAuth setup guidance and practice. Actual authentication and registration are performed in the  extension.</p>
+        <label for="googleClientIdInput">Google OAuth Web Client ID</label>
+        <input id="googleClientIdInput" type="password" autocomplete="off" placeholder="Paste your Google OAuth Web Client ID">
         <div class="oauthCenterButton">
-  <a id="oauthStartBtn" class="btn" href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener noreferrer">Get OAuth Client ID / Google Setup</a>
+  <button id="oauthStartBtn" class="btn" type="button">OAuth Authorization</button>
 </div>
 <div id="oauthSuccessBadge" class="oauthSuccessBadge">Authentication Successful</div>
 </div>
@@ -1218,6 +1251,10 @@ Please keep the format as it is.</textarea>
 <h2>YouTube Registration Notice</h2>
 <p>Humateck does not review, block, change, or add anything to the customer-approved translation. The approved content is sent as-is.</p>
 <p>All translations are registered to the YouTube channel immediately, and only languages actually rejected by the receiving side are separated as pending languages.</p>
+<section class="card" id="deliveryResultCard">
+      <h2>Registration Result</h2>
+      <textarea id="deliveryLog" class="mediumTextarea" readonly placeholder="YouTube registration results will appear here."></textarea>
+    </section>
 </section>
   </div>
 
@@ -1555,6 +1592,109 @@ ${countryBlock}`;
 
 
 
+
+<script>
+/* Humateck_New009 direct Google OAuth token restore only - EN */
+(function(){
+  function $(id){ return document.getElementById(id); }
+
+  var YOUTUBE_SCOPE = "https://www.googleapis.com/auth/youtube.force-ssl";
+  var tokenClient = null;
+
+  function setAuthStatus(text, type){
+    var targets = [$("authStatus"), $("authStatusSide"), $("oauthReceiveCheck")];
+    targets.forEach(function(el){
+      if(!el) return;
+      if("value" in el) el.value = text;
+      else el.textContent = text;
+      el.classList.remove("ok","bad","oauthReceiveOk");
+      if(type) el.classList.add(type);
+      if(type === "ok") el.classList.add("oauthReceiveOk");
+    });
+  }
+
+  function getClientId(){
+    var input = $("googleClientIdInput");
+    return input ? String(input.value || "").trim() : "";
+  }
+
+  function waitForGoogleIdentity(callback){
+    var tries = 0;
+    var timer = setInterval(function(){
+      tries++;
+      if(window.google && google.accounts && google.accounts.oauth2){
+        clearInterval(timer);
+        callback();
+      }else if(tries > 80){
+        clearInterval(timer);
+        setAuthStatus("Google authorization library could not be loaded. Please check browser script blocking settings.", "bad");
+      }
+    }, 150);
+  }
+
+  function startOAuth(){
+    var clientId = getClientId();
+    if(!clientId){
+      alert("Please enter your Google OAuth Web Client ID.");
+      setAuthStatus("Google OAuth Web Client ID is empty.", "bad");
+      return;
+    }
+
+    if(!/^https?:$/.test(window.location.protocol)){
+      alert("Google OAuth does not work properly from file://. Please run this page from your domain or localhost.");
+      setAuthStatus("Google OAuth may be limited from the current origin: " + window.location.origin, "bad");
+      return;
+    }
+
+    waitForGoogleIdentity(function(){
+      try{
+        tokenClient = google.accounts.oauth2.initTokenClient({
+          client_id: clientId,
+          scope: YOUTUBE_SCOPE,
+          prompt: "consent select_account",
+          callback: function(response){
+            if(response && response.access_token){
+              window.humateckGoogleAccessToken = response.access_token;
+              window.humateckGoogleOAuthScope = response.scope || YOUTUBE_SCOPE;
+              try{
+                sessionStorage.setItem("humateckGoogleAccessToken", response.access_token);
+                sessionStorage.setItem("humateckGoogleOAuthScope", response.scope || YOUTUBE_SCOPE);
+              }catch(e){}
+              setAuthStatus("Google OAuth authorization has been completed. You can now proceed with YouTube registration.", "ok");
+            }else{
+              setAuthStatus("No Google OAuth response was received. Please check Authorized JavaScript origins and Client ID. Current origin: " + window.location.origin, "bad");
+            }
+          },
+          error_callback: function(error){
+            var msg = "Google OAuth authorization failed.";
+            if(error && error.type) msg += " Error: " + error.type;
+            msg += " / Current origin: " + window.location.origin;
+            setAuthStatus(msg, "bad");
+            alert(msg);
+          }
+        });
+        tokenClient.requestAccessToken({prompt:"consent select_account"});
+        setAuthStatus("Google OAuth authorization window has opened. Please complete approval in the Google window.");
+      }catch(e){
+        var msg = "An error occurred while starting Google OAuth: " + (e && e.message ? e.message : e);
+        setAuthStatus(msg, "bad");
+        alert(msg);
+      }
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){
+    var btn = $("oauthStartBtn");
+    if(btn){
+      btn.addEventListener("click", function(e){
+        e.preventDefault();
+        startOAuth();
+      }, true);
+    }
+  });
+})();
+</script>
+
 <script>
 /* Humateck_New043 payload generator only */
 (function(){
@@ -1653,7 +1793,20 @@ ${countryBlock}`;
     }
   }
 
-  function getAccessToken(){ return window.humateckAccessToken || ""; }
+  function getAccessToken(){
+    if(window.humateckGoogleAccessToken) return window.humateckGoogleAccessToken;
+    try{
+      var saved = sessionStorage.getItem("humateckGoogleAccessToken");
+      if(saved) return saved;
+    }catch(e){}
+    var token = "";
+    var candidates = ["googleAccessToken","accessToken","oauthAccessToken","authToken"];
+    for(var i=0;i<candidates.length;i++){
+      var el = document.getElementById(candidates[i]);
+      if(el && el.value) return el.value.trim();
+    }
+    return token;
+  }
 
 
   function getNativeLanguageCode(){
@@ -1707,24 +1860,63 @@ ${countryBlock}`;
     var blocks = normalized.split("Country Code:").slice(1);
     var localizations = {};
 
+    function cleanLine(v){
+      return String(v || "").replace(/^\s+|\s+$/g, "");
+    }
+
+    function isJunkNumberLine(v){
+      var s = cleanLine(v);
+      return /^Number\s*:/i.test(s) || /^number\s*:/i.test(s) || /^\d+\s*[\.\)]?\s*$/.test(s);
+    }
+
     blocks.forEach(function(raw){
       var block = raw.replace(/^\s+/, "");
-      var firstBreak = block.indexOf("\n");
-      var code = (firstBreak >= 0 ? block.slice(0, firstBreak) : block).trim();
-      var rest = firstBreak >= 0 ? block.slice(firstBreak + 1) : "";
+      var lines = block.split("\n");
+      var code = cleanLine(lines.shift() || "");
       if(!code) return;
 
       var title = "";
       var description = "";
-      var titleMatch = rest.match(/(?:^|\n)Title:\s*(.*)/);
-      if(titleMatch) title = titleMatch[1].trim();
+      var mode = "";
 
-      var descIndex = rest.indexOf("Description:");
-      if(descIndex >= 0){
-        description = rest.slice(descIndex + "Description:".length).replace(/^\n/, "").trimEnd();
+      for(var i=0;i<lines.length;i++){
+        var line = lines[i];
+        var trimmed = cleanLine(line);
+
+        if(/^Title\s*:/i.test(trimmed)){
+          mode = "title";
+          var sameLineTitle = cleanLine(trimmed.replace(/^Title\s*:/i, ""));
+          if(sameLineTitle && !isJunkNumberLine(sameLineTitle)){
+            title = sameLineTitle;
+          }
+          continue;
+        }
+
+        if(/^Description\s*:/i.test(trimmed)){
+          mode = "description";
+          var sameLineDesc = line.replace(/^.*?Description\s*:/i, "");
+          if(cleanLine(sameLineDesc)){
+            description += sameLineDesc.replace(/^\s+/, "") + "\n";
+          }
+          continue;
+        }
+
+        if(mode === "title"){
+          if(!title && trimmed && !isJunkNumberLine(trimmed)){
+            title = trimmed;
+          }
+          continue;
+        }
+
+        if(mode === "description"){
+          description += line + "\n";
+        }
       }
 
-      localizations[code] = { title: title, description: description };
+      localizations[code] = {
+        title: title,
+        description: description.replace(/\n+$/g, "")
+      };
     });
 
     return localizations;
@@ -1786,7 +1978,7 @@ ${countryBlock}`;
     var codes = Object.keys(localizations);
     if(codes.length === 0){ alert("Could not find a registration-ready final version based on Country Code:."); return; }
 
-    var btn = $("sendOrderBtn");
+    var btn = $("sendOrderBtn") || $("youtubeRegisterBtn");
     if(btn){ btn.disabled = true; btn.textContent = "Registration in Progress"; }
 
     var startTime = Date.now();
@@ -1843,7 +2035,7 @@ ${countryBlock}`;
   }
 
   document.addEventListener("click", function(event){
-    var btn = event.target.closest("#sendOrderBtn");
+    var btn = event.target.closest("#sendOrderBtn, #youtubeRegisterBtn");
     if(!btn) return;
     event.preventDefault();
     deliverByYouTubeSpec();
