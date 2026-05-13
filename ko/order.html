@@ -938,6 +938,22 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 </style>
 
 <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+<style>
+/* Humateck_New010 registration result restore */
+#deliveryResultCard,
+#deliveryResultCard *{
+  writing-mode:horizontal-tb!important;
+  white-space:normal!important;
+  text-align:left!important;
+}
+#deliveryLog{
+  min-height:150px!important;
+  white-space:pre-wrap!important;
+  line-height:1.65!important;
+}
+</style>
+
 </head>
 <body>
 
@@ -1144,7 +1160,11 @@ Country Code / Country Name 대응표
       <h2>유튜브 등록관련 공지사항</h2>
       <p>당사는 고객님의 번역 승인본에 대해 어떠한 <span class="highlightAction">검수나 차단 · 변경 · 추가</span>를 하지 않으며, 고객 승인 내용 그대로 발송합니다.</p>
       <p>모든 번역문은 유튜브 채널에 즉시 등록되며, 접수측이 실제로 거부한 언어는 보류 언어로 분리 표시됩니다.</p>
+    <section class="card" id="deliveryResultCard">
+      <h2>등록결과</h2>
+      <textarea id="deliveryLog" class="mediumTextarea" readonly placeholder="유튜브 등록결과가 여기에 표시됩니다."></textarea>
     </section>
+</section>
   </div>
 
   <aside class="right">
@@ -1741,24 +1761,63 @@ ${countryBlock}`;
     var blocks = normalized.split("Country Code:").slice(1);
     var localizations = {};
 
+    function cleanLine(v){
+      return String(v || "").replace(/^\s+|\s+$/g, "");
+    }
+
+    function isJunkNumberLine(v){
+      var s = cleanLine(v);
+      return /^Number\s*:/i.test(s) || /^number\s*:/i.test(s) || /^\d+\s*[\.\)]?\s*$/.test(s);
+    }
+
     blocks.forEach(function(raw){
       var block = raw.replace(/^\s+/, "");
-      var firstBreak = block.indexOf("\n");
-      var code = (firstBreak >= 0 ? block.slice(0, firstBreak) : block).trim();
-      var rest = firstBreak >= 0 ? block.slice(firstBreak + 1) : "";
+      var lines = block.split("\n");
+      var code = cleanLine(lines.shift() || "");
       if(!code) return;
 
       var title = "";
       var description = "";
-      var titleMatch = rest.match(/(?:^|\n)Title:\s*(.*)/);
-      if(titleMatch) title = titleMatch[1].trim();
+      var mode = "";
 
-      var descIndex = rest.indexOf("Description:");
-      if(descIndex >= 0){
-        description = rest.slice(descIndex + "Description:".length).replace(/^\n/, "").trimEnd();
+      for(var i=0;i<lines.length;i++){
+        var line = lines[i];
+        var trimmed = cleanLine(line);
+
+        if(/^Title\s*:/i.test(trimmed)){
+          mode = "title";
+          var sameLineTitle = cleanLine(trimmed.replace(/^Title\s*:/i, ""));
+          if(sameLineTitle && !isJunkNumberLine(sameLineTitle)){
+            title = sameLineTitle;
+          }
+          continue;
+        }
+
+        if(/^Description\s*:/i.test(trimmed)){
+          mode = "description";
+          var sameLineDesc = line.replace(/^.*?Description\s*:/i, "");
+          if(cleanLine(sameLineDesc)){
+            description += sameLineDesc.replace(/^\s+/, "") + "\n";
+          }
+          continue;
+        }
+
+        if(mode === "title"){
+          if(!title && trimmed && !isJunkNumberLine(trimmed)){
+            title = trimmed;
+          }
+          continue;
+        }
+
+        if(mode === "description"){
+          description += line + "\n";
+        }
       }
 
-      localizations[code] = { title: title, description: description };
+      localizations[code] = {
+        title: title,
+        description: description.replace(/\n+$/g, "")
+      };
     });
 
     return localizations;
