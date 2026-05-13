@@ -923,6 +923,20 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 }
 </style>
 
+
+<style>
+/* Humateck_New006 OAuth Client ID masked input restore */
+#googleClientIdInput{
+  margin-bottom:16px!important;
+}
+.oauthPanelBelow label[for="googleClientIdInput"]{
+  display:block!important;
+  color:#ffd95a!important;
+  font-weight:900!important;
+  margin-top:12px!important;
+}
+</style>
+
 </head>
 <body>
 
@@ -1114,14 +1128,16 @@ Country Code / Country Name 대응표
       <div class="oauthPanelBelow">
         <h2>Google OAuth 인증</h2>
         <p>유튜브 등록할 때마다 필히 Google OAuth 인증(인증키 확인)을 받아야 합니다.</p>
+        <label for="googleClientIdInput">Google OAuth Web Client ID</label>
+        <input id="googleClientIdInput" type="password" autocomplete="off" placeholder="Google OAuth Web Client ID를 붙여넣으세요">
         <div class="oauthCenterButton">
-  <a id="oauthStartBtn" class="btn" href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener noreferrer">OAuth 인증키 받으러가기(구글 설정)</a>
+  <a id="oauthStartBtn" class="btn" href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener noreferrer">OAuth 인증받기</a>
 </div></div>
     </section>
 
     <section class="card">
       <h2>유튜브 등록</h2>
-      <div class="actions"><button class="btn" type="button" id="youtubeRegisterBtn">유튜브 등록</button></div>
+      <div class="actions"><button class="btn" type="button" id="sendOrderBtn">유튜브 등록</button></div>
     </section>
 <section class="card registerNoticeBelow">
       <h2>유튜브 등록관련 공지사항</h2>
@@ -1746,7 +1762,7 @@ ${countryBlock}`;
     var codes = Object.keys(localizations);
     if(codes.length === 0){ alert("Country Code: 기준의 등록용 최종본을 찾지 못했습니다."); return; }
 
-    var btn = $("sendOrderBtn");
+    var btn = $("sendOrderBtn") || $("youtubeRegisterBtn");
     if(btn){ btn.disabled = true; btn.textContent = "등록 진행 중"; }
 
     var startTime = Date.now();
@@ -1803,7 +1819,7 @@ ${countryBlock}`;
   }
 
   document.addEventListener("click", function(event){
-    var btn = event.target.closest("#sendOrderBtn");
+    var btn = event.target.closest("#sendOrderBtn, #youtubeRegisterBtn");
     if(!btn) return;
     event.preventDefault();
     deliverByYouTubeSpec();
