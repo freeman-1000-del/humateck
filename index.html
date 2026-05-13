@@ -1,64 +1,43 @@
-create table if not exists public.subscribers (
-  id uuid primary key default gen_random_uuid(),
-  email text not null,
-  paypal_subscription_id text unique,
-  paypal_plan_id text,
-  plan_code text not null,
-  plan_name text not null,
-  country_limit integer not null,
-  status text not null default 'inactive',
-  started_at timestamptz,
-  current_period_end timestamptz,
-  cancelled_at timestamptz,
-  last_payment_at timestamptz,
-  created_at timestamptz default now(),
-  updated_at timestamptz default now()
-);
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Humateck - 유튜브 다국어 자막 서비스</title>
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; line-height: 1.6; background-color: #f4f7f6; margin: 0; padding: 0; }
+        .container { width: 80%; margin: auto; overflow: hidden; padding: 20px; }
+        .card { background: #fff; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .btn-primary { display: inline-block; background: #007bff; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px; }
+        h1, h2 { color: #333; }
+        .faq-item { margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <section class="card">
+            <h1>Humateck 서비스</h1>
+            <div style="margin-top: 20px;">
+                <a href="order.html" class="btn-primary">다국어 번역/등록 바로가기</a>
+            </div>
+        </section>
 
-create table if not exists public.paypal_webhook_events (
-  id uuid primary key default gen_random_uuid(),
-  paypal_event_id text,
-  event_type text,
-  paypal_subscription_id text,
-  status text not null,
-  note text,
-  raw_payload jsonb,
-  created_at timestamptz default now()
-);
+        <section class="card">
+            <h2>고객센터 FAQ</h2>
+            <div class="faq-item">
+                <strong>① 구글 OAuth 설정이 무엇인가요? 사용시마다 설정해야 하나요?</strong>
+                <p>구글 OAuth 설정은 내 유튜브 채널에 자막을 등록해도 좋다고 구글에 허락받는 연결 과정입니다. 처음 한 번 설정하시면 그 후 재설정 없이 반복 사용이 가능합니다. 그러나 영구적인 것은 아니며, 다음의 사유가 있을 때는 재설정하셔야 됩니다. - 토큰 만료, 브라우저 변경, 계정 변경, 장기 미사용으로 인한 권한 철회, 대량 작업 등</p>
+            </div>
+            <div class="faq-item">
+                <strong>⓸ '유튜브 영상 주소에서 videoId를 찾지 못했습니다.' 메시지가 뜹니다.</strong>
+                <p>유튜브 주소를 잘못 입력하신 경우입니다. 반드시 유튜브 동영상(스튜디오 ×)의 주소를 그대로 복사하여 붙여 넣어 주시기 바랍니다.</p>
+            </div>
+        </section>
 
-alter table public.subscribers enable row level security;
-alter table public.paypal_webhook_events enable row level security;
-
-create index if not exists subscribers_email_idx on public.subscribers (lower(email));
-create index if not exists subscribers_status_idx on public.subscribers (status);
-create index if not exists subscribers_subscription_idx on public.subscribers (paypal_subscription_id);
-create index if not exists paypal_webhook_events_subscription_idx on public.paypal_webhook_events (paypal_subscription_id);
-create index if not exists paypal_webhook_events_event_type_idx on public.paypal_webhook_events (event_type);
-
-create or replace function public.is_active_subscriber(user_email text)
-returns table (
-  is_active boolean,
-  plan_code text,
-  plan_name text,
-  country_limit integer,
-  status text,
-  current_period_end timestamptz
-)
-language sql
-security definer
-as $$
-  select
-    (
-      s.status = 'active'
-      and s.current_period_end > now()
-    ) as is_active,
-    s.plan_code,
-    s.plan_name,
-    s.country_limit,
-    s.status,
-    s.current_period_end
-  from public.subscribers s
-  where lower(s.email) = lower(user_email)
-  order by s.current_period_end desc
-  limit 1;
-$$;
+        <section class="card">
+            <h2>서비스</h2>
+            <p>이 서비스는 고객이 필요에 따라 웹사이트와 프로그램 중 한 가지를 선택하여 사용할 수 있도록 설계되었습니다.</p>
+            </section>
+    </div>
+</body>
+</html>
