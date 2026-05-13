@@ -937,6 +937,7 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 }
 </style>
 
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 
@@ -1131,7 +1132,7 @@ Country Code / Country Name 대응표
         <label for="googleClientIdInput">Google OAuth Web Client ID</label>
         <input id="googleClientIdInput" type="password" autocomplete="off" placeholder="Google OAuth Web Client ID를 붙여넣으세요">
         <div class="oauthCenterButton">
-  <a id="oauthStartBtn" class="btn" href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener noreferrer">OAuth 인증받기</a>
+  <button id="oauthStartBtn" class="btn" type="button">OAuth 인증받기</button>
 </div></div>
     </section>
 
@@ -1467,62 +1468,108 @@ ${countryBlock}`;
 
 
 
+
 <script>
-/* Humateck OAuth-only restored from old working order page */
+/* Humateck_New008 direct Google OAuth token restore only */
 (function(){
   function $(id){ return document.getElementById(id); }
 
-  function setStatuses(text, type) {
-    var targets = [$("authStatus"), $("authStatusSide")];
+  var YOUTUBE_SCOPE = "https://www.googleapis.com/auth/youtube.force-ssl";
+  var tokenClient = null;
+
+  function setAuthStatus(text, type){
+    var targets = [$("authStatus"), $("authStatusSide"), $("oauthReceiveCheck")];
     targets.forEach(function(el){
-      if (!el) return;
-      el.value = text;
-      el.classList.remove("ok", "bad");
-      if (type) el.classList.add(type);
+      if(!el) return;
+      if("value" in el) el.value = text;
+      else el.textContent = text;
+      el.classList.remove("ok","bad","oauthReceiveOk");
+      if(type) el.classList.add(type);
+      if(type === "ok") el.classList.add("oauthReceiveOk");
     });
   }
 
-  function openOAuthPopup() {
-    setStatuses('현재 Humateck은 Google OAuth 및  인증 안정화 작업 중입니다. 정식 재개 전까지 인증 팝업 호출은 임시 중단됩니다.');
-    var receive = $("oauthReceiveCheck");
-    if (receive) receive.value = '현재 Humateck은 Google OAuth 및  인증 안정화 작업 중입니다. 정식 재개 전까지 인증 팝업 호출은 임시 중단됩니다.';
-    return false;
+  function getClientId(){
+    var input = $("googleClientIdInput");
+    return input ? String(input.value || "").trim() : "";
+  }
+
+  function waitForGoogleIdentity(callback){
+    var tries = 0;
+    var timer = setInterval(function(){
+      tries++;
+      if(window.google && google.accounts && google.accounts.oauth2){
+        clearInterval(timer);
+        callback();
+      }else if(tries > 80){
+        clearInterval(timer);
+        setAuthStatus("Google 인증 라이브러리를 불러오지 못했습니다. 브라우저의 스크립트 차단 여부를 확인해 주세요.", "bad");
+      }
+    }, 150);
+  }
+
+  function startOAuth(){
+    var clientId = getClientId();
+    if(!clientId){
+      alert("Google OAuth Web Client ID를 입력해 주세요.");
+      setAuthStatus("Google OAuth Web Client ID가 비어 있습니다.", "bad");
+      return;
+    }
+
+    if(!/^https?:$/.test(window.location.protocol)){
+      alert("Google OAuth는 file:// 실행에서 정상 작동하지 않습니다. 도메인 또는 localhost에서 실행해 주세요.");
+      setAuthStatus("현재 실행 주소에서는 Google OAuth가 제한될 수 있습니다. 현재 origin: " + window.location.origin, "bad");
+      return;
+    }
+
+    waitForGoogleIdentity(function(){
+      try{
+        tokenClient = google.accounts.oauth2.initTokenClient({
+          client_id: clientId,
+          scope: YOUTUBE_SCOPE,
+          prompt: "consent select_account",
+          callback: function(response){
+            if(response && response.access_token){
+              window.humateckGoogleAccessToken = response.access_token;
+              window.humateckGoogleOAuthScope = response.scope || YOUTUBE_SCOPE;
+              try{
+                sessionStorage.setItem("humateckGoogleAccessToken", response.access_token);
+                sessionStorage.setItem("humateckGoogleOAuthScope", response.scope || YOUTUBE_SCOPE);
+              }catch(e){}
+              setAuthStatus("Google OAuth 인증(인증키 확인)이 완료되었습니다. 이제 유튜브 등록을 진행할 수 있습니다.", "ok");
+            }else{
+              setAuthStatus("Google OAuth 인증 응답을 받지 못했습니다. Authorized JavaScript origins와 Client ID를 확인해 주세요. 현재 origin: " + window.location.origin, "bad");
+            }
+          },
+          error_callback: function(error){
+            var msg = "Google OAuth 인증에 실패했습니다.";
+            if(error && error.type) msg += " 오류: " + error.type;
+            msg += " / 현재 origin: " + window.location.origin;
+            setAuthStatus(msg, "bad");
+            alert(msg);
+          }
+        });
+        tokenClient.requestAccessToken({prompt:"consent select_account"});
+        setAuthStatus("Google OAuth 인증창을 열었습니다. Google 창에서 승인을 완료해 주세요.");
+      }catch(e){
+        var msg = "Google OAuth 시작 중 오류가 발생했습니다: " + (e && e.message ? e.message : e);
+        setAuthStatus(msg, "bad");
+        alert(msg);
+      }
+    });
   }
 
   document.addEventListener("DOMContentLoaded", function(){
-    var startBtn = $("oauthStartBtn");
-    var modal = $("oauthPopupGuideModal");
-
-    if (startBtn) {
-      startBtn.addEventListener("click", function(e){
+    var btn = $("oauthStartBtn");
+    if(btn){
+      btn.addEventListener("click", function(e){
         e.preventDefault();
-        if (modal) modal.classList.remove("hidden");
-        else openOAuthPopup();
+        startOAuth();
       }, true);
-    }
-
-    $("oauthPopupGuideOkBtn")?.addEventListener("click", function(){
-      $("oauthPopupGuideModal")?.classList.add("hidden");
-      openOAuthPopup();
-    });
-
-    $("oauthPopupGuideCloseBtn")?.addEventListener("click", function(){
-      $("oauthPopupGuideModal")?.classList.add("hidden");
-    });
-
-    $("oauthPopupGuideBackdrop")?.addEventListener("click", function(){
-      $("oauthPopupGuideModal")?.classList.add("hidden");
-    });
-  });
-
-  window.addEventListener("message", function(event){
-    if (event.data && event.data.type === "HUMATECK_OAUTH_SUCCESS") {
-      setStatuses("Google OAuth 인증이 완료되었습니다. 이제 배송 절차를 이어서 진행할 수 있습니다.", "ok");
     }
   });
 })();
 </script>
-
 
 <script>
 /* Humateck_New043 payload generator only */
@@ -1627,7 +1674,20 @@ ${countryBlock}`;
     }
   }
 
-  function getAccessToken(){ return window.humateckAccessToken || ""; }
+  function getAccessToken(){
+    if(window.humateckGoogleAccessToken) return window.humateckGoogleAccessToken;
+    try{
+      var saved = sessionStorage.getItem("humateckGoogleAccessToken");
+      if(saved) return saved;
+    }catch(e){}
+    var token = "";
+    var candidates = ["googleAccessToken","accessToken","oauthAccessToken","authToken"];
+    for(var i=0;i<candidates.length;i++){
+      var el = document.getElementById(candidates[i]);
+      if(el && el.value) return el.value.trim();
+    }
+    return token;
+  }
 
 
   function getNativeLanguageCode(){
