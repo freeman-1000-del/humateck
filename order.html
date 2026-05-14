@@ -1048,7 +1048,7 @@ input,textarea{font-size:16px!important;}
 
 <div class="wrap" id="top">
 <header class="top"><a href="index.html"><img class="logo" src="FINAL_LOGO01.png" alt="Humateck"></a><div class="lang">◎ English⌄</div></header>
-<div class="orderTopButtons"><a href="index.html">Home</a><a href="plans.html" class="serviceReadyTemporary">View All Plans</a></div>
+<div class="orderTopButtons"><a href="index.html">Home</a><a href="plans.html" class="serviceReadyTemporary">View All Plans · Service Preparation in Progress</a></div>
 <section class="orderMainGrid">
   <div class="orderLeftColumn">
     <section class="card">
@@ -1496,8 +1496,7 @@ A) This is because YouTube content display system fixes the default video settin
       "81. zh-HK | Chinese (Hong Kong)",
       "82. zh-TW | Chinese (Taiwan)",
       "83. zu | Zulu"
-    ].slice(0, activeCount + 2).join("
-");
+    ].slice(0, activeCount + 2).join("\n");
 
     var prompt =
 `Hello Gemini!
@@ -1747,8 +1746,7 @@ ${countryBlock}`;
 <script>
 /* Humateck_New046 OAuth receive check only */
 (function(){
-  function showReceiveStatus(message, ok) { return; }
-
+  function showReceiveStatus(message, ok){
     var auth = document.getElementById("authStatus");
     if(auth && ok){
       auth.value = message;
@@ -1771,7 +1769,7 @@ ${countryBlock}`;
     }
 
     showReceiveStatus(
-      "OAuth received\nToken receipt: " + (hasToken ? "Success" : "Failure") + "\nNow this token can be connected to register multilingual content in the next step.",
+      "OAuth received\\nToken receipt: " + (hasToken ? "Success" : "Failure") + "\\nNow this token can be connected to register multilingual content in the next step.",
       hasToken
     );
   });
