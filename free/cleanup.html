@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Humateck Free Trial Cleanup</title>
+<style>body{margin:0;background:#050b14;color:#f4f1e8;font-family:Arial,sans-serif}.box{max-width:720px;margin:80px auto;padding:28px;border:1px solid #d9b256;border-radius:18px;background:#111923}h1{color:#ffd95a}.btn{display:inline-flex;margin-top:18px;padding:12px 18px;border:1px solid #d9b256;border-radius:12px;color:#fff;text-decoration:none}</style></head>
+<body><div class="box"><h1>Free Trial State Cleanup Complete</h1><p>Old shared free-trial browser state has been removed from this browser.</p><p>The free-trial flow now uses only the isolated <b>humateckFreeOnly*</b> keys inside the /free/ flow.</p><a class="btn" href="/order.html">Go to Main Order Page</a> <a class="btn" href="/free/start.html">Go to Free Trial Start</a></div>
+<script>
+(function(){
+  var legacyKeys=[
+    'humateckFreeTrialActive','humateckFreeTrialStartMs','humateckFreeTrialEndMs','humateckFreeTrialEmail',
+    'humateckActivePlan','humateckSubscriberPlan','humateckPaymentSubscriptionPlan','humateckAdminSelectedPlan'
+  ];
+  legacyKeys.forEach(function(k){try{localStorage.removeItem(k);}catch(e){}});
+})();
+</script></body></html>

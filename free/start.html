@@ -25,6 +25,15 @@
 </div>
 <script>
 (function(){
+
+  function clearLegacyRootFreeKeys(){
+    var legacyKeys=[
+      'humateckFreeTrialActive','humateckFreeTrialStartMs','humateckFreeTrialEndMs','humateckFreeTrialEmail',
+      'humateckActivePlan','humateckSubscriberPlan','humateckPaymentSubscriptionPlan','humateckAdminSelectedPlan'
+    ];
+    legacyKeys.forEach(function(k){try{localStorage.removeItem(k);}catch(e){}});
+  }
+
   function pad(n){return String(n).padStart(2,"0")}
   function kst(ms){var d=new Date(ms+(9*60*60*1000));return d.getUTCFullYear()+"-"+pad(d.getUTCMonth()+1)+"-"+pad(d.getUTCDate())+" "+pad(d.getUTCHours())+":"+pad(d.getUTCMinutes())+":"+pad(d.getUTCSeconds())+" KST"}
   var btn=document.getElementById('startTrialBtn');
