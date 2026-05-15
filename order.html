@@ -1046,12 +1046,30 @@ input,textarea{font-size:16px!important;}
 }
 </style>
 
+<!-- Humateck_New209: free/order admin controls removed; free route stays isolated. -->
+<!-- Humateck_New208: free trial order copy. Isolated under /free/. Uses free-only storage keys; root order.html must never import this logic. -->
 </head>
 <body>
+<script>
+(function(){
+  try{
+    if(!localStorage.getItem("humateckFreeOnlyTrialEndMs")){
+      var startMs = Date.now();
+      var endMs = startMs + (7 * 24 * 60 * 60 * 1000);
+      localStorage.setItem("humateckFreeOnlyTrialStartMs", String(startMs));
+      localStorage.setItem("humateckFreeOnlyTrialEndMs", String(endMs));
+    }
+    localStorage.setItem("humateckFreeOnlyTrialActive", "true");
+    localStorage.setItem("humateckFreeOnlyActivePlan", "free7");
+    localStorage.setItem("humateckFreeOnlySubscriberPlan", "free7");
+  }catch(e){}
+})();
+</script>
+
 
 <div class="wrap" id="top">
-<header class="top"><a href="index.html"><img class="logo" src="FINAL_LOGO01.png" alt="Humateck"></a><div class="lang">◎ English⌄</div></header>
-<div class="orderTopButtons"><a href="index.html">Home</a><a href="plans.html">View All Plans · Service Preparation in Progress</a></div>
+<header class="top"><a href="../index.html"><img class="logo" src="../FINAL_LOGO01.png" alt="Humateck"></a><div class="lang">◎ English⌄</div></header>
+<div class="orderTopButtons"><a href="../index.html">Home</a><a href="../plans.html">View All Plans</a></div>
 <section class="orderMainGrid">
   <div class="orderLeftColumn">
     <section class="card">
@@ -1117,10 +1135,10 @@ Description: translated description
     </section>
 <section class="oauthInfoBox" id="googleOAuthNotice">
       <h2>Google OAuth Setup Guide Notice</h2>
-      <p>From here, this is the Google OAuth authentication sequence that subscribers must complete. Non-subscribers may also complete this authentication, but final register multilingual content is open only to subscribers. Please do not misunderstand this point.</p>
+      <p>Google OAuth authorization is available to all visitors. It is not a membership condition; it is only required when performing YouTube registration work. Final YouTube registration is available to active subscribers, including the 7-day free subscriber plan.</p>
       <p class="yellowStrong">If you have already received a Google OAuth authentication key, please skip the “Important Setup Guide.”</p>
       <center><p class="yellowStrong">Once configured, it can be used for multiple channels.</p></center>
-      <div class="actions"><a class="btn guideOpenButton" href="#oauthGuideModal">Important Setup Guide</a><a class="btn" href="plans.html">Subscribe to a Plan</a></div>
+      <div class="actions"><a class="btn guideOpenButton" href="#oauthGuideModal">Important Setup Guide</a><a class="btn" href="../plans.html">Subscribe to a Plan</a></div>
       <div class="oauthPanelBelow">
         <h2>Google OAuth Setup Guide</h2>
         <p class="oauthLaunchNotice">This authentication allows visitors to experience the reality of AI chat translation and YouTube registration. However, actual registration is available only to subscribers. Please do not misunderstand this point.</p>
@@ -1175,14 +1193,8 @@ A) This is because YouTube content display system fixes the default video settin
 </div>
 </details>
 </section>
-    <details class="adminSecret">
-      <summary>Hidden Admin Menu</summary>
-      <p>For testing and customer support responses, the administrator can select any plan.</p>
-      <div class="actions"><button class="btn adminPlanButton" type="button" data-admin-plan="monthly30">30 Countries</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly50">50 Countries</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly70">70 Countries</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly83">83 Countries</button><button class="btn adminPlanButton" type="button" data-admin-plan="yearly83">Annual 83 Countries</button></div>
-    </details>
-
-<input type="hidden" id="humateckActivePlanValue" value="">
-<p id="adminPlanStatus" class="adminPlanStatus" style="display:none!important;"></p>
+<input type="hidden" id="humateckFreeOnlyActivePlanValue" value="">
+<p id="freeTrialExactEndStatus" class="notice" style="display:none;"></p>
 
 
 </details>
@@ -1284,12 +1296,71 @@ A) This is because YouTube content display system fixes the default video settin
     if(el) el.value = value;
   }
 
-  function getActiveCount(){
-    var hidden = document.getElementById("humateckActivePlanValue");
-    var plan = hidden ? hidden.value : "";
-    if(!plan && window.humateckAdminSelectedPlan) plan = window.humateckAdminSelectedPlan;
-    if(!plan && window.humateckPaymentSubscriptionPlan) plan = window.humateckPaymentSubscriptionPlan;
 
+  function humateckFormatKstDateTime(ms){
+    var d = new Date(ms + (9 * 60 * 60 * 1000));
+    function pad(n){ return String(n).padStart(2, "0"); }
+    return d.getUTCFullYear() + "-" + pad(d.getUTCMonth() + 1) + "-" + pad(d.getUTCDate()) + " " + pad(d.getUTCHours()) + ":" + pad(d.getUTCMinutes()) + ":" + pad(d.getUTCSeconds()) + " KST";
+  }
+
+  function humateckGetFreeTrialEndMs(){
+    try{
+      var value = Number(localStorage.getItem("humateckFreeOnlyTrialEndMs") || "0");
+      return isNaN(value) ? 0 : value;
+    }catch(e){ return 0; }
+  }
+
+  function humateckIsFreeTrialActiveNow(){
+    var endMs = humateckGetFreeTrialEndMs();
+    if(!endMs) return false;
+    if(Date.now() > endMs){
+      try{
+        localStorage.removeItem("humateckFreeOnlyTrialActive");
+        localStorage.removeItem("humateckFreeOnlySubscriberPlan");
+        if(localStorage.getItem("humateckFreeOnlyActivePlan") === "free7") localStorage.removeItem("humateckFreeOnlyActivePlan");
+        if(localStorage.getItem("humateckFreeOnlyAdminSelectedPlan") === "free7") localStorage.removeItem("humateckFreeOnlyAdminSelectedPlan");
+      }catch(e){}
+      return false;
+    }
+    return true;
+  }
+
+  function humateckActivateFreeTrialExactTime(){
+    var startMs = Date.now();
+    var endMs = startMs + (7 * 24 * 60 * 60 * 1000);
+    try{
+      localStorage.setItem("humateckFreeOnlyTrialActive", "true");
+      localStorage.setItem("humateckFreeOnlyTrialStartMs", String(startMs));
+      localStorage.setItem("humateckFreeOnlyTrialEndMs", String(endMs));
+      localStorage.setItem("humateckFreeOnlyActivePlan", "free7");
+      localStorage.setItem("humateckFreeOnlySubscriberPlan", "free7");
+    }catch(e){}
+    humateckRenderFreeTrialExactTime();
+  }
+
+  function humateckRenderFreeTrialExactTime(){
+    var box = document.getElementById("freeTrialExactEndStatus");
+    if(!box) return;
+    if(getHumateckSubscriberPlan() !== "free7" || !humateckIsFreeTrialActiveNow()){
+      box.style.display = "none";
+      box.textContent = "";
+      return;
+    }
+    var startMs = Number(localStorage.getItem("humateckFreeOnlyTrialStartMs") || "0");
+    var endMs = humateckGetFreeTrialEndMs();
+    box.style.display = "block";
+    box.textContent = "7-Day Free Subscriber Plan starts at: " + humateckFormatKstDateTime(startMs) + " / ends at: " + humateckFormatKstDateTime(endMs);
+  }
+
+  function getHumateckSubscriberPlan(){
+    return humateckIsFreeTrialActiveNow() ? "free7" : "free7";
+  }
+
+
+  function getActiveCount(){
+    var plan = getHumateckSubscriberPlan();
+
+    if(plan === "free7") return 15;
     if(plan === "monthly50") return 50;
     if(plan === "monthly70") return 70;
     if(plan === "monthly83") return 83;
@@ -1300,12 +1371,34 @@ A) This is because YouTube content display system fixes the default video settin
     return 30;
   }
 
+  document.addEventListener("DOMContentLoaded", humateckRenderFreeTrialExactTime);
+
   function buildGeminiPrompt(){
     var activeCount = getActiveCount();
     var sourceTitle = getValue("sourceTitle");
     var sourceDescription = getValue("sourceDescription");
 
-    var countryBlock = [
+    var freeTrialCountryBlock = [
+      "Country Code / Country Name Mapping Table",
+      "",
+      "1. en | English (United States / Global English)",
+      "2. en-GB | English (United Kingdom)",
+      "3. hi | Hindi (India)",
+      "4. pt | Portuguese (Brazil focus)",
+      "5. id | Indonesian (Indonesia)",
+      "6. es-419 | Spanish (Latin America / Mexico focus)",
+      "7. ja | Japanese (Japan)",
+      "8. ko | Korean (South Korea)",
+      "9. de | German (Germany)",
+      "10. vi | Vietnamese (Vietnam)",
+      "11. fil | Filipino (Philippines)",
+      "12. tr | Turkish (Türkiye)",
+      "13. fr | French (France)",
+      "14. it | Italian (Italy)",
+      "15. ar | Arabic"
+    ].join("\n");
+
+    var paidCountryBlock = [
       "Country Code / Country Name Mapping Table",
       "",
       "1. af | Afrikaans",
@@ -1392,6 +1485,8 @@ A) This is because YouTube content display system fixes the default video settin
       "82. zh-TW | Chinese (Taiwan)",
       "83. zu | Zulu"
     ].slice(0, activeCount + 2).join("\n");
+
+    var countryBlock = getHumateckSubscriberPlan() === "free7" ? freeTrialCountryBlock : paidCountryBlock;
 
     var prompt =
 `Hello Gemini!
@@ -1825,11 +1920,8 @@ ${countryBlock}`;
   }
 
   function hasSubscriberAccess(){
-    var hidden = document.getElementById("humateckActivePlanValue");
-    var plan = hidden ? hidden.value : "";
-    if(!plan && window.humateckAdminSelectedPlan) plan = window.humateckAdminSelectedPlan;
-    if(!plan && window.humateckPaymentSubscriptionPlan) plan = window.humateckPaymentSubscriptionPlan;
-    return !!plan;
+    /* Membership condition only: plan/free-trial/payment/admin test plan. OAuth is intentionally excluded here. */
+    return !!getHumateckSubscriberPlan();
   }
 
   async function deliverByYouTubeSpec(){
@@ -2138,6 +2230,18 @@ ${countryBlock}`;
     event.preventDefault();
     fetchYoutubeI18nLanguages();
   }, true);
+})();
+</script>
+
+
+
+
+<div id="freeTrialMiniBadge" style="position:fixed;right:12px;bottom:12px;z-index:9999;border:1px solid rgba(255,217,90,.65);border-radius:999px;background:rgba(8,12,18,.88);color:#f4e4b6;padding:8px 12px;font:700 12px Arial,sans-serif;opacity:.82;">Free Trial · 15 countries</div>
+<script>
+(function(){
+  function pad(n){return String(n).padStart(2,'0')}
+  function kst(ms){var d=new Date(Number(ms)+(9*60*60*1000));return d.getUTCFullYear()+'-'+pad(d.getUTCMonth()+1)+'-'+pad(d.getUTCDate())+' '+pad(d.getUTCHours())+':'+pad(d.getUTCMinutes())+':'+pad(d.getUTCSeconds())+' KST'}
+  try{var e=localStorage.getItem('humateckFreeOnlyTrialEndMs');var b=document.getElementById('freeTrialMiniBadge');if(e&&b)b.innerHTML='Free Trial · 15 countries · <span style="color:#ffd95a">'+kst(e)+'</span>';}catch(err){}
 })();
 </script>
 </body></html>
