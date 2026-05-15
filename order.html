@@ -9,7 +9,7 @@
 html,body{margin:0;padding:0;background:#050b14;color:#f4f1e8;font-family:Arial,"Noto Sans KR",sans-serif}
 a{color:inherit;text-decoration:none}
 button,input,textarea{font-family:inherit}
-.wrap{width:1180px;max-width:calc(100vw - 48px);margin:0 auto;padding:24px 0 60px}View All Plans
+.wrap{width:1180px;max-width:calc(100vw - 48px);margin:0 auto;padding:24px 0 60px}
 .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
 .logo{width:210px;height:auto;display:block}
 .lang{border:1px solid rgba(214,176,78,.55);border-radius:999px;padding:8px 14px;color:#e8d8a8;background:rgba(255,255,255,.03)}
@@ -747,16 +747,6 @@ input,textarea{font-size:16px!important;}
   justify-content:center!important;
 }
 </style>
-
-
-<style>
-/* Humateck temporary service-ready marker only */
-.serviceReadyTemporary{
-  border-color:#ffd95a!important;
-  box-shadow:0 0 20px rgba(255,217,90,.55)!important;
-}
-</style>
-
 <style>
 /* Humateck OAuth success-only customer display */
 .oauthSuccessBadge{
@@ -1061,7 +1051,7 @@ input,textarea{font-size:16px!important;}
 
 <div class="wrap" id="top">
 <header class="top"><a href="index.html"><img class="logo" src="FINAL_LOGO01.png" alt="Humateck"></a><div class="lang">◎ English⌄</div></header>
-<div class="orderTopButtons"><a href="index.html">Home</a><a href="plans.html" class="serviceReadyTemporary">View All Plans</a></div>
+<div class="orderTopButtons"><a href="index.html">Home</a><a href="plans.html">View All Plans · Service Preparation in Progress</a></div>
 <section class="orderMainGrid">
   <div class="orderLeftColumn">
     <section class="card">
@@ -1130,7 +1120,7 @@ Description: translated description
       <p>From here, this is the Google OAuth authentication sequence that subscribers must complete. Non-subscribers may also complete this authentication, but final register multilingual content is open only to subscribers. Please do not misunderstand this point.</p>
       <p class="yellowStrong">If you have already received a Google OAuth authentication key, please skip the “Important Setup Guide.”</p>
       <center><p class="yellowStrong">Once configured, it can be used for multiple channels.</p></center>
-      <div class="actions"><a class="btn guideOpenButton" href="#oauthGuideModal">Important Setup Guide</a></div>
+      <div class="actions"><a class="btn guideOpenButton" href="#oauthGuideModal">Important Setup Guide</a><a class="btn" href="plans.html">Subscribe to a Plan</a></div>
       <div class="oauthPanelBelow">
         <h2>Google OAuth Setup Guide</h2>
         <p class="oauthLaunchNotice">This authentication allows visitors to experience the reality of AI chat translation and YouTube registration. However, actual registration is available only to subscribers. Please do not misunderstand this point.</p>
@@ -1155,8 +1145,7 @@ Description: translated description
     </section>
 <section class="card registerNoticeBelow">
 <h2>YouTube Registration Notice</h2>
-<p>All translations are registered to the YouTube channel immediately, but Humateck does not review, block, change, or add anything to the customer-approved translation. The approved content is sent as-is.</p>
-<p and only languages actually rejected by the receiving side are separated as pending languages.</p>
+<p>All translations are registered to the YouTube channel immediately. But Humateck does not review, block, change, or add anything to the customer-approved translation. The approved content is sent as-is.</p>
 <section class="card" id="deliveryResultCard">
       <h2>Registration Result</h2>
       <textarea id="deliveryLog" class="mediumTextarea" readonly placeholder="YouTube registration results will appear here."></textarea>
