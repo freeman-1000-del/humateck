@@ -1,13 +1,24 @@
-Humateck Supabase Setup
+Humateck New198 setup
 
-1. Create a Supabase project.
-2. Run supabase_schema.sql in Supabase SQL Editor.
-3. Open Authentication > Providers > Google and enable Google OAuth sign-in.
-   Do not use an internal email form for free-trial members.
-4. Open supabase-config.js and replace:
-   - HUMATECK_SUPABASE_URL
-   - HUMATECK_SUPABASE_ANON_KEY
-5. Do not put the service_role key in any HTML/JS file.
-6. Free-trial members are stored in free_trial_members.
-7. Paid members are stored in paid_members.
-8. OAuth is not a membership condition. OAuth remains only for YouTube registration work.
+Applied flow:
+Plan Page -> Email Verification -> browser email autocomplete -> Verify Email -> Order Page or Checkout.
+
+Files:
+- plans.html
+- signup.html
+- order.html
+- supabase-config.js
+- supabase-membership.js
+- supabase_schema.sql
+
+Important:
+- OAuth is not a membership condition.
+- Email verification loads membership status.
+- Free trial and paid members stay separated in Supabase tables.
+- Free trial is a 7-day subscriber plan with 15-country limit.
+- Free trial end time is handled down to seconds.
+
+Before deployment:
+1. Run supabase_schema.sql in Supabase SQL Editor.
+2. Put Supabase URL and anon key into supabase-config.js.
+3. Upload these files to the English/global site.

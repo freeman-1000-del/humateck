@@ -3,24 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Humateck 7-Day Free Trial</title>
+<title>Humateck Email Verification</title>
 <style>
-*{box-sizing:border-box}html,body{margin:0;padding:0;background:#050b14;color:#f4f1e8;font-family:Arial,"Noto Sans KR",sans-serif}a{color:inherit;text-decoration:none}.wrap{width:760px;max-width:calc(100vw - 40px);margin:0 auto;padding:34px 0 70px}.card{border:1px solid rgba(214,176,78,.72);border-radius:24px;background:linear-gradient(180deg,rgba(20,28,37,.96),rgba(13,19,26,.98));padding:30px 34px;box-shadow:0 18px 46px rgba(0,0,0,.28)}h1,h2{color:#f4c95c}p{line-height:1.75;color:#e6e0d4}.btn{display:inline-flex;align-items:center;justify-content:center;min-width:230px;min-height:54px;padding:12px 20px;border:2px solid #d9b256;border-radius:14px;color:#fff;font-size:18px;font-weight:900;background:linear-gradient(180deg,#5c4315,#15110a);cursor:pointer}.notice{border:1px solid rgba(214,176,78,.48);border-radius:16px;padding:16px;background:rgba(214,176,78,.1);color:#f0dfb4;line-height:1.7;margin-top:14px;white-space:pre-wrap}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}.yellow{color:#ffd95a;font-weight:900}
+*{box-sizing:border-box}html,body{margin:0;padding:0;background:#050b14;color:#f4f1e8;font-family:Arial,"Noto Sans KR",sans-serif}a{color:inherit;text-decoration:none}.wrap{width:760px;max-width:calc(100vw - 40px);margin:0 auto;padding:34px 0 70px}.card{border:1px solid rgba(214,176,78,.72);border-radius:24px;background:linear-gradient(180deg,rgba(20,28,37,.96),rgba(13,19,26,.98));padding:30px 34px;box-shadow:0 18px 46px rgba(0,0,0,.28)}h1,h2{color:#f4c95c}p{line-height:1.75;color:#e6e0d4}.btn{display:inline-flex;align-items:center;justify-content:center;min-width:210px;min-height:52px;padding:12px 20px;border:2px solid #d9b256;border-radius:14px;color:#fff;font-size:17px;font-weight:900;background:linear-gradient(180deg,#5c4315,#15110a);cursor:pointer}.notice{border:1px solid rgba(214,176,78,.48);border-radius:16px;padding:16px;background:rgba(214,176,78,.1);color:#f0dfb4;line-height:1.7;margin-top:14px;white-space:pre-wrap}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}.yellow{color:#ffd95a;font-weight:900}label{display:block;margin-top:18px;margin-bottom:8px;color:#ffd95a;font-weight:900}input{width:100%;padding:15px;background:#050b14;color:#f7f1e6;border:1px solid #4b5d6d;border-radius:12px;font-size:18px}.subtle{font-size:14px;color:#cfc8b9}.hidden{display:none!important}
 </style>
 </head>
 <body>
 <div class="wrap">
   <section class="card">
-    <h1>7-Day Free Trial</h1>
-    <p class="yellow">15-country subtitle registration.</p>
-    <p>This free trial is treated as a 7-day subscriber plan. The only limitation is the 15-country free trial set.</p>
+    <h1>Email Verification</h1>
+    <p id="selectedPlanText" class="yellow">Selected plan is being loaded.</p>
+    <p>Enter your email to continue with the selected plan.</p>
 
-    <h2>Google Sign-in</h2>
-    <p>Continue with your official Google account. Humateck does not use an internal email form for free-trial members.</p>
+    <label for="memberEmail">Email</label>
+    <input id="memberEmail" type="email" name="email" autocomplete="email" inputmode="email" placeholder="your@email.com">
+    <p class="subtle">Use the browser email suggestion shown from your own device.</p>
+
     <div class="actions">
-      <button id="googleSignInBtn" class="btn" type="button">Continue with Google</button>
-      <button id="activateFreeTrialBtn" class="btn" type="button">Activate 7-Day Free Trial</button>
-      <a class="btn" href="order.html">Go to Order Page</a>
+      <button id="verifyEmailBtn" class="btn" type="button">Verify Email</button>
+      <a class="btn" href="plans.html">Back to Plans</a>
+      <a id="goOrderBtn" class="btn hidden" href="order.html">Go to Order Page</a>
+      <a id="checkoutBtn" class="btn hidden" href="#" target="_blank" rel="noopener noreferrer">Continue to Checkout</a>
     </div>
     <div id="signupStatus" class="notice">Ready.</div>
   </section>
@@ -33,46 +36,97 @@
 (function(){
   function $(id){ return document.getElementById(id); }
   function setStatus(text){ var box=$("signupStatus"); if(box) box.textContent=text; }
-  function formatKst(iso){
-    var d = new Date(new Date(iso).getTime() + 9*60*60*1000);
-    function p(n){return String(n).padStart(2,"0");}
-    return d.getUTCFullYear()+"-"+p(d.getUTCMonth()+1)+"-"+p(d.getUTCDate())+" "+p(d.getUTCHours())+":"+p(d.getUTCMinutes())+":"+p(d.getUTCSeconds())+" KST";
+  function show(el, yes){ if(el) el.classList.toggle("hidden", !yes); }
+  function param(name){ return new URLSearchParams(window.location.search).get(name) || ""; }
+  function pad(n){ return String(n).padStart(2,"0"); }
+  function formatKst(isoOrMs){
+    var ms = typeof isoOrMs === "number" ? isoOrMs : new Date(isoOrMs).getTime();
+    var d = new Date(ms + 9*60*60*1000);
+    return d.getUTCFullYear()+"-"+pad(d.getUTCMonth()+1)+"-"+pad(d.getUTCDate())+" "+pad(d.getUTCHours())+":"+pad(d.getUTCMinutes())+":"+pad(d.getUTCSeconds())+" KST";
   }
+  var plan = param("plan") || "free7";
+  var labels = {
+    free7: "7-Day Free Trial / 15-country subtitle registration.",
+    monthly30: "30-Country Plan",
+    monthly50: "50-Country Plan",
+    monthly70: "70-Country Plan",
+    monthly83: "83-Country Plan",
+    yearly83: "83-Country Annual Plan"
+  };
+  var paypal = {
+    monthly30: "https://www.paypal.com/webapps/billing/plans/subscribe?plan_id=P-0NR97490A8670131FNH6DHPA",
+    monthly50: "https://www.paypal.com/webapps/billing/plans/subscribe?plan_id=P-86V63300B15314135NH6ENDQ",
+    monthly70: "https://www.paypal.com/webapps/billing/plans/subscribe?plan_id=P-752827993G859572ANH6EHKQ",
+    monthly83: "https://www.paypal.com/webapps/billing/plans/subscribe?plan_id=P-6E5334011V329504ENH6D6II",
+    yearly83: "https://www.paypal.com/webapps/billing/plans/subscribe?plan_id=P-9AN12524W12053819NH6ER3Y"
+  };
+  if($("selectedPlanText")) $("selectedPlanText").textContent = labels[plan] || labels.free7;
+
+  function isEmail(value){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value||"").trim()); }
+
   document.addEventListener("click", async function(e){
-    if(e.target && e.target.id === "googleSignInBtn"){
-      e.preventDefault();
-      try{
-        await window.humateckSignInWithGoogle();
-        setStatus("Redirecting to Google sign-in...");
-      }catch(err){ setStatus("Google sign-in failed: " + (err && err.message ? err.message : err)); }
-    }
-    if(e.target && e.target.id === "activateFreeTrialBtn"){
-      e.preventDefault();
-      try{
-        var result = await window.humateckStartFreeTrial();
-        setStatus("7-Day Free Trial activated.
-Email: " + result.email + "
+    if(!e.target || e.target.id !== "verifyEmailBtn") return;
+    e.preventDefault();
+    var email = ($("memberEmail") && $("memberEmail").value || "").trim().toLowerCase();
+    if(!isEmail(email)){ setStatus("Please enter a valid email address."); return; }
+    try{
+      localStorage.setItem("humateckVerifiedEmail", email);
+      localStorage.setItem("humateckSelectedPlan", plan);
+    }catch(err){}
+
+    try{
+      if(window.humateckVerifyEmailMembership){
+        var result = await window.humateckVerifyEmailMembership(email, plan);
+        if(result && result.active){
+          setStatus("Email verified.
+Email: " + email + "
 Plan: " + result.plan + "
 Country limit: " + result.countryLimit + "
 Ends at: " + formatKst(result.endsAt));
-      }catch(err){ setStatus("Free trial activation failed: " + (err && err.message ? err.message : err)); }
+          show($("goOrderBtn"), true);
+          show($("checkoutBtn"), false);
+          return;
+        }
+      }
+    }catch(err){
+      setStatus("Email verification could not read membership status.
+" + (err && err.message ? err.message : err));
+      return;
     }
-  });
 
-  window.humateckGetCurrentMembership().then(function(result){
-    if(result && result.email){
-      if(result.active){
-        setStatus("Signed in with Google.
-Email: " + result.email + "
-Plan: " + result.plan + "
-Ends at: " + formatKst(result.endsAt));
-      }else{
-        setStatus("Signed in with Google.
-Email: " + result.email + "
-You may now activate the 7-Day Free Trial.");
+    if(plan === "free7"){
+      try{
+        if(window.humateckStartFreeTrialByEmail){
+          var free = await window.humateckStartFreeTrialByEmail(email);
+          setStatus("7-Day Free Trial activated.
+Email: " + email + "
+Plan: free7
+Country limit: 15
+Ends at: " + formatKst(free.endsAt));
+          show($("goOrderBtn"), true);
+          show($("checkoutBtn"), false);
+          return;
+        }
+      }catch(err){
+        setStatus("Free trial activation failed.
+" + (err && err.message ? err.message : err));
+        return;
       }
     }
-  }).catch(function(){});
+
+    if(paypal[plan]){
+      var checkout = $("checkoutBtn");
+      checkout.href = paypal[plan];
+      show(checkout, true);
+      show($("goOrderBtn"), false);
+      setStatus("Email verified.
+Email: " + email + "
+Please continue to checkout for the selected plan.");
+      return;
+    }
+
+    setStatus("Email verified. Please continue.");
+  });
 })();
 </script>
 </body>
