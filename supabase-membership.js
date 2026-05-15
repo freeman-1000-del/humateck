@@ -1,5 +1,5 @@
 /* Humateck Supabase membership bridge
-   Purpose only: email auth + free/paid membership status lookup.
+   Purpose only: Google auth + free/paid membership status lookup.
    OAuth is intentionally not used as a membership condition. */
 (function(){
   function getClient(){
@@ -52,7 +52,7 @@
     var client = getClient();
     if(!client) return { active:false, reason:"Supabase is not configured." };
     var user = await getSessionUser();
-    if(!user) return { active:false, reason:"Email sign-in is required." };
+    if(!user) return { active:false, reason:"Google sign-in is required." };
 
     var nowIso = new Date().toISOString();
 
@@ -88,17 +88,20 @@
     return { active:false, reason:"No active membership found.", email:user.email };
   }
 
-  async function sendEmailOtp(email){
+  async function signInWithGoogle(){
     var client = getClient();
     if(!client) throw new Error("Supabase is not configured.");
-    return client.auth.signInWithOtp({ email: email, options: { emailRedirectTo: window.location.origin + window.location.pathname } });
+    return client.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: window.location.origin + window.location.pathname }
+    });
   }
 
   async function startFreeTrial(){
     var client = getClient();
     if(!client) throw new Error("Supabase is not configured.");
     var user = await getSessionUser();
-    if(!user) throw new Error("Email sign-in is required first.");
+    if(!user) throw new Error("Google sign-in is required first.");
 
     var now = new Date();
     var end = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
@@ -118,7 +121,7 @@
     return { active:true, kind:"free_trial", plan:"free7", countryLimit:15, endsAt:payload.ends_at, email:user.email };
   }
 
-  window.humateckSendEmailOtp = sendEmailOtp;
+  window.humateckSignInWithGoogle = signInWithGoogle;
   window.humateckStartFreeTrial = startFreeTrial;
   window.humateckGetCurrentMembership = getMembership;
   window.humateckGetSubscriberPlanFromSupabase = getMembership;
