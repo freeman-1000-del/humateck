@@ -2140,4 +2140,47 @@ ${countryBlock}`;
   }, true);
 })();
 </script>
+
+<script>
+/* Humateck_New012 admin registration permission restore */
+(function(){
+  function isAdminModeActive(){
+    var adminPlan = window.humateckAdminSelectedPlan || "";
+    var hidden = document.getElementById("humateckActivePlanValue");
+    var hiddenPlan = hidden && hidden.value ? hidden.value : "";
+    var adminToken = localStorage.getItem("humateckAdminMode") || "";
+    var adminFlag = localStorage.getItem("humateckAdmin") || "";
+
+    return !!(
+      adminPlan ||
+      hiddenPlan ||
+      adminToken === "true" ||
+      adminToken === "1" ||
+      adminFlag === "true" ||
+      adminFlag === "1"
+    );
+  }
+
+  window.humateckIsAdminModeActive = isAdminModeActive;
+
+  document.addEventListener("click", function(event){
+    var adminBtn = event.target.closest("[data-admin-plan]");
+    if(!adminBtn) return;
+
+    localStorage.setItem("humateckAdminMode", "true");
+    var plan = adminBtn.getAttribute("data-admin-plan") || "admin";
+    window.humateckAdminSelectedPlan = plan;
+
+    var hidden = document.getElementById("humateckActivePlanValue");
+    if(hidden) hidden.value = plan;
+
+    var sendBtn = document.getElementById("sendOrderBtn");
+    if(sendBtn){
+      sendBtn.disabled = false;
+      sendBtn.classList.remove("disabled");
+    }
+  }, true);
+})();
+</script>
+
 </body></html>
