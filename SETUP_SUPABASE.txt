@@ -22,3 +22,10 @@ Before deployment:
 1. Run supabase_schema.sql in Supabase SQL Editor.
 2. Put Supabase URL and anon key into supabase-config.js.
 3. Upload these files to the English/global site.
+
+
+New199 note:
+- The website does not use internal password signup.
+- Email autocomplete is used on signup.html.
+- Supabase tables are not publicly selectable. The frontend uses RPC functions in supabase_schema.sql.
+- OAuth remains excluded from membership eligibility.

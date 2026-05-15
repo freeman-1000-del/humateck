@@ -61,7 +61,6 @@
     yearly83: "https://www.paypal.com/webapps/billing/plans/subscribe?plan_id=P-9AN12524W12053819NH6ER3Y"
   };
   if($("selectedPlanText")) $("selectedPlanText").textContent = labels[plan] || labels.free7;
-
   function isEmail(value){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value||"").trim()); }
 
   document.addEventListener("click", async function(e){
@@ -78,19 +77,14 @@
       if(window.humateckVerifyEmailMembership){
         var result = await window.humateckVerifyEmailMembership(email, plan);
         if(result && result.active){
-          setStatus("Email verified.
-Email: " + email + "
-Plan: " + result.plan + "
-Country limit: " + result.countryLimit + "
-Ends at: " + formatKst(result.endsAt));
+          setStatus("Email verified.\nEmail: " + email + "\nPlan: " + result.plan + "\nCountry limit: " + result.countryLimit + "\nEnds at: " + formatKst(result.endsAt));
           show($("goOrderBtn"), true);
           show($("checkoutBtn"), false);
           return;
         }
       }
     }catch(err){
-      setStatus("Email verification could not read membership status.
-" + (err && err.message ? err.message : err));
+      setStatus("Email verification could not read membership status.\n" + (err && err.message ? err.message : err));
       return;
     }
 
@@ -98,18 +92,13 @@ Ends at: " + formatKst(result.endsAt));
       try{
         if(window.humateckStartFreeTrialByEmail){
           var free = await window.humateckStartFreeTrialByEmail(email);
-          setStatus("7-Day Free Trial activated.
-Email: " + email + "
-Plan: free7
-Country limit: 15
-Ends at: " + formatKst(free.endsAt));
+          setStatus("7-Day Free Trial activated.\nEmail: " + email + "\nPlan: free7\nCountry limit: 15\nEnds at: " + formatKst(free.endsAt));
           show($("goOrderBtn"), true);
           show($("checkoutBtn"), false);
           return;
         }
       }catch(err){
-        setStatus("Free trial activation failed.
-" + (err && err.message ? err.message : err));
+        setStatus("Free trial activation failed.\n" + (err && err.message ? err.message : err));
         return;
       }
     }
@@ -119,9 +108,7 @@ Ends at: " + formatKst(free.endsAt));
       checkout.href = paypal[plan];
       show(checkout, true);
       show($("goOrderBtn"), false);
-      setStatus("Email verified.
-Email: " + email + "
-Please continue to checkout for the selected plan.");
+      setStatus("Email verified.\nEmail: " + email + "\nPlease continue to checkout for the selected plan.");
       return;
     }
 
