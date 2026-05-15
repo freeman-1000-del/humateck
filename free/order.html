@@ -1046,6 +1046,7 @@ input,textarea{font-size:16px!important;}
 }
 </style>
 
+<!-- Humateck_New209: free/order admin controls removed; free route stays isolated. -->
 <!-- Humateck_New208: free trial order copy. Isolated under /free/. Uses free-only storage keys; root order.html must never import this logic. -->
 </head>
 <body>
@@ -1192,14 +1193,7 @@ A) This is because YouTube content display system fixes the default video settin
 </div>
 </details>
 </section>
-    <details class="adminSecret">
-      <summary>Hidden Admin Menu</summary>
-      <p>For testing and customer support responses, the administrator can select any plan.</p>
-      <div class="actions"><button class="btn adminPlanButton" type="button" data-admin-plan="free7">7-Day Free / 15 Countries</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly30">30 Countries</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly50">50 Countries</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly70">70 Countries</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly83">83 Countries</button><button class="btn adminPlanButton" type="button" data-admin-plan="yearly83">Annual 83 Countries</button></div>
-    </details>
-
 <input type="hidden" id="humateckFreeOnlyActivePlanValue" value="">
-<p id="adminPlanStatus" class="adminPlanStatus" style="display:none!important;"></p>
 <p id="freeTrialExactEndStatus" class="notice" style="display:none;"></p>
 
 
@@ -2239,53 +2233,7 @@ ${countryBlock}`;
 })();
 </script>
 
-<script>
-/* Humateck_New012 admin registration permission restore */
-(function(){
-  function isAdminModeActive(){
-    var adminPlan = window.humateckFreeOnlyAdminSelectedPlan || "";
-    var hidden = document.getElementById("humateckFreeOnlyActivePlanValue");
-    var hiddenPlan = hidden && hidden.value ? hidden.value : "";
-    var adminToken = localStorage.getItem("humateckAdminMode") || "";
-    var adminFlag = localStorage.getItem("humateckAdmin") || "";
 
-    return !!(
-      adminPlan ||
-      hiddenPlan ||
-      adminToken === "true" ||
-      adminToken === "1" ||
-      adminFlag === "true" ||
-      adminFlag === "1"
-    );
-  }
-
-  window.humateckIsAdminModeActive = isAdminModeActive;
-
-  document.addEventListener("click", function(event){
-    var adminBtn = event.target.closest("[data-admin-plan]");
-    if(!adminBtn) return;
-
-    localStorage.setItem("humateckAdminMode", "true");
-    var plan = adminBtn.getAttribute("data-admin-plan") || "admin";
-    window.humateckFreeOnlyAdminSelectedPlan = plan;
-    try{
-      localStorage.setItem("humateckFreeOnlyAdminSelectedPlan", plan);
-      localStorage.setItem("humateckFreeOnlyActivePlan", plan);
-      if(plan === "free7") humateckActivateFreeTrialExactTime();
-    }catch(e){}
-
-    var hidden = document.getElementById("humateckFreeOnlyActivePlanValue");
-    if(hidden) hidden.value = plan;
-    humateckRenderFreeTrialExactTime();
-
-    var sendBtn = document.getElementById("sendOrderBtn");
-    if(sendBtn){
-      sendBtn.disabled = false;
-      sendBtn.classList.remove("disabled");
-    }
-  }, true);
-})();
-</script>
 
 
 <div id="freeTrialMiniBadge" style="position:fixed;right:12px;bottom:12px;z-index:9999;border:1px solid rgba(255,217,90,.65);border-radius:999px;background:rgba(8,12,18,.88);color:#f4e4b6;padding:8px 12px;font:700 12px Arial,sans-serif;opacity:.82;">Free Trial · 15 countries</div>
