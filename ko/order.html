@@ -1088,7 +1088,7 @@ Description: translated description
     <details class="adminSecret">
       <summary>관리자용 히든 메뉴</summary>
       <p>관리자는 테스트와 고객 CS 대응을 위해 어떤 플랜도 선택할 수 있습니다.</p>
-      <div class="actions"><button class="btn adminPlanButton" type="button" data-admin-plan="monthly30">30개국</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly50">50개국</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly70">70개국</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly83">83개국</button><button class="btn adminPlanButton" type="button" data-admin-plan="yearly83">연간 83개국</button></div>
+      <div class="actions"><button class="btn adminPlanButton" type="button" data-admin-plan="trial7">7일 무료 15개국</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly30">30개국</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly50">50개국</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly70">70개국</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly83">83개국</button><button class="btn adminPlanButton" type="button" data-admin-plan="yearly83">연간 83개국</button></div>
     </details>
 
 <input type="hidden" id="humateckActivePlanValue" value="">
@@ -1201,6 +1201,9 @@ Description: translated description
     if(!plan && window.humateckAdminSelectedPlan) plan = window.humateckAdminSelectedPlan;
     if(!plan && window.humateckPaymentSubscriptionPlan) plan = window.humateckPaymentSubscriptionPlan;
 
+    if(plan === "trial7") return 15;
+    if(plan === "free7") return 15;
+    if(plan === "weeklyFree15") return 15;
     if(plan === "monthly50") return 50;
     if(plan === "monthly70") return 70;
     if(plan === "monthly83") return 83;
@@ -1733,7 +1736,18 @@ ${countryBlock}`;
     var plan = hidden ? String(hidden.value || "").trim() : "";
     if(!plan && window.humateckAdminSelectedPlan) plan = String(window.humateckAdminSelectedPlan || "").trim();
     if(!plan && window.humateckPaymentSubscriptionPlan) plan = String(window.humateckPaymentSubscriptionPlan || "").trim();
-    return !!plan;
+
+    if(plan) return true;
+
+    if(window.humateckIsAdminModeActive && window.humateckIsAdminModeActive()) return true;
+
+    try{
+      var adminToken = localStorage.getItem("humateckAdminMode") || "";
+      var adminFlag = localStorage.getItem("humateckAdmin") || "";
+      if(adminToken === "true" || adminToken === "1" || adminFlag === "true" || adminFlag === "1") return true;
+    }catch(e){}
+
+    return false;
   }
 
   function showSubscriberOnlyNotice(){
@@ -2076,6 +2090,10 @@ ${countryBlock}`;
     localStorage.setItem("humateckAdminMode", "true");
     var plan = adminBtn.getAttribute("data-admin-plan") || "admin";
     window.humateckAdminSelectedPlan = plan;
+    window.humateckPaymentSubscriptionPlan = plan;
+
+    document.querySelectorAll("[data-admin-plan]").forEach(function(btn){ btn.classList.remove("active"); });
+    adminBtn.classList.add("active");
 
     var hidden = document.getElementById("humateckActivePlanValue");
     if(hidden) hidden.value = plan;
