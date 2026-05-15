@@ -1,0 +1,31 @@
+Delete these old mixed-flow files from the repository if they still exist:
+
+signup.html
+supabase-config.js
+supabase-membership.js
+supabase_schema.sql
+SETUP_SUPABASE.txt
+
+Current separated structure:
+
+plans.html
+- Free trial button must link to: free/start.html
+- Paid plan buttons continue to: order.html
+
+order.html
+- Paid/main order page.
+- Based on order(190).html.
+- Do not mix free trial logic here.
+
+free/start.html
+- Free trial start page.
+- No Supabase pre-check.
+- No signup.html flow.
+
+free/order.html
+- Free trial order page.
+- Free 15-country flow only.
+- Must stay separate from order.html.
+
+free/gemini_free15_country_set.txt
+- Free trial Gemini 15-country set.
