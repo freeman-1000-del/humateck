@@ -51,7 +51,10 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 .faqItem{border-top:1px solid rgba(255,255,255,.12);padding-top:14px;margin-top:14px}
 .codebox{white-space:pre-wrap;background:#080f18;border:1px solid #334353;border-radius:12px;padding:14px;color:#e9e1d0;line-height:1.6;font-size:14px}
 @media(max-width:980px){.grid2,.order,.plans{grid-template-columns:1fr}.title{font-size:32px}.wrap{max-width:calc(100vw - 28px)}}
-.question{color:#ffd95a!important;font-weight:900}</style>
+.question{color:#ffd95a!important;font-weight:900}
+.freeTrialMiniBadge{position:fixed;left:18px;bottom:18px;z-index:1000;display:none;max-width:260px;padding:8px 11px;border:1px solid rgba(255,217,90,.58);border-radius:999px;background:rgba(8,12,18,.88);color:#ffd95a;font-size:12px;font-weight:900;line-height:1.35;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.freeTrialMiniBadge span{color:#f4f1e8;font-weight:700}
+</style>
 
 
 <style>
@@ -1048,6 +1051,7 @@ input,textarea{font-size:16px!important;}
 
 </head>
 <body>
+<div id="freeTrialMiniBadge" class="freeTrialMiniBadge"></div>
 
 <div class="wrap" id="top">
 <header class="top"><a href="index.html"><img class="logo" src="FINAL_LOGO01.png" alt="Humateck"></a><div class="lang">◎ English⌄</div></header>
@@ -1334,16 +1338,24 @@ A) This is because YouTube content display system fixes the default video settin
 
   function humateckRenderFreeTrialExactTime(){
     var box = document.getElementById("freeTrialExactEndStatus");
-    if(!box) return;
-    if(getHumateckSubscriberPlan() !== "free7" || !humateckIsFreeTrialActiveNow()){
-      box.style.display = "none";
-      box.textContent = "";
+    var badge = document.getElementById("freeTrialMiniBadge");
+    var active = (getHumateckSubscriberPlan() === "free7" && humateckIsFreeTrialActiveNow());
+    if(!active){
+      if(box){ box.style.display = "none"; box.textContent = ""; }
+      if(badge){ badge.style.display = "none"; badge.textContent = ""; }
       return;
     }
     var startMs = Number(localStorage.getItem("humateckFreeTrialStartMs") || "0");
     var endMs = humateckGetFreeTrialEndMs();
-    box.style.display = "block";
-    box.textContent = "7-Day Free Subscriber Plan starts at: " + humateckFormatKstDateTime(startMs) + " / ends at: " + humateckFormatKstDateTime(endMs);
+    var endText = humateckFormatKstDateTime(endMs);
+    if(box){
+      box.style.display = "block";
+      box.textContent = "7-Day Free Subscriber Plan / 15-country subtitle registration. Ends at: " + endText;
+    }
+    if(badge){
+      badge.style.display = "block";
+      badge.innerHTML = "FREE TRIAL <span>15 countries · until " + endText + "</span>";
+    }
   }
 
   function getHumateckSubscriberPlan(){
@@ -1382,6 +1394,7 @@ A) This is because YouTube content display system fixes the default video settin
   window.humateckRenderFreeTrialExactTime = humateckRenderFreeTrialExactTime;
   window.humateckGetSubscriberPlanLocal = getHumateckSubscriberPlan;
   document.addEventListener("DOMContentLoaded", humateckRenderFreeTrialExactTime);
+  setInterval(humateckRenderFreeTrialExactTime, 30000);
 
   function buildGeminiPrompt(){
     var activeCount = getActiveCount();
