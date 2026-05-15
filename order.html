@@ -1043,6 +1043,19 @@ input,textarea{font-size:16px!important;}
 }
 </style>
 
+
+<style>
+.oauthLaunchNotice{
+  border:1px solid rgba(255,217,90,.62);
+  border-radius:14px;
+  padding:12px 14px;
+  background:rgba(255,217,90,.08);
+  color:#f4e4b6!important;
+  font-weight:800;
+  line-height:1.7;
+}
+</style>
+
 </head>
 <body>
 
@@ -1120,7 +1133,7 @@ Description: translated description
       <div class="actions"><a class="btn guideOpenButton" href="#oauthGuideModal">Important Setup Guide</a></div>
       <div class="oauthPanelBelow">
         <h2>Google OAuth Setup Guide</h2>
-        <p>However, registration of actual YouTube content is only permitted for Plan subscribers.</p>
+        <p class="oauthLaunchNotice">This authentication allows visitors to experience the reality of AI chat translation and YouTube registration. However, actual registration is available only to subscribers. Please do not misunderstand this point.</p>
         <label for="googleClientIdInput">Google OAuth Web Client ID</label>
         <input id="googleClientIdInput" type="password" autocomplete="off" placeholder="Paste your Google OAuth Web Client ID">
         <div class="oauthCenterButton">
