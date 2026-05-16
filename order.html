@@ -747,16 +747,6 @@ input,textarea{font-size:16px!important;}
   justify-content:center!important;
 }
 </style>
-
-
-<style>
-/* Humateck temporary service-ready marker only */
-.serviceReadyTemporary{
-  border-color:#ffd95a!important;
-  box-shadow:0 0 20px rgba(255,217,90,.55)!important;
-}
-</style>
-
 <style>
 /* Humateck OAuth success-only customer display */
 .oauthSuccessBadge{
@@ -1061,7 +1051,7 @@ input,textarea{font-size:16px!important;}
 
 <div class="wrap" id="top">
 <header class="top"><a href="index.html"><img class="logo" src="FINAL_LOGO01.png" alt="Humateck"></a><div class="lang">◎ English⌄</div></header>
-<div class="orderTopButtons"><a href="index.html">Home</a><a href="plans.html" class="serviceReadyTemporary">View All Plans · Service Preparation in Progress</a></div>
+<div class="orderTopButtons"><a href="index.html">Home</a><a href="plans.html">View All Plans</a></div>
 <section class="orderMainGrid">
   <div class="orderLeftColumn">
     <section class="card">
@@ -1127,10 +1117,10 @@ Description: translated description
     </section>
 <section class="oauthInfoBox" id="googleOAuthNotice">
       <h2>Google OAuth Setup Guide Notice</h2>
-      <p>From here, this is the Google OAuth authentication sequence that subscribers must complete. Non-subscribers may also complete this authentication, but final register multilingual content is open only to subscribers. Please do not misunderstand this point.</p>
+      <p>Google OAuth authorization is available to all visitors. It is not a membership condition; it is only required when performing YouTube registration work. Final YouTube registration is available to active subscribers, including the 7-day free subscriber plan.</p>
       <p class="yellowStrong">If you have already received a Google OAuth authentication key, please skip the “Important Setup Guide.”</p>
       <center><p class="yellowStrong">Once configured, it can be used for multiple channels.</p></center>
-      <div class="actions"><a class="btn guideOpenButton" href="#oauthGuideModal">Important Setup Guide</a></div>
+      <div class="actions"><a class="btn guideOpenButton" href="#oauthGuideModal">Important Setup Guide</a><a class="btn" href="plans.html">Subscribe to a Plan</a></div>
       <div class="oauthPanelBelow">
         <h2>Google OAuth Setup Guide</h2>
         <p class="oauthLaunchNotice">This authentication allows visitors to experience the reality of AI chat translation and YouTube registration. However, actual registration is available only to subscribers. Please do not misunderstand this point.</p>
@@ -1155,8 +1145,7 @@ Description: translated description
     </section>
 <section class="card registerNoticeBelow">
 <h2>YouTube Registration Notice</h2>
-<p>Humateck does not review, block, change, or add anything to the customer-approved translation. The approved content is sent as-is.</p>
-<p>All translations are registered to the YouTube channel immediately, and only languages actually rejected by the receiving side are separated as pending languages.</p>
+<p>All translations are registered to the YouTube channel immediately. But Humateck does not review, block, change, or add anything to the customer-approved translation. The approved content is sent as-is.</p>
 <section class="card" id="deliveryResultCard">
       <h2>Registration Result</h2>
       <textarea id="deliveryLog" class="mediumTextarea" readonly placeholder="YouTube registration results will appear here."></textarea>
@@ -1189,11 +1178,12 @@ A) This is because YouTube content display system fixes the default video settin
     <details class="adminSecret">
       <summary>Hidden Admin Menu</summary>
       <p>For testing and customer support responses, the administrator can select any plan.</p>
-      <div class="actions"><button class="btn adminPlanButton" type="button" data-admin-plan="monthly30">30 Countries</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly50">50 Countries</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly70">70 Countries</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly83">83 Countries</button><button class="btn adminPlanButton" type="button" data-admin-plan="yearly83">Annual 83 Countries</button></div>
+      <div class="actions"><button class="btn adminPlanButton" type="button" data-admin-plan="free7">7-Day Free / 15 Countries</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly30">30 Countries</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly50">50 Countries</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly70">70 Countries</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly83">83 Countries</button><button class="btn adminPlanButton" type="button" data-admin-plan="yearly83">Annual 83 Countries</button></div>
     </details>
 
 <input type="hidden" id="humateckActivePlanValue" value="">
 <p id="adminPlanStatus" class="adminPlanStatus" style="display:none!important;"></p>
+<p id="freeTrialExactEndStatus" class="notice" style="display:none;"></p>
 
 
 </details>
@@ -1283,6 +1273,11 @@ A) This is because YouTube content display system fixes the default video settin
 <div class="account"><a href="#" title="Google Official Authentication">G</a><a href="#" title="Apple Official Authentication">●</a><a href="#" title="Email Official Authentication">@</a></div>
 
 
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="supabase-membership.js"></script>
+
 <script>
 (function(){
   function getValue(id){
@@ -1295,12 +1290,85 @@ A) This is because YouTube content display system fixes the default video settin
     if(el) el.value = value;
   }
 
-  function getActiveCount(){
-    var hidden = document.getElementById("humateckActivePlanValue");
-    var plan = hidden ? hidden.value : "";
-    if(!plan && window.humateckAdminSelectedPlan) plan = window.humateckAdminSelectedPlan;
-    if(!plan && window.humateckPaymentSubscriptionPlan) plan = window.humateckPaymentSubscriptionPlan;
 
+  function humateckFormatKstDateTime(ms){
+    var d = new Date(ms + (9 * 60 * 60 * 1000));
+    function pad(n){ return String(n).padStart(2, "0"); }
+    return d.getUTCFullYear() + "-" + pad(d.getUTCMonth() + 1) + "-" + pad(d.getUTCDate()) + " " + pad(d.getUTCHours()) + ":" + pad(d.getUTCMinutes()) + ":" + pad(d.getUTCSeconds()) + " KST";
+  }
+
+  function humateckGetFreeTrialEndMs(){
+    try{
+      var value = Number(localStorage.getItem("humateckFreeTrialEndMs") || "0");
+      return isNaN(value) ? 0 : value;
+    }catch(e){ return 0; }
+  }
+
+  function humateckIsFreeTrialActiveNow(){
+    var endMs = humateckGetFreeTrialEndMs();
+    if(!endMs) return false;
+    if(Date.now() > endMs){
+      try{
+        localStorage.removeItem("humateckFreeTrialActive");
+        localStorage.removeItem("humateckSubscriberPlan");
+        if(localStorage.getItem("humateckActivePlan") === "free7") localStorage.removeItem("humateckActivePlan");
+        if(localStorage.getItem("humateckAdminSelectedPlan") === "free7") localStorage.removeItem("humateckAdminSelectedPlan");
+      }catch(e){}
+      return false;
+    }
+    return true;
+  }
+
+  function humateckActivateFreeTrialExactTime(){
+    var startMs = Date.now();
+    var endMs = startMs + (7 * 24 * 60 * 60 * 1000);
+    try{
+      localStorage.setItem("humateckFreeTrialActive", "true");
+      localStorage.setItem("humateckFreeTrialStartMs", String(startMs));
+      localStorage.setItem("humateckFreeTrialEndMs", String(endMs));
+      localStorage.setItem("humateckActivePlan", "free7");
+      localStorage.setItem("humateckSubscriberPlan", "free7");
+    }catch(e){}
+    humateckRenderFreeTrialExactTime();
+  }
+
+  function humateckRenderFreeTrialExactTime(){
+    var box = document.getElementById("freeTrialExactEndStatus");
+    if(!box) return;
+    if(getHumateckSubscriberPlan() !== "free7" || !humateckIsFreeTrialActiveNow()){
+      box.style.display = "none";
+      box.textContent = "";
+      return;
+    }
+    var startMs = Number(localStorage.getItem("humateckFreeTrialStartMs") || "0");
+    var endMs = humateckGetFreeTrialEndMs();
+    box.style.display = "block";
+    box.textContent = "7-Day Free Subscriber Plan starts at: " + humateckFormatKstDateTime(startMs) + " / ends at: " + humateckFormatKstDateTime(endMs);
+  }
+
+  function getHumateckSubscriberPlan(){
+    var hidden = document.getElementById("humateckActivePlanValue");
+    var plan = hidden ? String(hidden.value || "").trim() : "";
+    if(!plan && window.humateckAdminSelectedPlan) plan = String(window.humateckAdminSelectedPlan || "").trim();
+    if(!plan && window.humateckPaymentSubscriptionPlan) plan = String(window.humateckPaymentSubscriptionPlan || "").trim();
+    if(!plan){ try{ plan = String(localStorage.getItem("humateckSubscriberPlan") || "").trim(); }catch(e){} }
+    if(!plan){ try{ plan = String(localStorage.getItem("humateckActivePlan") || "").trim(); }catch(e){} }
+    if(!plan){ try{ plan = String(localStorage.getItem("humateckPaymentSubscriptionPlan") || "").trim(); }catch(e){} }
+    if(!plan){ try{ plan = String(localStorage.getItem("humateckAdminSelectedPlan") || "").trim(); }catch(e){} }
+    if(!plan){
+      try{
+        var trial = String(localStorage.getItem("humateckFreeTrialActive") || "").trim();
+        if((trial === "true" || trial === "1") && humateckIsFreeTrialActiveNow()) plan = "free7";
+      }catch(e){}
+    }
+    return plan;
+  }
+
+
+  function getActiveCount(){
+    var plan = getHumateckSubscriberPlan();
+
+    if(plan === "free7") return 15;
     if(plan === "monthly50") return 50;
     if(plan === "monthly70") return 70;
     if(plan === "monthly83") return 83;
@@ -1311,12 +1379,36 @@ A) This is because YouTube content display system fixes the default video settin
     return 30;
   }
 
+  window.humateckRenderFreeTrialExactTime = humateckRenderFreeTrialExactTime;
+  window.humateckGetSubscriberPlanLocal = getHumateckSubscriberPlan;
+  document.addEventListener("DOMContentLoaded", humateckRenderFreeTrialExactTime);
+
   function buildGeminiPrompt(){
     var activeCount = getActiveCount();
     var sourceTitle = getValue("sourceTitle");
     var sourceDescription = getValue("sourceDescription");
 
-    var countryBlock = [
+    var freeTrialCountryBlock = [
+      "Country Code / Country Name Mapping Table",
+      "",
+      "1. en | English (United States / Global English)",
+      "2. en-GB | English (United Kingdom)",
+      "3. hi | Hindi (India)",
+      "4. pt | Portuguese (Brazil focus)",
+      "5. id | Indonesian (Indonesia)",
+      "6. es-419 | Spanish (Latin America / Mexico focus)",
+      "7. ja | Japanese (Japan)",
+      "8. ko | Korean (South Korea)",
+      "9. de | German (Germany)",
+      "10. vi | Vietnamese (Vietnam)",
+      "11. fil | Filipino (Philippines)",
+      "12. tr | Turkish (Türkiye)",
+      "13. fr | French (France)",
+      "14. it | Italian (Italy)",
+      "15. ar | Arabic"
+    ].join("\n");
+
+    var paidCountryBlock = [
       "Country Code / Country Name Mapping Table",
       "",
       "1. af | Afrikaans",
@@ -1403,6 +1495,8 @@ A) This is because YouTube content display system fixes the default video settin
       "82. zh-TW | Chinese (Taiwan)",
       "83. zu | Zulu"
     ].slice(0, activeCount + 2).join("\n");
+
+    var countryBlock = getHumateckSubscriberPlan() === "free7" ? freeTrialCountryBlock : paidCountryBlock;
 
     var prompt =
 `Hello Gemini!
@@ -1835,16 +1929,19 @@ ${countryBlock}`;
     return data;
   }
 
-  function hasSubscriberAccess(){
-    var hidden = document.getElementById("humateckActivePlanValue");
-    var plan = hidden ? hidden.value : "";
-    if(!plan && window.humateckAdminSelectedPlan) plan = window.humateckAdminSelectedPlan;
-    if(!plan && window.humateckPaymentSubscriptionPlan) plan = window.humateckPaymentSubscriptionPlan;
-    return !!plan;
+  async function hasSubscriberAccess(){
+    /* Membership condition only: Supabase paid/free-trial membership or admin test plan. OAuth is intentionally excluded here. */
+    if(window.humateckGetSubscriberPlanFromSupabase){
+      try{
+        var member = await window.humateckGetSubscriberPlanFromSupabase();
+        if(member && member.active && member.plan) return true;
+      }catch(e){}
+    }
+    return !!getHumateckSubscriberPlan();
   }
 
   async function deliverByYouTubeSpec(){
-    if(!hasSubscriberAccess()){
+    if(!(await hasSubscriberAccess())){
       alert("Sorry. YouTube Multilingual Registration is available only to subscribers.");
       return;
     }
@@ -2151,4 +2248,53 @@ ${countryBlock}`;
   }, true);
 })();
 </script>
+
+<script>
+/* Humateck_New012 admin registration permission restore */
+(function(){
+  function isAdminModeActive(){
+    var adminPlan = window.humateckAdminSelectedPlan || "";
+    var hidden = document.getElementById("humateckActivePlanValue");
+    var hiddenPlan = hidden && hidden.value ? hidden.value : "";
+    var adminToken = localStorage.getItem("humateckAdminMode") || "";
+    var adminFlag = localStorage.getItem("humateckAdmin") || "";
+
+    return !!(
+      adminPlan ||
+      hiddenPlan ||
+      adminToken === "true" ||
+      adminToken === "1" ||
+      adminFlag === "true" ||
+      adminFlag === "1"
+    );
+  }
+
+  window.humateckIsAdminModeActive = isAdminModeActive;
+
+  document.addEventListener("click", function(event){
+    var adminBtn = event.target.closest("[data-admin-plan]");
+    if(!adminBtn) return;
+
+    localStorage.setItem("humateckAdminMode", "true");
+    var plan = adminBtn.getAttribute("data-admin-plan") || "admin";
+    window.humateckAdminSelectedPlan = plan;
+    try{
+      localStorage.setItem("humateckAdminSelectedPlan", plan);
+      localStorage.setItem("humateckActivePlan", plan);
+      if(plan === "free7") humateckActivateFreeTrialExactTime();
+    }catch(e){}
+
+    var hidden = document.getElementById("humateckActivePlanValue");
+    if(hidden) hidden.value = plan;
+    humateckRenderFreeTrialExactTime();
+
+    var sendBtn = document.getElementById("sendOrderBtn");
+    if(sendBtn){
+      sendBtn.disabled = false;
+      sendBtn.classList.remove("disabled");
+    }
+  }, true);
+})();
+</script>
+
 </body></html>
