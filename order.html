@@ -2238,4 +2238,118 @@ ${countryBlock}`;
 })();
 </script>
 
+
+<script>
+/* HUMATECK NEW215 ADMIN ACTIVE COUNT DIRECT FIX
+   Purpose:
+   - Hidden Admin Menu must control Gemini activeCount immediately.
+   - Selecting 30/50/70/83/Annual 83 must update the generated prompt country count.
+   - This is an admin plan selector bridge only.
+*/
+(function(){
+  function $(id){ return document.getElementById(id); }
+
+  function planToCount(plan){
+    if(plan === "monthly50") return 50;
+    if(plan === "monthly70") return 70;
+    if(plan === "monthly83") return 83;
+    if(plan === "yearly83") return 83;
+    if(plan === "yearly70") return 70;
+    if(plan === "free7") return 15;
+    return 30;
+  }
+
+  function setAdminPlan(plan, btn){
+    if(!plan) return;
+    var count = planToCount(plan);
+
+    window.humateckAdminSelectedPlan = plan;
+    window.humateckPaymentSubscriptionPlan = plan;
+    window.humateckAdminActiveCount = count;
+
+    try{
+      localStorage.setItem("humateckAdminSelectedPlan", plan);
+      localStorage.setItem("humateckActivePlan", plan);
+      localStorage.setItem("humateckSubscriberPlan", plan);
+      localStorage.setItem("humateckPaymentSubscriptionPlan", plan);
+      localStorage.setItem("humateckAdminActiveCount", String(count));
+    }catch(e){}
+
+    var hidden = $("humateckActivePlanValue");
+    if(hidden) hidden.value = plan;
+
+    var buttons = document.querySelectorAll("[data-admin-plan]");
+    for(var i=0;i<buttons.length;i++){
+      buttons[i].classList.remove("active");
+    }
+    if(btn) btn.classList.add("active");
+
+    var geminiText = $("geminiPromptText");
+    if(geminiText){
+      if(typeof window.buildGeminiPrompt === "function"){
+        var title = $("sourceTitle");
+        var desc = $("sourceDescription");
+        // If the user has entered anything, regenerate immediately.
+        if((title && title.value.trim()) || (desc && desc.value.trim())){
+          window.buildGeminiPrompt();
+        }else{
+          // Otherwise update the visible template count only, without changing source content.
+          geminiText.value = geminiText.value
+            .replace(/\{activeCount\}-country/g, count + "-country")
+            .replace(/for the \d+-country set/g, "for the " + count + "-country set")
+            .replace(/for the \{activeCount\}-country set/g, "for the " + count + "-country set");
+        }
+      }
+    }
+
+    var sendBtn = $("sendOrderBtn");
+    if(sendBtn){
+      sendBtn.disabled = false;
+      sendBtn.removeAttribute("disabled");
+      sendBtn.classList.remove("disabled");
+    }
+  }
+
+  // Wrap existing getActiveCount if available after page scripts load.
+  function installGetActiveCountBridge(){
+    try{
+      var oldBuild = window.buildGeminiPrompt;
+      if(typeof oldBuild === "function" && !oldBuild.__humateck215Wrapped){
+        // Existing buildGeminiPrompt already calls its internal getActiveCount.
+        // We make sure the hidden value is current before it runs.
+        var wrapped = function(){
+          var plan = "";
+          try{ plan = localStorage.getItem("humateckAdminSelectedPlan") || ""; }catch(e){}
+          if(!plan && window.humateckAdminSelectedPlan) plan = window.humateckAdminSelectedPlan;
+          var hidden = $("humateckActivePlanValue");
+          if(plan && hidden) hidden.value = plan;
+          return oldBuild.apply(this, arguments);
+        };
+        wrapped.__humateck215Wrapped = true;
+        window.buildGeminiPrompt = wrapped;
+      }
+    }catch(e){}
+  }
+
+  document.addEventListener("click", function(e){
+    var btn = e.target && e.target.closest ? e.target.closest("[data-admin-plan]") : null;
+    if(!btn) return;
+    e.preventDefault();
+    e.stopPropagation();
+    setAdminPlan(btn.getAttribute("data-admin-plan"), btn);
+  }, true);
+
+  document.addEventListener("DOMContentLoaded", function(){
+    installGetActiveCountBridge();
+    var plan = "";
+    try{ plan = localStorage.getItem("humateckAdminSelectedPlan") || ""; }catch(e){}
+    if(plan){
+      setAdminPlan(plan, document.querySelector('[data-admin-plan="' + plan + '"]'));
+    }
+  });
+
+  window.humateckSetAdminPlanDirect = setAdminPlan;
+})();
+</script>
+
 </body></html>
