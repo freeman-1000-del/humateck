@@ -1,59 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- HUMATECK FREE PATH ONLY: This page starts the 7-day free trial flow under /free/. -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Start Your 7-Day Free Trial</title>
+<title>Start Your 7-Day Free Trial | Humateck</title>
 <style>
-*{box-sizing:border-box}html,body{margin:0;padding:0;background:#050b14;color:#f4f1e8;font-family:Arial,"Noto Sans KR",sans-serif}a{color:inherit;text-decoration:none}.wrap{width:860px;max-width:calc(100vw - 36px);margin:0 auto;padding:28px 0 60px}.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}.logo{width:190px}.card{border:1px solid rgba(214,176,78,.72);border-radius:24px;background:linear-gradient(180deg,rgba(20,28,37,.96),rgba(13,19,26,.98));padding:34px;box-shadow:0 18px 46px rgba(0,0,0,.28)}h1{color:#ffd95a;font-size:36px;margin:0 0 10px}.lead{font-size:19px;line-height:1.7;margin:0 0 24px}.label{display:block;color:#ffd95a;font-weight:900;margin:18px 0 8px}input{width:100%;padding:16px;border:1px solid #4b5d6d;border-radius:14px;font-size:18px;background:#edf4ff;color:#050b14}button,.btn{display:inline-flex;align-items:center;justify-content:center;min-width:230px;min-height:56px;margin:22px 12px 0 0;padding:12px 22px;border:2px solid #d9b256;border-radius:14px;color:#fff;background:linear-gradient(180deg,#5c4315,#15110a);font-size:19px;font-weight:900;cursor:pointer}.muted{font-size:15px;color:#d8d0bd;line-height:1.6;margin-top:10px}.done{display:none;border:1px solid rgba(255,217,90,.62);border-radius:16px;background:rgba(255,217,90,.08);padding:18px;margin-top:22px;font-size:17px;line-height:1.7}.highlight{color:#ffd95a;font-weight:900}.smallTop{margin-bottom:18px}.miniNav{display:inline-flex;border:1px solid rgba(214,176,78,.55);border-radius:999px;padding:8px 14px;color:#e8d8a8;background:rgba(255,255,255,.03);font-weight:800}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#050b14;color:#f4f1e8;font-family:Arial,"Noto Sans KR",sans-serif}
+a{color:inherit;text-decoration:none}
+.wrap{width:960px;max-width:calc(100vw - 40px);margin:44px auto;padding-bottom:60px}
+.logo{width:190px;height:auto;display:block;margin-bottom:22px}
+.card{border:1px solid rgba(214,176,78,.72);border-radius:24px;background:linear-gradient(180deg,rgba(20,28,37,.96),rgba(13,19,26,.98));padding:30px 34px;margin-bottom:22px;box-shadow:0 18px 46px rgba(0,0,0,.28)}
+h1,h2{color:#ffd95a;margin-top:0}
+p{font-size:17px;line-height:1.72;color:#eee5d5}
+input{width:100%;padding:15px;background:#eef4ff;color:#111;border:1px solid #9fb4d6;border-radius:12px;font-size:18px;margin:8px 0 14px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-width:230px;min-height:54px;padding:13px 22px;border:2px solid #d9b256;border-radius:14px;color:#fff;font-size:19px;font-weight:900;background:linear-gradient(180deg,#5c4315,#15110a);cursor:pointer}
+.btn.secondary{background:rgba(214,176,78,.10)}
+.actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:18px}
+.notice{border:1px solid rgba(255,217,90,.55);border-radius:16px;background:rgba(255,217,90,.08);padding:16px 18px;margin-top:16px}
+.deadline{color:#ffd95a;font-weight:900}
+.planMirror{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}
+.planLink{border:1px solid rgba(214,176,78,.55);border-radius:16px;background:rgba(5,11,20,.42);padding:16px}
+.planLink strong{color:#ffd95a}
+.devNote{font-size:13px;color:#cfc8b9;border-top:1px solid rgba(255,255,255,.12);margin-top:22px;padding-top:12px}
+@media(max-width:760px){.planMirror{grid-template-columns:1fr}.wrap{max-width:calc(100vw - 24px)}}
 </style>
-<!-- Humateck_New208: free folder only. Uses free-only storage keys and never writes root order.html membership keys. -->
 </head>
 <body>
 <div class="wrap">
-  <header class="top"><a href="../index.html"><img class="logo" src="../FINAL_LOGO01.png" alt="Humateck"></a><a class="miniNav" href="../plans.html">Back to Plans</a></header>
+  <a href="../index.html"><img class="logo" src="../FINAL_LOGO01.png" alt="Humateck"></a>
+
   <section class="card">
     <h1>Start Your 7-Day Free Trial</h1>
-    <p class="lead"><strong>15-country subtitle registration.</strong><br>Start simply with your email and continue to the free trial order page.</p>
-    <label class="label" for="trialEmail">Email</label>
-    <input id="trialEmail" type="email" name="email" autocomplete="email" placeholder="your@email.com">
-    <p class="muted">Use the browser email suggestion shown from your own device.</p>
-    <button id="startTrialBtn" type="button">Start Free Trial</button>
-    <a class="btn" href="../plans.html">Back to Plans</a>
-    <div id="trialDone" class="done"></div>
+    <p><strong>15-country subtitle registration.</strong></p>
+    <p>Enter your email and start the free trial in this free-trial path.</p>
+
+    <label for="freeEmail"><strong>Email</strong></label>
+    <input id="freeEmail" type="email" name="email" autocomplete="email" placeholder="your@email.com">
+
+    <div class="actions">
+      <button id="startFreeTrialBtn" class="btn" type="button">Start Free Trial</button>
+      <a class="btn secondary" href="../plans.html">View Paid Plans</a>
+    </div>
+
+    <div id="freeTrialNotice" class="notice" style="display:none;"></div>
+  </section>
+
+  <section class="card">
+    <h2>Upgrade to a Paid Plan</h2>
+    <p>Paid plans are not duplicated inside the free-trial path. They mirror the root plan page only.</p>
+    <p>To upgrade, please move to the official plan page.</p>
+    <div class="planMirror">
+      <a class="planLink" href="../plans.html"><strong>30-Country Plan</strong><br>Open root plans page</a>
+      <a class="planLink" href="../plans.html"><strong>50-Country Plan</strong><br>Open root plans page</a>
+      <a class="planLink" href="../plans.html"><strong>70-Country Plan</strong><br>Open root plans page</a>
+      <a class="planLink" href="../plans.html"><strong>83-Country Plan</strong><br>Open root plans page</a>
+      <a class="planLink" href="../plans.html"><strong>83-Country Annual Plan</strong><br>Open root plans page</a>
+    </div>
+    <p class="devNote">Developer note: Paid plan buttons inside /free/ must never link directly to order.html. They must point to ../plans.html only.</p>
   </section>
 </div>
+
 <script>
 (function(){
-
-  function clearLegacyRootFreeKeys(){
-    var legacyKeys=[
-      'humateckFreeTrialActive','humateckFreeTrialStartMs','humateckFreeTrialEndMs','humateckFreeTrialEmail',
-      'humateckActivePlan','humateckSubscriberPlan','humateckPaymentSubscriptionPlan','humateckAdminSelectedPlan'
-    ];
-    legacyKeys.forEach(function(k){try{localStorage.removeItem(k);}catch(e){}});
+  function pad(n){ return String(n).padStart(2, "0"); }
+  function formatKst(ms){
+    var d = new Date(ms + (9 * 60 * 60 * 1000));
+    return d.getUTCFullYear()+"-"+pad(d.getUTCMonth()+1)+"-"+pad(d.getUTCDate())+" "+pad(d.getUTCHours())+":"+pad(d.getUTCMinutes())+":"+pad(d.getUTCSeconds())+" KST";
   }
-
-  function pad(n){return String(n).padStart(2,"0")}
-  function kst(ms){var d=new Date(ms+(9*60*60*1000));return d.getUTCFullYear()+"-"+pad(d.getUTCMonth()+1)+"-"+pad(d.getUTCDate())+" "+pad(d.getUTCHours())+":"+pad(d.getUTCMinutes())+":"+pad(d.getUTCSeconds())+" KST"}
-  var btn=document.getElementById('startTrialBtn');
-  btn.addEventListener('click',function(){
-    var email=(document.getElementById('trialEmail').value||'').trim();
-    if(!email){alert('Please enter your email.');return;}
-    var startMs=Date.now();
-    var endMs=startMs+(7*24*60*60*1000);
+  function getStoredEnd(email){
     try{
-      localStorage.setItem('humateckFreeTrialEmail',email);
-      localStorage.setItem('humateckFreeOnlyTrialActive','true');
-      localStorage.setItem('humateckFreeOnlyTrialStartMs',String(startMs));
-      localStorage.setItem('humateckFreeOnlyTrialEndMs',String(endMs));
-      localStorage.setItem('humateckFreeOnlyActivePlan','free7');
-      localStorage.setItem('humateckFreeOnlySubscriberPlan','free7');
-    }catch(e){}
-    var box=document.getElementById('trialDone');
-    box.style.display='block';
-    box.innerHTML='Free trial activated.<br>Trial ends at: <span class="highlight">'+kst(endMs)+'</span><br><a class="btn" href="order.html">Continue to Free Trial Order Page</a>';
-  });
+      var key = "humateckFreeOnlyEndMs_" + email.toLowerCase();
+      return Number(localStorage.getItem(key) || "0");
+    }catch(e){ return 0; }
+  }
+  function storeTrial(email){
+    var now = Date.now();
+    var end = getStoredEnd(email);
+    var fresh = false;
+    if(!end){
+      end = now + (7 * 24 * 60 * 60 * 1000);
+      fresh = true;
+      try{
+        localStorage.setItem("humateckFreeOnlyEmail", email);
+        localStorage.setItem("humateckFreeOnlyStartMs_" + email.toLowerCase(), String(now));
+        localStorage.setItem("humateckFreeOnlyEndMs_" + email.toLowerCase(), String(end));
+        sessionStorage.setItem("humateckFreeOnlyPlan", "free7");
+        sessionStorage.setItem("humateckFreeOnlyCountryLimit", "15");
+      }catch(e){}
+    }
+    return {end:end, fresh:fresh};
+  }
+  var btn = document.getElementById("startFreeTrialBtn");
+  var input = document.getElementById("freeEmail");
+  var notice = document.getElementById("freeTrialNotice");
+  if(btn){
+    btn.addEventListener("click", function(){
+      var email = (input && input.value ? input.value : "").trim();
+      if(!email || email.indexOf("@") < 1){
+        notice.style.display = "block";
+        notice.innerHTML = "Please enter your email.";
+        return;
+      }
+      var t = storeTrial(email);
+      notice.style.display = "block";
+      notice.innerHTML = (t.fresh ? "Free trial activated." : "Existing free trial loaded.") +
+        "<br>Trial ends at: <span class='deadline'>" + formatKst(t.end) + "</span>" +
+        "<br><br><a class='btn' href='order.html'>Continue to Free Order Page</a>";
+    });
+  }
 })();
 </script>
 </body>
