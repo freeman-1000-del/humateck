@@ -26,6 +26,17 @@ input{width:100%;padding:15px;background:#eef4ff;color:#111;border:1px solid #9f
 .devNote{font-size:13px;color:#cfc8b9;border-top:1px solid rgba(255,255,255,.12);margin-top:22px;padding-top:12px}
 @media(max-width:760px){.planMirror{grid-template-columns:1fr}.wrap{max-width:calc(100vw - 24px)}}
 </style>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const HUMATECK_SUPABASE_URL = "https://ajvtyotblrtexcxuazqm.supabase.co";
+const HUMATECK_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFqdnR5b3RibHJ0ZXhjeHVhenFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3MjIyODYsImV4cCI6MjA4OTI5ODI4Nn0.yICmhq9lmAzVH5OqYO3KbqhZ-WD22WVrkcFh3gigql4";
+const humateckSupabase = window.supabase.createClient(
+  HUMATECK_SUPABASE_URL,
+  HUMATECK_SUPABASE_ANON_KEY
+);
+</script>
+
 </head>
 <body>
 <div class="wrap">
@@ -50,55 +61,96 @@ input{width:100%;padding:15px;background:#eef4ff;color:#111;border:1px solid #9f
   
 </div>
 
+
 <script>
 (function(){
-  function pad(n){ return String(n).padStart(2, "0"); }
-  function formatKst(ms){
-    var d = new Date(ms + (9 * 60 * 60 * 1000));
-    return d.getUTCFullYear()+"-"+pad(d.getUTCMonth()+1)+"-"+pad(d.getUTCDate())+" "+pad(d.getUTCHours())+":"+pad(d.getUTCMinutes())+":"+pad(d.getUTCSeconds())+" KST";
+
+function pad(n){ return String(n).padStart(2, "0"); }
+
+function formatKst(dateString){
+  var d = new Date(dateString);
+  return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())+" "+pad(d.getHours())+":"+pad(d.getMinutes())+":"+pad(d.getSeconds())+" KST";
+}
+
+async function loadOrCreateFreePlan(email){
+
+  const existing = await humateckSupabase
+    .from("free_trial_members")
+    .select("*")
+    .eq("email", email)
+    .maybeSingle();
+
+  if(existing.data){
+    localStorage.setItem("humateckFreeOnlyEmail", email);
+    return {
+      fresh:false,
+      end:existing.data.trial_end
+    };
   }
-  function getStoredEnd(email){
-    try{
-      var key = "humateckFreeOnlyEndMs_" + email.toLowerCase();
-      return Number(localStorage.getItem(key) || "0");
-    }catch(e){ return 0; }
+
+  const now = new Date();
+  const end = new Date(now.getTime() + (7 * 24 * 60 * 60 * 1000));
+
+  const inserted = await humateckSupabase
+    .from("free_trial_members")
+    .insert([{
+      email: email,
+      plan_type: "free7",
+      country_limit: 15,
+      status: "active",
+      trial_start: now.toISOString(),
+      trial_end: end.toISOString()
+    }])
+    .select()
+    .single();
+
+  return {
+    fresh:true,
+    end:inserted.data.trial_end
+  };
+}
+
+var btn = document.getElementById("startFreeTrialBtn");
+var input = document.getElementById("freeEmail");
+var notice = document.getElementById("freeTrialNotice");
+
+btn.addEventListener("click", async function(){
+
+  var email = (input.value || "").trim().toLowerCase();
+
+  if(!email || email.indexOf("@") < 1){
+    notice.style.display = "block";
+    notice.innerHTML = "Please enter your email.";
+    return;
   }
-  function storeTrial(email){
-    var now = Date.now();
-    var end = getStoredEnd(email);
-    var fresh = false;
-    if(!end){
-      end = now + (7 * 24 * 60 * 60 * 1000);
-      fresh = true;
-      try{
-        localStorage.setItem("humateckFreeOnlyEmail", email);
-        localStorage.setItem("humateckFreeOnlyStartMs_" + email.toLowerCase(), String(now));
-        localStorage.setItem("humateckFreeOnlyEndMs_" + email.toLowerCase(), String(end));
-        sessionStorage.setItem("humateckFreeOnlyPlan", "free7");
-        sessionStorage.setItem("humateckFreeOnlyCountryLimit", "15");
-      }catch(e){}
-    }
-    return {end:end, fresh:fresh};
+
+  btn.disabled = true;
+  btn.innerText = "Loading...";
+
+  try{
+
+    var t = await loadOrCreateFreePlan(email);
+
+    notice.style.display = "block";
+    notice.innerHTML =
+      (t.fresh ? "Free plan activated." : "Existing free plan loaded.") +
+      "<br>Plan ends at: <span class='deadline'>" + formatKst(t.end) + "</span>" +
+      "<br><br><a class='btn' href='order.html'>Continue to Free Order Page</a>";
+
+  }catch(e){
+
+    notice.style.display = "block";
+    notice.innerHTML = "Unable to connect to free plan server.";
+
   }
-  var btn = document.getElementById("startFreeTrialBtn");
-  var input = document.getElementById("freeEmail");
-  var notice = document.getElementById("freeTrialNotice");
-  if(btn){
-    btn.addEventListener("click", function(){
-      var email = (input && input.value ? input.value : "").trim();
-      if(!email || email.indexOf("@") < 1){
-        notice.style.display = "block";
-        notice.innerHTML = "Please enter your email.";
-        return;
-      }
-      var t = storeTrial(email);
-      notice.style.display = "block";
-      notice.innerHTML = (t.fresh ? "Free plan activated." : "Existing free plan loaded.") +
-        "<br>Trial ends at: <span class='deadline'>" + formatKst(t.end) + "</span>" +
-        "<br><br><a class='btn' href='order.html'>Continue to Free Order Page</a>";
-    });
-  }
+
+  btn.disabled = false;
+  btn.innerText = "Start Free Plan";
+
+});
+
 })();
 </script>
+
 </body>
 </html>
