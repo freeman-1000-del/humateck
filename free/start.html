@@ -4,7 +4,7 @@
 <!-- HUMATECK FREE PATH ONLY: This page starts the 7-day free trial flow under /free/. -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Start Your 7-Day Free Trial | Humateck</title>
+<title>Start Your 7-Day Free Plan | Humateck</title>
 <style>
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;background:#050b14;color:#f4f1e8;font-family:Arial,"Noto Sans KR",sans-serif}
@@ -32,7 +32,7 @@ input{width:100%;padding:15px;background:#eef4ff;color:#111;border:1px solid #9f
   <a href="../index.html"><img class="logo" src="../FINAL_LOGO01.png" alt="Humateck"></a>
 
   <section class="card">
-    <h1>Start Your 7-Day Free Trial</h1>
+    <h1>Start Your 7-Day Free Plan</h1>
     <p><strong>15-country subtitle registration.</strong></p>
     <p>Enter your email and start the free trial in this free-trial path.</p>
 
@@ -40,26 +40,14 @@ input{width:100%;padding:15px;background:#eef4ff;color:#111;border:1px solid #9f
     <input id="freeEmail" type="email" name="email" autocomplete="email" placeholder="your@email.com">
 
     <div class="actions">
-      <button id="startFreeTrialBtn" class="btn" type="button">Start Free Trial</button>
+      <button id="startFreeTrialBtn" class="btn" type="button">Start Free Plan</button>
       <a class="btn secondary" href="../plans.html">View Paid Plans</a>
     </div>
 
     <div id="freeTrialNotice" class="notice" style="display:none;"></div>
   </section>
 
-  <section class="card">
-    <h2>Upgrade to a Paid Plan</h2>
-    <p>Paid plans are not duplicated inside the free-trial path. They mirror the root plan page only.</p>
-    <p>To upgrade, please move to the official plan page.</p>
-    <div class="planMirror">
-      <a class="planLink" href="../plans.html"><strong>30-Country Plan</strong><br>Open root plans page</a>
-      <a class="planLink" href="../plans.html"><strong>50-Country Plan</strong><br>Open root plans page</a>
-      <a class="planLink" href="../plans.html"><strong>70-Country Plan</strong><br>Open root plans page</a>
-      <a class="planLink" href="../plans.html"><strong>83-Country Plan</strong><br>Open root plans page</a>
-      <a class="planLink" href="../plans.html"><strong>83-Country Annual Plan</strong><br>Open root plans page</a>
-    </div>
-    <p class="devNote">Developer note: Paid plan buttons inside /free/ must never link directly to order.html. They must point to ../plans.html only.</p>
-  </section>
+  
 </div>
 
 <script>
@@ -105,7 +93,7 @@ input{width:100%;padding:15px;background:#eef4ff;color:#111;border:1px solid #9f
       }
       var t = storeTrial(email);
       notice.style.display = "block";
-      notice.innerHTML = (t.fresh ? "Free trial activated." : "Existing free trial loaded.") +
+      notice.innerHTML = (t.fresh ? "Free plan activated." : "Existing free plan loaded.") +
         "<br>Trial ends at: <span class='deadline'>" + formatKst(t.end) + "</span>" +
         "<br><br><a class='btn' href='order.html'>Continue to Free Order Page</a>";
     });
