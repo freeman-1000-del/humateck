@@ -1,7 +1,7 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- HUMATECK FREE PATH ONLY: This file belongs to /free/order.html. Do not merge with root /order.html. -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>YouTube Multilingual Registration</title>
@@ -1044,25 +1044,12 @@ input,textarea{font-size:16px!important;}
 }
 </style>
 
-
-<style>
-.oauthLaunchNotice{
-  border:1px solid rgba(255,217,90,.62);
-  border-radius:14px;
-  padding:12px 14px;
-  background:rgba(255,217,90,.08);
-  color:#f4e4b6!important;
-  font-weight:800;
-  line-height:1.7;
-}
-</style>
-
 </head>
 <body>
 
 <div class="wrap" id="top">
-<header class="top"><a href="../index.html"><img class="logo" src="../FINAL_LOGO01.png" alt="Humateck"></a><div class="lang">◎ English⌄</div></header>
-<div class="orderTopButtons"><a href="../index.html">Home</a><a href="../plans.html" class="serviceReadyTemporary">View All Plans · Service Preparation in Progress</a></div>
+<header class="top"><a href="index.html"><img class="logo" src="FINAL_LOGO01.png" alt="Humateck"></a><div class="lang">◎ English⌄</div></header>
+<div class="orderTopButtons"><a href="index.html">Home</a><a href="plans.html" class="serviceReadyTemporary">View All Plans</a></div>
 <section class="orderMainGrid">
   <div class="orderLeftColumn">
     <section class="card">
@@ -1092,41 +1079,154 @@ input,textarea{font-size:16px!important;}
 Please naturally localize and translate the title and description below for the {activeCount}-country set.
 Please continue translating from beginning to end without stopping midway.
 
-Important:
-- You must output all {activeCount} Country Codes without omission.
-- Do not change the number or order of the Country Codes.
-- Do not add explanations, opinions, notes, or extra remarks.
-- Keep the exact format:
-  Number:
-  Country Code:
-  Title:
-  Description:
-- Output only the final translated results.
-- When the work is finished, move to the bottom.
-
-[Source Information]
-Native Language Code: {nativeLanguageCode}
-YouTube Video URL: {videoUrl}
-
 [Source Text]
-Title:
-{sourceTitle}
+Title: {sourceTitle}
 
 Description:
 {sourceDescription}
 
 [Output Format]
-Number: sequence
+Number: sequence number
 Country Code: language code
+Country Name: English country name
 Title: translated title
-Description: translated description
+Description:
+translated description
 
-[Country Code List]
-{countryBlock}</textarea>
+[Core Principles]
+1. Never stop midway; continue translating from beginning to end.
+2. Do not include work explanations, introductions, closing remarks, or commentary.
+3. Use the Country Code and Country Name in the mapping table below exactly as written.
+4. Never change the order of the blocks.
+5. Each block must start with Country Code.
+6. Maintain the paragraph structure and line breaks of the Description according to the flow of the source text.
+7. Do not include any extra remarks, keyword lines, hashtags, code blocks, or HTML other than the title and description.
+8. When the work is finished, move to the bottom.
+
+Country Code / Country Name Mapping Table
+
+1. af | Afrikaans
+2. am | Amharic
+3. ar | Arabic
+4. as | Assamese
+5. az | Azerbaijani
+6. be | Belarusian
+7. bg | Bulgarian
+8. bn | Bengali
+9. bs | Bosnian
+10. ca | Catalan
+11. cs | Czech
+12. da | Danish
+13. de | German
+14. el | Greek
+15. en-GB | English (United Kingdom)
+16. en-IN | English (India)
+17. en | English
+18. es | Spanish
+19. es-419 | Spanish (Latin America)
+20. es-US | Spanish (United States)
+21. et | Estonian
+22. eu | Basque
+23. fa | Persian
+24. fi | Finnish
+25. fil | Filipino
+26. fr-CA | French (Canada)
+27. fr | French
+28. gl | Galician
+29. gu | Gujarati
+30. hi | Hindi
+31. hr | Croatian
+32. hu | Hungarian
+33. hy | Armenian
+34. id | Indonesian
+35. is | Icelandic
+36. it | Italian
+37. iw | Hebrew
+38. ja | Japanese
+39. ka | Georgian
+40. kk | Kazakh
+41. km | Khmer
+42. kn | Kannada
+43. ko | Korean
+44. ky | Kyrgyz
+45. lo | Lao
+46. lt | Lithuanian
+47. lv | Latvian
+48. mk | Macedonian
+49. ml | Malayalam
+50. mn | Mongolian
+51. mr | Marathi
+52. ms | Malay
+53. my | Burmese
+54. no | Norwegian
+55. ne | Nepali
+56. nl | Dutch
+57. or | Odia
+58. pa | Punjabi
+59. pl | Polish
+60. pt | Portuguese
+61. pt-PT | Portuguese (Portugal)
+62. ro | Romanian
+63. ru | Russian
+64. si | Sinhala
+65. sk | Slovak
+66. sl | Slovenian
+67. sq | Albanian
+68. sr-Latn | Serbian (Latin)
+69. sr | Serbian
+70. sv | Swedish
+71. sw | Swahili
+72. ta | Tamil
+73. te | Telugu
+74. th | Thai
+75. tr | Turkish
+76. uk | Ukrainian
+77. ur | Urdu
+78. uz | Uzbek
+79. vi | Vietnamese
+80. zh-CN | Chinese (China)
+81. zh-HK | Chinese (Hong Kong)
+82. zh-TW | Chinese (Taiwan)
+83. zu | Zulu</textarea>
       <div class="actions"><button class="btn copyButtonVisible" type="button" data-copy-target="geminiPromptText">Copy</button></div>
       <p id="geminiCopyStatus" class="copyStatus"></p><div class="actions"><a class="btn geminiChatButton" href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer">Go to Gemini Chat Translation.</a></div>
     </section>
-<section class="oauthInfoBox" id="googleOAuthNotice">
+
+    <section class="card">
+      <h2>Gemini Command Copy-and-Paste Sequence</h2><div class="commandFullRows"><div class="commandFullItem">
+<div class="commandFullTop"><label class="">Command 1</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText1">Copy</button></div>
+<textarea id="commandText1" readonly>Please automatically and carefully check for mixed-in other languages, unnatural context, and any other issues.</textarea>
+</div><div class="commandFullItem">
+<div class="commandFullTop"><label class="">Command 2</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText2">Copy</button></div>
+<textarea id="commandText2" readonly>Please delete only the Number: and Country Name: lines.
+Important: Keep the rest of the format exactly as it is now (Country Code:, Title:, Description:).</textarea>
+</div><div class="commandFullItem">
+<div class="commandFullTop"><label class="">Command 3</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText3">Copy</button></div>
+<textarea id="commandText3" readonly>Please check once more for mixed-in other languages, unnatural context, and any other issues.
+Please keep the format as it is.</textarea>
+</div><div class="commandFullItem">
+<div class="commandFullTop"><label class="">Command 4</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText4">Copy</button></div>
+<textarea id="commandText4" readonly>Please check again whether the country names have been deleted, and carefully check once more for mixed-in other languages, unnatural context, and any other issues.</textarea>
+</div><div class="commandFullItem">
+<div class="commandFullTop"><label class="">Command 5</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText5">Copy</button></div>
+<textarea id="commandText5" readonly>Please add number: and count the total number of translation codes.</textarea>
+</div><div class="commandFullItem">
+<div class="commandFullTop"><label class="">Command 6</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText6">Copy</button></div>
+<textarea id="commandText6" readonly>If the total number is correct, delete all number: entries and carefully perform the final check for mixed-in other languages, unnatural context, and any other issues.</textarea>
+</div><div class="commandFullItem">
+<div class="commandFullTop"><label class="">Command 7</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText7">Copy</button></div>
+<textarea id="commandText7" readonly>Please move to the bottom.</textarea>
+<p class="commandWarningBlink">
+⚠️ (Important) In the Gemini window, be sure to press the ⧉ (Copy response) button at the end of the last translation above the “Please move to the bottom.” command, then paste it into the final version field.<br><br>
+⚠️ (Important) Be careful not to include extra remarks or unnecessary words other than the translation, as they may cause registration errors.
+</p>
+
+</div></div><h2>Paste Final Version</h2>
+      <textarea id="finalOutput" class="mediumTextarea" placeholder="Paste the final Gemini translation result."></textarea>
+      
+    </section>
+
+    <section class="oauthInfoBox" id="googleOAuthNotice">
       <h2>Google OAuth Setup Guide Notice</h2>
       <p>From here, this is the Google OAuth authentication sequence that subscribers must complete. Non-subscribers may also complete this authentication, but final register multilingual content is open only to subscribers. Please do not misunderstand this point.</p>
       <p class="yellowStrong">If you have already received a Google OAuth authentication key, please skip the “Important Setup Guide.”</p>
@@ -1134,7 +1234,7 @@ Description: translated description
       <div class="actions"><a class="btn guideOpenButton" href="#oauthGuideModal">Important Setup Guide</a></div>
       <div class="oauthPanelBelow">
         <h2>Google OAuth Setup Guide</h2>
-        <p class="oauthLaunchNotice">This authentication allows visitors to experience the reality of AI chat translation and YouTube registration. However, actual registration is available only to subscribers. Please do not misunderstand this point.</p>
+        <p>This website provides OAuth setup guidance and practice. Actual authentication and registration are performed in the  extension.</p>
         <label for="googleClientIdInput">Google OAuth Web Client ID</label>
         <input id="googleClientIdInput" type="password" autocomplete="off" placeholder="Paste your Google OAuth Web Client ID">
         <div class="oauthCenterButton">
@@ -1144,13 +1244,7 @@ Description: translated description
 </div>
     </section>
 
-    
-    <section class="card" id="finalVersionCard">
-      <h2>Final Version (Customer Review)</h2>
-      <textarea id="finalOutput" class="mediumTextarea" placeholder="Paste the customer-reviewed final version from Gemini here."></textarea>
-    </section>
-
-<section class="card">
+    <section class="card">
       <h2>YouTube Subtitle Registration</h2>
       <div class="actions"><button class="btn humateckOnlyButton" type="button" id="sendOrderBtn">YouTube Subtitle Registration</button></div>
     </section>
@@ -1187,6 +1281,14 @@ A) This is because YouTube content display system fixes the default video settin
 </div>
 </details>
 </section>
+    <details class="adminSecret">
+      <summary>Hidden Admin Menu</summary>
+      <p>For testing and customer support responses, the administrator can select any plan.</p>
+      <div class="actions"><button class="btn adminPlanButton" type="button" data-admin-plan="monthly30">30 Countries</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly50">50 Countries</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly70">70 Countries</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly83">83 Countries</button><button class="btn adminPlanButton" type="button" data-admin-plan="yearly83">Annual 83 Countries</button></div>
+    </details>
+
+<input type="hidden" id="humateckActivePlanValue" value="">
+<p id="adminPlanStatus" class="adminPlanStatus" style="display:none!important;"></p>
 
 
 </details>
@@ -1395,7 +1497,8 @@ A) This is because YouTube content display system fixes the default video settin
       "81. zh-HK | Chinese (Hong Kong)",
       "82. zh-TW | Chinese (Taiwan)",
       "83. zu | Zulu"
-    ].slice(0, activeCount + 2).join("\n");
+    ].slice(0, activeCount + 2).join("
+");
 
     var prompt =
 `Hello Gemini!
@@ -1645,7 +1748,8 @@ ${countryBlock}`;
 <script>
 /* Humateck_New046 OAuth receive check only */
 (function(){
-  function showReceiveStatus(message, ok){
+  function showReceiveStatus(message, ok) { return; }
+
     var auth = document.getElementById("authStatus");
     if(auth && ok){
       auth.value = message;
@@ -1668,7 +1772,7 @@ ${countryBlock}`;
     }
 
     showReceiveStatus(
-      "OAuth received\\nToken receipt: " + (hasToken ? "Success" : "Failure") + "\\nNow this token can be connected to register multilingual content in the next step.",
+      "OAuth received\nToken receipt: " + (hasToken ? "Success" : "Failure") + "\nNow this token can be connected to register multilingual content in the next step.",
       hasToken
     );
   });
@@ -2145,16 +2249,109 @@ ${countryBlock}`;
 })();
 </script>
 
+
 <script>
-/* HUMATECK FREE PATH ONLY
-   This script is intentionally limited to /free/order.html.
-   It must never be copied into root /order.html.
-*/
+/* Humateck_New084 admin plan prompt count restore */
 (function(){
-  try{
-    sessionStorage.setItem("humateckFreeOnlyPlan", "free7");
-    sessionStorage.setItem("humateckFreeOnlyCountryLimit", "15");
-  }catch(e){}
+  var HUMATECK_COUNTRY_LINES_83 = `1. af | Afrikaans\n2. am | Amharic\n3. ar | Arabic\n4. as | Assamese\n5. az | Azerbaijani\n6. be | Belarusian\n7. bg | Bulgarian\n8. bn | Bengali\n9. bs | Bosnian\n10. ca | Catalan\n11. cs | Czech\n12. da | Danish\n13. de | German\n14. el | Greek\n15. en-GB | English (United Kingdom)\n16. en-IN | English (India)\n17. en | English\n18. es | Spanish\n19. es-419 | Spanish (Latin America)\n20. es-US | Spanish (United States)\n21. et | Estonian\n22. eu | Basque\n23. fa | Persian\n24. fi | Finnish\n25. fil | Filipino\n26. fr-CA | French (Canada)\n27. fr | French\n28. gl | Galician\n29. gu | Gujarati\n30. hi | Hindi\n31. hr | Croatian\n32. hu | Hungarian\n33. hy | Armenian\n34. id | Indonesian\n35. is | Icelandic\n36. it | Italian\n37. iw | Hebrew\n38. ja | Japanese\n39. ka | Georgian\n40. kk | Kazakh\n41. km | Khmer\n42. kn | Kannada\n43. ko | Korean\n44. ky | Kyrgyz\n45. lo | Lao\n46. lt | Lithuanian\n47. lv | Latvian\n48. mk | Macedonian\n49. ml | Malayalam\n50. mn | Mongolian\n51. mr | Marathi\n52. ms | Malay\n53. my | Burmese\n54. no | Norwegian\n55. ne | Nepali\n56. nl | Dutch\n57. or | Odia\n58. pa | Punjabi\n59. pl | Polish\n60. pt | Portuguese\n61. pt-PT | Portuguese (Portugal)\n62. ro | Romanian\n63. ru | Russian\n64. si | Sinhala\n65. sk | Slovak\n66. sl | Slovenian\n67. sq | Albanian\n68. sr-Latn | Serbian (Latin)\n69. sr | Serbian\n70. sv | Swedish\n71. sw | Swahili\n72. ta | Tamil\n73. te | Telugu\n74. th | Thai\n75. tr | Turkish\n76. uk | Ukrainian\n77. ur | Urdu\n78. uz | Uzbek\n79. vi | Vietnamese\n80. zh-CN | Chinese (China)\n81. zh-HK | Chinese (Hong Kong)\n82. zh-TW | Chinese (Taiwan)\n83. zu | Zulu`;
+
+  function getValue(id){
+    var el = document.getElementById(id);
+    return el ? el.value : "";
+  }
+
+  function setValue(id, value){
+    var el = document.getElementById(id);
+    if(el) el.value = value;
+  }
+
+  function countFromPlan(plan){
+    if(plan === "monthly50") return 50;
+    if(plan === "monthly70") return 70;
+    if(plan === "monthly83") return 83;
+    if(plan === "yearly83") return 83;
+    if(plan === "monthly30") return 30;
+    return 30;
+  }
+
+  function rebuildGeminiPromptByPlan(plan){
+    var activeCount = countFromPlan(plan);
+    var sourceTitle = getValue("sourceTitle");
+    var sourceDescription = getValue("sourceDescription");
+    var lines = HUMATECK_COUNTRY_LINES_83.split("\n").slice(0, activeCount).join("\n");
+
+    var prompt =
+`Hello Gemini!
+Please naturally localize and translate the title and description below for the ${activeCount}-country set.
+Please continue translating from beginning to end without stopping midway.
+
+[Source Text]
+Title: ${sourceTitle}
+
+Description:
+${sourceDescription}
+
+[Output Format]
+Number: sequence number
+Country Code: language code
+Country Name: English country name
+Title: translated title
+Description:
+translated description
+
+[Core Principles]
+1. Never stop midway; continue translating from beginning to end.
+2. Do not include work explanations, introductions, closing remarks, or commentary.
+3. Use the Country Code and Country Name in the mapping table below exactly as written.
+4. Never change the order of the blocks.
+5. Each block must start with Country Code.
+6. Maintain the paragraph structure and line breaks of the Description according to the flow of the source text.
+7. Do not include any extra remarks, keyword lines, hashtags, code blocks, or HTML other than the title and description.
+8. When the work is finished, move to the bottom.
+
+Country Code / Country Name Mapping Table
+
+${lines}`;
+
+    setValue("geminiPromptText", prompt);
+
+    var status = document.getElementById("geminiCopyStatus");
+    if(status) status.textContent = "The Gemini request prompt has been generated. Please press the copy button.";
+
+    var gemini = document.getElementById("gemini");
+    if(gemini) gemini.scrollIntoView({behavior:"smooth", block:"start"});
+  }
+
+  function setAdminPlan(plan){
+    var hidden = document.getElementById("humateckActivePlanValue");
+    if(hidden) hidden.value = plan;
+
+    window.humateckAdminSelectedPlan = plan;
+    /* Admin test plan must stay separated from customer payment subscription state. */
+
+    document.querySelectorAll("[data-admin-plan]").forEach(function(btn){
+      btn.classList.toggle("active", btn.getAttribute("data-admin-plan") === plan);
+    });
+
+    var status = document.getElementById("adminPlanStatus");
+    if(status){
+      status.textContent = "";
+      status.style.display = "none";
+    }
+
+    rebuildGeminiPromptByPlan(plan);
+  }
+
+  document.addEventListener("click", function(event){
+    var btn = event.target.closest("[data-admin-plan]");
+    if(!btn) return;
+    event.preventDefault();
+    event.stopPropagation();
+    setAdminPlan(btn.getAttribute("data-admin-plan"));
+  }, true);
+
+  window.humateckSetAdminPlan = setAdminPlan;
+  window.humateckRebuildGeminiPromptByPlan = rebuildGeminiPromptByPlan;
 })();
 </script>
 </body></html>
