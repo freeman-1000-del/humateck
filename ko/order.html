@@ -1384,8 +1384,7 @@ Country Code / Country Name 대응표
       "81. zh-HK | 중국어(홍콩)",
       "82. zh-TW | 중국어(대만)",
       "83. zu | 줄루어"
-    ].slice(0, activeCount + 2).join("
-");
+    ].slice(0, activeCount + 2).join("\n");
 
     var prompt =
 `안녕 제미나이!
@@ -1426,21 +1425,51 @@ ${countryBlock}`;
 
   window.buildGeminiPrompt = buildGeminiPrompt;
 
-  function copyText(targetId){
-    var target = document.getElementById(targetId);
-    if(!target) return;
-    target.focus();
-    target.select();
-    target.setSelectionRange(0, target.value.length);
-
-    var done = false;
-    try{
-      done = document.execCommand("copy");
-    }catch(e){ done = false; }
-
+  function showCopyStatus(targetId, message){
     var status = document.getElementById("geminiCopyStatus");
     if(status && targetId === "geminiPromptText"){
-      status.textContent = done ? "복사되었습니다." : "복사가 되지 않으면 칸 안의 내용을 선택해 복사해 주세요.";
+      status.textContent = message;
+    }
+  }
+
+  function copyText(targetId, button){
+    var target = document.getElementById(targetId);
+    if(!target) return;
+
+    var text = target.value || target.textContent || "";
+    var originalText = button ? button.textContent : "";
+
+    function markDone(){
+      if(button){
+        button.textContent = "복사완료";
+        setTimeout(function(){ button.textContent = originalText || "복사"; }, 1200);
+      }
+      showCopyStatus(targetId, "복사되었습니다.");
+    }
+
+    function fallbackCopy(){
+      target.focus();
+      if(target.select) target.select();
+      if(target.setSelectionRange) target.setSelectionRange(0, text.length);
+
+      var done = false;
+      try{
+        done = document.execCommand("copy");
+      }catch(err){
+        done = false;
+      }
+
+      if(done){
+        markDone();
+      }else{
+        showCopyStatus(targetId, "복사가 되지 않으면 칸 안의 내용을 선택해 복사해 주세요.");
+      }
+    }
+
+    if(navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText(text).then(markDone).catch(fallbackCopy);
+    }else{
+      fallbackCopy();
     }
   }
 
@@ -1455,7 +1484,7 @@ ${countryBlock}`;
     var copyButton = e.target.closest("[data-copy-target]");
     if(copyButton){
       e.preventDefault();
-      copyText(copyButton.getAttribute("data-copy-target"));
+      copyText(copyButton.getAttribute("data-copy-target"), copyButton);
     }
   });
 })();
