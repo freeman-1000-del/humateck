@@ -722,6 +722,16 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
   justify-content:center!important;
 }
 </style>
+
+
+<style>
+/* Humateck temporary service-ready marker only */
+.serviceReadyTemporary{
+  border-color:#ffd95a!important;
+  box-shadow:0 0 20px rgba(255,217,90,.55)!important;
+}
+</style>
+
 <style>
 /* Humateck website cleanup: preparation / guide space only */
 .humateckOnlyNotice{
@@ -944,84 +954,12 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 }
 </style>
 
-
-<style>
-.oauthLaunchNotice{
-  border:1px solid rgba(255,217,90,.62);
-  border-radius:14px;
-  padding:12px 14px;
-  background:rgba(255,217,90,.08);
-  color:#f4e4b6!important;
-  font-weight:800;
-  line-height:1.7;
-}
-</style>
-
-
-<style>
-/* Humateck_New025 Korean final Gemini command only */
-.finalGeminiCommandCard{
-  border:1px solid rgba(214,176,78,.45);
-  border-radius:16px;
-  padding:16px;
-  margin-top:16px;
-  background:rgba(5,11,20,.42);
-}
-.finalGeminiCommandTop{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-  margin-bottom:8px;
-}
-.finalGeminiCommandTop h3{
-  margin:0!important;
-  color:#f4c95c!important;
-  font-size:20px!important;
-  line-height:1.45!important;
-}
-.finalGeminiCommandCopy{
-  min-width:78px!important;
-  min-height:36px!important;
-  padding:7px 13px!important;
-  font-size:14px!important;
-}
-#finalGeminiCommandText{
-  min-height:72px!important;
-  font-size:16px!important;
-  line-height:1.65!important;
-  margin-top:0!important;
-}
-.finalGeminiWarning{
-  margin:8px 0 0;
-  padding:10px 12px;
-  border:1px solid rgba(214,176,78,.38);
-  border-radius:12px;
-  background:rgba(214,176,78,.06);
-  color:#e6e0d4!important;
-  font-size:16px!important;
-  line-height:1.65!important;
-  font-weight:400!important;
-}
-.finalGeminiWarning p{
-  margin:6px 0!important;
-  color:#e6e0d4!important;
-  font-size:16px!important;
-  line-height:1.65!important;
-  font-weight:400!important;
-}
-.finalGeminiWarning .finalGeminiEmphasis{
-  color:#ffd95a!important;
-  font-weight:700!important;
-}
-</style>
-
 </head>
 <body>
 
 <div class="wrap" id="top">
 <header class="top"><a href="index.html"><img class="logo" src="FINAL_LOGO01.png" alt="Humateck"></a><div class="lang">◎ 한국어⌄</div></header>
-<div class="orderTopButtons"><a href="index.html">첫페이지 가기</a><a href="plans.html">전체플랜 가기</a></div>
+<div class="orderTopButtons"><a href="index.html">첫페이지 가기</a><a href="plans.html" class="serviceReadyTemporary">전체플랜 가기</a></div>
 <section class="orderMainGrid">
   <div class="orderLeftColumn">
     <section class="card">
@@ -1047,62 +985,145 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 
     <section id="gemini" class="card">
       <h2>제미나이 의뢰문</h2>
-      <textarea id="geminiPromptText" class="mediumTextarea" readonly>Hello Gemini!
-Please naturally localize and translate the title and description below for the {activeCount}-country set.
-Please continue translating from beginning to end without stopping midway.
+      <textarea id="geminiPromptText" class="mediumTextarea" readonly>안녕 제미나이!
+아래 제목과 설명문을 {activeCount}개 국가 세트에 맞춰 자연스럽게 현지화 번역해 줘.
+처음부터 끝까지 중간에 끊지 말고 계속 번역해 줘.
 
-Important:
-- You must output all {activeCount} Country Codes without omission.
-- Do not change the number or order of the Country Codes.
-- Do not add explanations, opinions, notes, or extra remarks.
-- Keep the exact format:
-  Number:
-  Country Code:
-  Title:
-  Description:
-- Output only the final translated results.
-- When the work is finished, move to the bottom.
-
-[Source Information]
-Native Language Code: {nativeLanguageCode}
-YouTube Video URL: {videoUrl}
-
-[Source Text]
-Title:
-{sourceTitle}
+[원문]
+Title: {sourceTitle}
 
 Description:
 {sourceDescription}
 
-[Output Format]
-Number: sequence
-Country Code: language code
-Title: translated title
-Description: translated description
+[출력 형식]
+Number: 순번
+Country Code: 언어코드
+Country Name: 영어 국가명
+Title: 번역된 제목
+Description:
+번역된 설명문
 
-[Country Code List]
-{countryBlock}</textarea>
+[핵심 원칙]
+1. 처음부터 끝까지 절대 끊지 말고 계속 번역해 줘.
+2. 작업내용 설명, 머리말, 맺음말, 해설문은 넣지 말아 줘.
+3. 아래 대응표의 Country Code와 Country Name을 그대로 사용할 것
+4. 블록 순서는 절대 바꾸지 말 것
+5. 각 블록은 반드시 Country Code로 시작할 것
+6. Description의 문단 구조와 줄바꿈은 원문 흐름을 유지할 것
+7. 제목, 설명문 외의 군소리, 키워드 줄, 해시태그, 코드블록, HTML은 넣지 말 것
+8. 작업이 끝났으면 아래로 이동해 줘.
+
+Country Code / Country Name 대응표
+
+1. af | 아프리칸스어
+2. am | 암하라어
+3. ar | 아랍어
+4. as | 아삼어
+5. az | 아제르바이잔어
+6. be | 벨라루스어
+7. bg | 불가리아어
+8. bn | 벵골어
+9. bs | 보스니아어
+10. ca | 카탈로니아어
+11. cs | 체코어
+12. da | 덴마크어
+13. de | 독일어
+14. el | 그리스어
+15. en-GB | 영어(영국)
+16. en-IN | 영어(인도)
+17. en | 영어
+18. es | 스페인어
+19. es-419 | 스페인어(라틴 아메리카)
+20. es-US | 스페인어(미국)
+21. et | 에스토니아어
+22. eu | 바스크어
+23. fa | 페르시아어
+24. fi | 핀란드어
+25. fil | 필리핀어
+26. fr-CA | 프랑스어(캐나다)
+27. fr | 프랑스어
+28. gl | 갈리시아어
+29. gu | 구자라트어
+30. hi | 힌디어
+31. hr | 크로아티아어
+32. hu | 헝가리어
+33. hy | 아르메니아어
+34. id | 인도네시아어
+35. is | 아이슬란드어
+36. it | 이탈리아어
+37. iw | 히브리어
+38. ja | 일본어
+39. ka | 조지아어
+40. kk | 카자흐어
+41. km | 크메르어
+42. kn | 칸나다어
+43. ko | 한국어
+44. ky | 키르기스어
+45. lo | 라오어
+46. lt | 리투아니아어
+47. lv | 라트비아어
+48. mk | 마케도니아어
+49. ml | 말라얄람어
+50. mn | 몽골어
+51. mr | 마라티어
+52. ms | 말레이어
+53. my | 버마어
+54. no | 노르웨이어
+55. ne | 네팔어
+56. nl | 네덜란드어
+57. or | 오리야어
+58. pa | 펀자브어
+59. pl | 폴란드어
+60. pt | 포르투갈어
+61. pt-PT | 포르투갈어(포르투갈)
+62. ro | 루마니아어
+63. ru | 러시아어
+64. si | 싱할라어
+65. sk | 슬로바키아어
+66. sl | 슬로베니아어
+67. sq | 알바니아어
+68. sr-Latn | 세르비아어(로마자)
+69. sr | 세르비아어
+70. sv | 스웨덴어
+71. sw | 스와힐리어
+72. ta | 타밀어
+73. te | 텔루구어
+74. th | 태국어
+75. tr | 튀르키예어
+76. uk | 우크라이나어
+77. ur | 우르두어
+78. uz | 우즈베크어
+79. vi | 베트남어
+80. zh-CN | 중국어(중국)
+81. zh-HK | 중국어(홍콩)
+82. zh-TW | 중국어(대만)
+83. zu | 줄루어</textarea>
       <div class="actions"><button class="btn copyButtonVisible" type="button" data-copy-target="geminiPromptText">복사</button></div>
       <p id="geminiCopyStatus" class="copyStatus"></p><div class="actions"><a class="btn geminiChatButton" href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer">제미나이 챗번역 하러 가기.</a></div>
-      <div class="finalGeminiCommandCard">
-        <div class="finalGeminiCommandTop">
-          <h3>최종 제미나이 명령</h3>
-          <button class="btn finalGeminiCommandCopy" type="button" data-copy-target="finalGeminiCommandText">복사</button>
-        </div>
-        <textarea id="finalGeminiCommandText" readonly>Number:와 그 옆의 숫자를 삭제하고, 아래로 이동해 줘.</textarea>
-        <div class="finalGeminiWarning">
-          <p>⚠️ <span class="finalGeminiEmphasis">(중요)</span> 반드시 제미나이 창의 ‘아래로 이동해 줘.’ 명령 위 마지막 번역 끝에 있는 ⧉(대답 복사) 버튼을 누른 후 최종본에 붙여 넣어 주세요.</p>
-          <p>⚠️ <span class="finalGeminiEmphasis">(중요)</span> 번역문 외에 등록오류의 원인이 되는 사족이나 군소리가 들어가지 않도록 주의하세요.</p>
+    </section>
+
+    <section class="card">
+      <h2>최종 제미나이 명령</h2>
+      <div class="commandFullRows">
+        <div class="commandFullItem">
+          <div class="commandFullTop"><label class="">최종 명령</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText7" onclick="humateckCopyCommandText7(); return false;">복사</button></div>
+          <textarea id="commandText7" readonly>Number:와 그 옆의 숫자를 삭제하고, 아래로 이동해 줘.</textarea>
+          <p class="commandWarningBlink">
+⚠️ <span class="yellowStrong">(중요)</span> 반드시 제미나이 창의 <span class="yellowStrong">'아래로 이동해 줘.'</span> 명령 위 마지막 번역문 끝에 있는 ⧉(대답 복사) 버튼을 누르신 후 최종본에 붙여 넣어 주세요.<br><br>
+⚠️ <span class="yellowStrong">(중요)</span> 번역문 외에 등록오류의 원인이 되는 사족이나 군소리가 들어가지 않도록 주의하세요.
+          </p>
         </div>
       </div>
-
+      <h2>최종본 붙여넣기</h2>
+      <textarea id="finalOutput" class="mediumTextarea" placeholder="제미나이 최종 번역 결과를 붙여넣으세요."></textarea>
     </section>
-<section class="oauthInfoBox" id="googleOAuthNotice">
+
+    <section class="oauthInfoBox" id="googleOAuthNotice">
       <h2>Google OAuth 인증관련 안내</h2>
       <p>이제부터는 구독하신 분들이 필수적으로 거쳐야 될 Google OAuth 인증 순서입니다. 비구독자분들도 이 인증을 받을 수는 있으나, 최종 유튜브 등록은 반드시 구독자에게만 개방되오니 착오 없으시기 바랍니다.</p>
       <p class="yellowStrong">Google OAuth 인증키를 이미 받으신 분들은 ‘중요설정 길잡이’를 건너 띄시기 바랍니다.</p>
       <center><p class="yellowStrong">채널당 단 한번 !</p></center>
-      <div class="actions"><a class="btn guideOpenButton" href="#oauthGuideModal">중요설정 길잡이</a><a class="btn" href="plans.html">플랜 구독하러 가기</a></div>
+      <div class="actions"><a class="btn guideOpenButton" href="#oauthGuideModal">중요설정 길잡이</a></div>
       <div class="oauthPanelBelow">
         <h2>Google OAuth 인증</h2>
         <p>유튜브 등록할 때마다 필히 Google OAuth 인증(인증키 확인)을 받아야 합니다.</p>
@@ -1113,13 +1134,7 @@ Description: translated description
 </div></div>
     </section>
 
-    
-    <section class="card" id="finalVersionCard">
-      <h2>최종 버전(고객 검수)</h2>
-      <textarea id="finalOutput" class="mediumTextarea" placeholder="고객님이 검수한 제미나이 최종 버전을 붙여넣어 주세요."></textarea>
-    </section>
-
-<section class="card">
+    <section class="card">
       <h2>유튜브 등록</h2>
       <div class="actions"><button class="btn" type="button" id="sendOrderBtn">유튜브 등록</button></div>
     </section>
@@ -1137,9 +1152,9 @@ Description: translated description
   <aside class="right">
     <h2 class="yellowNotice">상태 안내</h2>
     <h3>빠른 안내</h3>
-    <p>1) 본 서비스를 이용하기 위한 필수 첫단계는 구글 OAuth 승인 설정입니다. 아래의 '중요설정 길잡이'의 상세 안내에 따라 설정을 진행해 주세요.</p>
-    <p>2) 여러 채널의 유튜브 다국어 번역콘텐츠를 등록하시려는 경우에도, Google OAuth 설정을 채널마다 새로 만들 필요는 없습니다. 다만 Google 인증을 진행한 계정이 해당 유튜브 채널 또는 영상에 수정 권한을 가지고 있어야 정상 등록이 가능합니다.</p>
-    <p>3) 유튜브 등록할 때마다 필히 Google OAuth 인증(인증키 확인)을 받아야 합니다.</p>
+    <p>1) 본 서비스 이용을 위해서는 Google OAuth 승인 설정이 필요합니다. 아래 ‘중요설정 길잡이’의 안내에 따라 설정해 주세요.</p>
+    <p>2) 여러 유튜브 채널에 등록하더라도 OAuth 설정을 채널마다 새로 만들 필요는 없습니다. 다만 인증한 Google 계정이 해당 채널 또는 영상의 수정 권한을 가지고 있어야 정상 등록됩니다.</p>
+    <p>3) 유튜브 등록을 진행할 때마다 Google OAuth 인증(인증키 확인)을 받아야 합니다.</p>
 <section id="faq" class="faqCollapsed">
 <details open>
 <summary>유튜브 AI 챗번역 FAQ</summary>
@@ -1152,6 +1167,7 @@ Description: translated description
 <div class="faqItem"><p class="question"><b>4. 문) 구글 OAuth 설정이 무엇인가요? 사용시마다 설정해야 하나요?</b></p><p>답) 내 유튜브 채널에 자막을 등록해도 좋다고 구글에 허락받는 연결 과정입니다. 설정 후 상당기간 재사용되는 것이 일반적입니다.</p></div>
 <div class="faqItem"><p class="question"><b>5. 문) 여러 채널을 운영 중입니다. OAuth 설정을 단 한번만 받아도 되나요?</b></p><p>답) 여러 채널의 유튜브 다국어 번역콘텐츠를 등록하시려는 경우에도, Google OAuth 설정을 채널마다 새로 만들 필요는 없습니다. 다만 Google 인증을 진행한 계정이 해당 유튜브 채널 또는 영상에 수정 권한을 가지고 있어야 정상 등록이 가능합니다.</p></div>
 <div class="faqItem"><p class="question"><b>6. 문) 유튜브 다국어 등록하기를 누르니 할당량 초과 메시지가 뜹니다.</b></p><p>답) 유튜브 다국어 번역컨텐츠등록 일일 API 무료할당량이 초과된 경우입니다. 다음날 할당량이 재충전될 때까지 기다렸다가 다시 시도하시기 바랍니다.</p></div>
+
 </details>
 </div>
 </details>
@@ -1172,7 +1188,6 @@ Description: translated description
 <div id="oauthGuideModal" class="guideModal">
   <div class="guideModalBox">
     <h2>중요설정 길잡이</h2>
-        <p class="oauthLaunchNotice">본 인증은 방문객들에게 AI 챗번역과 유튜브 등록의 실제를 체험하도록 허용합니다. 그러나 실제 등록은 구독자에게만 허용되오니 착오 없으시기 바랍니다.</p>
     <p class="guideSubTitle">처음 사용자를 위한 Google OAuth 승인방법입니다.</p>
 
     <div class="guideIntroBox">
@@ -1373,7 +1388,8 @@ Description: translated description
       "81. zh-HK | 중국어(홍콩)",
       "82. zh-TW | 중국어(대만)",
       "83. zu | 줄루어"
-    ].slice(0, activeCount + 2).join("\n");
+    ].slice(0, activeCount + 2).join("
+");
 
     var prompt =
 `안녕 제미나이!
@@ -1418,6 +1434,29 @@ ${countryBlock}`;
   function copyText(targetId){
     var target = document.getElementById(targetId);
     if(!target) return;
+
+    var textToCopy = target.value || target.textContent || "";
+    function showStatus(done){
+      var status = document.getElementById("geminiCopyStatus");
+      if(status && targetId === "geminiPromptText"){
+        status.textContent = done ? "복사되었습니다." : "복사가 되지 않으면 칸 안의 내용을 선택해 복사해 주세요.";
+      }
+    }
+
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(textToCopy).then(function(){
+        showStatus(true);
+      }).catch(function(){
+        target.focus();
+        target.select();
+        target.setSelectionRange(0, target.value.length);
+        var done = false;
+        try{ done = document.execCommand("copy"); }catch(e){ done = false; }
+        showStatus(done);
+      });
+      return;
+    }
+
     target.focus();
     target.select();
     target.setSelectionRange(0, target.value.length);
@@ -1427,10 +1466,7 @@ ${countryBlock}`;
       done = document.execCommand("copy");
     }catch(e){ done = false; }
 
-    var status = document.getElementById("geminiCopyStatus");
-    if(status && targetId === "geminiPromptText"){
-      status.textContent = done ? "복사되었습니다." : "복사가 되지 않으면 칸 안의 내용을 선택해 복사해 주세요.";
-    }
+    showStatus(done);
   }
 
   document.addEventListener("click", function(e){
@@ -1596,7 +1632,7 @@ ${countryBlock}`;
   window.generateFinalPayloadOnly=function(){
     const txt=getFinalText();
     if(!txt){
-      alert("제미나이 최종 버전(고객 검수)을 붙여넣어 주세요.");
+      alert("제미나이 최종본을 붙여넣어 주세요.");
       return null;
     }
     const payload=parseBlocks(txt);
@@ -1804,18 +1840,7 @@ ${countryBlock}`;
     var plan = hidden ? String(hidden.value || "").trim() : "";
     if(!plan && window.humateckAdminSelectedPlan) plan = String(window.humateckAdminSelectedPlan || "").trim();
     if(!plan && window.humateckPaymentSubscriptionPlan) plan = String(window.humateckPaymentSubscriptionPlan || "").trim();
-
-    if(plan) return true;
-
-    if(window.humateckIsAdminModeActive && window.humateckIsAdminModeActive()) return true;
-
-    try{
-      var adminToken = localStorage.getItem("humateckAdminMode") || "";
-      var adminFlag = localStorage.getItem("humateckAdmin") || "";
-      if(adminToken === "true" || adminToken === "1" || adminFlag === "true" || adminFlag === "1") return true;
-    }catch(e){}
-
-    return false;
+    return !!plan;
   }
 
   function showSubscriberOnlyNotice(){
@@ -1852,11 +1877,11 @@ ${countryBlock}`;
     }
 
     var finalText = getFinalText();
-    if(!finalText){ alert("제미나이 최종 버전(고객 검수)을 붙여넣어 주세요."); return; }
+    if(!finalText){ alert("제미나이 최종본을 붙여넣어 주세요."); return; }
 
     var localizations = parseFinalTextToLocalizations(finalText);
     var codes = Object.keys(localizations);
-    if(codes.length === 0){ alert("Country Code: 기준의 등록용 최종 버전(고객 검수)을 찾지 못했습니다."); return; }
+    if(codes.length === 0){ alert("Country Code: 기준의 등록용 최종본을 찾지 못했습니다."); return; }
 
     var btn = $("sendOrderBtn") || $("youtubeRegisterBtn");
     if(btn){ btn.disabled = true; btn.textContent = "등록 진행 중"; }
@@ -2129,50 +2154,188 @@ ${countryBlock}`;
 })();
 </script>
 
-<script>
-/* Humateck_New012 admin registration permission restore */
-(function(){
-  function isAdminModeActive(){
-    var adminPlan = window.humateckAdminSelectedPlan || "";
-    var hidden = document.getElementById("humateckActivePlanValue");
-    var hiddenPlan = hidden && hidden.value ? hidden.value : "";
-    var adminToken = localStorage.getItem("humateckAdminMode") || "";
-    var adminFlag = localStorage.getItem("humateckAdmin") || "";
 
-    return !!(
-      adminPlan ||
-      hiddenPlan ||
-      adminToken === "true" ||
-      adminToken === "1" ||
-      adminFlag === "true" ||
-      adminFlag === "1"
-    );
+<script>
+/* Humateck_New084 admin plan prompt count restore */
+(function(){
+  var HUMATECK_COUNTRY_LINES_83 = `1. af | 아프리칸스어\n2. am | 암하라어\n3. ar | 아랍어\n4. as | 아삼어\n5. az | 아제르바이잔어\n6. be | 벨라루스어\n7. bg | 불가리아어\n8. bn | 벵골어\n9. bs | 보스니아어\n10. ca | 카탈로니아어\n11. cs | 체코어\n12. da | 덴마크어\n13. de | 독일어\n14. el | 그리스어\n15. en-GB | 영어(영국)\n16. en-IN | 영어(인도)\n17. en | 영어\n18. es | 스페인어\n19. es-419 | 스페인어(라틴 아메리카)\n20. es-US | 스페인어(미국)\n21. et | 에스토니아어\n22. eu | 바스크어\n23. fa | 페르시아어\n24. fi | 핀란드어\n25. fil | 필리핀어\n26. fr-CA | 프랑스어(캐나다)\n27. fr | 프랑스어\n28. gl | 갈리시아어\n29. gu | 구자라트어\n30. hi | 힌디어\n31. hr | 크로아티아어\n32. hu | 헝가리어\n33. hy | 아르메니아어\n34. id | 인도네시아어\n35. is | 아이슬란드어\n36. it | 이탈리아어\n37. iw | 히브리어\n38. ja | 일본어\n39. ka | 조지아어\n40. kk | 카자흐어\n41. km | 크메르어\n42. kn | 칸나다어\n43. ko | 한국어\n44. ky | 키르기스어\n45. lo | 라오어\n46. lt | 리투아니아어\n47. lv | 라트비아어\n48. mk | 마케도니아어\n49. ml | 말라얄람어\n50. mn | 몽골어\n51. mr | 마라티어\n52. ms | 말레이어\n53. my | 버마어\n54. no | 노르웨이어\n55. ne | 네팔어\n56. nl | 네덜란드어\n57. or | 오리야어\n58. pa | 펀자브어\n59. pl | 폴란드어\n60. pt | 포르투갈어\n61. pt-PT | 포르투갈어(포르투갈)\n62. ro | 루마니아어\n63. ru | 러시아어\n64. si | 싱할라어\n65. sk | 슬로바키아어\n66. sl | 슬로베니아어\n67. sq | 알바니아어\n68. sr-Latn | 세르비아어(로마자)\n69. sr | 세르비아어\n70. sv | 스웨덴어\n71. sw | 스와힐리어\n72. ta | 타밀어\n73. te | 텔루구어\n74. th | 태국어\n75. tr | 튀르키예어\n76. uk | 우크라이나어\n77. ur | 우르두어\n78. uz | 우즈베크어\n79. vi | 베트남어\n80. zh-CN | 중국어(중국)\n81. zh-HK | 중국어(홍콩)\n82. zh-TW | 중국어(대만)\n83. zu | 줄루어`;
+
+  function getValue(id){
+    var el = document.getElementById(id);
+    return el ? el.value : "";
   }
 
-  window.humateckIsAdminModeActive = isAdminModeActive;
+  function setValue(id, value){
+    var el = document.getElementById(id);
+    if(el) el.value = value;
+  }
 
-  document.addEventListener("click", function(event){
-    var adminBtn = event.target.closest("[data-admin-plan]");
-    if(!adminBtn) return;
+  function countFromPlan(plan){
+    if(plan === "monthly50") return 50;
+    if(plan === "monthly70") return 70;
+    if(plan === "monthly83") return 83;
+    if(plan === "yearly83") return 83;
+    if(plan === "monthly30") return 30;
+    return 30;
+  }
 
-    localStorage.setItem("humateckAdminMode", "true");
-    var plan = adminBtn.getAttribute("data-admin-plan") || "admin";
-    window.humateckAdminSelectedPlan = plan;
-    window.humateckPaymentSubscriptionPlan = plan;
+  function rebuildGeminiPromptByPlan(plan){
+    var activeCount = countFromPlan(plan);
+    var sourceTitle = getValue("sourceTitle");
+    var sourceDescription = getValue("sourceDescription");
+    var lines = HUMATECK_COUNTRY_LINES_83.split("\n").slice(0, activeCount).join("\n");
 
-    document.querySelectorAll("[data-admin-plan]").forEach(function(btn){ btn.classList.remove("active"); });
-    adminBtn.classList.add("active");
+    var prompt =
+`안녕 제미나이!
+아래 제목과 설명문을 ${activeCount}개 국가 세트에 맞춰 자연스럽게 현지화 번역해 줘.
+처음부터 끝까지 중간에 끊지 말고 계속 번역해 줘.
 
+[원문]
+Title: ${sourceTitle}
+
+Description:
+${sourceDescription}
+
+[출력 형식]
+Number: 순번
+Country Code: 언어코드
+Country Name: 영어 국가명
+Title: 번역된 제목
+Description:
+번역된 설명문
+
+[핵심 원칙]
+1. 처음부터 끝까지 절대 끊지 말고 계속 번역해 줘.
+2. 작업내용 설명, 머리말, 맺음말, 해설문은 넣지 말아 줘.
+3. 아래 대응표의 Country Code와 Country Name을 그대로 사용할 것
+4. 블록 순서는 절대 바꾸지 말 것
+5. 각 블록은 반드시 Country Code로 시작할 것
+6. Description의 문단 구조와 줄바꿈은 원문 흐름을 유지할 것
+7. 제목, 설명문 외의 군소리, 키워드 줄, 해시태그, 코드블록, HTML은 넣지 말 것
+8. 작업이 끝났으면 아래로 이동해 줘.
+
+Country Code / Country Name 대응표
+
+${lines}`;
+
+    setValue("geminiPromptText", prompt);
+
+    var status = document.getElementById("geminiCopyStatus");
+    if(status) status.textContent = "제미나이 의뢰문이 생성되었습니다. 복사 버튼을 눌러 주세요.";
+
+    var gemini = document.getElementById("gemini");
+    if(gemini) gemini.scrollIntoView({behavior:"smooth", block:"start"});
+  }
+
+  function setAdminPlan(plan){
     var hidden = document.getElementById("humateckActivePlanValue");
     if(hidden) hidden.value = plan;
+
+    window.humateckAdminSelectedPlan = plan;
+    /* Admin test plan must stay separated from customer payment subscription state. */
+
+    document.querySelectorAll("[data-admin-plan]").forEach(function(btn){
+      btn.classList.toggle("active", btn.getAttribute("data-admin-plan") === plan);
+    });
+
+    var status = document.getElementById("adminPlanStatus");
+    if(status){
+      status.textContent = "";
+      status.style.display = "none";
+    }
 
     var sendBtn = document.getElementById("sendOrderBtn");
     if(sendBtn){
       sendBtn.disabled = false;
       sendBtn.classList.remove("disabled");
+      sendBtn.textContent = "다국어 번역콘텐츠 유튜브 등록";
     }
+
+    rebuildGeminiPromptByPlan(plan);
+  }
+
+  document.addEventListener("click", function(event){
+    var btn = event.target.closest("[data-admin-plan]");
+    if(!btn) return;
+    event.preventDefault();
+    event.stopPropagation();
+    setAdminPlan(btn.getAttribute("data-admin-plan"));
+  }, true);
+
+  window.humateckSetAdminPlan = setAdminPlan;
+  window.humateckRebuildGeminiPromptByPlan = rebuildGeminiPromptByPlan;
+})();
+</script>
+
+<script>
+/* Humateck_New028 final command copy repair only */
+(function(){
+  function copyFinalCommand(){
+    var target = document.getElementById("commandText7");
+    if(!target) return;
+
+    var value = target.value || target.textContent || "";
+
+    function fallbackCopy(){
+      target.focus();
+      target.select();
+      try{ target.setSelectionRange(0, value.length); }catch(e){}
+      try{ document.execCommand("copy"); }catch(e){}
+    }
+
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(value).catch(function(){
+        fallbackCopy();
+      });
+    }else{
+      fallbackCopy();
+    }
+  }
+
+  document.addEventListener("click", function(event){
+    var btn = event.target.closest('[data-copy-target="commandText7"]');
+    if(!btn) return;
+    event.preventDefault();
+    event.stopPropagation();
+    copyFinalCommand();
   }, true);
 })();
+</script>
+
+
+<script>
+/* Humateck_New029 direct final command copy only */
+function humateckCopyCommandText7(){
+  var target = document.getElementById("commandText7");
+  if(!target) return false;
+
+  var value = target.value || target.textContent || "";
+
+  function fallback(){
+    try{
+      target.removeAttribute("readonly");
+      target.focus();
+      target.select();
+      target.setSelectionRange(0, value.length);
+      var ok = document.execCommand("copy");
+      target.setAttribute("readonly", "readonly");
+      return ok;
+    }catch(e){
+      try{ target.setAttribute("readonly", "readonly"); }catch(_){}
+      return false;
+    }
+  }
+
+  if(navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext){
+    navigator.clipboard.writeText(value).catch(function(){
+      fallback();
+    });
+  }else{
+    fallback();
+  }
+
+  return false;
+}
 </script>
 
 </body></html>
