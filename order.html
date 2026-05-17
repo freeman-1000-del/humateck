@@ -1045,19 +1045,16 @@ input,textarea{font-size:16px!important;}
 
 
 <style>
-/* Humateck_New010 persistent blue copy mark */
-.humateckCopiedMark{
-  background:#145cff!important;
-  border-color:#66a3ff!important;
-  color:#ffffff!important;
-  box-shadow:0 0 22px rgba(65,135,255,.85)!important;
-}
-.humateckCopiedFieldMark{
-  border-color:#66a3ff!important;
-  box-shadow:0 0 16px rgba(65,135,255,.55)!important;
+/* Humateck_New012 copied text-only blue mark */
+.humateckCopiedTextMark{
+  color:#4b97ff!important;
 }
 </style>
 
+
+<style>
+/* Humateck copied text-only mark: button visual mark removed */
+</style>
 </head>
 <body>
 
@@ -1197,30 +1194,15 @@ Country Code Mapping Table
     <section class="card">
       <h2>Gemini Command Copy-and-Paste Sequence</h2><div class="commandFullRows"><div class="commandFullItem">
 <div class="commandFullTop"><label class="">Command 1</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText1">Copy</button></div>
-<textarea id="commandText1" readonly>Please automatically and carefully check for mixed-in other languages, unnatural context, and any other issues.
-Do not add any explanations, introductions, commentary, or extra remarks.</textarea>
+<textarea id="commandText1" readonly>Please automatically and carefully check for mixed-in other languages, unnatural context, and any other issues.</textarea>
 </div><div class="commandFullItem">
 <div class="commandFullTop"><label class="">Command 2</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText2">Copy</button></div>
-<textarea id="commandText2" readonly>Please delete only the Number: and Country Name: lines.
-Important: Keep the rest of the format exactly as it is now (Country Code:, Title:, Description:).</textarea>
+<textarea id="commandText2" readonly>Please delete the ':country name' next to the country code.</textarea>
 </div><div class="commandFullItem">
 <div class="commandFullTop"><label class="">Command 3</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText3">Copy</button></div>
-<textarea id="commandText3" readonly>Please check once more for mixed-in other languages, unnatural context, and any other issues.
-Please keep the format as it is.</textarea>
-</div><div class="commandFullItem">
-<div class="commandFullTop"><label class="">Command 4</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText4">Copy</button></div>
-<textarea id="commandText4" readonly>Please check again whether Country Name: have been deleted, and carefully check once more for mixed-in other languages, unnatural context, and any other issues.</textarea>
-</div><div class="commandFullItem">
-<div class="commandFullTop"><label class="">Command 5</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText5">Copy</button></div>
-<textarea id="commandText5" readonly>If the total number is correct, delete all number: entries and carefully perform the final check for mixed-in other languages, unnatural context, and any other issues.</textarea>
-</div><div class="commandFullItem">
-<div class="commandFullTop"><label class="">Command 6</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText6">Copy</button></div>
-<textarea id="commandText6" readonly>Please delete 'Country Code:', article name only, not real codes.</textarea>
-</div><div class="commandFullItem">
-<div class="commandFullTop"><label class="">Command 7</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText7">Copy</button></div>
-<textarea id="commandText7" readonly>Please move to the bottom.</textarea>
+<textarea id="commandText3" readonly>아래로 이동해 줘.</textarea>
 <p class="commandWarningBlink">
-⚠️ (Important) In the Gemini window, be sure to press the ⧉ (Copy response) button at the end of the last translation above the “Please move to the bottom.” command, then paste it into the final version field.<br><br>
+⚠️ (Important) In the Gemini window, be sure to press the ⧉ (Copy response) button at the end of the last translation above the “아래로 이동해 줘.” command, then paste it into the final version field.<br><br>
 ⚠️ (Important) Be careful not to include extra remarks or unnecessary words other than the translation, as they may cause registration errors.
 </p>
 
@@ -1535,17 +1517,14 @@ ${countryBlock}`;
 
     function mark(done){
       if(button){
-        button.classList.add("humateckCopiedMark");
         button.textContent = done ? "Copied ✓" : "Copy failed";
-        var item = button.closest(".commandFullItem");
-        if(item) item.classList.add("humateckCopiedFieldMark");
       }
       if(target){
-        target.classList.add("humateckCopiedFieldMark");
+        target.classList.add("humateckCopiedTextMark");
       }
       var status = document.getElementById("geminiCopyStatus");
       if(status && targetId === "geminiPromptText"){
-        status.textContent = done ? "Copied. The copied button and field are marked in blue." : "If copying does not work, please select the content inside the field and copy it.";
+        status.textContent = done ? "Copied. The copied field text is marked in blue." : "If copying does not work, please select the content inside the field and copy it.";
       }
     }
 
@@ -1976,7 +1955,7 @@ Now this token can be connected to register multilingual content in the next ste
 
     var localizations = parseFinalTextToLocalizations(finalText);
     var codes = Object.keys(localizations);
-    if(codes.length === 0){ alert("Could not find a registration-ready final version based on Country Code:."); return; }
+    if(codes.length === 0){ alert("Please paste the final version first."); return; }
 
     var btn = $("sendOrderBtn") || $("youtubeRegisterBtn");
     if(btn){ btn.disabled = true; btn.textContent = "Registration in Progress"; }
@@ -2404,4 +2383,7 @@ ${lines}`;
   window.humateckRebuildGeminiPromptByPlan = rebuildGeminiPromptByPlan;
 })();
 </script>
+
+<!-- Humateck_New012: duplicate delegated copy marker removed. Main copy handler marks textarea text only. -->
+
 </body></html>
