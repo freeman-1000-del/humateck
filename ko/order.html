@@ -957,6 +957,65 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 }
 </style>
 
+
+<style>
+/* Humateck_New025 Korean final Gemini command only */
+.finalGeminiCommandCard{
+  border:1px solid rgba(214,176,78,.45);
+  border-radius:16px;
+  padding:16px;
+  margin-top:16px;
+  background:rgba(5,11,20,.42);
+}
+.finalGeminiCommandTop{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-bottom:8px;
+}
+.finalGeminiCommandTop h3{
+  margin:0!important;
+  color:#f4c95c!important;
+  font-size:20px!important;
+  line-height:1.45!important;
+}
+.finalGeminiCommandCopy{
+  min-width:78px!important;
+  min-height:36px!important;
+  padding:7px 13px!important;
+  font-size:14px!important;
+}
+#finalGeminiCommandText{
+  min-height:72px!important;
+  font-size:16px!important;
+  line-height:1.65!important;
+  margin-top:0!important;
+}
+.finalGeminiWarning{
+  margin:8px 0 0;
+  padding:10px 12px;
+  border:1px solid rgba(214,176,78,.38);
+  border-radius:12px;
+  background:rgba(214,176,78,.06);
+  color:#e6e0d4!important;
+  font-size:16px!important;
+  line-height:1.65!important;
+  font-weight:400!important;
+}
+.finalGeminiWarning p{
+  margin:6px 0!important;
+  color:#e6e0d4!important;
+  font-size:16px!important;
+  line-height:1.65!important;
+  font-weight:400!important;
+}
+.finalGeminiWarning .finalGeminiEmphasis{
+  color:#ffd95a!important;
+  font-weight:700!important;
+}
+</style>
+
 </head>
 <body>
 
@@ -1025,6 +1084,18 @@ Description: translated description
 {countryBlock}</textarea>
       <div class="actions"><button class="btn copyButtonVisible" type="button" data-copy-target="geminiPromptText">복사</button></div>
       <p id="geminiCopyStatus" class="copyStatus"></p><div class="actions"><a class="btn geminiChatButton" href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer">제미나이 챗번역 하러 가기.</a></div>
+      <div class="finalGeminiCommandCard">
+        <div class="finalGeminiCommandTop">
+          <h3>최종 제미나이 명령</h3>
+          <button class="btn finalGeminiCommandCopy" type="button" data-copy-target="finalGeminiCommandText">복사</button>
+        </div>
+        <textarea id="finalGeminiCommandText" readonly>Number:와 그 옆의 숫자를 삭제하고, 아래로 이동해 줘.</textarea>
+        <div class="finalGeminiWarning">
+          <p>⚠️ <span class="finalGeminiEmphasis">(중요)</span> 반드시 제미나이 창의 ‘아래로 이동해 줘.’ 명령 위 마지막 번역 끝에 있는 ⧉(대답 복사) 버튼을 누른 후 최종본에 붙여 넣어 주세요.</p>
+          <p>⚠️ <span class="finalGeminiEmphasis">(중요)</span> 번역문 외에 등록오류의 원인이 되는 사족이나 군소리가 들어가지 않도록 주의하세요.</p>
+        </div>
+      </div>
+
     </section>
 <section class="oauthInfoBox" id="googleOAuthNotice">
       <h2>Google OAuth 인증관련 안내</h2>
@@ -1088,7 +1159,7 @@ Description: translated description
     <details class="adminSecret">
       <summary>관리자용 히든 메뉴</summary>
       <p>관리자는 테스트와 고객 CS 대응을 위해 어떤 플랜도 선택할 수 있습니다.</p>
-      <div class="actions"><button class="btn adminPlanButton" type="button" data-admin-plan="trial7">7일 무료 15개국</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly30">30개국</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly50">50개국</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly70">70개국</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly83">83개국</button><button class="btn adminPlanButton" type="button" data-admin-plan="yearly83">연간 83개국</button></div>
+      <div class="actions"><button class="btn adminPlanButton" type="button" data-admin-plan="monthly30">30개국</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly50">50개국</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly70">70개국</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly83">83개국</button><button class="btn adminPlanButton" type="button" data-admin-plan="yearly83">연간 83개국</button></div>
     </details>
 
 <input type="hidden" id="humateckActivePlanValue" value="">
@@ -1201,9 +1272,6 @@ Description: translated description
     if(!plan && window.humateckAdminSelectedPlan) plan = window.humateckAdminSelectedPlan;
     if(!plan && window.humateckPaymentSubscriptionPlan) plan = window.humateckPaymentSubscriptionPlan;
 
-    if(plan === "trial7") return 15;
-    if(plan === "free7") return 15;
-    if(plan === "weeklyFree15") return 15;
     if(plan === "monthly50") return 50;
     if(plan === "monthly70") return 70;
     if(plan === "monthly83") return 83;
