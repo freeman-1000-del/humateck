@@ -1059,7 +1059,7 @@ input,textarea{font-size:16px!important;}
       </div>
       <div class="nativeCodeLabelRow">
   <label for="nativeLanguageCode">Native Language Code</label>
-  <button id="openNativeCodeListBtn" class="nativeCodeListBtn" type="button">83 Country Names / Language Codes List</button>
+  <button id="openNativeCodeListBtn" class="nativeCodeListBtn" type="button">70 Country Names / Language Codes List</button>
 </div>
 <input id="nativeLanguageCode" type="text" placeholder="Example: ko, ja, de, fr, es">
 <label>YouTube Video URL</label>
@@ -1075,7 +1075,7 @@ input,textarea{font-size:16px!important;}
     <section id="gemini" class="card">
       <h2>Gemini Request Prompt</h2>
       <textarea id="geminiPromptText" class="mediumTextarea" readonly>Hello Gemini!
-Please naturally localize and translate the title and description below for the 70-country set.
+Please naturally localize and translate the title and description below for the {activeCount}-country set.
 Please continue translating from beginning to end without stopping midway.
 
 [Source Text]
@@ -1084,86 +1084,94 @@ Title: {sourceTitle}
 Description:
 {sourceDescription}
 
-[Output Request]
-Translate the source title and description into the following 70 languages in the exact order below.
-Do not print labels such as Number, Code, Country Code, Country Name, Title, or Description.
-Do not add explanations, introductions, closing remarks, keyword lines, hashtags, code blocks, or HTML.
-Separate each language result with one blank line only.
-Keep the source description's paragraph flow and line breaks as naturally as possible.
-When the work is finished, move to the bottom.
+[Output Format]
+Country Code: language code
+Title: translated title
+Description:
+translated description
 
-70-Language Order
+[Core Principles]
+1. Never stop midway; continue translating from beginning to end.
+2. Do not include work explanations, introductions, closing remarks, or commentary.
+3. Use only the language codes in the mapping table below.
+4. Never change the order of the blocks.
+5. Each block must start with Country Code.
+6. Maintain the paragraph structure and line breaks of the Description according to the flow of the source text.
+7. Do not include any extra remarks, keyword lines, hashtags, code blocks, HTML, or country-name lines other than the title and description.
+8. When the work is finished, move to the bottom.
+
+Country Code Mapping Table
 
 1. en | English
-2. es | Spanish
-3. es-419 | Spanish (Latin America)
-4. es-US | Spanish (United States)
-5. pt | Portuguese
-6. pt-PT | Portuguese (Portugal)
-7. fr | French
-8. fr-CA | French (Canada)
-9. de | German
-10. ja | Japanese
-11. ko | Korean
-12. zh-CN | Chinese (China)
-13. zh-TW | Chinese (Taiwan)
-14. zh-HK | Chinese (Hong Kong)
-15. hi | Hindi
-16. id | Indonesian
-17. ar | Arabic
-18. bn | Bengali
-19. ru | Russian
-20. tr | Turkish
-21. vi | Vietnamese
-22. th | Thai
-23. it | Italian
-24. nl | Dutch
-25. pl | Polish
-26. sv | Swedish
-27. cs | Czech
-28. ro | Romanian
-29. el | Greek
-30. hu | Hungarian
-31. fil | Filipino
-32. ms | Malay
+2. en-GB | English (United Kingdom)
+3. en-IN | English (India)
+4. es | Spanish
+5. es-419 | Spanish (Latin America)
+6. es-US | Spanish (United States)
+7. pt | Portuguese
+8. pt-PT | Portuguese (Portugal)
+9. fr | French
+10. fr-CA | French (Canada)
+11. de | German
+12. ja | Japanese
+13. ko | Korean
+14. zh-CN | Chinese (China)
+15. zh-TW | Chinese (Taiwan)
+16. zh-HK | Chinese (Hong Kong)
+17. hi | Hindi
+18. id | Indonesian
+19. ar | Arabic
+20. bn | Bengali
+21. ru | Russian
+22. tr | Turkish
+23. vi | Vietnamese
+24. th | Thai
+25. it | Italian
+26. nl | Dutch
+27. pl | Polish
+28. sv | Swedish
+29. cs | Czech
+30. ro | Romanian
+31. el | Greek
+32. hu | Hungarian
 33. uk | Ukrainian
 34. fa | Persian
 35. ur | Urdu
 36. ta | Tamil
 37. te | Telugu
 38. mr | Marathi
-39. gu | Gujarati
-40. pa | Punjabi
-41. kn | Kannada
-42. ml | Malayalam
-43. or | Odia
-44. am | Amharic
-45. sw | Swahili
-46. af | Afrikaans
-47. az | Azerbaijani
-48. be | Belarusian
-49. bg | Bulgarian
-50. bs | Bosnian
-51. ca | Catalan
-52. da | Danish
-53. et | Estonian
-54. eu | Basque
-55. fi | Finnish
-56. gl | Galician
-57. hr | Croatian
-58. hy | Armenian
-59. is | Icelandic
-60. iw | Hebrew
-61. ka | Georgian
-62. kk | Kazakh
-63. km | Khmer
-64. ky | Kyrgyz
-65. lo | Lao
-66. lt | Lithuanian
-67. lv | Latvian
-68. mk | Macedonian
-69. mn | Mongolian
-70. no | Norwegian</textarea>
+39. fil | Filipino
+40. ms | Malay
+41. no | Norwegian
+42. da | Danish
+43. fi | Finnish
+44. iw | Hebrew
+45. ca | Catalan
+46. bg | Bulgarian
+47. hr | Croatian
+48. sk | Slovak
+49. sr | Serbian
+50. sr-Latn | Serbian (Latin)
+51. sq | Albanian
+52. et | Estonian
+53. lt | Lithuanian
+54. lv | Latvian
+55. ka | Georgian
+56. kk | Kazakh
+57. hy | Armenian
+58. az | Azerbaijani
+59. be | Belarusian
+60. bs | Bosnian
+61. mk | Macedonian
+62. mn | Mongolian
+63. ne | Nepali
+64. sw | Swahili
+65. am | Amharic
+66. af | Afrikaans
+67. gu | Gujarati
+68. kn | Kannada
+69. ml | Malayalam
+70. pa | Punjabi</textarea>
       <div class="actions"><button class="btn copyButtonVisible" type="button" data-copy-target="geminiPromptText">Copy</button></div>
       <p id="geminiCopyStatus" class="copyStatus"></p><div class="actions"><a class="btn geminiChatButton" href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer">Go to Gemini Chat Translation.</a></div>
     </section>
@@ -1174,19 +1182,21 @@ When the work is finished, move to the bottom.
 <textarea id="commandText1" readonly>Please automatically and carefully check for mixed-in other languages, unnatural context, and any other issues.</textarea>
 </div><div class="commandFullItem">
 <div class="commandFullTop"><label class="">Command 2</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText2">Copy</button></div>
-<textarea id="commandText2" readonly>Please remove any unnecessary headings or labels such as Number, Code, Country Code, Country Name, Title, or Description if they appeared in the result.</textarea>
+<textarea id="commandText2" readonly>Please remove any unnecessary numbering or country-name lines if they appear.
+Important: Keep the translation blocks in the required registration order.</textarea>
 </div><div class="commandFullItem">
 <div class="commandFullTop"><label class="">Command 3</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText3">Copy</button></div>
-<textarea id="commandText3" readonly>Please check once more for mixed-in other languages, unnatural context, and unnecessary extra remarks. Keep only the translated content.</textarea>
+<textarea id="commandText3" readonly>Please check once more for mixed-in other languages, unnatural context, and any other issues.
+Please keep the format as it is.</textarea>
 </div><div class="commandFullItem">
 <div class="commandFullTop"><label class="">Command 4</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText4">Copy</button></div>
-<textarea id="commandText4" readonly>Please check whether the 70 language results follow the requested order. Do not add explanations.</textarea>
+<textarea id="commandText4" readonly>Please check again that unnecessary country-name lines or extra remarks are not included, and carefully check once more for mixed-in other languages, unnatural context, and any other issues.</textarea>
 </div><div class="commandFullItem">
 <div class="commandFullTop"><label class="">Command 5</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText5">Copy</button></div>
-<textarea id="commandText5" readonly>Please internally confirm that there are 70 language results. Do not print a separate count report.</textarea>
+<textarea id="commandText5" readonly>Please count the total number of translation codes.</textarea>
 </div><div class="commandFullItem">
 <div class="commandFullTop"><label class="">Command 6</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText6">Copy</button></div>
-<textarea id="commandText6" readonly>Please perform the final cleanup so that only the translated title and description content remains for each language.</textarea>
+<textarea id="commandText6" readonly>If the total number is correct, remove any unnecessary numbering and carefully perform the final check for mixed-in other languages, unnatural context, and any other issues.</textarea>
 </div><div class="commandFullItem">
 <div class="commandFullTop"><label class="">Command 7</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText7">Copy</button></div>
 <textarea id="commandText7" readonly>Please move to the bottom.</textarea>
@@ -1258,7 +1268,7 @@ A) This is because YouTube content display system fixes the default video settin
     <details class="adminSecret">
       <summary>Hidden Admin Menu</summary>
       <p>For testing and customer support responses, the administrator can select any plan.</p>
-      <div class="actions"><button class="btn adminPlanButton" type="button" data-admin-plan="monthly30">30 Countries</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly50">50 Countries</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly70">70 Countries</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly83">83 Countries</button><button class="btn adminPlanButton" type="button" data-admin-plan="yearly83">Annual 83 Countries</button></div>
+      <div class="actions"><button class="btn adminPlanButton" type="button" data-admin-plan="monthly30">30 Countries</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly50">50 Countries</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly70">70 Countries</button><button class="btn adminPlanButton" type="button" data-admin-plan="yearly70">Annual 70 Countries</button></div>
     </details>
 
 <input type="hidden" id="humateckActivePlanValue" value="">
@@ -1372,12 +1382,10 @@ A) This is because YouTube content display system fixes the default video settin
 
     if(plan === "monthly50") return 50;
     if(plan === "monthly70") return 70;
-    if(plan === "monthly83") return 70;
-    if(plan === "yearly83") return 70;
     if(plan === "yearly70") return 70;
     if(plan === "monthly30") return 30;
 
-    return 70;
+    return 30;
   }
 
   function buildGeminiPrompt(){
@@ -1386,77 +1394,79 @@ A) This is because YouTube content display system fixes the default video settin
     var sourceDescription = getValue("sourceDescription");
 
     var countryBlock = [
+      "Country Code Mapping Table",
+      "",
       '1. en | English',
-      '2. es | Spanish',
-      '3. es-419 | Spanish (Latin America)',
-      '4. es-US | Spanish (United States)',
-      '5. pt | Portuguese',
-      '6. pt-PT | Portuguese (Portugal)',
-      '7. fr | French',
-      '8. fr-CA | French (Canada)',
-      '9. de | German',
-      '10. ja | Japanese',
-      '11. ko | Korean',
-      '12. zh-CN | Chinese (China)',
-      '13. zh-TW | Chinese (Taiwan)',
-      '14. zh-HK | Chinese (Hong Kong)',
-      '15. hi | Hindi',
-      '16. id | Indonesian',
-      '17. ar | Arabic',
-      '18. bn | Bengali',
-      '19. ru | Russian',
-      '20. tr | Turkish',
-      '21. vi | Vietnamese',
-      '22. th | Thai',
-      '23. it | Italian',
-      '24. nl | Dutch',
-      '25. pl | Polish',
-      '26. sv | Swedish',
-      '27. cs | Czech',
-      '28. ro | Romanian',
-      '29. el | Greek',
-      '30. hu | Hungarian',
-      '31. fil | Filipino',
-      '32. ms | Malay',
+      '2. en-GB | English (United Kingdom)',
+      '3. en-IN | English (India)',
+      '4. es | Spanish',
+      '5. es-419 | Spanish (Latin America)',
+      '6. es-US | Spanish (United States)',
+      '7. pt | Portuguese',
+      '8. pt-PT | Portuguese (Portugal)',
+      '9. fr | French',
+      '10. fr-CA | French (Canada)',
+      '11. de | German',
+      '12. ja | Japanese',
+      '13. ko | Korean',
+      '14. zh-CN | Chinese (China)',
+      '15. zh-TW | Chinese (Taiwan)',
+      '16. zh-HK | Chinese (Hong Kong)',
+      '17. hi | Hindi',
+      '18. id | Indonesian',
+      '19. ar | Arabic',
+      '20. bn | Bengali',
+      '21. ru | Russian',
+      '22. tr | Turkish',
+      '23. vi | Vietnamese',
+      '24. th | Thai',
+      '25. it | Italian',
+      '26. nl | Dutch',
+      '27. pl | Polish',
+      '28. sv | Swedish',
+      '29. cs | Czech',
+      '30. ro | Romanian',
+      '31. el | Greek',
+      '32. hu | Hungarian',
       '33. uk | Ukrainian',
       '34. fa | Persian',
       '35. ur | Urdu',
       '36. ta | Tamil',
       '37. te | Telugu',
       '38. mr | Marathi',
-      '39. gu | Gujarati',
-      '40. pa | Punjabi',
-      '41. kn | Kannada',
-      '42. ml | Malayalam',
-      '43. or | Odia',
-      '44. am | Amharic',
-      '45. sw | Swahili',
-      '46. af | Afrikaans',
-      '47. az | Azerbaijani',
-      '48. be | Belarusian',
-      '49. bg | Bulgarian',
-      '50. bs | Bosnian',
-      '51. ca | Catalan',
-      '52. da | Danish',
-      '53. et | Estonian',
-      '54. eu | Basque',
-      '55. fi | Finnish',
-      '56. gl | Galician',
-      '57. hr | Croatian',
-      '58. hy | Armenian',
-      '59. is | Icelandic',
-      '60. iw | Hebrew',
-      '61. ka | Georgian',
-      '62. kk | Kazakh',
-      '63. km | Khmer',
-      '64. ky | Kyrgyz',
-      '65. lo | Lao',
-      '66. lt | Lithuanian',
-      '67. lv | Latvian',
-      '68. mk | Macedonian',
-      '69. mn | Mongolian',
-      '70. no | Norwegian'
-    ].slice(0, activeCount).join("\n");
+      '39. fil | Filipino',
+      '40. ms | Malay',
+      '41. no | Norwegian',
+      '42. da | Danish',
+      '43. fi | Finnish',
+      '44. iw | Hebrew',
+      '45. ca | Catalan',
+      '46. bg | Bulgarian',
+      '47. hr | Croatian',
+      '48. sk | Slovak',
+      '49. sr | Serbian',
+      '50. sr-Latn | Serbian (Latin)',
+      '51. sq | Albanian',
+      '52. et | Estonian',
+      '53. lt | Lithuanian',
+      '54. lv | Latvian',
+      '55. ka | Georgian',
+      '56. kk | Kazakh',
+      '57. hy | Armenian',
+      '58. az | Azerbaijani',
+      '59. be | Belarusian',
+      '60. bs | Bosnian',
+      '61. mk | Macedonian',
+      '62. mn | Mongolian',
+      '63. ne | Nepali',
+      '64. sw | Swahili',
+      '65. am | Amharic',
+      '66. af | Afrikaans',
+      '67. gu | Gujarati',
+      '68. kn | Kannada',
+      '69. ml | Malayalam',
+      '70. pa | Punjabi'
+    ].slice(0, activeCount + 2).join("\n");
 
     var prompt =
 `Hello Gemini!
@@ -1469,15 +1479,21 @@ Title: ${sourceTitle}
 Description:
 ${sourceDescription}
 
-[Output Request]
-Translate the source title and description into the following ${activeCount} languages in the exact order below.
-Do not print labels such as Number, Code, Country Code, Country Name, Title, or Description.
-Do not add explanations, introductions, closing remarks, keyword lines, hashtags, code blocks, or HTML.
-Separate each language result with one blank line only.
-Keep the source description's paragraph flow and line breaks as naturally as possible.
-When the work is finished, move to the bottom.
+[Output Format]
+Country Code: language code
+Title: translated title
+Description:
+translated description
 
-Language Order
+[Core Principles]
+1. Never stop midway; continue translating from beginning to end.
+2. Do not include work explanations, introductions, closing remarks, or commentary.
+3. Use only the language codes in the mapping table below.
+4. Never change the order of the blocks.
+5. Each block must start with Country Code.
+6. Maintain the paragraph structure and line breaks of the Description according to the flow of the source text.
+7. Do not include any extra remarks, keyword lines, hashtags, code blocks, HTML, or country-name lines other than the title and description.
+8. When the work is finished, move to the bottom.
 
 ${countryBlock}`;
 
@@ -1490,21 +1506,38 @@ ${countryBlock}`;
 
   window.buildGeminiPrompt = buildGeminiPrompt;
 
-  function copyText(targetId){
+  function copyText(targetId, button){
     var target = document.getElementById(targetId);
     if(!target) return;
-    target.focus();
-    target.select();
-    target.setSelectionRange(0, target.value.length);
+    var text = target.value || target.textContent || "";
 
-    var done = false;
-    try{
-      done = document.execCommand("copy");
-    }catch(e){ done = false; }
+    function mark(done){
+      var old = button ? button.textContent : "";
+      if(button){
+        button.textContent = done ? "Copied" : "Copy failed";
+        setTimeout(function(){ button.textContent = old || "Copy"; }, 1200);
+      }
+      var status = document.getElementById("geminiCopyStatus");
+      if(status && targetId === "geminiPromptText"){
+        status.textContent = done ? "Copied." : "If copying does not work, please select the content inside the field and copy it.";
+      }
+    }
 
-    var status = document.getElementById("geminiCopyStatus");
-    if(status && targetId === "geminiPromptText"){
-      status.textContent = done ? "Copied." : "If copying does not work, please select the content inside the field and copy it.";
+    if(navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText(text).then(function(){ mark(true); }).catch(function(){ fallbackCopy(); });
+    }else{
+      fallbackCopy();
+    }
+
+    function fallbackCopy(){
+      var done = false;
+      try{
+        target.focus();
+        target.select();
+        target.setSelectionRange(0, text.length);
+        done = document.execCommand("copy");
+      }catch(e){ done = false; }
+      mark(done);
     }
   }
 
@@ -1519,7 +1552,7 @@ ${countryBlock}`;
     var copyButton = e.target.closest("[data-copy-target]");
     if(copyButton){
       e.preventDefault();
-      copyText(copyButton.getAttribute("data-copy-target"));
+      copyText(copyButton.getAttribute("data-copy-target"), copyButton);
     }
   });
 })();
@@ -1711,7 +1744,9 @@ ${countryBlock}`;
     }
 
     showReceiveStatus(
-      "OAuth received\nToken receipt: " + (hasToken ? "Success" : "Failure") + "\nNow this token can be connected to register multilingual content in the next step.",
+      "OAuth received
+Token receipt: " + (hasToken ? "Success" : "Failure") + "
+Now this token can be connected to register multilingual content in the next step.",
       hasToken
     );
   });
@@ -1937,17 +1972,11 @@ ${countryBlock}`;
 
       var body = {
         id: videoId,
-        snippet: {
-          title: getNativeTitle() || snippet.title || "",
-          description: getNativeDescription() || snippet.description || "",
-          categoryId: snippet.categoryId || "22",
-          defaultLanguage: getNativeLanguageCode()
-        },
         localizations: mergedLocalizations
       };
 
       await youtubeJson(
-        "https://www.googleapis.com/youtube/v3/videos?part=snippet,localizations",
+        "https://www.googleapis.com/youtube/v3/videos?part=localizations",
         {
           method: "PUT",
           headers: { Authorization: "Bearer " + token, "Content-Type": "application/json" },
@@ -1986,93 +2015,80 @@ ${countryBlock}`;
 <div id="nativeCodeModal" class="nativeCodeModal" aria-hidden="true">
   <div class="nativeCodeModalBox">
     <div class="nativeCodeModalHeader">
-      <h2>83 Country Names / Language Codes List</h2>
+      <h2>70 Country Names / Language Codes List</h2>
       <button id="closeNativeCodeListBtn" class="nativeCodeCloseBtn" type="button">Close</button>
     </div>
     <div class="nativeCodeGrid">
-      <div class="nativeCodeItem"><div class="nativeCodeText"><strong>af</strong> | Afrikaans</div><button type="button" data-native-code="af">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>am</strong> | Amharic</div><button type="button" data-native-code="am">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ar</strong> | Arabic</div><button type="button" data-native-code="ar">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>as</strong> | Assamese</div><button type="button" data-native-code="as">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>az</strong> | Azerbaijani</div><button type="button" data-native-code="az">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>be</strong> | Belarusian</div><button type="button" data-native-code="be">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>bg</strong> | Bulgarian</div><button type="button" data-native-code="bg">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>bn</strong> | Bengali</div><button type="button" data-native-code="bn">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>bs</strong> | Bosnian</div><button type="button" data-native-code="bs">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ca</strong> | Catalan</div><button type="button" data-native-code="ca">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>cs</strong> | Czech</div><button type="button" data-native-code="cs">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>da</strong> | Danish</div><button type="button" data-native-code="da">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>de</strong> | German</div><button type="button" data-native-code="de">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>el</strong> | Greek</div><button type="button" data-native-code="el">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>en</strong> | English</div><button type="button" data-native-code="en">Select</button></div>
 <div class="nativeCodeItem"><div class="nativeCodeText"><strong>en-GB</strong> | English (United Kingdom)</div><button type="button" data-native-code="en-GB">Select</button></div>
 <div class="nativeCodeItem"><div class="nativeCodeText"><strong>en-IN</strong> | English (India)</div><button type="button" data-native-code="en-IN">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>en</strong> | English</div><button type="button" data-native-code="en">Select</button></div>
 <div class="nativeCodeItem"><div class="nativeCodeText"><strong>es</strong> | Spanish</div><button type="button" data-native-code="es">Select</button></div>
 <div class="nativeCodeItem"><div class="nativeCodeText"><strong>es-419</strong> | Spanish (Latin America)</div><button type="button" data-native-code="es-419">Select</button></div>
 <div class="nativeCodeItem"><div class="nativeCodeText"><strong>es-US</strong> | Spanish (United States)</div><button type="button" data-native-code="es-US">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>et</strong> | Estonian</div><button type="button" data-native-code="et">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>eu</strong> | Basque</div><button type="button" data-native-code="eu">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>fa</strong> | Persian</div><button type="button" data-native-code="fa">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>fi</strong> | Finnish</div><button type="button" data-native-code="fi">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>fil</strong> | Filipino</div><button type="button" data-native-code="fil">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>fr-CA</strong> | French (Canada)</div><button type="button" data-native-code="fr-CA">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>fr</strong> | French</div><button type="button" data-native-code="fr">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>gl</strong> | Galician</div><button type="button" data-native-code="gl">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>gu</strong> | Gujarati</div><button type="button" data-native-code="gu">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>hi</strong> | Hindi</div><button type="button" data-native-code="hi">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>hr</strong> | Croatian</div><button type="button" data-native-code="hr">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>hu</strong> | Hungarian</div><button type="button" data-native-code="hu">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>hy</strong> | Armenian</div><button type="button" data-native-code="hy">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>id</strong> | Indonesian</div><button type="button" data-native-code="id">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>is</strong> | Icelandic</div><button type="button" data-native-code="is">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>it</strong> | Italian</div><button type="button" data-native-code="it">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>iw</strong> | Hebrew</div><button type="button" data-native-code="iw">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ja</strong> | Japanese</div><button type="button" data-native-code="ja">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ka</strong> | Georgian</div><button type="button" data-native-code="ka">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>kk</strong> | Kazakh</div><button type="button" data-native-code="kk">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>km</strong> | Khmer</div><button type="button" data-native-code="km">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>kn</strong> | Kannada</div><button type="button" data-native-code="kn">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ko</strong> | Korean</div><button type="button" data-native-code="ko">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ky</strong> | Kyrgyz</div><button type="button" data-native-code="ky">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>lo</strong> | Lao</div><button type="button" data-native-code="lo">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>lt</strong> | Lithuanian</div><button type="button" data-native-code="lt">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>lv</strong> | Latvian</div><button type="button" data-native-code="lv">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>mk</strong> | Macedonian</div><button type="button" data-native-code="mk">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ml</strong> | Malayalam</div><button type="button" data-native-code="ml">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>mn</strong> | Mongolian</div><button type="button" data-native-code="mn">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>mr</strong> | Marathi</div><button type="button" data-native-code="mr">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ms</strong> | Malay</div><button type="button" data-native-code="ms">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>my</strong> | Burmese</div><button type="button" data-native-code="my">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>no</strong> | Norwegian</div><button type="button" data-native-code="no">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ne</strong> | Nepali</div><button type="button" data-native-code="ne">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>nl</strong> | Dutch</div><button type="button" data-native-code="nl">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>or</strong> | Odia</div><button type="button" data-native-code="or">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>pa</strong> | Punjabi</div><button type="button" data-native-code="pa">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>pl</strong> | Polish</div><button type="button" data-native-code="pl">Select</button></div>
 <div class="nativeCodeItem"><div class="nativeCodeText"><strong>pt</strong> | Portuguese</div><button type="button" data-native-code="pt">Select</button></div>
 <div class="nativeCodeItem"><div class="nativeCodeText"><strong>pt-PT</strong> | Portuguese (Portugal)</div><button type="button" data-native-code="pt-PT">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ro</strong> | Romanian</div><button type="button" data-native-code="ro">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>fr</strong> | French</div><button type="button" data-native-code="fr">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>fr-CA</strong> | French (Canada)</div><button type="button" data-native-code="fr-CA">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>de</strong> | German</div><button type="button" data-native-code="de">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ja</strong> | Japanese</div><button type="button" data-native-code="ja">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ko</strong> | Korean</div><button type="button" data-native-code="ko">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>zh-CN</strong> | Chinese (China)</div><button type="button" data-native-code="zh-CN">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>zh-TW</strong> | Chinese (Taiwan)</div><button type="button" data-native-code="zh-TW">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>zh-HK</strong> | Chinese (Hong Kong)</div><button type="button" data-native-code="zh-HK">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>hi</strong> | Hindi</div><button type="button" data-native-code="hi">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>id</strong> | Indonesian</div><button type="button" data-native-code="id">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ar</strong> | Arabic</div><button type="button" data-native-code="ar">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>bn</strong> | Bengali</div><button type="button" data-native-code="bn">Select</button></div>
 <div class="nativeCodeItem"><div class="nativeCodeText"><strong>ru</strong> | Russian</div><button type="button" data-native-code="ru">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>si</strong> | Sinhala</div><button type="button" data-native-code="si">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>sk</strong> | Slovak</div><button type="button" data-native-code="sk">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>sl</strong> | Slovenian</div><button type="button" data-native-code="sl">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>sq</strong> | Albanian</div><button type="button" data-native-code="sq">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>sr-Latn</strong> | Serbian (Latin)</div><button type="button" data-native-code="sr-Latn">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>sr</strong> | Serbian</div><button type="button" data-native-code="sr">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>tr</strong> | Turkish</div><button type="button" data-native-code="tr">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>vi</strong> | Vietnamese</div><button type="button" data-native-code="vi">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>th</strong> | Thai</div><button type="button" data-native-code="th">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>it</strong> | Italian</div><button type="button" data-native-code="it">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>nl</strong> | Dutch</div><button type="button" data-native-code="nl">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>pl</strong> | Polish</div><button type="button" data-native-code="pl">Select</button></div>
 <div class="nativeCodeItem"><div class="nativeCodeText"><strong>sv</strong> | Swedish</div><button type="button" data-native-code="sv">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>sw</strong> | Swahili</div><button type="button" data-native-code="sw">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>cs</strong> | Czech</div><button type="button" data-native-code="cs">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ro</strong> | Romanian</div><button type="button" data-native-code="ro">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>el</strong> | Greek</div><button type="button" data-native-code="el">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>hu</strong> | Hungarian</div><button type="button" data-native-code="hu">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>uk</strong> | Ukrainian</div><button type="button" data-native-code="uk">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>fa</strong> | Persian</div><button type="button" data-native-code="fa">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ur</strong> | Urdu</div><button type="button" data-native-code="ur">Select</button></div>
 <div class="nativeCodeItem"><div class="nativeCodeText"><strong>ta</strong> | Tamil</div><button type="button" data-native-code="ta">Select</button></div>
 <div class="nativeCodeItem"><div class="nativeCodeText"><strong>te</strong> | Telugu</div><button type="button" data-native-code="te">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>th</strong> | Thai</div><button type="button" data-native-code="th">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>tr</strong> | Turkish</div><button type="button" data-native-code="tr">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>uk</strong> | Ukrainian</div><button type="button" data-native-code="uk">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ur</strong> | Urdu</div><button type="button" data-native-code="ur">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>uz</strong> | Uzbek</div><button type="button" data-native-code="uz">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>vi</strong> | Vietnamese</div><button type="button" data-native-code="vi">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>zh-CN</strong> | Chinese (China)</div><button type="button" data-native-code="zh-CN">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>zh-HK</strong> | Chinese (Hong Kong)</div><button type="button" data-native-code="zh-HK">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>zh-TW</strong> | Chinese (Taiwan)</div><button type="button" data-native-code="zh-TW">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>zu</strong> | Zulu</div><button type="button" data-native-code="zu">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>mr</strong> | Marathi</div><button type="button" data-native-code="mr">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>fil</strong> | Filipino</div><button type="button" data-native-code="fil">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ms</strong> | Malay</div><button type="button" data-native-code="ms">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>no</strong> | Norwegian</div><button type="button" data-native-code="no">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>da</strong> | Danish</div><button type="button" data-native-code="da">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>fi</strong> | Finnish</div><button type="button" data-native-code="fi">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>iw</strong> | Hebrew</div><button type="button" data-native-code="iw">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ca</strong> | Catalan</div><button type="button" data-native-code="ca">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>bg</strong> | Bulgarian</div><button type="button" data-native-code="bg">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>hr</strong> | Croatian</div><button type="button" data-native-code="hr">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>sk</strong> | Slovak</div><button type="button" data-native-code="sk">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>sr</strong> | Serbian</div><button type="button" data-native-code="sr">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>sr-Latn</strong> | Serbian (Latin)</div><button type="button" data-native-code="sr-Latn">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>sq</strong> | Albanian</div><button type="button" data-native-code="sq">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>et</strong> | Estonian</div><button type="button" data-native-code="et">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>lt</strong> | Lithuanian</div><button type="button" data-native-code="lt">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>lv</strong> | Latvian</div><button type="button" data-native-code="lv">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ka</strong> | Georgian</div><button type="button" data-native-code="ka">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>kk</strong> | Kazakh</div><button type="button" data-native-code="kk">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>hy</strong> | Armenian</div><button type="button" data-native-code="hy">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>az</strong> | Azerbaijani</div><button type="button" data-native-code="az">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>be</strong> | Belarusian</div><button type="button" data-native-code="be">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>bs</strong> | Bosnian</div><button type="button" data-native-code="bs">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>mk</strong> | Macedonian</div><button type="button" data-native-code="mk">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>mn</strong> | Mongolian</div><button type="button" data-native-code="mn">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ne</strong> | Nepali</div><button type="button" data-native-code="ne">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>sw</strong> | Swahili</div><button type="button" data-native-code="sw">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>am</strong> | Amharic</div><button type="button" data-native-code="am">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>af</strong> | Afrikaans</div><button type="button" data-native-code="af">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>gu</strong> | Gujarati</div><button type="button" data-native-code="gu">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>kn</strong> | Kannada</div><button type="button" data-native-code="kn">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ml</strong> | Malayalam</div><button type="button" data-native-code="ml">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>pa</strong> | Punjabi</div><button type="button" data-native-code="pa">Select</button></div>
     </div>
   </div>
 </div>
@@ -2192,76 +2208,76 @@ ${countryBlock}`;
 <script>
 /* Humateck_New084 admin plan prompt count restore */
 (function(){
-  var HUMATECK_COUNTRY_LINES_83 = `1. en | English
-2. es | Spanish
-3. es-419 | Spanish (Latin America)
-4. es-US | Spanish (United States)
-5. pt | Portuguese
-6. pt-PT | Portuguese (Portugal)
-7. fr | French
-8. fr-CA | French (Canada)
-9. de | German
-10. ja | Japanese
-11. ko | Korean
-12. zh-CN | Chinese (China)
-13. zh-TW | Chinese (Taiwan)
-14. zh-HK | Chinese (Hong Kong)
-15. hi | Hindi
-16. id | Indonesian
-17. ar | Arabic
-18. bn | Bengali
-19. ru | Russian
-20. tr | Turkish
-21. vi | Vietnamese
-22. th | Thai
-23. it | Italian
-24. nl | Dutch
-25. pl | Polish
-26. sv | Swedish
-27. cs | Czech
-28. ro | Romanian
-29. el | Greek
-30. hu | Hungarian
-31. fil | Filipino
-32. ms | Malay
+  var HUMATECK_COUNTRY_LINES_70 = `1. en | English
+2. en-GB | English (United Kingdom)
+3. en-IN | English (India)
+4. es | Spanish
+5. es-419 | Spanish (Latin America)
+6. es-US | Spanish (United States)
+7. pt | Portuguese
+8. pt-PT | Portuguese (Portugal)
+9. fr | French
+10. fr-CA | French (Canada)
+11. de | German
+12. ja | Japanese
+13. ko | Korean
+14. zh-CN | Chinese (China)
+15. zh-TW | Chinese (Taiwan)
+16. zh-HK | Chinese (Hong Kong)
+17. hi | Hindi
+18. id | Indonesian
+19. ar | Arabic
+20. bn | Bengali
+21. ru | Russian
+22. tr | Turkish
+23. vi | Vietnamese
+24. th | Thai
+25. it | Italian
+26. nl | Dutch
+27. pl | Polish
+28. sv | Swedish
+29. cs | Czech
+30. ro | Romanian
+31. el | Greek
+32. hu | Hungarian
 33. uk | Ukrainian
 34. fa | Persian
 35. ur | Urdu
 36. ta | Tamil
 37. te | Telugu
 38. mr | Marathi
-39. gu | Gujarati
-40. pa | Punjabi
-41. kn | Kannada
-42. ml | Malayalam
-43. or | Odia
-44. am | Amharic
-45. sw | Swahili
-46. af | Afrikaans
-47. az | Azerbaijani
-48. be | Belarusian
-49. bg | Bulgarian
-50. bs | Bosnian
-51. ca | Catalan
-52. da | Danish
-53. et | Estonian
-54. eu | Basque
-55. fi | Finnish
-56. gl | Galician
-57. hr | Croatian
-58. hy | Armenian
-59. is | Icelandic
-60. iw | Hebrew
-61. ka | Georgian
-62. kk | Kazakh
-63. km | Khmer
-64. ky | Kyrgyz
-65. lo | Lao
-66. lt | Lithuanian
-67. lv | Latvian
-68. mk | Macedonian
-69. mn | Mongolian
-70. no | Norwegian`;
+39. fil | Filipino
+40. ms | Malay
+41. no | Norwegian
+42. da | Danish
+43. fi | Finnish
+44. iw | Hebrew
+45. ca | Catalan
+46. bg | Bulgarian
+47. hr | Croatian
+48. sk | Slovak
+49. sr | Serbian
+50. sr-Latn | Serbian (Latin)
+51. sq | Albanian
+52. et | Estonian
+53. lt | Lithuanian
+54. lv | Latvian
+55. ka | Georgian
+56. kk | Kazakh
+57. hy | Armenian
+58. az | Azerbaijani
+59. be | Belarusian
+60. bs | Bosnian
+61. mk | Macedonian
+62. mn | Mongolian
+63. ne | Nepali
+64. sw | Swahili
+65. am | Amharic
+66. af | Afrikaans
+67. gu | Gujarati
+68. kn | Kannada
+69. ml | Malayalam
+70. pa | Punjabi`;
 
   function getValue(id){
     var el = document.getElementById(id);
@@ -2276,17 +2292,16 @@ ${countryBlock}`;
   function countFromPlan(plan){
     if(plan === "monthly50") return 50;
     if(plan === "monthly70") return 70;
-    if(plan === "monthly83") return 70;
-    if(plan === "yearly83") return 70;
+    if(plan === "yearly70") return 70;
     if(plan === "monthly30") return 30;
-    return 70;
+    return 30;
   }
 
   function rebuildGeminiPromptByPlan(plan){
     var activeCount = countFromPlan(plan);
     var sourceTitle = getValue("sourceTitle");
     var sourceDescription = getValue("sourceDescription");
-    var lines = HUMATECK_COUNTRY_LINES_83.split("\n").slice(0, activeCount).join("\n");
+    var lines = HUMATECK_COUNTRY_LINES_70.split("\n").slice(0, activeCount).join("\n");
 
     var prompt =
 `Hello Gemini!
@@ -2299,15 +2314,23 @@ Title: ${sourceTitle}
 Description:
 ${sourceDescription}
 
-[Output Request]
-Translate the source title and description into the following ${activeCount} languages in the exact order below.
-Do not print labels such as Number, Code, Country Code, Country Name, Title, or Description.
-Do not add explanations, introductions, closing remarks, keyword lines, hashtags, code blocks, or HTML.
-Separate each language result with one blank line only.
-Keep the source description's paragraph flow and line breaks as naturally as possible.
-When the work is finished, move to the bottom.
+[Output Format]
+Country Code: language code
+Title: translated title
+Description:
+translated description
 
-Language Order
+[Core Principles]
+1. Never stop midway; continue translating from beginning to end.
+2. Do not include work explanations, introductions, closing remarks, or commentary.
+3. Use only the language codes in the mapping table below.
+4. Never change the order of the blocks.
+5. Each block must start with Country Code.
+6. Maintain the paragraph structure and line breaks of the Description according to the flow of the source text.
+7. Do not include any extra remarks, keyword lines, hashtags, code blocks, HTML, or country-name lines other than the title and description.
+8. When the work is finished, move to the bottom.
+
+Country Code Mapping Table
 
 ${lines}`;
 
