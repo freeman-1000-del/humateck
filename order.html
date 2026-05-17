@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1549,11 +1548,9 @@ ${countryBlock}`;
           callback: function(response){
             if(response && response.access_token){
               window.humateckGoogleAccessToken = response.access_token;
-              window.humateckAccessToken = response.access_token;
               window.humateckGoogleOAuthScope = response.scope || YOUTUBE_SCOPE;
               try{
                 sessionStorage.setItem("humateckGoogleAccessToken", response.access_token);
-                sessionStorage.setItem("humateckAccessToken", response.access_token);
                 sessionStorage.setItem("humateckGoogleOAuthScope", response.scope || YOUTUBE_SCOPE);
               }catch(e){}
               setAuthStatus("Google OAuth authorization has been completed. You can now proceed with YouTube registration.", "ok");
@@ -1690,12 +1687,9 @@ ${countryBlock}`;
 
   function getAccessToken(){
     if(window.humateckGoogleAccessToken) return window.humateckGoogleAccessToken;
-    if(window.humateckAccessToken) return window.humateckAccessToken;
     try{
-      var savedGoogle = sessionStorage.getItem("humateckGoogleAccessToken");
-      if(savedGoogle) return savedGoogle;
-      var savedCommon = sessionStorage.getItem("humateckAccessToken");
-      if(savedCommon) return savedCommon;
+      var saved = sessionStorage.getItem("humateckGoogleAccessToken");
+      if(saved) return saved;
     }catch(e){}
     var token = "";
     var candidates = ["googleAccessToken","accessToken","oauthAccessToken","authToken"];
@@ -1832,20 +1826,9 @@ ${countryBlock}`;
 
   function hasSubscriberAccess(){
     var hidden = document.getElementById("humateckActivePlanValue");
-    var plan = hidden ? String(hidden.value || "").trim() : "";
-    if(!plan && window.humateckAdminSelectedPlan) plan = String(window.humateckAdminSelectedPlan || "").trim();
-    if(!plan && window.humateckPaymentSubscriptionPlan) plan = String(window.humateckPaymentSubscriptionPlan || "").trim();
-
-    try{
-      if(!plan) plan = String(localStorage.getItem("humateckAdminSelectedPlan") || "").trim();
-      if(!plan) plan = String(localStorage.getItem("humateckSubscriberPlan") || "").trim();
-      if(!plan) plan = String(localStorage.getItem("humateckActivePlan") || "").trim();
-      if(!plan) plan = String(localStorage.getItem("humateckPaymentSubscriptionPlan") || "").trim();
-      var adminMode = String(localStorage.getItem("humateckAdminMode") || "").trim();
-      var adminFlag = String(localStorage.getItem("humateckAdmin") || "").trim();
-      if(!plan && (adminMode === "true" || adminMode === "1" || adminFlag === "true" || adminFlag === "1")) plan = "admin";
-    }catch(e){}
-
+    var plan = hidden ? hidden.value : "";
+    if(!plan && window.humateckAdminSelectedPlan) plan = window.humateckAdminSelectedPlan;
+    if(!plan && window.humateckPaymentSubscriptionPlan) plan = window.humateckPaymentSubscriptionPlan;
     return !!plan;
   }
 
@@ -2159,197 +2142,44 @@ ${countryBlock}`;
 </script>
 
 <script>
-/* Humateck_New214 root order direct admin restore
-   This block only restores Hidden Admin Menu selection.
-   It does not change delivery logic, Gemini prompt structure, free folder, or plan page.
-*/
+/* Humateck_New012 admin registration permission restore */
 (function(){
-  function applyAdminPlan(plan, clickedButton){
-    if(!plan) return;
-
-    window.humateckAdminSelectedPlan = plan;
-    window.humateckPaymentSubscriptionPlan = plan;
-
-    try{
-      localStorage.setItem("humateckAdminMode", "true");
-      localStorage.setItem("humateckAdmin", "true");
-      localStorage.setItem("humateckAdminSelectedPlan", plan);
-      localStorage.setItem("humateckActivePlan", plan);
-      localStorage.setItem("humateckSubscriberPlan", plan);
-      localStorage.setItem("humateckPaymentSubscriptionPlan", plan);
-    }catch(e){}
-
-    var hidden = document.getElementById("humateckActivePlanValue");
-    if(hidden) hidden.value = plan;
-
-    var buttons = document.querySelectorAll("[data-admin-plan]");
-    for(var i=0;i<buttons.length;i++){
-      buttons[i].classList.remove("active");
-    }
-    if(clickedButton) clickedButton.classList.add("active");
-
-    var sendBtn = document.getElementById("sendOrderBtn");
-    if(sendBtn){
-      sendBtn.disabled = false;
-      sendBtn.classList.remove("disabled");
-      sendBtn.removeAttribute("disabled");
-    }
-  }
-
   function isAdminModeActive(){
+    var adminPlan = window.humateckAdminSelectedPlan || "";
     var hidden = document.getElementById("humateckActivePlanValue");
     var hiddenPlan = hidden && hidden.value ? hidden.value : "";
-    var adminPlan = window.humateckAdminSelectedPlan || "";
-    if(hiddenPlan || adminPlan) return true;
-    try{
-      return !!(
-        localStorage.getItem("humateckAdminSelectedPlan") ||
-        localStorage.getItem("humateckActivePlan") ||
-        localStorage.getItem("humateckSubscriberPlan") ||
-        localStorage.getItem("humateckPaymentSubscriptionPlan") ||
-        localStorage.getItem("humateckAdminMode") === "true" ||
-        localStorage.getItem("humateckAdminMode") === "1" ||
-        localStorage.getItem("humateckAdmin") === "true" ||
-        localStorage.getItem("humateckAdmin") === "1"
-      );
-    }catch(e){ return false; }
+    var adminToken = localStorage.getItem("humateckAdminMode") || "";
+    var adminFlag = localStorage.getItem("humateckAdmin") || "";
+
+    return !!(
+      adminPlan ||
+      hiddenPlan ||
+      adminToken === "true" ||
+      adminToken === "1" ||
+      adminFlag === "true" ||
+      adminFlag === "1"
+    );
   }
 
   window.humateckIsAdminModeActive = isAdminModeActive;
 
   document.addEventListener("click", function(event){
-    var target = event.target;
-    if(!target || !target.closest) return;
-    var adminBtn = target.closest("[data-admin-plan]");
+    var adminBtn = event.target.closest("[data-admin-plan]");
     if(!adminBtn) return;
-    event.preventDefault();
-    applyAdminPlan(adminBtn.getAttribute("data-admin-plan") || "admin", adminBtn);
-  }, true);
 
-  document.addEventListener("DOMContentLoaded", function(){
-    var plan = "";
-    try{
-      plan = localStorage.getItem("humateckAdminSelectedPlan") ||
-             localStorage.getItem("humateckSubscriberPlan") ||
-             localStorage.getItem("humateckActivePlan") ||
-             localStorage.getItem("humateckPaymentSubscriptionPlan") || "";
-    }catch(e){}
-    if(plan) applyAdminPlan(plan, null);
-  });
-})();
-</script>
-
-
-<script>
-/* HUMATECK NEW215 ADMIN ACTIVE COUNT DIRECT FIX
-   Purpose:
-   - Hidden Admin Menu must control Gemini activeCount immediately.
-   - Selecting 30/50/70/83/Annual 83 must update the generated prompt country count.
-   - This is an admin plan selector bridge only.
-*/
-(function(){
-  function $(id){ return document.getElementById(id); }
-
-  function planToCount(plan){
-    if(plan === "monthly50") return 50;
-    if(plan === "monthly70") return 70;
-    if(plan === "monthly83") return 83;
-    if(plan === "yearly83") return 83;
-    if(plan === "yearly70") return 70;
-    if(plan === "free7") return 15;
-    return 30;
-  }
-
-  function setAdminPlan(plan, btn){
-    if(!plan) return;
-    var count = planToCount(plan);
-
+    localStorage.setItem("humateckAdminMode", "true");
+    var plan = adminBtn.getAttribute("data-admin-plan") || "admin";
     window.humateckAdminSelectedPlan = plan;
-    window.humateckPaymentSubscriptionPlan = plan;
-    window.humateckAdminActiveCount = count;
 
-    try{
-      localStorage.setItem("humateckAdminSelectedPlan", plan);
-      localStorage.setItem("humateckActivePlan", plan);
-      localStorage.setItem("humateckSubscriberPlan", plan);
-      localStorage.setItem("humateckPaymentSubscriptionPlan", plan);
-      localStorage.setItem("humateckAdminActiveCount", String(count));
-    }catch(e){}
-
-    var hidden = $("humateckActivePlanValue");
+    var hidden = document.getElementById("humateckActivePlanValue");
     if(hidden) hidden.value = plan;
 
-    var buttons = document.querySelectorAll("[data-admin-plan]");
-    for(var i=0;i<buttons.length;i++){
-      buttons[i].classList.remove("active");
-    }
-    if(btn) btn.classList.add("active");
-
-    var geminiText = $("geminiPromptText");
-    if(geminiText){
-      if(typeof window.buildGeminiPrompt === "function"){
-        var title = $("sourceTitle");
-        var desc = $("sourceDescription");
-        // If the user has entered anything, regenerate immediately.
-        if((title && title.value.trim()) || (desc && desc.value.trim())){
-          window.buildGeminiPrompt();
-        }else{
-          // Otherwise update the visible template count only, without changing source content.
-          geminiText.value = geminiText.value
-            .replace(/\{activeCount\}-country/g, count + "-country")
-            .replace(/for the \d+-country set/g, "for the " + count + "-country set")
-            .replace(/for the \{activeCount\}-country set/g, "for the " + count + "-country set");
-        }
-      }
-    }
-
-    var sendBtn = $("sendOrderBtn");
+    var sendBtn = document.getElementById("sendOrderBtn");
     if(sendBtn){
       sendBtn.disabled = false;
-      sendBtn.removeAttribute("disabled");
       sendBtn.classList.remove("disabled");
     }
-  }
-
-  // Wrap existing getActiveCount if available after page scripts load.
-  function installGetActiveCountBridge(){
-    try{
-      var oldBuild = window.buildGeminiPrompt;
-      if(typeof oldBuild === "function" && !oldBuild.__humateck215Wrapped){
-        // Existing buildGeminiPrompt already calls its internal getActiveCount.
-        // We make sure the hidden value is current before it runs.
-        var wrapped = function(){
-          var plan = "";
-          try{ plan = localStorage.getItem("humateckAdminSelectedPlan") || ""; }catch(e){}
-          if(!plan && window.humateckAdminSelectedPlan) plan = window.humateckAdminSelectedPlan;
-          var hidden = $("humateckActivePlanValue");
-          if(plan && hidden) hidden.value = plan;
-          return oldBuild.apply(this, arguments);
-        };
-        wrapped.__humateck215Wrapped = true;
-        window.buildGeminiPrompt = wrapped;
-      }
-    }catch(e){}
-  }
-
-  document.addEventListener("click", function(e){
-    var btn = e.target && e.target.closest ? e.target.closest("[data-admin-plan]") : null;
-    if(!btn) return;
-    e.preventDefault();
-    e.stopPropagation();
-    setAdminPlan(btn.getAttribute("data-admin-plan"), btn);
   }, true);
-
-  document.addEventListener("DOMContentLoaded", function(){
-    installGetActiveCountBridge();
-    var plan = "";
-    try{ plan = localStorage.getItem("humateckAdminSelectedPlan") || ""; }catch(e){}
-    if(plan){
-      setAdminPlan(plan, document.querySelector('[data-admin-plan="' + plan + '"]'));
-    }
-  });
-
-  window.humateckSetAdminPlanDirect = setAdminPlan;
 })();
 </script>
 

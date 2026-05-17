@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -7,7 +6,7 @@
 <title>Humateck 전체 등록플랜</title>
 <style>
 *{box-sizing:border-box}
-html,body{margin:0;padding:0;background:#050b14;color:#f4f1e8;font-family:Arial,"Not전체플래o Sans KR",sans-serif}
+html,body{margin:0;padding:0;background:#050b14;color:#f4f1e8;font-family:Arial,"Noto Sans KR",sans-serif}
 a{color:inherit;text-decoration:none}
 button,input,textarea{font-family:inherit}
 .wrap{width:1180px;max-width:calc(100vw - 48px);margin:0 auto;padding:24px 0 60px}
@@ -723,16 +722,6 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
   justify-content:center!important;
 }
 </style>
-
-
-<style>
-/* Humateck temporary service-ready marker only */
-.serviceReadyTemporary{
-  border-color:#ffd95a!important;
-  box-shadow:0 0 20px rgba(255,217,90,.55)!important;
-}
-</style>
-
 <style>
 /* Humateck website cleanup: preparation / guide space only */
 .humateckOnlyNotice{
@@ -895,16 +884,89 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 }
 </style>
 
+
+<style>
+/* Humateck_New005 Korean order cleanup */
+.registerNoticeBelow,
+.registerNoticeBelow *{
+  writing-mode:horizontal-tb!important;
+  white-space:normal!important;
+  text-align:left!important;
+  word-break:keep-all!important;
+  overflow-wrap:break-word!important;
+}
+.registerNoticeBelow h2{
+  display:block!important;
+  width:100%!important;
+  margin:0 0 14px!important;
+  color:#f4c95c!important;
+  font-size:26px!important;
+  line-height:1.45!important;
+}
+.registerNoticeBelow p{
+  display:block!important;
+  width:100%!important;
+  margin:8px 0!important;
+  color:#e6e0d4!important;
+  font-size:17px!important;
+  line-height:1.78!important;
+}
+</style>
+
+
+<style>
+/* Humateck_New006 OAuth Client ID masked input restore */
+#googleClientIdInput{
+  margin-bottom:16px!important;
+}
+.oauthPanelBelow label[for="googleClientIdInput"]{
+  display:block!important;
+  color:#ffd95a!important;
+  font-weight:900!important;
+  margin-top:12px!important;
+}
+</style>
+
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+<style>
+/* Humateck_New010 registration result restore */
+#deliveryResultCard,
+#deliveryResultCard *{
+  writing-mode:horizontal-tb!important;
+  white-space:normal!important;
+  text-align:left!important;
+}
+#deliveryLog{
+  min-height:150px!important;
+  white-space:pre-wrap!important;
+  line-height:1.65!important;
+}
+</style>
+
+
+<style>
+.oauthLaunchNotice{
+  border:1px solid rgba(255,217,90,.62);
+  border-radius:14px;
+  padding:12px 14px;
+  background:rgba(255,217,90,.08);
+  color:#f4e4b6!important;
+  font-weight:800;
+  line-height:1.7;
+}
+</style>
+
 </head>
 <body>
 
 <div class="wrap" id="top">
 <header class="top"><a href="index.html"><img class="logo" src="FINAL_LOGO01.png" alt="Humateck"></a><div class="lang">◎ 한국어⌄</div></header>
-<div class="orderTopButtons"><a href="index.html">첫페이지 가기</a><a href="plans.html" class="serviceReadyTemporary">전체플랜 가기</a></div>
+<div class="orderTopButtons"><a href="index.html">첫페이지 가기</a><a href="plans.html">전체플랜 가기</a></div>
 <section class="orderMainGrid">
   <div class="orderLeftColumn">
     <section class="card">
-      <h1>유튜브 AI 챗번역 및 등록 주문서</h1>
+      <h1>다국어 자막 등록 주문서</h1>
       <div class="order-intro-note">
         <p>1. 본 주문양식은 제미나이AI 챗번역 체험을 위해 누구나에게 개방되어 있습니다.</p>
         <p>2. 단, 번역결과를 최종적으로 유튜브에 등록할 권한은 본 서비스 구독자님들에게만 열리오니 착오 없으시기 바랍니다.</p>
@@ -926,150 +988,64 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 
     <section id="gemini" class="card">
       <h2>제미나이 의뢰문</h2>
-      <textarea id="geminiPromptText" class="mediumTextarea" readonly>안녕 제미나이!
-아래 제목과 설명문을 {activeCount}개 국가 세트에 맞춰 자연스럽게 현지화 번역해 줘.
-처음부터 끝까지 중간에 끊지 말고 계속 번역해 줘.
+      <textarea id="geminiPromptText" class="mediumTextarea" readonly>Hello Gemini!
+Please naturally localize and translate the title and description below for the {activeCount}-country set.
+Please continue translating from beginning to end without stopping midway.
 
-[원문]
-Title: {sourceTitle}
+Important:
+- You must output all {activeCount} Country Codes without omission.
+- Do not change the number or order of the Country Codes.
+- Do not add explanations, opinions, notes, or extra remarks.
+- Keep the exact format:
+  Number:
+  Country Code:
+  Title:
+  Description:
+- Output only the final translated results.
+- When the work is finished, move to the bottom.
+
+[Source Information]
+Native Language Code: {nativeLanguageCode}
+YouTube Video URL: {videoUrl}
+
+[Source Text]
+Title:
+{sourceTitle}
 
 Description:
 {sourceDescription}
 
-[출력 형식]
-Number: 순번
-Country Code: 언어코드
-Country Name: 영어 국가명
-Title: 번역된 제목
-Description:
-번역된 설명문
+[Output Format]
+Number: sequence
+Country Code: language code
+Title: translated title
+Description: translated description
 
-[핵심 원칙]
-1. 처음부터 끝까지 절대 끊지 말고 계속 번역해 줘.
-2. 작업내용 설명, 머리말, 맺음말, 해설문은 넣지 말아 줘.
-3. 아래 대응표의 Country Code와 Country Name을 그대로 사용할 것
-4. 블록 순서는 절대 바꾸지 말 것
-5. 각 블록은 반드시 Country Code로 시작할 것
-6. Description의 문단 구조와 줄바꿈은 원문 흐름을 유지할 것
-7. 제목, 설명문 외의 군소리, 키워드 줄, 해시태그, 코드블록, HTML은 넣지 말 것
-8. 작업이 끝났으면 아래로 이동해 줘.
-
-Country Code / Country Name 대응표
-
-1. af | 아프리칸스어
-2. am | 암하라어
-3. ar | 아랍어
-4. as | 아삼어
-5. az | 아제르바이잔어
-6. be | 벨라루스어
-7. bg | 불가리아어
-8. bn | 벵골어
-9. bs | 보스니아어
-10. ca | 카탈로니아어
-11. cs | 체코어
-12. da | 덴마크어
-13. de | 독일어
-14. el | 그리스어
-15. en-GB | 영어(영국)
-16. en-IN | 영어(인도)
-17. en | 영어
-18. es | 스페인어
-19. es-419 | 스페인어(라틴 아메리카)
-20. es-US | 스페인어(미국)
-21. et | 에스토니아어
-22. eu | 바스크어
-23. fa | 페르시아어
-24. fi | 핀란드어
-25. fil | 필리핀어
-26. fr-CA | 프랑스어(캐나다)
-27. fr | 프랑스어
-28. gl | 갈리시아어
-29. gu | 구자라트어
-30. hi | 힌디어
-31. hr | 크로아티아어
-32. hu | 헝가리어
-33. hy | 아르메니아어
-34. id | 인도네시아어
-35. is | 아이슬란드어
-36. it | 이탈리아어
-37. iw | 히브리어
-38. ja | 일본어
-39. ka | 조지아어
-40. kk | 카자흐어
-41. km | 크메르어
-42. kn | 칸나다어
-43. ko | 한국어
-44. ky | 키르기스어
-45. lo | 라오어
-46. lt | 리투아니아어
-47. lv | 라트비아어
-48. mk | 마케도니아어
-49. ml | 말라얄람어
-50. mn | 몽골어
-51. mr | 마라티어
-52. ms | 말레이어
-53. my | 버마어
-54. no | 노르웨이어
-55. ne | 네팔어
-56. nl | 네덜란드어
-57. or | 오리야어
-58. pa | 펀자브어
-59. pl | 폴란드어
-60. pt | 포르투갈어
-61. pt-PT | 포르투갈어(포르투갈)
-62. ro | 루마니아어
-63. ru | 러시아어
-64. si | 싱할라어
-65. sk | 슬로바키아어
-66. sl | 슬로베니아어
-67. sq | 알바니아어
-68. sr-Latn | 세르비아어(로마자)
-69. sr | 세르비아어
-70. sv | 스웨덴어
-71. sw | 스와힐리어
-72. ta | 타밀어
-73. te | 텔루구어
-74. th | 태국어
-75. tr | 튀르키예어
-76. uk | 우크라이나어
-77. ur | 우르두어
-78. uz | 우즈베크어
-79. vi | 베트남어
-80. zh-CN | 중국어(중국)
-81. zh-HK | 중국어(홍콩)
-82. zh-TW | 중국어(대만)
-83. zu | 줄루어</textarea>
-
-       <div class="actions"><button class="btn copyButtonVisible" type="button" data-copy-target="geminiPromptText">복사</button></div>
+[Country Code List]
+{countryBlock}</textarea>
+      <div class="actions"><button class="btn copyButtonVisible" type="button" data-copy-target="geminiPromptText">복사</button></div>
       <p id="geminiCopyStatus" class="copyStatus"></p><div class="actions"><a class="btn geminiChatButton" href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer">제미나이 챗번역 하러 가기.</a></div>
     </section>
-
-    <section class="card">
-      <h2>제미나이 명령문 복사 붙여넣기 순서</h2><div class="commandFullRows"><div class="commandFullItem">
-<div class="commandFullTop"><label class="">최종 명령</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText7">복사</button></div>
-<textarea id="commandText7" readonly>Numer:와 그 옆 숫자를 삭제하고, 아래로 이동해 줘.</textarea>
-<p class="commandWarningBlink">
-⚠️ (중요) 반드시 제미나이 창의 '아래로 이동해 줘.' 명령 위 마지막 번역문 끝에 있는 ⧉(대답 복사) 버튼을 누르신 후 최종본에 붙여 넣어 주세요.<br><br>
-⚠️ (중요) 번역문 외에 등록오류의 원인이 되는 사족이나 군소리가 들어가지 않도록 주의하세요.
-</p>
-
-</div></div><h2>최종본 붙여넣기</h2>
-      <textarea id="finalOutput" class="mediumTextarea" placeholder="제미나이 최종 번역 결과를 붙여넣으세요."></textarea>
-      
-    </section>
-
-    <section class="oauthInfoBox" id="googleOAuthNotice">
+<section class="oauthInfoBox" id="googleOAuthNotice">
       <h2>Google OAuth 인증관련 안내</h2>
       <p>이제부터는 구독하신 분들이 필수적으로 거쳐야 될 Google OAuth 인증 순서입니다. 비구독자분들도 이 인증을 받을 수는 있으나, 최종 유튜브 등록은 반드시 구독자에게만 개방되오니 착오 없으시기 바랍니다.</p>
       <p class="yellowStrong">Google OAuth 인증키를 이미 받으신 분들은 ‘중요설정 길잡이’를 건너 띄시기 바랍니다.</p>
       <center><p class="yellowStrong">채널당 단 한번 !</p></center>
-      <div class="actions"><a class="btn guideOpenButton" href="#oauthGuideModal">중요설정 길잡이</a></div>
+      <div class="actions"><a class="btn guideOpenButton" href="#oauthGuideModal">중요설정 길잡이</a><a class="btn" href="plans.html">플랜 구독하러 가기</a></div>
       <div class="oauthPanelBelow">
         <h2>Google OAuth 인증</h2>
-        <p>구독자는 판 팝업에서 Google OAuth 인증을 진행합니다.</p>
+        <p>유튜브 등록할 때마다 필히 Google OAuth 인증(인증키 확인)을 받아야 합니다.</p>
+        <label for="googleClientIdInput">Google OAuth Web Client ID</label>
+        <input id="googleClientIdInput" type="password" autocomplete="off" placeholder="Google OAuth Web Client ID를 붙여넣으세요">
         <div class="oauthCenterButton">
-  <a id="oauthStartBtn" class="btn" href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener noreferrer">OAuth 인증키 받으러가기(구글 설정)</a>
+  <button id="oauthStartBtn" class="btn" type="button">OAuth 인증받기</button>
 </div></div>
+    </section>
+
+    
+    <section class="card" id="finalVersionCard">
+      <h2>최종 버전(고객 검수)</h2>
+      <textarea id="finalOutput" class="mediumTextarea" placeholder="고객님이 검수한 제미나이 최종 버전을 붙여넣어 주세요."></textarea>
     </section>
 
 <section class="card">
@@ -1225,9 +1201,6 @@ Country Code / Country Name 대응표
     if(!plan && window.humateckAdminSelectedPlan) plan = window.humateckAdminSelectedPlan;
     if(!plan && window.humateckPaymentSubscriptionPlan) plan = window.humateckPaymentSubscriptionPlan;
 
-    if(plan === "trial7") return 15;
-    if(plan === "free7") return 15;
-    if(plan === "weeklyFree15") return 15;
     if(plan === "monthly50") return 50;
     if(plan === "monthly70") return 70;
     if(plan === "monthly83") return 83;
@@ -1760,18 +1733,7 @@ ${countryBlock}`;
     var plan = hidden ? String(hidden.value || "").trim() : "";
     if(!plan && window.humateckAdminSelectedPlan) plan = String(window.humateckAdminSelectedPlan || "").trim();
     if(!plan && window.humateckPaymentSubscriptionPlan) plan = String(window.humateckPaymentSubscriptionPlan || "").trim();
-
-    if(plan) return true;
-
-    if(window.humateckIsAdminModeActive && window.humateckIsAdminModeActive()) return true;
-
-    try{
-      var adminToken = localStorage.getItem("humateckAdminMode") || "";
-      var adminFlag = localStorage.getItem("humateckAdmin") || "";
-      if(adminToken === "true" || adminToken === "1" || adminFlag === "true" || adminFlag === "1") return true;
-    }catch(e){}
-
-    return false;
+    return !!plan;
   }
 
   function showSubscriberOnlyNotice(){
@@ -2114,10 +2076,6 @@ ${countryBlock}`;
     localStorage.setItem("humateckAdminMode", "true");
     var plan = adminBtn.getAttribute("data-admin-plan") || "admin";
     window.humateckAdminSelectedPlan = plan;
-    window.humateckPaymentSubscriptionPlan = plan;
-
-    document.querySelectorAll("[data-admin-plan]").forEach(function(btn){ btn.classList.remove("active"); });
-    adminBtn.classList.add("active");
 
     var hidden = document.getElementById("humateckActivePlanValue");
     if(hidden) hidden.value = plan;
