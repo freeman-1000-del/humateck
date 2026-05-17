@@ -1091,7 +1091,8 @@ Important:
   Title:
   Description:
 - Output only the final translated results.
-- When the work is finished, move to the bottom.
+- Number:와 그 옆의 숫자를 지워줘.
+- 번역 끝났으면 아래로 이동해 줘.
 
 [Source Information]
 Native Language Code: {nativeLanguageCode}
@@ -1114,13 +1115,6 @@ Description: translated description
 {countryBlock}</textarea>
       <div class="actions"><button class="btn copyButtonVisible" type="button" data-copy-target="geminiPromptText">Copy</button></div>
       <p id="geminiCopyStatus" class="copyStatus"></p><div class="actions"><a class="btn geminiChatButton" href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer">Go to Gemini Chat Translation.</a></div>
-    </section>
-
-    <section class="card">
-      <div class="commandFullItem">
-        <div class="commandFullTop"><label>명령</label><button class="btn copyCommandButton" type="button" data-copy-target="commandTextMoveBottom">Copy</button></div>
-        <textarea id="commandTextMoveBottom" readonly>번역 끝났으면 아래로 이동해 줘</textarea>
-      </div>
     </section>
 <section class="oauthInfoBox" id="googleOAuthNotice">
       <h2>Google OAuth Setup Guide Notice</h2>
@@ -1427,7 +1421,8 @@ translated description
 5. Each block must start with Country Code.
 6. Maintain the paragraph structure and line breaks of the Description according to the flow of the source text.
 7. Do not include any extra remarks, keyword lines, hashtags, code blocks, or HTML other than the title and description.
-8. When the work is finished, move to the bottom.
+8. Number:와 그 옆의 숫자를 지워줘.
+9. 번역 끝났으면 아래로 이동해 줘.
 
 ${countryBlock}`;
 
