@@ -1425,51 +1425,21 @@ ${countryBlock}`;
 
   window.buildGeminiPrompt = buildGeminiPrompt;
 
-  function showCopyStatus(targetId, message){
-    var status = document.getElementById("geminiCopyStatus");
-    if(status && targetId === "geminiPromptText"){
-      status.textContent = message;
-    }
-  }
-
-  function copyText(targetId, button){
+  function copyText(targetId){
     var target = document.getElementById(targetId);
     if(!target) return;
+    target.focus();
+    target.select();
+    target.setSelectionRange(0, target.value.length);
 
-    var text = target.value || target.textContent || "";
-    var originalText = button ? button.textContent : "";
+    var done = false;
+    try{
+      done = document.execCommand("copy");
+    }catch(e){ done = false; }
 
-    function markDone(){
-      if(button){
-        button.textContent = "복사완료";
-        setTimeout(function(){ button.textContent = originalText || "복사"; }, 1200);
-      }
-      showCopyStatus(targetId, "복사되었습니다.");
-    }
-
-    function fallbackCopy(){
-      target.focus();
-      if(target.select) target.select();
-      if(target.setSelectionRange) target.setSelectionRange(0, text.length);
-
-      var done = false;
-      try{
-        done = document.execCommand("copy");
-      }catch(err){
-        done = false;
-      }
-
-      if(done){
-        markDone();
-      }else{
-        showCopyStatus(targetId, "복사가 되지 않으면 칸 안의 내용을 선택해 복사해 주세요.");
-      }
-    }
-
-    if(navigator.clipboard && window.isSecureContext){
-      navigator.clipboard.writeText(text).then(markDone).catch(fallbackCopy);
-    }else{
-      fallbackCopy();
+    var status = document.getElementById("geminiCopyStatus");
+    if(status && targetId === "geminiPromptText"){
+      status.textContent = done ? "복사되었습니다." : "복사가 되지 않으면 칸 안의 내용을 선택해 복사해 주세요.";
     }
   }
 
@@ -1484,7 +1454,7 @@ ${countryBlock}`;
     var copyButton = e.target.closest("[data-copy-target]");
     if(copyButton){
       e.preventDefault();
-      copyText(copyButton.getAttribute("data-copy-target"), copyButton);
+      copyText(copyButton.getAttribute("data-copy-target"));
     }
   });
 })();
@@ -1771,15 +1741,22 @@ ${countryBlock}`;
       return String(v || "").replace(/^\s+|\s+$/g, "");
     }
 
+    function cleanCode(v){
+      var s = cleanLine(v);
+      s = s.split("|")[0];
+      s = s.split(/\s+/)[0];
+      return cleanLine(s);
+    }
+
     function isJunkNumberLine(v){
       var s = cleanLine(v);
-      return /^Number\s*:/i.test(s) || /^number\s*:/i.test(s) || /^\d+\s*[\.\)]?\s*$/.test(s);
+      return /^Number\s*:/i.test(s) || /^number\s*:/i.test(s) || /^Country\s+Name\s*:/i.test(s) || /^\d+\s*[\.]?\s*$/.test(s);
     }
 
     blocks.forEach(function(raw){
       var block = raw.replace(/^\s+/, "");
       var lines = block.split("\n");
-      var code = cleanLine(lines.shift() || "");
+      var code = cleanCode(lines.shift() || "");
       if(!code) return;
 
       var title = "";
@@ -1789,6 +1766,10 @@ ${countryBlock}`;
       for(var i=0;i<lines.length;i++){
         var line = lines[i];
         var trimmed = cleanLine(line);
+
+        if(/^Country\s+Name\s*:/i.test(trimmed)){
+          continue;
+        }
 
         if(/^Title\s*:/i.test(trimmed)){
           mode = "title";
@@ -1820,10 +1801,15 @@ ${countryBlock}`;
         }
       }
 
-      localizations[code] = {
-        title: title,
-        description: description.replace(/\n+$/g, "")
-      };
+      title = cleanLine(title);
+      description = description.replace(/\n+$/g, "");
+
+      if(title && description){
+        localizations[code] = {
+          title: title,
+          description: description
+        };
+      }
     });
 
     return localizations;
@@ -1903,16 +1889,23 @@ ${countryBlock}`;
       if(!video) throw new Error("대상 영상을 찾지 못했습니다.");
 
       var snippet = video.snippet || {};
+      var defaultLanguage = snippet.defaultLanguage || getNativeLanguageCode();
+
+      if(defaultLanguage && localizations[defaultLanguage]){
+        delete localizations[defaultLanguage];
+      }
+
       var mergedLocalizations = Object.assign({}, video.localizations || {}, localizations);
+
+      var safeSnippet = Object.assign({}, snippet);
+      safeSnippet.title = snippet.title || getNativeTitle();
+      safeSnippet.description = snippet.description || getNativeDescription();
+      safeSnippet.categoryId = snippet.categoryId || "22";
+      if(defaultLanguage){ safeSnippet.defaultLanguage = defaultLanguage; }
 
       var body = {
         id: videoId,
-        snippet: {
-          title: getNativeTitle() || snippet.title || "",
-          description: getNativeDescription() || snippet.description || "",
-          categoryId: snippet.categoryId || "22",
-          defaultLanguage: getNativeLanguageCode()
-        },
+        snippet: safeSnippet,
         localizations: mergedLocalizations
       };
 
@@ -2268,6 +2261,47 @@ ${lines}`;
 
   window.humateckSetAdminPlan = setAdminPlan;
   window.humateckRebuildGeminiPromptByPlan = rebuildGeminiPromptByPlan;
+})();
+</script>
+
+<script>
+/* Humateck copy button recovery - copy only, no registration logic */
+(function(){
+  async function writeClipboard(text){
+    if(navigator.clipboard && window.isSecureContext){
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+    var tmp = document.createElement("textarea");
+    tmp.value = text;
+    tmp.setAttribute("readonly", "readonly");
+    tmp.style.position = "fixed";
+    tmp.style.left = "-9999px";
+    document.body.appendChild(tmp);
+    tmp.focus();
+    tmp.select();
+    var ok = document.execCommand("copy");
+    document.body.removeChild(tmp);
+    return ok;
+  }
+
+  document.addEventListener("click", function(event){
+    var btn = event.target.closest("[data-copy-target]");
+    if(!btn) return;
+    var targetId = btn.getAttribute("data-copy-target");
+    var target = document.getElementById(targetId);
+    if(!target) return;
+    event.preventDefault();
+    event.stopPropagation();
+    var original = btn.textContent;
+    writeClipboard(target.value || target.textContent || "").then(function(){
+      btn.textContent = "복사완료";
+      setTimeout(function(){ btn.textContent = original || "복사"; }, 1200);
+    }).catch(function(){
+      btn.textContent = "복사실패";
+      setTimeout(function(){ btn.textContent = original || "복사"; }, 1200);
+    });
+  }, true);
 })();
 </script>
 </body></html>
