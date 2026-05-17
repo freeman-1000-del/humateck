@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1046,56 +1047,6 @@ input,textarea{font-size:16px!important;}
 }
 </style>
 
-<style>
-/* Humateck_New013 calm separate Gemini follow-up command */
-.geminiFollowCommandBox{
-  margin-top:18px;
-  border:1px solid rgba(154,166,178,.46);
-  border-radius:14px;
-  padding:14px;
-  background:rgba(154,166,178,.07);
-}
-.geminiFollowCommandTop{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-  margin-bottom:8px;
-}
-.geminiFollowCommandBox label{
-  display:block;
-  color:#d8d2c5;
-  font-weight:900;
-}
-.geminiFollowCommandTop .btn{
-  min-width:72px!important;
-  min-height:36px!important;
-  padding:7px 12px!important;
-  font-size:14px!important;
-}
-.geminiFollowCommandBox textarea{
-  min-height:62px!important;
-  background:#07101b;
-  border-color:rgba(154,166,178,.46);
-}
-.geminiFollowNotice{
-  display:block;
-  margin-top:10px;
-  padding:11px 13px;
-  border:1px solid rgba(154,166,178,.40);
-  border-radius:12px;
-  background:rgba(154,166,178,.08);
-  color:#d8d2c5!important;
-  font-weight:400;
-  font-size:16px;
-  line-height:1.6;
-}
-.geminiFollowNotice .noticeEmphasis{
-  color:#ffd95a;
-  font-weight:900;
-}
-</style>
-
 </head>
 <body>
 
@@ -1164,14 +1115,6 @@ Description: translated description
 {countryBlock}</textarea>
       <div class="actions"><button class="btn copyButtonVisible" type="button" data-copy-target="geminiPromptText">Copy</button></div>
       <p id="geminiCopyStatus" class="copyStatus"></p><div class="actions"><a class="btn geminiChatButton" href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer">Go to Gemini Chat Translation.</a></div>
-      <div class="geminiFollowCommandBox">
-        <div class="geminiFollowCommandTop">
-          <label for="geminiFollowCommandText">Final Gemini Command</label>
-          <button class="btn" type="button" data-copy-target="geminiFollowCommandText">Copy</button>
-        </div>
-        <textarea id="geminiFollowCommandText" readonly>Delete “Number:” and the number next to it, then Please move to the bottom.</textarea>
-        <div class="geminiFollowNotice">⚠️ <span class="noticeEmphasis">(Important)</span> In the Gemini window, be sure to press the ⧉ (Copy response) button at the end of the last translation above the <span class="noticeEmphasis">“Please move to the bottom.”</span> command, then paste it into the final version field.<br><br>⚠️ <span class="noticeEmphasis">(Important)</span> Be careful not to include extra remarks or unnecessary words other than the translation, as they may cause registration errors.</div>
-      </div>
     </section>
 <section class="oauthInfoBox" id="googleOAuthNotice">
       <h2>Google OAuth Setup Guide Notice</h2>
