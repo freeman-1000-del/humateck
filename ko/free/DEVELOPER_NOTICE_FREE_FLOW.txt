@@ -1,0 +1,21 @@
+HUMATECK NEW212 - FREE UPGRADE MIRROR STRUCTURE
+
+Scope:
+- /free/start.html
+- /free/order.html
+- /free/DEVELOPER_NOTICE_FREE_FLOW.txt
+
+Do NOT upload this package over root files.
+Do NOT replace root order.html with free/order.html.
+
+Fixed rule:
+1. Free trial path lives only under /free/.
+2. Root order.html must not be touched.
+3. Paid plan cards shown inside /free/start.html are mirror links only.
+4. Paid plan links inside /free/ must go to ../plans.html.
+5. Paid plan links inside /free/ must never go directly to ../order.html.
+6. Korean future free path must be /ko/free/ only, not /free/ and not /ko root.
+
+Reason:
+Free trial users may upgrade later.
+When they upgrade, they must leave the free path and move to the root plans page.
