@@ -1043,6 +1043,21 @@ input,textarea{font-size:16px!important;}
 }
 </style>
 
+
+<style>
+/* Humateck_New010 persistent blue copy mark */
+.humateckCopiedMark{
+  background:#145cff!important;
+  border-color:#66a3ff!important;
+  color:#ffffff!important;
+  box-shadow:0 0 22px rgba(65,135,255,.85)!important;
+}
+.humateckCopiedFieldMark{
+  border-color:#66a3ff!important;
+  box-shadow:0 0 16px rgba(65,135,255,.55)!important;
+}
+</style>
+
 </head>
 <body>
 
@@ -1093,12 +1108,15 @@ translated description
 [Core Principles]
 1. Never stop midway; continue translating from beginning to end.
 2. Do not include work explanations, introductions, closing remarks, or commentary.
-3. Use only the language codes in the mapping table below.
-4. Never change the order of the blocks.
-5. Each block must start with Country Code.
-6. Maintain the paragraph structure and line breaks of the Description according to the flow of the source text.
-7. Do not include any extra remarks, keyword lines, hashtags, code blocks, HTML, or country-name lines other than the title and description.
-8. When the work is finished, move to the bottom.
+3. IMPORTANT: Do not add explanations, introductions, commentary, or extra remarks. Output only the translation blocks.
+4. IMPORTANT: Do not add any words before or after the translation result.
+5. IMPORTANT: Any extra remarks may cause YouTube registration errors, so output only the requested translation content.
+6. Use only the language codes in the mapping table below.
+7. Never change the order of the blocks.
+8. Each block must start with Country Code.
+9. Maintain the paragraph structure and line breaks of the Description according to the flow of the source text.
+10. Do not include any extra remarks, keyword lines, hashtags, code blocks, HTML, or country-name lines other than the title and description.
+11. When the work is finished, move to the bottom.
 
 Country Code Mapping Table
 
@@ -1179,24 +1197,25 @@ Country Code Mapping Table
     <section class="card">
       <h2>Gemini Command Copy-and-Paste Sequence</h2><div class="commandFullRows"><div class="commandFullItem">
 <div class="commandFullTop"><label class="">Command 1</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText1">Copy</button></div>
-<textarea id="commandText1" readonly>Please automatically and carefully check for mixed-in other languages, unnatural context, and any other issues.</textarea>
+<textarea id="commandText1" readonly>Please automatically and carefully check for mixed-in other languages, unnatural context, and any other issues.
+Do not add any explanations, introductions, commentary, or extra remarks.</textarea>
 </div><div class="commandFullItem">
 <div class="commandFullTop"><label class="">Command 2</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText2">Copy</button></div>
-<textarea id="commandText2" readonly>Please remove any unnecessary numbering or country-name lines if they appear.
-Important: Keep the translation blocks in the required registration order.</textarea>
+<textarea id="commandText2" readonly>Please delete only the Number: and Country Name: lines.
+Important: Keep the rest of the format exactly as it is now (Country Code:, Title:, Description:).</textarea>
 </div><div class="commandFullItem">
 <div class="commandFullTop"><label class="">Command 3</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText3">Copy</button></div>
 <textarea id="commandText3" readonly>Please check once more for mixed-in other languages, unnatural context, and any other issues.
 Please keep the format as it is.</textarea>
 </div><div class="commandFullItem">
 <div class="commandFullTop"><label class="">Command 4</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText4">Copy</button></div>
-<textarea id="commandText4" readonly>Please check again that unnecessary country-name lines or extra remarks are not included, and carefully check once more for mixed-in other languages, unnatural context, and any other issues.</textarea>
+<textarea id="commandText4" readonly>Please check again whether Country Name: have been deleted, and carefully check once more for mixed-in other languages, unnatural context, and any other issues.</textarea>
 </div><div class="commandFullItem">
 <div class="commandFullTop"><label class="">Command 5</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText5">Copy</button></div>
-<textarea id="commandText5" readonly>Please count the total number of translation codes.</textarea>
+<textarea id="commandText5" readonly>If the total number is correct, delete all number: entries and carefully perform the final check for mixed-in other languages, unnatural context, and any other issues.</textarea>
 </div><div class="commandFullItem">
 <div class="commandFullTop"><label class="">Command 6</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText6">Copy</button></div>
-<textarea id="commandText6" readonly>If the total number is correct, remove any unnecessary numbering and carefully perform the final check for mixed-in other languages, unnatural context, and any other issues.</textarea>
+<textarea id="commandText6" readonly>Please delete 'Country Code:', article name only, not real codes.</textarea>
 </div><div class="commandFullItem">
 <div class="commandFullTop"><label class="">Command 7</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText7">Copy</button></div>
 <textarea id="commandText7" readonly>Please move to the bottom.</textarea>
@@ -1488,12 +1507,15 @@ translated description
 [Core Principles]
 1. Never stop midway; continue translating from beginning to end.
 2. Do not include work explanations, introductions, closing remarks, or commentary.
-3. Use only the language codes in the mapping table below.
-4. Never change the order of the blocks.
-5. Each block must start with Country Code.
-6. Maintain the paragraph structure and line breaks of the Description according to the flow of the source text.
-7. Do not include any extra remarks, keyword lines, hashtags, code blocks, HTML, or country-name lines other than the title and description.
-8. When the work is finished, move to the bottom.
+3. IMPORTANT: Do not add explanations, introductions, commentary, or extra remarks. Output only the translation blocks.
+4. IMPORTANT: Do not add any words before or after the translation result.
+5. IMPORTANT: Any extra remarks may cause YouTube registration errors, so output only the requested translation content.
+6. Use only the language codes in the mapping table below.
+7. Never change the order of the blocks.
+8. Each block must start with Country Code.
+9. Maintain the paragraph structure and line breaks of the Description according to the flow of the source text.
+10. Do not include any extra remarks, keyword lines, hashtags, code blocks, HTML, or country-name lines other than the title and description.
+11. When the work is finished, move to the bottom.
 
 ${countryBlock}`;
 
@@ -1512,14 +1534,18 @@ ${countryBlock}`;
     var text = target.value || target.textContent || "";
 
     function mark(done){
-      var old = button ? button.textContent : "";
       if(button){
-        button.textContent = done ? "Copied" : "Copy failed";
-        setTimeout(function(){ button.textContent = old || "Copy"; }, 1200);
+        button.classList.add("humateckCopiedMark");
+        button.textContent = done ? "Copied ✓" : "Copy failed";
+        var item = button.closest(".commandFullItem");
+        if(item) item.classList.add("humateckCopiedFieldMark");
+      }
+      if(target){
+        target.classList.add("humateckCopiedFieldMark");
       }
       var status = document.getElementById("geminiCopyStatus");
       if(status && targetId === "geminiPromptText"){
-        status.textContent = done ? "Copied." : "If copying does not work, please select the content inside the field and copy it.";
+        status.textContent = done ? "Copied. The copied button and field are marked in blue." : "If copying does not work, please select the content inside the field and copy it.";
       }
     }
 
@@ -2323,12 +2349,15 @@ translated description
 [Core Principles]
 1. Never stop midway; continue translating from beginning to end.
 2. Do not include work explanations, introductions, closing remarks, or commentary.
-3. Use only the language codes in the mapping table below.
-4. Never change the order of the blocks.
-5. Each block must start with Country Code.
-6. Maintain the paragraph structure and line breaks of the Description according to the flow of the source text.
-7. Do not include any extra remarks, keyword lines, hashtags, code blocks, HTML, or country-name lines other than the title and description.
-8. When the work is finished, move to the bottom.
+3. IMPORTANT: Do not add explanations, introductions, commentary, or extra remarks. Output only the translation blocks.
+4. IMPORTANT: Do not add any words before or after the translation result.
+5. IMPORTANT: Any extra remarks may cause YouTube registration errors, so output only the requested translation content.
+6. Use only the language codes in the mapping table below.
+7. Never change the order of the blocks.
+8. Each block must start with Country Code.
+9. Maintain the paragraph structure and line breaks of the Description according to the flow of the source text.
+10. Do not include any extra remarks, keyword lines, hashtags, code blocks, HTML, or country-name lines other than the title and description.
+11. When the work is finished, move to the bottom.
 
 Country Code Mapping Table
 
