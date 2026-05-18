@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!--
+DEVELOPER NOTICE - HUMATECK FIXED RULES
+1. Do not introduce independent JS logic, parser logic, metadata judgment, content inspection, content correction, pre-blocking, or risk-scoring into the order form.
+2. The order form is a delivery page only: customer-approved text -> Google browser OAuth result -> YouTube API delivery -> YouTube response display.
+3. Google performs authentication. YouTube decides acceptance/rejection. Humateck must not act as an internal reviewer or gatekeeper.
+4. Keep PayPal subscription links open. Do not add temporary payment-block scripts.
+5. Target set is fixed at 70 countries. Do not restore 83-country wording or 83-country plan logic without explicit approval.
+6. Gemini target-country order must follow country importance, not alphabetical order.
+-->
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>YouTube Multilingual Subtitle Registration Plan</title>
@@ -405,10 +415,10 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 <div class="top-left-tools"><a class="miniNavButton" href="index.html">Back to First Page</a><a class="miniNavButton" href="order.html">View Order Page</a></div>
 <section class="card"><h1>YouTube Multilingual Subtitle Registration Plan</h1></section>
 <section class="plans">
-<article class="plan" data-subscription-plan="free7"><div class="currentPlanBadge">Currently Active</div><h2>7-Day Free Plan</h2><div class="price">Free / 7 days</div><p>Trial plan for practicing the Gemini translation workflow and YouTube registration preparation based on 15 countries.</p><a class="btn" href="free/start.html" data-google-signup-first="true">Start with Google Sign-in</a></article>
 <article class="plan" data-subscription-plan="monthly30"><div class="currentPlanBadge">Currently Active</div><h2>30-Country Plan</h2><div class="price">USD 12 / month</div><p>Multilingual translation support and content registration basic plan based on 30 countries.</p><a class="btn" href="https://www.paypal.com/webapps/billing/plans/subscribe?plan_id=P-0NR97490A8670131FNH6DHPA" target="_blank" rel="noopener noreferrer" data-payment-link-preserved="true">Subscribe</a></article>
 <article class="plan" data-subscription-plan="monthly50"><div class="currentPlanBadge">Currently Active</div><h2>50-Country Plan</h2><div class="price">USD 19 / month</div><p>Multilingual translation support and content registration expanded plan based on 50 countries.</p><a class="btn" href="https://www.paypal.com/webapps/billing/plans/subscribe?plan_id=P-86V63300B15314135NH6ENDQ" target="_blank" rel="noopener noreferrer" data-payment-link-preserved="true">Subscribe</a></article>
 <article class="plan" data-subscription-plan="monthly70"><div class="currentPlanBadge">Currently Active</div><h2>70-Country Plan</h2><div class="price">USD 25 / month</div><p>Multilingual translation support and content registration stable plan based on 70 countries.</p><a class="btn" href="https://www.paypal.com/webapps/billing/plans/subscribe?plan_id=P-752827993G859572ANH6EHKQ" target="_blank" rel="noopener noreferrer" data-payment-link-preserved="true">Subscribe</a></article>
+<article class="plan" data-subscription-plan="yearly70"><div class="currentPlanBadge">Currently Active</div><h2>70-Country Annual Plan</h2><div class="price">USD 219 / year</div><p>Multilingual translation support and content registration annual plan based on 70 countries.</p><a class="btn" href="https://www.paypal.com/webapps/billing/plans/subscribe?plan_id=P-9AN12524W12053819NH6ER3Y" target="_blank" rel="noopener noreferrer" data-payment-link-preserved="true">Subscribe</a></article>
 </section><footer class="footer"><a href="terms.html">Terms of Service</a><span>|</span><a href="privacy.html">Privacy Policy</a><span>|</span><a href="refund.html">Refund Policy</a></footer></div><div class="account"><a href="#" title="Google Official Authorization">G</a><a href="#" title="Apple Official Authorization">●</a><a href="#" title="Email Official Authorization">@</a></div>
 
 <script>

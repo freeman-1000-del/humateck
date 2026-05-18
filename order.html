@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!--
+DEVELOPER NOTICE - HUMATECK FIXED RULES
+1. Do not introduce independent JS logic, parser logic, metadata judgment, content inspection, content correction, pre-blocking, or risk-scoring into the order form.
+2. The order form is a delivery page only: customer-approved text -> Google browser OAuth result -> YouTube API delivery -> YouTube response display.
+3. Google performs authentication. YouTube decides acceptance/rejection. Humateck must not act as an internal reviewer or gatekeeper.
+4. Keep PayPal subscription links open. Do not add temporary payment-block scripts.
+5. Target set is fixed at 70 countries. Do not restore 83-country wording or 83-country plan logic without explicit approval.
+6. Gemini target-country order must follow country importance, not alphabetical order.
+-->
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>YouTube Multilingual Registration</title>
@@ -376,37 +386,6 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 
 
 <style>
-/* Humateck_New046 OAuth receive check only */
-.oauthReceiveCheckBox{
-  margin-top:14px;
-  border:1px solid rgba(255,217,90,.58);
-  border-radius:14px;
-  padding:14px;
-  background:rgba(255,217,90,.08);
-}
-.oauthReceiveTitle{
-  color:#ffd95a;
-  font-weight:900;
-  margin-bottom:8px;
-}
-#oauthReceiveCheck{
-  width:100%;
-  min-height:86px;
-  background:#07101b;
-  color:#f5eddb;
-  border:1px solid rgba(214,176,78,.45);
-  border-radius:10px;
-  padding:10px;
-  line-height:1.6;
-}
-.oauthReceiveOk{
-  box-shadow:0 0 20px rgba(255,217,90,.65);
-  border-color:#ffd95a!important;
-}
-</style>
-
-
-<style>
 /* Humateck_New050 command 7 warning separation */
 .commandWarningOutside{
   display:block;
@@ -579,50 +558,6 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 
 
 <style>
-/* Humateck_New074 YouTube official language list */
-.youtubeLanguageAdminBox{
-  margin-top:16px;
-  border:1px solid rgba(255,217,90,.55);
-  border-radius:14px;
-  padding:14px;
-  background:rgba(255,217,90,.07);
-}
-.youtubeLanguageAdminBox h3{
-  color:#ffd95a;
-  margin:0 0 8px;
-}
-#youtubeI18nLanguagesResult{
-  margin-top:10px;
-  min-height:220px;
-  font-size:14px;
-  line-height:1.6;
-}
-</style>
-
-
-<style>
-/* Humateck_New075 YouTube official language list in admin login */
-.youtubeLanguageAdminBox{
-  margin-top:16px;
-  border:1px solid rgba(255,217,90,.55);
-  border-radius:14px;
-  padding:14px;
-  background:rgba(255,217,90,.07);
-}
-.youtubeLanguageAdminBox h3{
-  color:#ffd95a;
-  margin:0 0 8px;
-}
-#youtubeI18nLanguagesResult{
-  margin-top:10px;
-  min-height:220px;
-  font-size:14px;
-  line-height:1.6;
-}
-</style>
-
-
-<style>
 /* Humateck_New083 hide admin plan status text */
 #adminPlanStatus{
   display:none!important;
@@ -747,25 +682,315 @@ input,textarea{font-size:16px!important;}
   justify-content:center!important;
 }
 </style>
+<style>
+/* Humateck OAuth success-only customer display */
+.oauthSuccessBadge{
+  display:none;
+  margin:16px auto 0;
+  max-width:420px;
+  padding:14px 18px;
+  border:1px solid rgba(80,220,120,.95);
+  border-radius:14px;
+  background:rgba(80,220,120,.12);
+  color:#7dff9d;
+  font-size:22px;
+  font-weight:900;
+  text-align:center;
+  box-shadow:0 0 22px rgba(80,220,120,.45);
+}
+.oauthSuccessBadge.show{display:block;}
+.oauthSuccessButton{
+  border-color:rgba(80,220,120,.95)!important;
+  color:#7dff9d!important;
+  box-shadow:0 0 24px rgba(80,220,120,.55)!important;
+}
+</style>
 
 
 <style>
-/* Humateck temporary service-ready marker only */
-.serviceReadyTemporary{
-  border-color:#ffd95a!important;
-  box-shadow:0 0 20px rgba(255,217,90,.55)!important;
+/* Humateck compact OAuth/guide popup height patch */
+.guideModalBox,
+.oauth-modal-dialog{
+  max-height:62vh!important;
+  overflow:auto!important;
+}
+.guideModalBox{
+  padding:16px 20px!important;
+}
+.oauth-modal-body{
+  padding:14px 18px!important;
+}
+.guideModalBox h2{
+  margin:0 0 8px!important;
+  font-size:22px!important;
+}
+.guideModalBox h3{
+  margin:12px 0 4px!important;
+  font-size:16px!important;
+}
+.guideModalBox p,
+.guideModalBox li{
+  margin:3px 0 7px!important;
+  line-height:1.42!important;
+  font-size:14px!important;
+}
+.oauth-inline-actions{
+  margin-top:8px!important;
+}
+.closeModalBtn{
+  margin-top:8px!important;
+  padding:8px 14px!important;
 }
 </style>
+
+
+<style>
+/* Humateck OAuth success-only display: no result windows */
+.oauthSuccessBadge{
+  display:none;
+  margin:16px auto 0;
+  max-width:420px;
+  padding:14px 18px;
+  border:1px solid rgba(80,220,120,.95);
+  border-radius:14px;
+  background:rgba(80,220,120,.12);
+  color:#7dff9d;
+  font-size:22px;
+  font-weight:900;
+  text-align:center;
+  box-shadow:0 0 22px rgba(80,220,120,.45);
+}
+.oauthSuccessBadge.show{display:block;}
+.oauthSuccessButton{
+  border-color:rgba(80,220,120,.95)!important;
+  color:#7dff9d!important;
+  box-shadow:0 0 24px rgba(80,220,120,.55)!important;
+}
+.oauthReceiveCheckBox,
+#authStatus,
+#authStatusSide,
+#oauthReceiveCheck{
+  display:none!important;
+}
+</style>
+
+
+<style>
+/* Humateck website cleanup: preparation / guide space only */
+.humateckOnlyNotice{
+  border:1px solid rgba(255,217,90,.72);
+  border-radius:16px;
+  padding:18px 20px;
+  margin:18px 0;
+  background:rgba(255,217,90,.09);
+  color:#f4e4b6;
+  line-height:1.72;
+  font-weight:800;
+}
+.humateckOnlyNotice strong{color:#ffd95a;}
+.humateckOnlyButton{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:280px;
+  min-height:58px;
+  padding:14px 22px;
+  border:2px solid #d9b256;
+  border-radius:14px;
+  color:#fff!important;
+  font-size:18px;
+  font-weight:900;
+  background:linear-gradient(180deg,#5c4315,#15110a);
+  text-align:center;
+  line-height:1.45;
+  margin-top:10px;
+}
+.oauthReceiveCheckBox,#authStatus,#authStatusSide,#oauthReceiveCheck{display:none!important;}
+</style>
+
+
+<style>
+/* Humateck_New003 clean OAuth guide modal */
+.guideModal{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:300;
+  background:rgba(0,0,0,.72);
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+}
+.guideModal:target{display:flex!important}
+.guideModalBox{
+  width:860px!important;
+  max-width:calc(100vw - 48px)!important;
+  max-height:86vh!important;
+  overflow:auto!important;
+  border:1px solid #d4a94f!important;
+  border-radius:22px!important;
+  background:linear-gradient(180deg,#121a23,#0b1119)!important;
+  color:#eee5d5!important;
+  padding:30px 34px!important;
+  box-shadow:0 24px 80px rgba(0,0,0,.72)!important;
+  line-height:1.72!important;
+  word-break:keep-all!important;
+  overflow-wrap:break-word!important;
+  writing-mode:horizontal-tb!important;
+  white-space:normal!important;
+  text-align:left!important;
+}
+.guideModalBox *{
+  writing-mode:horizontal-tb!important;
+  white-space:normal!important;
+  text-align:left!important;
+}
+.guideModalBox h2{
+  color:#ffd95a!important;
+  margin:0 0 8px!important;
+  font-size:28px!important;
+  line-height:1.35!important;
+}
+.guideSubTitle{
+  color:#f4e4b6!important;
+  font-size:16px!important;
+  line-height:1.7!important;
+  margin:0 0 18px!important;
+}
+.guideIntroBox,.guideWarning{
+  border:1px solid rgba(255,217,90,.55);
+  border-radius:16px;
+  background:rgba(255,217,90,.08);
+  padding:16px 18px;
+  margin:16px 0 22px;
+}
+.guideSection{
+  border:1px solid rgba(214,176,78,.34);
+  border-radius:16px;
+  background:rgba(5,11,20,.42);
+  padding:16px 18px;
+  margin:14px 0;
+}
+.guideModalBox h3{
+  color:#ffd95a!important;
+  margin:0 0 8px!important;
+  font-size:19px!important;
+  line-height:1.45!important;
+}
+.guideModalBox p{
+  color:#eee5d5!important;
+  margin:6px 0!important;
+  line-height:1.72!important;
+  font-size:15.5px!important;
+}
+.guidePoint{color:#ffd95a!important;font-weight:900!important}
+.guideCode{
+  display:inline-block;
+  padding:2px 8px;
+  border:1px solid rgba(255,217,90,.45);
+  border-radius:999px;
+  color:#ffd95a;
+  background:rgba(255,217,90,.08);
+  font-weight:900;
+}
+.guideList{margin:8px 0 0;padding-left:19px}
+.guideList li{
+  color:#eee5d5!important;
+  line-height:1.7!important;
+  font-size:15.5px!important;
+  margin:5px 0!important;
+}
+.guideCloudBtn{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-width:230px!important;
+  min-height:46px!important;
+  margin:10px 0 4px!important;
+  padding:10px 18px!important;
+  border:2px solid #d9b256!important;
+  border-radius:12px!important;
+  color:#fff!important;
+  background:linear-gradient(180deg,#5c4315,#15110a)!important;
+  font-weight:900!important;
+  text-decoration:none!important;
+  text-align:center!important;
+}
+.closeModalBtn{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-width:120px!important;
+  min-height:42px!important;
+  margin-top:18px!important;
+  border:1px solid #caa24e!important;
+  padding:10px 18px!important;
+  border-radius:10px!important;
+  color:#fff!important;
+  background:rgba(255,217,90,.08)!important;
+  font-weight:900!important;
+  text-align:center!important;
+}
+@media(max-width:760px){
+  .guideModalBox{padding:22px 20px!important}
+  .guideModalBox h2{font-size:24px!important}
+}
+</style>
+
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+<style>
+/* Humateck_New009 EN OAuth Client ID masked input restore */
+#googleClientIdInput{
+  margin-bottom:16px!important;
+}
+.oauthPanelBelow label[for="googleClientIdInput"]{
+  display:block!important;
+  color:#ffd95a!important;
+  font-weight:900!important;
+  margin-top:12px!important;
+}
+</style>
+
+
+<style>
+/* Humateck_New010 registration result restore */
+#deliveryResultCard,
+#deliveryResultCard *{
+  writing-mode:horizontal-tb!important;
+  white-space:normal!important;
+  text-align:left!important;
+}
+#deliveryLog{
+  min-height:150px!important;
+  white-space:pre-wrap!important;
+  line-height:1.65!important;
+}
+</style>
+
+
+<style>
+.oauthLaunchNotice{
+  border:1px solid rgba(255,217,90,.62);
+  border-radius:14px;
+  padding:12px 14px;
+  background:rgba(255,217,90,.08);
+  color:#f4e4b6!important;
+  font-weight:800;
+  line-height:1.7;
+}
+</style>
+
 </head>
 <body>
 
 <div class="wrap" id="top">
 <header class="top"><a href="index.html"><img class="logo" src="FINAL_LOGO01.png" alt="Humateck"></a><div class="lang">◎ English⌄</div></header>
-<div class="orderTopButtons"><a href="index.html">Home</a><a href="plans.html" class="serviceReadyTemporary">View All Plans</a></div>
+<div class="orderTopButtons"><a href="index.html">Home</a><a href="plans.html">View All Plans · Service Preparation in Progress</a></div>
 <section class="orderMainGrid">
   <div class="orderLeftColumn">
     <section class="card">
-      <h1>YouTube AI Chat Translation and Registration Order Form</h1>
+      <h1>Multilingual Subtitle Registration Order Form</h1>
       <div class="order-intro-note">
         <p>1. This order form is open to everyone for experiencing Gemini AI chat translation.</p>
         <p>2. However, the authority to finally register the translation results on YouTube is open only to subscribers of this service. Please do not misunderstand this point.</p>
@@ -791,165 +1016,75 @@ input,textarea{font-size:16px!important;}
 Please naturally localize and translate the title and description below for the {activeCount}-country set.
 Please continue translating from beginning to end without stopping midway.
 
-[Very Important Output Warning]
-Do not explain anything.
-Do not add commentary, notes, summaries, introductions, closing remarks, or extra words.
-Output only the required translation blocks.
-Again, do not explain anything before, between, or after the translations.
-Again, do not add any extra remarks outside the required format.
-Again, output only the translations in the requested format.
+Important:
+- You must output all {activeCount} Country Codes without omission.
+- Do not change the number or order of the Country Codes.
+- Do not add explanations, opinions, notes, or extra remarks.
+- Keep the exact format:
+  Number:
+  Country Code:
+  Title:
+  Description:
+- Output only the final translated results.
+- When the work is finished, move to the bottom.
+
+[Source Information]
+Native Language Code: {nativeLanguageCode}
+YouTube Video URL: {videoUrl}
 
 [Source Text]
-Title: {sourceTitle}
+Title:
+{sourceTitle}
 
 Description:
 {sourceDescription}
 
 [Output Format]
+Number: sequence
 Country Code: language code
 Title: translated title
-Description:
-translated description
+Description: translated description
 
-[Core Principles]
-1. Never stop midway; continue translating from beginning to end.
-2. Do not include work explanations, introductions, closing remarks, commentary, notes, or summaries.
-3. Use only the language codes in the mapping table below.
-4. Never change the order of the blocks.
-5. Each block must start with Country Code.
-6. Maintain the paragraph structure and line breaks of the Description according to the flow of the source text.
-7. Do not include any extra remarks, keyword lines, hashtags, code blocks, HTML, or country-name lines other than the title and description.
-8. When the work is finished, move to the bottom.
-
-Country Code Mapping Table
-
-1. en | English
-2. en-GB | English (United Kingdom)
-3. en-IN | English (India)
-4. es | Spanish
-5. es-419 | Spanish (Latin America)
-6. es-US | Spanish (United States)
-7. pt | Portuguese
-8. pt-PT | Portuguese (Portugal)
-9. fr | French
-10. fr-CA | French (Canada)
-11. de | German
-12. ja | Japanese
-13. ko | Korean
-14. zh-CN | Chinese (China)
-15. zh-TW | Chinese (Taiwan)
-16. zh-HK | Chinese (Hong Kong)
-17. hi | Hindi
-18. id | Indonesian
-19. ar | Arabic
-20. bn | Bengali
-21. ru | Russian
-22. tr | Turkish
-23. vi | Vietnamese
-24. th | Thai
-25. it | Italian
-26. nl | Dutch
-27. pl | Polish
-28. sv | Swedish
-29. cs | Czech
-30. ro | Romanian
-31. el | Greek
-32. hu | Hungarian
-33. uk | Ukrainian
-34. fa | Persian
-35. ur | Urdu
-36. ta | Tamil
-37. te | Telugu
-38. mr | Marathi
-39. fil | Filipino
-40. ms | Malay
-41. no | Norwegian
-42. da | Danish
-43. fi | Finnish
-44. iw | Hebrew
-45. ca | Catalan
-46. bg | Bulgarian
-47. hr | Croatian
-48. sk | Slovak
-49. sr | Serbian
-50. sr-Latn | Serbian (Latin)
-51. sq | Albanian
-52. et | Estonian
-53. lt | Lithuanian
-54. lv | Latvian
-55. ka | Georgian
-56. kk | Kazakh
-57. hy | Armenian
-58. az | Azerbaijani
-59. be | Belarusian
-60. bs | Bosnian
-61. mk | Macedonian
-62. mn | Mongolian
-63. ne | Nepali
-64. sw | Swahili
-65. am | Amharic
-66. af | Afrikaans
-67. gu | Gujarati
-68. kn | Kannada
-69. ml | Malayalam
-70. pa | Punjabi</textarea>
+[Country Code List]
+{countryBlock}</textarea>
       <div class="actions"><button class="btn copyButtonVisible" type="button" data-copy-target="geminiPromptText">Copy</button></div>
       <p id="geminiCopyStatus" class="copyStatus"></p><div class="actions"><a class="btn geminiChatButton" href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer">Go to Gemini Chat Translation.</a></div>
     </section>
-
-    <section class="card">
-      <h2>Gemini Command Copy-and-Paste Sequence</h2><div class="commandFullRows"><div class="commandFullItem">
-<div class="commandFullTop"><label class="">Command 1</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText1">Copy</button></div>
-<textarea id="commandText1" readonly>Please automatically and carefully check for mixed-in other languages, unnatural context, and any other issues.</textarea>
-</div><div class="commandFullItem">
-<div class="commandFullTop"><label class="">Command 2</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText2">Copy</button></div>
-<textarea id="commandText2" readonly>Please delete only the "Number:" line and the "Country Name:" line.
-Do not delete "Country Code:".
-Never delete, change, or remove the actual language code values.</textarea>
-</div><div class="commandFullItem">
-<div class="commandFullTop"><label class="">Command 3</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText3">Copy</button></div>
-<textarea id="commandText3" readonly>Please move to the bottom.</textarea>
-<p class="commandWarningBlink">
-⚠️ (Important) In the Gemini window, press the ⧉ (Copy response) button at the end of the last translation above the “Please move to the bottom.” command, then paste it into the final version field.<br><br>
-⚠️ (Important) Because the Gemini translation result may be large, please wait until the copied content is fully saved to the clipboard after pressing the ⧉ Copy response button. Do not paste immediately before the clipboard copy is complete.<br><br>
-⚠️ (Important) Be careful not to include extra remarks or unnecessary words other than the translation, as they may cause registration errors.
-</p>
-
-</div></div><h2>Paste Final Version</h2>
-      <textarea id="finalOutput" class="mediumTextarea" placeholder="Paste the final Gemini translation result."></textarea>
-      
-    </section>
-
-    <section class="oauthInfoBox" id="googleOAuthNotice">
-      <h2>Google OAuth Authentication Notice</h2>
+<section class="oauthInfoBox" id="googleOAuthNotice">
+      <h2>Google OAuth Setup Guide Notice</h2>
       <p>From here, this is the Google OAuth authentication sequence that subscribers must complete. Non-subscribers may also complete this authentication, but final register multilingual content is open only to subscribers. Please do not misunderstand this point.</p>
       <p class="yellowStrong">If you have already received a Google OAuth authentication key, please skip the “Important Setup Guide.”</p>
-      <center><p class="yellowStrong">Only once per channel !</p></center>
-      <div class="actions"><a class="btn guideOpenButton" href="#oauthGuideModal">Important Setup Guide</a></div>
+      <center><p class="yellowStrong">Once configured, it can be used for multiple channels.</p></center>
+      <div class="actions"><a class="btn guideOpenButton" href="#oauthGuideModal">Important Setup Guide</a><a class="btn" href="plans.html">Subscribe to a Plan</a></div>
       <div class="oauthPanelBelow">
-        <h2>Google OAuth Authentication</h2>
-        <p>Subscribers complete Google OAuth authentication through the Chrome extension popup.</p>
+        <h2>Google OAuth Setup Guide</h2>
+        <p class="oauthLaunchNotice">This authentication allows visitors to experience the reality of AI chat translation and YouTube registration. However, actual registration is available only to subscribers. Please do not misunderstand this point.</p>
+        <label for="googleClientIdInput">Google OAuth Web Client ID</label>
+        <input id="googleClientIdInput" type="password" autocomplete="off" placeholder="Paste your Google OAuth Web Client ID">
         <div class="oauthCenterButton">
-  <button type="button" id="oauthStartBtn" class="btn serviceReadyTemporary">Google OAuth Stabilization in Progress</button>
+  <button id="oauthStartBtn" class="btn" type="button">OAuth Authorization</button>
 </div>
-<textarea id="authStatus" class="oauth-status-box" rows="3" readonly>Google OAuth authentication is currently being stabilized.
-Authentication popup calls are temporarily paused until official reopening.</textarea>
-<div class="oauthReceiveCheckBox">
-  <div class="oauthReceiveTitle">OAuth Receipt Confirmation</div>
-  <textarea id="oauthReceiveCheck" rows="4" readonly>OAuth stabilization is in progress.
-The receipt result will be displayed here after official reopening.</textarea>
-</div></div>
+<div id="oauthSuccessBadge" class="oauthSuccessBadge">Authentication Successful</div>
+</div>
     </section>
 
-    <section class="card">
-      <h2>Register Multilingual Content</h2>
-      <div class="actions"><button id="sendOrderBtn" class="btn" type="button">YouTube Multilingual Registration</button></div>
-<textarea id="deliveryLog" rows="8" readonly placeholder="register multilingual content results will be displayed here." style="margin-top:12px;"></textarea>
+    
+    <section class="card" id="finalVersionCard">
+      <h2>Final Version (Customer Review)</h2>
+      <textarea id="finalOutput" class="mediumTextarea" placeholder="Paste the customer-reviewed final version from Gemini here."></textarea>
+    </section>
+
+<section class="card">
+      <h2>YouTube Subtitle Registration</h2>
+      <div class="actions"><button class="btn humateckOnlyButton" type="button" id="sendOrderBtn">YouTube Subtitle Registration</button></div>
     </section>
 <section class="card registerNoticeBelow">
-<h2>YouTube Multilingual Registration Notices</h2>
-<p>We do not perform any <span class="highlightAction">review, blocking, modification, or addition</span> on the customer-approved translation version, and send it exactly as approved by the customer.</p>
-<p>All translations are immediately registered on the YouTube channel, and languages actually rejected by the receiving side are separately displayed as pending languages.</p>
+<h2>YouTube Registration Notice</h2>
+<p>All translations are registered to the YouTube channel immediately. But Humateck does not review, block, change, or add anything to the customer-approved translation. The approved content is sent as-is.</p>
+<section class="card" id="deliveryResultCard">
+      <h2>Registration Result</h2>
+      <textarea id="deliveryLog" class="mediumTextarea" readonly placeholder="YouTube registration results will appear here."></textarea>
+    </section>
 </section>
   </div>
 
@@ -957,9 +1092,9 @@ The receipt result will be displayed here after official reopening.</textarea>
     <h2 class="yellowNotice">Status Notice</h2>
     <h3>Quick Notice</h3>
     <p>1) The essential first step for using this service is Google OAuth approval setup. Please proceed according to the detailed guidance in the “Important Setup Guide” below.</p>
-    <p>2) If you want to register YouTube content for multiple channels, one OAuth setup is required for each channel. No separate setup fee is charged.</p>
-    <p>3) Google OAuth authentication is not handled directly on the homepage; it is completed directly through the Chrome extension popup.</p>
-<section class="faqCollapsed">
+    <p>2) Even if you want to register multilingual YouTube content for multiple channels, you do not need to create a separate Google OAuth setup for each channel. However, the Google account used for authorization must have permission to edit the relevant YouTube channel or video in order for registration to work properly.</p>
+    <p>3) Google OAuth authorization is required each time you regist YouTube Subtitle content.</p>
+<section id="faq" class="faqCollapsed">
 <details open>
 <summary>YouTube AI Chat Translation FAQ</summary>
 <div class="faqDetails">
@@ -969,9 +1104,8 @@ A) This is because YouTube content display system fixes the default video settin
 <div class="faqItem"><p class="question"><b>2. Q) When I press YouTube content registration, a quota exceeded message appears.</b></p><p>A) This means the daily free API quota for YouTube content registration has been exceeded. Please wait until the quota is recharged the next day, then try again.</p></div>
 <div class="faqItem"><p class="question"><b>3. Q) The message “Could not find videoId in the YouTube video URL” appears.</b></p><p>A) This means the YouTube URL was entered incorrectly. Please copy and paste the actual YouTube video URL (not YouTube Studio) exactly as it is.</p></div>
 <div class="faqItem"><p class="question"><b>4. Q) What is Google OAuth setup? Do I need to set it up every time I use the service?</b></p><p>A) It is the connection process of receiving permission from Google to register multilingual translations on your YouTube channel. You only need to set it up once at the beginning.</p></div>
-<div class="faqItem"><p class="question"><b>5. Q) I operate multiple channels. Is one OAuth setup enough?</b></p><p>A) Under Google’s policy, setup is required once for each channel you own.</p></div>
-<div class="faqItem"><p class="question"><b>6. Q) When I press YouTube content registration, a quota exceeded message appears.</b></p><p>A) This means the daily free API quota for YouTube content registration has been exceeded. Please wait until the quota is recharged the next day, then try again.</p></div>
-<div class="faqItem"><p class="question"><b>7. Q) There is a similar service in the Chrome extension. Is it the same company plan? Do I need to sign up separately?</b></p><p>A) No separate signup is required. The website and the Chrome extension are connected under the same Humateck subscription plan.<br>Customers may use both the website and the Chrome extension according to their situation and convenience.<br><span style="display:block;margin:2px 0;line-height:1.36;">1) The website is suitable for users who prefer larger text and a wider screen.</span><span style="display:block;margin:2px 0 36px;line-height:1.36;">2) The Chrome extension is useful when creating and registering multilingual translations while directly viewing your own YouTube channel.</span></p></div>
+<div class="faqItem"><p class="question"><b>5. Q) I operate multiple YouTube channels. Do I need to create a separate OAuth setting for each channel?</b></p><p>A) You do not need to create a new Google OAuth setting for each channel. However, the Google account used for authorization must have permission to edit the relevant YouTube channel or video in order for registration to work properly.</p></div>
+<div class="faqItem"><p class="question"><b>6. Q) I see a quota exceeded message when I click YouTube multilingual registration. What does this mean?</b></p><p>A) This means the daily free YouTube API quota for multilingual registration has been exceeded. Please wait until the quota is refreshed the next day and try again.</p></div>
 </details>
 </div>
 </details>
@@ -989,58 +1123,121 @@ A) This is because YouTube content display system fixes the default video settin
 </details>
   </aside>
 </section>
-
-<section class="orderBottomGrid">
-  
-</section>
-
 <div id="oauthGuideModal" class="guideModal">
   <div class="guideModalBox">
     <h2>Important Setup Guide</h2>
-    <h3>(Google OAuth Approval Method for First-Time Users)</h3>
+    <p class="guideSubTitle">Google OAuth authorization guide for first-time users.</p>
 
-    <p>It may feel a little unfamiliar at first.</p>
-    <p>However, you only need to complete this setup once at the beginning.</p>
-    <p><b>Simply put, this is the connection process of receiving permission from Google to register multilingual translations on your YouTube channel.</b></p>
-    <p>Please do not think of it as too difficult. Just follow the steps below slowly.</p>
+    <div class="guideIntroBox">
+      <p>This setup may feel unfamiliar at first. It is the official Google authorization process required to register multilingual content to your YouTube video.</p>
+      <p><span class="guidePoint">A Google OAuth Client ID is generally reusable for a considerable period after setup, but reconfiguration or reauthorization may be required due to token expiration from heavy usage or other reasons.</span></p>
+    </div>
 
-    <h3>Step 1. Go to Google Cloud</h3>
-    <p>First, go to Google Cloud.</p>
-    <p>On the <span class="menuWord">Google Cloud</span> screen, proceed using the left menu as your guide.</p>
+    <div class="guideSection">
+      <h3>Step 1. Go to Google Cloud</h3>
+      <p>Click the button below to open the Google Cloud setup page.</p>
+      <a class="guideCloudBtn" href="https://console.cloud.google.com/auth/audience?hl=ko&project=fourth-cedar-489307-b1" target="_blank" rel="noopener noreferrer">Open Google Cloud</a>
+      <p>Sign in with the Google account you will use for YouTube registration.</p>
+    </div>
 
-    <h3>Step 2. Click Branding on the left</h3>
-    <p>In <span class="menuWord">App name</span>, enter the name of the channel where you want to register multilingual translations.</p>
-    <p>In <span class="menuWord">User support email</span> and <span class="menuWord">Developer contact information</span>, enter the representative email address for that channel.</p>
+    <div class="guideSection">
+      <h3>Step 2. Enable YouTube Data API v3</h3>
+      <p>Search for <span class="guideCode">YouTube Data API v3</span> in Google Cloud and enable it.</p>
+      <p>This API must be enabled to send multilingual title and description registration requests to YouTube.</p>
+    </div>
 
-    <h3>Step 3. Click Target on the left</h3>
-    <p>If you see <span class="menuWord">Publishing status</span>, <span class="menuWord">User type</span>, and <span class="menuWord">Test users</span>, it is normal.</p>
+    <div class="guideSection">
+      <h3>Step 3. Enter Branding information</h3>
+      <p>Open <span class="guideCode">Branding</span> from the left menu.</p>
+      <ul class="guideList">
+        <li>Enter an easy-to-recognize name in <span class="guidePoint">App name</span>.</li>
+        <li>Select your Google email for <span class="guidePoint">User support email</span>.</li>
+        <li>Enter a reachable email under <span class="guidePoint">Developer contact information</span>.</li>
+      </ul>
+    </div>
 
-    <h3>Step 4. Enter your Google email under Test users</h3>
-    <p>Enter one of your own email addresses that will actually be used for the approval test.</p>
+    <div class="guideSection">
+      <h3>Step 4. Check Target / Test users</h3>
+      <p>Open <span class="guideCode">Target</span> from the left menu.</p>
+      <p>If the app is in testing status, add the Google email that will perform authorization under <span class="guidePoint">Test users</span>.</p>
+    </div>
 
-    <h3>Step 5. Click client on the left</h3>
-    <p>Select <span class="menuWord">Create Client</span> → <span class="menuWord">Web application</span>.</p>
+    <div class="guideSection">
+      <h3>Step 5. Create a Web application OAuth Client</h3>
+      <p>Open <span class="guideCode">Client</span>, then select <span class="guideCode">Create client</span>.</p>
+      <p>The application type must be <span class="guidePoint">Web application</span>.</p>
+    </div>
 
-    <h3>Step 6. Copy the created OAuth Client ID</h3>
-    <p>This value is the number to paste into the order page.</p>
+    <div class="guideSection">
+      <h3>Step 6. Add Authorized JavaScript origins</h3>
+      <p>To authorize directly from the website, add the website origin you are using.</p>
+      <ul class="guideList">
+        <li>Official site example: <span class="guideCode">https://humateck.com</span></li>
+        <li>If using www: <span class="guideCode">https://www.humateck.com</span></li>
+        <li>For local testing: <span class="guideCode">http://localhost:5500</span> or your actual localhost origin</li>
+      </ul>
+      <p><span class="guidePoint">Do not add a trailing slash or a path such as /order.html.</span></p>
+    </div>
 
-    <h3>Step 7. Authenticate through the Chrome popup on the order page</h3>
-    <p>Complete authentication directly in Google’s official authentication environment, then continue the delivery procedure.</p>
+    <div class="guideSection">
+      <h3>Step 7. Copy the OAuth Client ID</h3>
+      <p>Copy the generated <span class="guidePoint">Client ID</span> and paste it into the Google OAuth Web Client ID field on the order page.</p>
+      <p>The input may be masked for security.</p>
+    </div>
 
-    <h3>Step 8. Authenticate through the Chrome popup on the order page</h3>
-    <p>Press the <span class="menuWord">Authenticate with Google via Chrome Popup</span> button located below the “Important Setup Guide.”</p>
-    <p>Google OAuth is not handled directly inside the homepage; it is completed directly through the Chrome extension popup.</p>
+    <div class="guideSection">
+      <h3>Step 8. Click Google Authorization</h3>
+      <p>Click <span class="guidePoint">Google Authorization</span> on the order page to open the official Google authorization window.</p>
+      <p>The Google account must have edit permission for the target YouTube channel or video.</p>
+    </div>
+
+    <div class="guideWarning">
+      <h3>Important Notice</h3>
+      <p>If the same Google account has management permission for multiple channels, you can proceed by entering the actual YouTube video URL for each target video.</p>
+      <p>A Google OAuth Client ID is generally reusable for a considerable period, but reconfiguration or reauthorization may be required due to token expiration from heavy usage or other reasons.</p>
+      <p>This is a normal Google security process for account protection and YouTube API usage, not a service error.</p>
+    </div>
 
     <a class="closeModalBtn" href="#top">Close</a>
   </div>
 </div>
-<footer class="footer"><a href="terms_ko.html">Terms of Service</a><span>|</span><a href="privacy.html">Privacy Policy</a><span>|</span><a href="refund.html">Refund Policy</a></footer>
+
+
 </div>
 <div class="account"><a href="#" title="Google Official Authentication">G</a><a href="#" title="Apple Official Authentication">●</a><a href="#" title="Email Official Authentication">@</a></div>
 
 
 <script>
 (function(){
+  function applyHumateckPlan(plan){
+    if(!plan) return;
+    if(plan === "monthly83") plan = "monthly70";
+    if(plan === "yearly83") plan = "yearly70";
+    var allowed = {monthly30:true, monthly50:true, monthly70:true, yearly70:true};
+    if(!allowed[plan]) return;
+    window.humateckPaymentSubscriptionPlan = plan;
+    var hidden = document.getElementById("humateckActivePlanValue");
+    if(hidden) hidden.value = plan;
+  }
+
+  async function loadHumateckSubscriptionStatus(){
+    try{
+      var email = localStorage.getItem("humateckUserEmail") || localStorage.getItem("humateckEmail") || "";
+      var url = "/api/check-subscription" + (email ? ("?email=" + encodeURIComponent(email)) : "");
+      var res = await fetch(url, { credentials:"include", cache:"no-store" });
+      if(!res.ok) return;
+      var data = await res.json().catch(function(){ return {}; });
+      if(data && (data.admin === true || data.is_admin === true)){ applyHumateckPlan(data.plan || "yearly70"); return; }
+      if(data && (data.active === true || data.status === "active")){ applyHumateckPlan(data.plan || data.subscription_plan); }
+    }catch(e){}
+  }
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", loadHumateckSubscriptionStatus);
+  }else{
+    loadHumateckSubscriptionStatus();
+  }
+
   function getValue(id){
     var el = document.getElementById(id);
     return el ? el.value : "";
@@ -1059,6 +1256,8 @@ A) This is because YouTube content display system fixes the default video settin
 
     if(plan === "monthly50") return 50;
     if(plan === "monthly70") return 70;
+    if(plan === "monthly83") return 83;
+    if(plan === "yearly83") return 83;
     if(plan === "yearly70") return 70;
     if(plan === "monthly30") return 30;
 
@@ -1071,93 +1270,84 @@ A) This is because YouTube content display system fixes the default video settin
     var sourceDescription = getValue("sourceDescription");
 
     var countryBlock = [
-      "Country Code Mapping Table",
+      "Country Code / Country Name Mapping Table",
       "",
       "1. en | English",
-      "2. en-GB | English (United Kingdom)",
-      "3. en-IN | English (India)",
-      "4. es | Spanish",
-      "5. es-419 | Spanish (Latin America)",
-      "6. es-US | Spanish (United States)",
-      "7. pt | Portuguese",
-      "8. pt-PT | Portuguese (Portugal)",
-      "9. fr | French",
-      "10. fr-CA | French (Canada)",
-      "11. de | German",
-      "12. ja | Japanese",
-      "13. ko | Korean",
-      "14. zh-CN | Chinese (China)",
-      "15. zh-TW | Chinese (Taiwan)",
-      "16. zh-HK | Chinese (Hong Kong)",
-      "17. hi | Hindi",
-      "18. id | Indonesian",
-      "19. ar | Arabic",
-      "20. bn | Bengali",
-      "21. ru | Russian",
-      "22. tr | Turkish",
-      "23. vi | Vietnamese",
-      "24. th | Thai",
-      "25. it | Italian",
-      "26. nl | Dutch",
-      "27. pl | Polish",
+      "2. es | Spanish",
+      "3. es-419 | Spanish (Latin America)",
+      "4. es-US | Spanish (United States)",
+      "5. pt | Portuguese",
+      "6. pt-PT | Portuguese (Portugal)",
+      "7. fr | French",
+      "8. fr-CA | French (Canada)",
+      "9. de | German",
+      "10. ja | Japanese",
+      "11. ko | Korean",
+      "12. zh-CN | Chinese (China)",
+      "13. zh-TW | Chinese (Taiwan)",
+      "14. zh-HK | Chinese (Hong Kong)",
+      "15. hi | Hindi",
+      "16. id | Indonesian",
+      "17. ar | Arabic",
+      "18. ru | Russian",
+      "19. it | Italian",
+      "20. tr | Turkish",
+      "21. vi | Vietnamese",
+      "22. th | Thai",
+      "23. fil | Filipino",
+      "24. ms | Malay",
+      "25. nl | Dutch",
+      "26. pl | Polish",
+      "27. uk | Ukrainian",
       "28. sv | Swedish",
-      "29. cs | Czech",
-      "30. ro | Romanian",
-      "31. el | Greek",
-      "32. hu | Hungarian",
-      "33. uk | Ukrainian",
-      "34. fa | Persian",
-      "35. ur | Urdu",
-      "36. ta | Tamil",
-      "37. te | Telugu",
-      "38. mr | Marathi",
-      "39. fil | Filipino",
-      "40. ms | Malay",
-      "41. no | Norwegian",
-      "42. da | Danish",
-      "43. fi | Finnish",
-      "44. iw | Hebrew",
-      "45. ca | Catalan",
-      "46. bg | Bulgarian",
-      "47. hr | Croatian",
-      "48. sk | Slovak",
-      "49. sr | Serbian",
-      "50. sr-Latn | Serbian (Latin)",
-      "51. sq | Albanian",
-      "52. et | Estonian",
-      "53. lt | Lithuanian",
-      "54. lv | Latvian",
-      "55. ka | Georgian",
-      "56. kk | Kazakh",
-      "57. hy | Armenian",
-      "58. az | Azerbaijani",
-      "59. be | Belarusian",
-      "60. bs | Bosnian",
-      "61. mk | Macedonian",
-      "62. mn | Mongolian",
-      "63. ne | Nepali",
-      "64. sw | Swahili",
-      "65. am | Amharic",
-      "66. af | Afrikaans",
-      "67. gu | Gujarati",
-      "68. kn | Kannada",
-      "69. ml | Malayalam",
-      "70. pa | Punjabi"
-    ].slice(0, activeCount + 2).join("
-");
+      "29. no | Norwegian",
+      "30. da | Danish",
+      "31. fi | Finnish",
+      "32. el | Greek",
+      "33. ro | Romanian",
+      "34. hu | Hungarian",
+      "35. cs | Czech",
+      "36. sk | Slovak",
+      "37. bg | Bulgarian",
+      "38. hr | Croatian",
+      "39. sr | Serbian",
+      "40. sr-Latn | Serbian (Latin)",
+      "41. sq | Albanian",
+      "42. mk | Macedonian",
+      "43. et | Estonian",
+      "44. lv | Latvian",
+      "45. lt | Lithuanian",
+      "46. iw | Hebrew",
+      "47. fa | Persian",
+      "48. ur | Urdu",
+      "49. bn | Bengali",
+      "50. ta | Tamil",
+      "51. te | Telugu",
+      "52. mr | Marathi",
+      "53. gu | Gujarati",
+      "54. kn | Kannada",
+      "55. ml | Malayalam",
+      "56. pa | Punjabi",
+      "57. ne | Nepali",
+      "58. my | Burmese",
+      "59. km | Khmer",
+      "60. lo | Lao",
+      "61. am | Amharic",
+      "62. sw | Swahili",
+      "63. af | Afrikaans",
+      "64. az | Azerbaijani",
+      "65. be | Belarusian",
+      "66. bs | Bosnian",
+      "67. ca | Catalan",
+      "68. eu | Basque",
+      "69. gl | Galician",
+      "70. ka | Georgian"
+    ].slice(0, activeCount + 2).join("\n");
 
     var prompt =
 `Hello Gemini!
 Please naturally localize and translate the title and description below for the ${activeCount}-country set.
 Please continue translating from beginning to end without stopping midway.
-
-[Very Important Output Warning]
-Do not explain anything.
-Do not add commentary, notes, summaries, introductions, closing remarks, or extra words.
-Output only the required translation blocks.
-Again, do not explain anything before, between, or after the translations.
-Again, do not add any extra remarks outside the required format.
-Again, output only the translations in the requested format.
 
 [Source Text]
 Title: ${sourceTitle}
@@ -1166,19 +1356,21 @@ Description:
 ${sourceDescription}
 
 [Output Format]
+Number: sequence number
 Country Code: language code
+Country Name: English country name
 Title: translated title
 Description:
 translated description
 
 [Core Principles]
 1. Never stop midway; continue translating from beginning to end.
-2. Do not include work explanations, introductions, closing remarks, commentary, notes, or summaries.
-3. Use only the language codes in the mapping table below.
+2. Do not include work explanations, introductions, closing remarks, or commentary.
+3. Use the Country Code and Country Name in the mapping table below exactly as written.
 4. Never change the order of the blocks.
 5. Each block must start with Country Code.
 6. Maintain the paragraph structure and line breaks of the Description according to the flow of the source text.
-7. Do not include any extra remarks, keyword lines, hashtags, code blocks, HTML, or country-name lines other than the title and description.
+7. Do not include any extra remarks, keyword lines, hashtags, code blocks, or HTML other than the title and description.
 8. When the work is finished, move to the bottom.
 
 ${countryBlock}`;
@@ -1228,169 +1420,125 @@ ${countryBlock}`;
 </script>
 
 
-<div id="oauthPopupGuideModal" class="oauth-modal hidden">
-  <div class="oauth-modal-backdrop" id="oauthPopupGuideBackdrop"></div>
-  <div class="oauth-modal-dialog">
-    <div class="oauth-modal-body">
-      <p style="font-size:22px;font-weight:800;color:#f5c518;margin-bottom:12px;">Chrome Popup Integration Notice</p>
-      <p style="font-size:14px;line-height:1.8;color:#eee5d5;">
-        Google OAuth authentication is completed directly through the Chrome extension popup.<br><br>
-        Please complete authentication directly in the official authentication environment, then continue the delivery procedure.
-      </p>
-      <div class="oauth-inline-actions">
-        <button id="oauthPopupGuideOkBtn" class="btn" type="button">OK</button>
-        <button id="oauthPopupGuideCloseBtn" class="btn" type="button">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 <script>
-/* Humateck OAuth-only restored from old working order page */
+/* Humateck_New009 direct Google OAuth token restore only - EN */
 (function(){
   function $(id){ return document.getElementById(id); }
 
-  function setStatuses(text, type) {
-    var targets = [$("authStatus"), $("authStatusSide")];
+  var YOUTUBE_SCOPE = "https://www.googleapis.com/auth/youtube.force-ssl";
+  var tokenClient = null;
+
+  function setAuthStatus(text, type){
+    var targets = [$("authStatus"), $("authStatusSide"), $("oauthReceiveCheck")];
     targets.forEach(function(el){
-      if (!el) return;
-      el.value = text;
-      el.classList.remove("ok", "bad");
-      if (type) el.classList.add(type);
+      if(!el) return;
+      if("value" in el) el.value = text;
+      else el.textContent = text;
+      el.classList.remove("ok","bad","oauthReceiveOk");
+      if(type) el.classList.add(type);
+      if(type === "ok") el.classList.add("oauthReceiveOk");
     });
   }
 
-  function openChromeOAuthPopup() {
-    setStatuses('Humateck is currently stabilizing Google OAuth and Chrome authentication. Authentication popup calls are temporarily paused until official reopening.');
-    var receive = $("oauthReceiveCheck");
-    if (receive) receive.value = 'Humateck is currently stabilizing Google OAuth and Chrome authentication. Authentication popup calls are temporarily paused until official reopening.';
-    return false;
+  function getClientId(){
+    var input = $("googleClientIdInput");
+    return input ? String(input.value || "").trim() : "";
+  }
+
+  function waitForGoogleIdentity(callback){
+    var tries = 0;
+    var timer = setInterval(function(){
+      tries++;
+      if(window.google && google.accounts && google.accounts.oauth2){
+        clearInterval(timer);
+        callback();
+      }else if(tries > 80){
+        clearInterval(timer);
+        setAuthStatus("Google authorization library could not be loaded. Please check browser script blocking settings.", "bad");
+      }
+    }, 150);
+  }
+
+  function startOAuth(){
+    var clientId = getClientId();
+    if(!clientId){
+      alert("Please enter your Google OAuth Web Client ID.");
+      setAuthStatus("Google OAuth Web Client ID is empty.", "bad");
+      return;
+    }
+
+    if(!/^https?:$/.test(window.location.protocol)){
+      alert("Google OAuth does not work properly from file://. Please run this page from your domain or localhost.");
+      setAuthStatus("Google OAuth may be limited from the current origin: " + window.location.origin, "bad");
+      return;
+    }
+
+    waitForGoogleIdentity(function(){
+      try{
+        tokenClient = google.accounts.oauth2.initTokenClient({
+          client_id: clientId,
+          scope: YOUTUBE_SCOPE,
+          prompt: "consent select_account",
+          callback: function(response){
+            if(response && response.access_token){
+              window.humateckGoogleAccessToken = response.access_token;
+              window.humateckGoogleOAuthScope = response.scope || YOUTUBE_SCOPE;
+              try{
+                sessionStorage.setItem("humateckGoogleAccessToken", response.access_token);
+                sessionStorage.setItem("humateckGoogleOAuthScope", response.scope || YOUTUBE_SCOPE);
+              }catch(e){}
+              setAuthStatus("Google OAuth authorization has been completed. You can now proceed with YouTube registration.", "ok");
+            }else{
+              setAuthStatus("No Google OAuth response was received. Please check Authorized JavaScript origins and Client ID. Current origin: " + window.location.origin, "bad");
+            }
+          },
+          error_callback: function(error){
+            var msg = "Google OAuth authorization failed.";
+            if(error && error.type) msg += " Error: " + error.type;
+            msg += " / Current origin: " + window.location.origin;
+            setAuthStatus(msg, "bad");
+            alert(msg);
+          }
+        });
+        tokenClient.requestAccessToken({prompt:"consent select_account"});
+        setAuthStatus("Google OAuth authorization window has opened. Please complete approval in the Google window.");
+      }catch(e){
+        var msg = "An error occurred while starting Google OAuth: " + (e && e.message ? e.message : e);
+        setAuthStatus(msg, "bad");
+        alert(msg);
+      }
+    });
   }
 
   document.addEventListener("DOMContentLoaded", function(){
-    var startBtn = $("oauthStartBtn");
-    var modal = $("oauthPopupGuideModal");
-
-    if (startBtn) {
-      startBtn.addEventListener("click", function(e){
+    var btn = $("oauthStartBtn");
+    if(btn){
+      btn.addEventListener("click", function(e){
         e.preventDefault();
-        if (modal) modal.classList.remove("hidden");
-        else openChromeOAuthPopup();
+        startOAuth();
       }, true);
     }
-
-    $("oauthPopupGuideOkBtn")?.addEventListener("click", function(){
-      $("oauthPopupGuideModal")?.classList.add("hidden");
-      openChromeOAuthPopup();
-    });
-
-    $("oauthPopupGuideCloseBtn")?.addEventListener("click", function(){
-      $("oauthPopupGuideModal")?.classList.add("hidden");
-    });
-
-    $("oauthPopupGuideBackdrop")?.addEventListener("click", function(){
-      $("oauthPopupGuideModal")?.classList.add("hidden");
-    });
-  });
-
-  window.addEventListener("message", function(event){
-    if (event.data && event.data.type === "HUMATECK_OAUTH_SUCCESS") {
-      setStatuses("Google OAuth authentication has been completed. You can now continue the delivery procedure.", "ok");
-    }
   });
 })();
 </script>
 
-
-<script>
-/* Humateck_New043 payload generator only */
-(function(){
-  function getFinalText(){
-    const ids=["finalOutput","finalText"];
-    for(const id of ids){
-      const el=document.getElementById(id);
-      if(el && el.value.trim()) return el.value.trim();
-    }
-    return "";
-  }
-
-  function parseBlocks(text){
-    const blocks=text.split("Country Code:").slice(1);
-    const result={};
-    blocks.forEach(b=>{
-      const lines=b.trim().split("\n");
-      const code=lines[0].trim();
-      let title="";
-      let desc="";
-      let mode="";
-      lines.slice(1).forEach(l=>{
-        if(l.startsWith("Title:")){
-          title=l.replace("Title:","").trim();
-          mode="title";
-        }else if(l.startsWith("Description:")){
-          mode="desc";
-        }else if(mode==="desc"){
-          desc+=l+"\n";
-        }
-      });
-      result[code]={title:title,description:desc.trim()};
-    });
-    return result;
-  }
-
-  window.generateFinalPayloadOnly=function(){
-    const txt=getFinalText();
-    if(!txt){
-      alert("Please paste the final Gemini version.");
-      return null;
-    }
-    const payload=parseBlocks(txt);
-    console.log("PAYLOAD:",payload);
-    return payload;
-  };
-})();
-</script>
-
-
-<script>
-/* Humateck_New046 OAuth receive check only */
-(function(){
-  function showReceiveStatus(message, ok){
-    var box = document.getElementById("oauthReceiveCheck");
-    if(box){
-      box.value = message;
-      if(ok) box.classList.add("oauthReceiveOk");
-    }
-
-    var auth = document.getElementById("authStatus");
-    if(auth && ok){
-      auth.value = message;
-    }
-
-    var authSide = document.getElementById("authStatusSide");
-    if(authSide && ok){
-      authSide.value = message;
-    }
-  }
-
-  window.addEventListener("message", function(event){
-    if(!event.data) return;
-    if(event.data.type !== "HUMATECK_OAUTH_SUCCESS") return;
-
-    var token = event.data.token || event.data.accessToken || "";
-    var hasToken = !!token;
-    if(hasToken){
-      window.humateckAccessToken = token;
-    }
-
-    showReceiveStatus(
-      "OAuth received\nToken receipt: " + (hasToken ? "Success" : "Failure") + "\nNow this token can be connected to register multilingual content in the next step.",
-      hasToken
-    );
-  });
-})();
-</script>
 
 
 <script>
@@ -1406,7 +1554,20 @@ ${countryBlock}`;
     }
   }
 
-  function getAccessToken(){ return window.humateckAccessToken || ""; }
+  function getAccessToken(){
+    if(window.humateckGoogleAccessToken) return window.humateckGoogleAccessToken;
+    try{
+      var saved = sessionStorage.getItem("humateckGoogleAccessToken");
+      if(saved) return saved;
+    }catch(e){}
+    var token = "";
+    var candidates = ["googleAccessToken","accessToken","oauthAccessToken","authToken"];
+    for(var i=0;i<candidates.length;i++){
+      var el = document.getElementById(candidates[i]);
+      if(el && el.value) return el.value.trim();
+    }
+    return token;
+  }
 
 
   function getNativeLanguageCode(){
@@ -1460,24 +1621,58 @@ ${countryBlock}`;
     var blocks = normalized.split("Country Code:").slice(1);
     var localizations = {};
 
+    function cleanLine(v){
+      return String(v || "").replace(/^\s+|\s+$/g, "");
+    }
+
     blocks.forEach(function(raw){
       var block = raw.replace(/^\s+/, "");
-      var firstBreak = block.indexOf("\n");
-      var code = (firstBreak >= 0 ? block.slice(0, firstBreak) : block).trim();
-      var rest = firstBreak >= 0 ? block.slice(firstBreak + 1) : "";
+      var lines = block.split("\n");
+      var code = cleanLine(lines.shift() || "");
       if(!code) return;
 
       var title = "";
       var description = "";
-      var titleMatch = rest.match(/(?:^|\n)Title:\s*(.*)/);
-      if(titleMatch) title = titleMatch[1].trim();
+      var mode = "";
 
-      var descIndex = rest.indexOf("Description:");
-      if(descIndex >= 0){
-        description = rest.slice(descIndex + "Description:".length).replace(/^\n/, "").trimEnd();
+      for(var i=0;i<lines.length;i++){
+        var line = lines[i];
+        var trimmed = cleanLine(line);
+
+        if(/^Title\s*:/i.test(trimmed)){
+          mode = "title";
+          var sameLineTitle = cleanLine(trimmed.replace(/^Title\s*:/i, ""));
+          if(sameLineTitle){
+            title = sameLineTitle;
+          }
+          continue;
+        }
+
+        if(/^Description\s*:/i.test(trimmed)){
+          mode = "description";
+          var sameLineDesc = line.replace(/^.*?Description\s*:/i, "");
+          if(cleanLine(sameLineDesc)){
+            description += sameLineDesc.replace(/^\s+/, "") + "\n";
+          }
+          continue;
+        }
+
+        if(mode === "title"){
+          if(!title && trimmed){
+            title = trimmed;
+          }
+          continue;
+        }
+
+        if(mode === "description"){
+          description += line + "\n";
+        }
       }
 
-      localizations[code] = { title: title, description: description };
+      localizations[code] = {
+        title: title,
+        description: description.replace(/\n+$/g, "")
+      };
     });
 
     return localizations;
@@ -1539,7 +1734,7 @@ ${countryBlock}`;
     var codes = Object.keys(localizations);
     if(codes.length === 0){ alert("Could not find a registration-ready final version based on Country Code:."); return; }
 
-    var btn = $("sendOrderBtn");
+    var btn = $("sendOrderBtn") || $("youtubeRegisterBtn");
     if(btn){ btn.disabled = true; btn.textContent = "Registration in Progress"; }
 
     var startTime = Date.now();
@@ -1596,7 +1791,7 @@ ${countryBlock}`;
   }
 
   document.addEventListener("click", function(event){
-    var btn = event.target.closest("#sendOrderBtn");
+    var btn = event.target.closest("#sendOrderBtn, #youtubeRegisterBtn");
     if(!btn) return;
     event.preventDefault();
     deliverByYouTubeSpec();
@@ -1612,77 +1807,90 @@ ${countryBlock}`;
       <button id="closeNativeCodeListBtn" class="nativeCodeCloseBtn" type="button">Close</button>
     </div>
     <div class="nativeCodeGrid">
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>en</strong> | English</div><button type="button" data-native-code="en">Select</button></div>
+      <div class="nativeCodeItem"><div class="nativeCodeText"><strong>af</strong> | Afrikaans</div><button type="button" data-native-code="af">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>am</strong> | Amharic</div><button type="button" data-native-code="am">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ar</strong> | Arabic</div><button type="button" data-native-code="ar">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>as</strong> | Assamese</div><button type="button" data-native-code="as">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>az</strong> | Azerbaijani</div><button type="button" data-native-code="az">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>be</strong> | Belarusian</div><button type="button" data-native-code="be">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>bg</strong> | Bulgarian</div><button type="button" data-native-code="bg">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>bn</strong> | Bengali</div><button type="button" data-native-code="bn">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>bs</strong> | Bosnian</div><button type="button" data-native-code="bs">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ca</strong> | Catalan</div><button type="button" data-native-code="ca">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>cs</strong> | Czech</div><button type="button" data-native-code="cs">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>da</strong> | Danish</div><button type="button" data-native-code="da">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>de</strong> | German</div><button type="button" data-native-code="de">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>el</strong> | Greek</div><button type="button" data-native-code="el">Select</button></div>
 <div class="nativeCodeItem"><div class="nativeCodeText"><strong>en-GB</strong> | English (United Kingdom)</div><button type="button" data-native-code="en-GB">Select</button></div>
 <div class="nativeCodeItem"><div class="nativeCodeText"><strong>en-IN</strong> | English (India)</div><button type="button" data-native-code="en-IN">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>en</strong> | English</div><button type="button" data-native-code="en">Select</button></div>
 <div class="nativeCodeItem"><div class="nativeCodeText"><strong>es</strong> | Spanish</div><button type="button" data-native-code="es">Select</button></div>
 <div class="nativeCodeItem"><div class="nativeCodeText"><strong>es-419</strong> | Spanish (Latin America)</div><button type="button" data-native-code="es-419">Select</button></div>
 <div class="nativeCodeItem"><div class="nativeCodeText"><strong>es-US</strong> | Spanish (United States)</div><button type="button" data-native-code="es-US">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>pt</strong> | Portuguese</div><button type="button" data-native-code="pt">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>pt-PT</strong> | Portuguese (Portugal)</div><button type="button" data-native-code="pt-PT">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>fr</strong> | French</div><button type="button" data-native-code="fr">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>fr-CA</strong> | French (Canada)</div><button type="button" data-native-code="fr-CA">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>de</strong> | German</div><button type="button" data-native-code="de">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ja</strong> | Japanese</div><button type="button" data-native-code="ja">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ko</strong> | Korean</div><button type="button" data-native-code="ko">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>zh-CN</strong> | Chinese (China)</div><button type="button" data-native-code="zh-CN">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>zh-TW</strong> | Chinese (Taiwan)</div><button type="button" data-native-code="zh-TW">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>zh-HK</strong> | Chinese (Hong Kong)</div><button type="button" data-native-code="zh-HK">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>hi</strong> | Hindi</div><button type="button" data-native-code="hi">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>id</strong> | Indonesian</div><button type="button" data-native-code="id">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ar</strong> | Arabic</div><button type="button" data-native-code="ar">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>bn</strong> | Bengali</div><button type="button" data-native-code="bn">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ru</strong> | Russian</div><button type="button" data-native-code="ru">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>tr</strong> | Turkish</div><button type="button" data-native-code="tr">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>vi</strong> | Vietnamese</div><button type="button" data-native-code="vi">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>th</strong> | Thai</div><button type="button" data-native-code="th">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>it</strong> | Italian</div><button type="button" data-native-code="it">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>nl</strong> | Dutch</div><button type="button" data-native-code="nl">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>pl</strong> | Polish</div><button type="button" data-native-code="pl">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>sv</strong> | Swedish</div><button type="button" data-native-code="sv">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>cs</strong> | Czech</div><button type="button" data-native-code="cs">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ro</strong> | Romanian</div><button type="button" data-native-code="ro">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>el</strong> | Greek</div><button type="button" data-native-code="el">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>hu</strong> | Hungarian</div><button type="button" data-native-code="hu">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>uk</strong> | Ukrainian</div><button type="button" data-native-code="uk">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>fa</strong> | Persian</div><button type="button" data-native-code="fa">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ur</strong> | Urdu</div><button type="button" data-native-code="ur">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ta</strong> | Tamil</div><button type="button" data-native-code="ta">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>te</strong> | Telugu</div><button type="button" data-native-code="te">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>mr</strong> | Marathi</div><button type="button" data-native-code="mr">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>fil</strong> | Filipino</div><button type="button" data-native-code="fil">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ms</strong> | Malay</div><button type="button" data-native-code="ms">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>no</strong> | Norwegian</div><button type="button" data-native-code="no">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>da</strong> | Danish</div><button type="button" data-native-code="da">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>fi</strong> | Finnish</div><button type="button" data-native-code="fi">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>iw</strong> | Hebrew</div><button type="button" data-native-code="iw">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ca</strong> | Catalan</div><button type="button" data-native-code="ca">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>bg</strong> | Bulgarian</div><button type="button" data-native-code="bg">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>hr</strong> | Croatian</div><button type="button" data-native-code="hr">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>sk</strong> | Slovak</div><button type="button" data-native-code="sk">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>sr</strong> | Serbian</div><button type="button" data-native-code="sr">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>sr-Latn</strong> | Serbian (Latin)</div><button type="button" data-native-code="sr-Latn">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>sq</strong> | Albanian</div><button type="button" data-native-code="sq">Select</button></div>
 <div class="nativeCodeItem"><div class="nativeCodeText"><strong>et</strong> | Estonian</div><button type="button" data-native-code="et">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>lt</strong> | Lithuanian</div><button type="button" data-native-code="lt">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>lv</strong> | Latvian</div><button type="button" data-native-code="lv">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>eu</strong> | Basque</div><button type="button" data-native-code="eu">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>fa</strong> | Persian</div><button type="button" data-native-code="fa">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>fi</strong> | Finnish</div><button type="button" data-native-code="fi">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>fil</strong> | Filipino</div><button type="button" data-native-code="fil">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>fr-CA</strong> | French (Canada)</div><button type="button" data-native-code="fr-CA">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>fr</strong> | French</div><button type="button" data-native-code="fr">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>gl</strong> | Galician</div><button type="button" data-native-code="gl">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>gu</strong> | Gujarati</div><button type="button" data-native-code="gu">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>hi</strong> | Hindi</div><button type="button" data-native-code="hi">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>hr</strong> | Croatian</div><button type="button" data-native-code="hr">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>hu</strong> | Hungarian</div><button type="button" data-native-code="hu">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>hy</strong> | Armenian</div><button type="button" data-native-code="hy">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>id</strong> | Indonesian</div><button type="button" data-native-code="id">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>is</strong> | Icelandic</div><button type="button" data-native-code="is">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>it</strong> | Italian</div><button type="button" data-native-code="it">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>iw</strong> | Hebrew</div><button type="button" data-native-code="iw">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ja</strong> | Japanese</div><button type="button" data-native-code="ja">Select</button></div>
 <div class="nativeCodeItem"><div class="nativeCodeText"><strong>ka</strong> | Georgian</div><button type="button" data-native-code="ka">Select</button></div>
 <div class="nativeCodeItem"><div class="nativeCodeText"><strong>kk</strong> | Kazakh</div><button type="button" data-native-code="kk">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>hy</strong> | Armenian</div><button type="button" data-native-code="hy">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>az</strong> | Azerbaijani</div><button type="button" data-native-code="az">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>be</strong> | Belarusian</div><button type="button" data-native-code="be">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>bs</strong> | Bosnian</div><button type="button" data-native-code="bs">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>mk</strong> | Macedonian</div><button type="button" data-native-code="mk">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>mn</strong> | Mongolian</div><button type="button" data-native-code="mn">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ne</strong> | Nepali</div><button type="button" data-native-code="ne">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>sw</strong> | Swahili</div><button type="button" data-native-code="sw">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>am</strong> | Amharic</div><button type="button" data-native-code="am">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>af</strong> | Afrikaans</div><button type="button" data-native-code="af">Select</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>gu</strong> | Gujarati</div><button type="button" data-native-code="gu">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>km</strong> | Khmer</div><button type="button" data-native-code="km">Select</button></div>
 <div class="nativeCodeItem"><div class="nativeCodeText"><strong>kn</strong> | Kannada</div><button type="button" data-native-code="kn">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ko</strong> | Korean</div><button type="button" data-native-code="ko">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ky</strong> | Kyrgyz</div><button type="button" data-native-code="ky">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>lo</strong> | Lao</div><button type="button" data-native-code="lo">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>lt</strong> | Lithuanian</div><button type="button" data-native-code="lt">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>lv</strong> | Latvian</div><button type="button" data-native-code="lv">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>mk</strong> | Macedonian</div><button type="button" data-native-code="mk">Select</button></div>
 <div class="nativeCodeItem"><div class="nativeCodeText"><strong>ml</strong> | Malayalam</div><button type="button" data-native-code="ml">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>mn</strong> | Mongolian</div><button type="button" data-native-code="mn">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>mr</strong> | Marathi</div><button type="button" data-native-code="mr">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ms</strong> | Malay</div><button type="button" data-native-code="ms">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>my</strong> | Burmese</div><button type="button" data-native-code="my">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>no</strong> | Norwegian</div><button type="button" data-native-code="no">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ne</strong> | Nepali</div><button type="button" data-native-code="ne">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>nl</strong> | Dutch</div><button type="button" data-native-code="nl">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>or</strong> | Odia</div><button type="button" data-native-code="or">Select</button></div>
 <div class="nativeCodeItem"><div class="nativeCodeText"><strong>pa</strong> | Punjabi</div><button type="button" data-native-code="pa">Select</button></div>
-</div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>pl</strong> | Polish</div><button type="button" data-native-code="pl">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>pt</strong> | Portuguese</div><button type="button" data-native-code="pt">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>pt-PT</strong> | Portuguese (Portugal)</div><button type="button" data-native-code="pt-PT">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ro</strong> | Romanian</div><button type="button" data-native-code="ro">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ru</strong> | Russian</div><button type="button" data-native-code="ru">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>si</strong> | Sinhala</div><button type="button" data-native-code="si">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>sk</strong> | Slovak</div><button type="button" data-native-code="sk">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>sl</strong> | Slovenian</div><button type="button" data-native-code="sl">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>sq</strong> | Albanian</div><button type="button" data-native-code="sq">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>sr-Latn</strong> | Serbian (Latin)</div><button type="button" data-native-code="sr-Latn">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>sr</strong> | Serbian</div><button type="button" data-native-code="sr">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>sv</strong> | Swedish</div><button type="button" data-native-code="sv">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>sw</strong> | Swahili</div><button type="button" data-native-code="sw">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ta</strong> | Tamil</div><button type="button" data-native-code="ta">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>te</strong> | Telugu</div><button type="button" data-native-code="te">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>th</strong> | Thai</div><button type="button" data-native-code="th">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>tr</strong> | Turkish</div><button type="button" data-native-code="tr">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>uk</strong> | Ukrainian</div><button type="button" data-native-code="uk">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ur</strong> | Urdu</div><button type="button" data-native-code="ur">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>uz</strong> | Uzbek</div><button type="button" data-native-code="uz">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>vi</strong> | Vietnamese</div><button type="button" data-native-code="vi">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>zh-CN</strong> | Chinese (China)</div><button type="button" data-native-code="zh-CN">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>zh-HK</strong> | Chinese (Hong Kong)</div><button type="button" data-native-code="zh-HK">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>zh-TW</strong> | Chinese (Taiwan)</div><button type="button" data-native-code="zh-TW">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>zu</strong> | Zulu</div><button type="button" data-native-code="zu">Select</button></div>
+    </div>
   </div>
 </div>
 
@@ -1744,235 +1952,4 @@ ${countryBlock}`;
 </script>
 
 
-<script>
-/* Humateck_New075 YouTube official language list fetch */
-(function(){
-  function $(id){ return document.getElementById(id); }
-
-  async function fetchYoutubeI18nLanguages(){
-    var out = $("youtubeI18nLanguagesResult");
-    if(out) out.value = "Retrieving the official YouTube language list...";
-
-    var token = window.humateckAccessToken || "";
-    if(!token){
-      if(out) out.value = "There is no OAuth token. Please complete Google OAuth authentication first.";
-      alert("Please complete Google OAuth authentication first.");
-      return;
-    }
-
-    try{
-      var res = await fetch("https://www.googleapis.com/youtube/v3/i18nLanguages?part=snippet&hl=en", {
-        headers: { Authorization: "Bearer " + token }
-      });
-      var data = await res.json();
-
-      if(!res.ok){
-        var msg = data && data.error && data.error.message ? data.error.message : "YouTube i18nLanguages.list error";
-        throw new Error(msg);
-      }
-
-      var items = data.items || [];
-      var lines = items.map(function(item, index){
-        var code = item.id || (item.snippet && item.snippet.hl) || "";
-        var name = item.snippet && item.snippet.name ? item.snippet.name : "";
-        return (index + 1) + ". " + code + " | " + name;
-      });
-
-      if(out){
-        out.value = "Number of officially supported YouTube languages: " + items.length + " languages\n\n" + lines.join("\n");
-      }
-    }catch(error){
-      var message = error && error.message ? error.message : error;
-      if(out) out.value = "Failed to retrieve the official YouTube language list:\n" + message;
-      alert("Failed to retrieve the official YouTube language list: " + message);
-    }
-  }
-
-  document.addEventListener("click", function(event){
-    var btn = event.target.closest("#fetchYoutubeI18nLanguagesBtn");
-    if(!btn) return;
-    event.preventDefault();
-    fetchYoutubeI18nLanguages();
-  }, true);
-})();
-</script>
-
-
-<script>
-/* Humateck_New084 admin plan prompt count restore */
-(function(){
-  var HUMATECK_COUNTRY_LINES_70 = `1. en | English
-2. en-GB | English (United Kingdom)
-3. en-IN | English (India)
-4. es | Spanish
-5. es-419 | Spanish (Latin America)
-6. es-US | Spanish (United States)
-7. pt | Portuguese
-8. pt-PT | Portuguese (Portugal)
-9. fr | French
-10. fr-CA | French (Canada)
-11. de | German
-12. ja | Japanese
-13. ko | Korean
-14. zh-CN | Chinese (China)
-15. zh-TW | Chinese (Taiwan)
-16. zh-HK | Chinese (Hong Kong)
-17. hi | Hindi
-18. id | Indonesian
-19. ar | Arabic
-20. bn | Bengali
-21. ru | Russian
-22. tr | Turkish
-23. vi | Vietnamese
-24. th | Thai
-25. it | Italian
-26. nl | Dutch
-27. pl | Polish
-28. sv | Swedish
-29. cs | Czech
-30. ro | Romanian
-31. el | Greek
-32. hu | Hungarian
-33. uk | Ukrainian
-34. fa | Persian
-35. ur | Urdu
-36. ta | Tamil
-37. te | Telugu
-38. mr | Marathi
-39. fil | Filipino
-40. ms | Malay
-41. no | Norwegian
-42. da | Danish
-43. fi | Finnish
-44. iw | Hebrew
-45. ca | Catalan
-46. bg | Bulgarian
-47. hr | Croatian
-48. sk | Slovak
-49. sr | Serbian
-50. sr-Latn | Serbian (Latin)
-51. sq | Albanian
-52. et | Estonian
-53. lt | Lithuanian
-54. lv | Latvian
-55. ka | Georgian
-56. kk | Kazakh
-57. hy | Armenian
-58. az | Azerbaijani
-59. be | Belarusian
-60. bs | Bosnian
-61. mk | Macedonian
-62. mn | Mongolian
-63. ne | Nepali
-64. sw | Swahili
-65. am | Amharic
-66. af | Afrikaans
-67. gu | Gujarati
-68. kn | Kannada
-69. ml | Malayalam
-70. pa | Punjabi`;
-
-  function getValue(id){
-    var el = document.getElementById(id);
-    return el ? el.value : "";
-  }
-
-  function setValue(id, value){
-    var el = document.getElementById(id);
-    if(el) el.value = value;
-  }
-
-  function countFromPlan(plan){
-    if(plan === "monthly50") return 50;
-    if(plan === "monthly70") return 70;
-    if(plan === "monthly30") return 30;
-    return 30;
-  }
-
-  function rebuildGeminiPromptByPlan(plan){
-    var activeCount = countFromPlan(plan);
-    var sourceTitle = getValue("sourceTitle");
-    var sourceDescription = getValue("sourceDescription");
-    var lines = HUMATECK_COUNTRY_LINES_70.split("\n").slice(0, activeCount).join("\n");
-
-    var prompt =
-`Hello Gemini!
-Please naturally localize and translate the title and description below for the ${activeCount}-country set.
-Please continue translating from beginning to end without stopping midway.
-
-[Very Important Output Warning]
-Do not explain anything.
-Do not add commentary, notes, summaries, introductions, closing remarks, or extra words.
-Output only the required translation blocks.
-Again, do not explain anything before, between, or after the translations.
-Again, do not add any extra remarks outside the required format.
-Again, output only the translations in the requested format.
-
-[Source Text]
-Title: ${sourceTitle}
-
-Description:
-${sourceDescription}
-
-[Output Format]
-Country Code: language code
-Title: translated title
-Description:
-translated description
-
-[Core Principles]
-1. Never stop midway; continue translating from beginning to end.
-2. Do not include work explanations, introductions, closing remarks, commentary, notes, or summaries.
-3. Use only the language codes in the mapping table below.
-4. Never change the order of the blocks.
-5. Each block must start with Country Code.
-6. Maintain the paragraph structure and line breaks of the Description according to the flow of the source text.
-7. Do not include any extra remarks, keyword lines, hashtags, code blocks, HTML, or country-name lines other than the title and description.
-8. When the work is finished, move to the bottom.
-
-Country Code Mapping Table
-
-${lines}`;
-
-    setValue("geminiPromptText", prompt);
-
-    var status = document.getElementById("geminiCopyStatus");
-    if(status) status.textContent = "The Gemini request prompt has been generated. Please press the copy button.";
-
-    var gemini = document.getElementById("gemini");
-    if(gemini) gemini.scrollIntoView({behavior:"smooth", block:"start"});
-  }
-
-  function setAdminPlan(plan){
-    var hidden = document.getElementById("humateckActivePlanValue");
-    if(hidden) hidden.value = plan;
-
-    window.humateckAdminSelectedPlan = plan;
-    /* Admin test plan must stay separated from customer payment subscription state. */
-
-    document.querySelectorAll("[data-admin-plan]").forEach(function(btn){
-      btn.classList.toggle("active", btn.getAttribute("data-admin-plan") === plan);
-    });
-
-    var status = document.getElementById("adminPlanStatus");
-    if(status){
-      status.textContent = "";
-      status.style.display = "none";
-    }
-
-    rebuildGeminiPromptByPlan(plan);
-  }
-
-  document.addEventListener("click", function(event){
-    var btn = event.target.closest("[data-admin-plan]");
-    if(!btn) return;
-    event.preventDefault();
-    event.stopPropagation();
-    setAdminPlan(btn.getAttribute("data-admin-plan"));
-  }, true);
-
-  window.humateckSetAdminPlan = setAdminPlan;
-  window.humateckRebuildGeminiPromptByPlan = rebuildGeminiPromptByPlan;
-})();
-</script>
 </body></html>
