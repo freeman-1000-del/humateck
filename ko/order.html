@@ -890,12 +890,12 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
       <input id="sourceTitle" type="text" placeholder="자국어 제목을 입력하세요">
       <label>자국어 설명문</label>
       <textarea id="sourceDescription" class="mediumTextarea" placeholder="자국어 설명문을 입력하세요"></textarea>
-      <div class="actions"><button class="btn" type="button" id="generateGeminiPrompt">제출하기</button></div>
-      <div class="notice">제출하기를 누르면 자국어 코드, 영상 주소, 자국어 제목, 자국어 설명문을 바탕으로 제미나이 번역의뢰문이 생성됩니다.</div>
+      <div class="actions"><button class="btn copyButtonVisible" type="button" id="generateGeminiPrompt">제미나이 명령문 생성</button></div>
+      <div class="notice">여기서 제미나이 명령문을 생성한 뒤 복사하여 제미나이에 붙여넣고, 완료된 제미나이 결과물을 다시 이 주문서에 붙여넣으시면 됩니다.</div>
     </section>
 
     <section id="gemini" class="card">
-      <h2>제미나이 의뢰문</h2>
+      <h2>제미나이 명령문 복사</h2>
       <textarea id="geminiPromptText" class="mediumTextarea" readonly>Hello Gemini!
 Please naturally localize and translate the title and description below for the {activeCount}-country set.
 Please continue translating from beginning to end without stopping midway.
@@ -931,8 +931,8 @@ Description: translated description
 
 [Country Code List]
 {countryBlock}</textarea>
-      <div class="actions"><button class="btn copyButtonVisible" type="button" data-copy-target="geminiPromptText">복사</button></div>
-      <p id="geminiCopyStatus" class="copyStatus"></p><div class="actions"><a class="btn geminiChatButton" href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer">제미나이 챗번역 하러 가기.</a></div>
+      <div class="actions"><button class="btn copyButtonVisible" type="button" data-copy-target="geminiPromptText">제미나이 명령문 복사</button></div>
+      <p id="geminiCopyStatus" class="copyStatus"></p><div class="actions"><a class="btn geminiChatButton" href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer">제미나이 챗번역 하러 가기</a></div>
     </section>
 <section class="oauthInfoBox" id="googleOAuthNotice">
       <h2>Google OAuth 인증관련 안내</h2>

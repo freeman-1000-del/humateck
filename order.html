@@ -979,12 +979,12 @@ input,textarea{font-size:16px!important;}
       <input id="sourceTitle" type="text" placeholder="Enter the native language title">
       <label>Native Language Description</label>
       <textarea id="sourceDescription" class="mediumTextarea" placeholder="Enter the native language description"></textarea>
-      <div class="actions"><button class="btn" type="button" id="generateGeminiPrompt">Submit</button></div>
-      <div class="notice">When you press Submit, a Gemini translation request prompt is generated based on the native language code, video URL, native language title, and native language description.</div>
+      <div class="actions"><button class="btn copyButtonVisible" type="button" id="generateGeminiPrompt">Generate Gemini Request Prompt</button></div>
+      <div class="notice">Generate the Gemini request prompt here, copy it, paste it into Gemini, and then paste the completed Gemini result back into this order form.</div>
     </section>
 
     <section id="gemini" class="card">
-      <h2>Gemini Request Prompt</h2>
+      <h2>Gemini Request Prompt Copy</h2>
       <textarea id="geminiPromptText" class="mediumTextarea" readonly>Hello Gemini!
 Please naturally localize and translate the title and description below for the {activeCount}-country set.
 Please continue translating from beginning to end without stopping midway.
@@ -1020,8 +1020,8 @@ Description: translated description
 
 [Country Code List]
 {countryBlock}</textarea>
-      <div class="actions"><button class="btn copyButtonVisible" type="button" data-copy-target="geminiPromptText">Copy</button></div>
-      <p id="geminiCopyStatus" class="copyStatus"></p><div class="actions"><a class="btn geminiChatButton" href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer">Go to Gemini Chat Translation.</a></div>
+      <div class="actions"><button class="btn copyButtonVisible" type="button" data-copy-target="geminiPromptText">Copy Gemini Prompt</button></div>
+      <p id="geminiCopyStatus" class="copyStatus"></p><div class="actions"><a class="btn geminiChatButton" href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer">Open Gemini Chat Translation</a></div>
     </section>
 <section class="oauthInfoBox" id="googleOAuthNotice">
       <h2>Google OAuth Setup Guide Notice</h2>
