@@ -984,29 +984,6 @@ input,textarea{font-size:16px!important;}
 /* Humateck Production split: keep Gemini prompt box compact */
 #geminiPromptText{min-height:92px!important;height:92px!important;overflow:auto!important;}
 </style>
-
-
-<style>
-/* Humateck_Production_Order_v12 calm command warning */
-.commandWarningOutside{
-  display:block!important;
-  margin:16px 0 18px!important;
-  padding:13px 15px!important;
-  border:1px solid rgba(96,140,190,.55)!important;
-  border-radius:12px!important;
-  background:rgba(70,105,150,.10)!important;
-  color:#dce8f8!important;
-  font-weight:600!important;
-  line-height:1.65!important;
-  animation:none!important;
-  box-shadow:none!important;
-  text-shadow:none!important;
-}
-.commandWarningOutside .softStrong{
-  color:#f0c85a!important;
-  font-weight:900!important;
-}
-</style>
 </head>
 <body>
 <!--
@@ -1044,7 +1021,7 @@ Do not add review, blocking, metadata judgment, hidden/admin menu, auto-correcti
 
     <section id="gemini" class="card">
       <h2>Gemini Request Prompt Copy</h2>
-      <div class="geminiCoreNotice">This is the core of Humateck. Copy this prompt, paste it into Gemini, and paste only the completed translation result back into the Final Registration Command box.</div>
+      <div class="geminiCoreNotice">This is the core of Humateck. Copy this prompt, paste it into Gemini, and paste only the completed translation result back into the final version box.</div>
       <textarea id="geminiPromptText" class="mediumTextarea" readonly>Hello Gemini!
 Without any explanation, output only the translated registration text.
 
@@ -1088,13 +1065,13 @@ Do not delete the language code itself.</textarea></div>
         <div class="commandFullItem"><div class="commandFullTop"><label>Command 5</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText5">Copy</button></div><textarea id="commandText5" readonly>Please automatically and carefully check once more for mixed-in other languages, unnatural context, and any other issues.</textarea></div>
         <div class="commandFullItem"><div class="commandFullTop"><label>Command 6</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText6">Copy</button></div><textarea id="commandText6" readonly>Please output only the pure translated text without Gemini explanations or commentary.</textarea></div>
         <div class="commandFullItem"><div class="commandFullTop"><label>Command 7</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText7">Copy</button></div><textarea id="commandText7" readonly>Please move to the bottom.</textarea></div>
-        <div class="commandWarningOutside"><span class="softStrong">⚠️ Important</span> Be sure to press the ⧉ [Copy response] button at the end of the translated text above “Please move to the bottom.” Wait until it is fully copied to the clipboard, then paste it into <span class="softStrong">Final Registration Command</span>.<br><br><span class="softStrong">⚠️ Important</span> Be careful not to include Gemini explanations, commentary, or unnecessary words other than the translation, as they may cause YouTube registration errors.</div>
+        <div class="commandWarningOutside">⚠️ In the Gemini window, be sure to press the ⧉ Copy response button at the end of the last translation above the “Please move to the bottom.” command, then paste it into the final version field.<br><br>⚠️ Be careful not to include Gemini explanations, commentary, or unnecessary words other than the translation, as they may cause YouTube registration errors.</div>
       </div>
     </section>
 
     <section class="card" id="finalVersionCard">
-      <h2>Final Registration Command</h2>
-      <textarea id="finalOutput" class="mediumTextarea" placeholder="Paste the final Gemini translation result for YouTube registration."></textarea>
+      <h2>Paste Final Version</h2>
+      <textarea id="finalOutput" class="mediumTextarea" placeholder="Paste the final Gemini translation result."></textarea>
     </section>
 
 
