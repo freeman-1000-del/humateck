@@ -63,7 +63,18 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 .faqItem{border-top:1px solid rgba(255,255,255,.12);padding-top:14px;margin-top:14px}
 .codebox{white-space:pre-wrap;background:#080f18;border:1px solid #334353;border-radius:12px;padding:14px;color:#e9e1d0;line-height:1.6;font-size:14px}
 @media(max-width:980px){.grid2,.order,.plans{grid-template-columns:1fr}.title{font-size:32px}.wrap{max-width:calc(100vw - 28px)}}
-.question{color:#ffd95a!important;font-weight:900}</style>
+.question{color:#ffd95a!important;font-weight:900}
+/* Humateck_New013: visual-only blue warning for empty customer fields. No blocking, no validation. */
+@keyframes humateckBlueBlink{
+  0%,100%{border-color:#2f7cff;box-shadow:0 0 0 1px rgba(47,124,255,.35),0 0 12px rgba(47,124,255,.35);}
+  50%{border-color:#8fc2ff;box-shadow:0 0 0 2px rgba(143,194,255,.65),0 0 22px rgba(47,124,255,.75);}
+}
+.humateck-empty-blue-warning{
+  border-color:#2f7cff!important;
+  animation:humateckBlueBlink 1.15s ease-in-out infinite;
+}
+
+</style>
 
 
 <style>
@@ -1064,7 +1075,6 @@ Description: translated description
 A) This is because YouTube content display system fixes the default video setting to U.S. English when multilingual translations are registered. However, this is not an error, and you may edit your native-language title or description at any time. Please do not misunderstand this point.</p></div>
 <details><summary>View Details</summary>
 <div class="faqItem"><p class="question"><b>2. Q) When I press YouTube content registration, a quota exceeded message appears.</b></p><p>A) This means the daily free API quota for YouTube content registration has been exceeded. Please wait until the quota is recharged the next day, then try again.</p></div>
-<div class="faqItem"><p class="question"><b>3. Q) The message “Could not find videoId in the YouTube video URL” appears.</b></p><p>A) This means the YouTube URL was entered incorrectly. Please copy and paste the actual YouTube video URL (not YouTube Studio) exactly as it is.</p></div>
 <div class="faqItem"><p class="question"><b>4. Q) What is Google OAuth setup? Do I need to set it up every time I use the service?</b></p><p>A) It is the connection process of receiving permission from Google to register multilingual translations on your YouTube channel. You only need to set it up once at the beginning.</p></div>
 <div class="faqItem"><p class="question"><b>5. Q) I operate multiple YouTube channels. Do I need to create a separate OAuth setting for each channel?</b></p><p>A) You do not need to create a new Google OAuth setting for each channel. However, the Google account used for authorization must have permission to edit the relevant YouTube channel or video in order for registration to work properly.</p></div>
 <div class="faqItem"><p class="question"><b>6. Q) I see a quota exceeded message when I click YouTube multilingual registration. What does this mean?</b></p><p>A) This means the daily free YouTube API quota for multilingual registration has been exceeded. Please wait until the quota is refreshed the next day and try again.</p></div>
@@ -1646,23 +1656,11 @@ ${countryBlock}`;
     return data;
   }
 
-  function hasSubscriberAccess(){
-    var hidden = document.getElementById("humateckActivePlanValue");
-    var plan = hidden ? hidden.value : "";
-    if(!plan && window.humateckPaymentSubscriptionPlan) plan = window.humateckPaymentSubscriptionPlan;
-    return !!plan;
-  }
-
   async function deliverByYouTubeSpec(){
-    if(!hasSubscriberAccess()){
-      alert("Sorry. YouTube Multilingual Registration is available only to subscribers.");
-      return;
-    }
     var token = getAccessToken();
-    if(!token){ alert("There is no OAuth token. Please complete Google OAuth authentication first."); return; }
 
-    var videoId = extractVideoId(getVideoUrl());
-    if(!videoId){ alert("Could not find videoId in the YouTube video URL."); return; }
+    var rawVideoUrl = getVideoUrl();
+    var videoId = extractVideoId(rawVideoUrl) || rawVideoUrl;
 
 
     var nativeCode = getNativeLanguageCode();
@@ -1671,11 +1669,9 @@ ${countryBlock}`;
 
 
     var finalText = getFinalText();
-    if(!finalText){ alert("Please paste the final Gemini version."); return; }
 
     var localizations = parseFinalTextToLocalizations(finalText);
     var codes = Object.keys(localizations);
-    if(codes.length === 0){ alert("Could not find a registration-ready final version based on Country Code:."); return; }
 
     var btn = $("sendOrderBtn") || $("youtubeRegisterBtn");
     if(btn){ btn.disabled = true; btn.textContent = "Registration in Progress"; }
@@ -1690,9 +1686,7 @@ ${countryBlock}`;
       );
 
       var video = existing.items && existing.items[0];
-      if(!video) throw new Error("Could not find the target video.");
-
-      var snippet = video.snippet || {};
+      var snippet = video && video.snippet ? video.snippet : {};
       var mergedLocalizations = Object.assign({}, video.localizations || {}, localizations);
 
       var body = {
@@ -1719,15 +1713,13 @@ ${countryBlock}`;
       showResult(
         "Registration Results\n" +
         "Number of target registration languages: " + codes.length + " languages\n" +
-        "Number of completed register multilingual contents: " + codes.length + " languages\n" +
-        "Errors: 0\n" +
         "Registration time: " + seconds + " seconds"
       );
       alert("register multilingual content has been completed.");
     }catch(error){
       var message = error && error.message ? error.message : String(error);
-      showResult("YouTube returned error:\n" + message);
-      alert("YouTube returned error: " + message);
+      showResult(message);
+      alert(message);
     }finally{
       if(btn){ btn.disabled = false; btn.textContent = "YouTube Multilingual Registration"; }
     }
@@ -1894,5 +1886,39 @@ ${countryBlock}`;
 })();
 </script>
 
+
+
+<script>
+/* Humateck_New013: customer input reminder only. This does not block registration and does not judge content. */
+(function(){
+  var HUMATECK_CUSTOMER_FIELD_IDS = [
+    "nativeLanguageCode",
+    "videoUrl",
+    "sourceTitle",
+    "sourceDescription",
+    "googleClientIdInput",
+    "finalOutput"
+  ];
+
+  function updateHumateckEmptyFieldLights(){
+    HUMATECK_CUSTOMER_FIELD_IDS.forEach(function(id){
+      var el = document.getElementById(id);
+      if(!el) return;
+      var empty = !String(el.value || "").trim();
+      el.classList.toggle("humateck-empty-blue-warning", empty);
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){
+    HUMATECK_CUSTOMER_FIELD_IDS.forEach(function(id){
+      var el = document.getElementById(id);
+      if(!el) return;
+      el.addEventListener("input", updateHumateckEmptyFieldLights);
+      el.addEventListener("change", updateHumateckEmptyFieldLights);
+    });
+    updateHumateckEmptyFieldLights();
+  });
+})();
+</script>
 
 </body></html>
