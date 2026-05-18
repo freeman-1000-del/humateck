@@ -956,11 +956,9 @@ Description:
       <h2>제미나이 명령 복사/붙여넣기 순서</h2>
       <div class="commandFullRows">
         <div class="commandFullItem"><div class="commandFullTop"><label>명령 1</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText1">복사</button></div><textarea id="commandText1" readonly>Please automatically and carefully check for mixed-in other languages, unnatural context, and any other issues.</textarea></div>
-        <div class="commandFullItem"><div class="commandFullTop"><label>명령 2</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText2">복사</button></div><textarea id="commandText2" readonly>Please give only the translated text and absolutely no explanation.
-If Gemini explanations are included in the translation text for YouTube registration, serious registration errors may occur.</textarea></div>
-        <div class="commandFullItem"><div class="commandFullTop"><label>명령 3</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText3">복사</button></div><textarea id="commandText3" readonly>Please delete the Number: , Country Name:, Country Code:.</textarea></div>
-        <div class="commandFullItem"><div class="commandFullTop"><label>명령 4</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText4">복사</button></div><textarea id="commandText4" readonly>Carefully check once more for mixed-in other languages, unnatural context, and any other issues.</textarea></div>
-        <div class="commandFullItem"><div class="commandFullTop"><label>명령 5</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText5">복사</button></div><textarea id="commandText5" readonly>Please move to the bottom.</textarea></div>
+        <div class="commandFullItem"><div class="commandFullTop"><label>명령 2</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText2">복사</button></div><textarea id="commandText2" readonly>Please delete the Number: , Country Name:, Country Code:.</textarea></div>
+        <div class="commandFullItem"><div class="commandFullTop"><label>명령 3</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText3">복사</button></div><textarea id="commandText3" readonly>Carefully check once more for mixed-in other languages, unnatural context, and any other issues.</textarea></div>
+        <div class="commandFullItem"><div class="commandFullTop"><label>명령 4</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText4">복사</button></div><textarea id="commandText4" readonly>Please move to the bottom.</textarea></div>
       </div>
     </section>
 
@@ -1133,6 +1131,24 @@ If Gemini explanations are included in the translation text for YouTube registra
     var limitHidden = document.getElementById("humateckActiveCountryLimit");
     if(limitHidden && arguments.length > 1 && arguments[1]) limitHidden.value = String(arguments[1]);
   }
+
+  function getHumateckPlanLimit(plan){
+    if(plan === "free7") return 15;
+    if(plan === "monthly30") return 30;
+    if(plan === "monthly50") return 50;
+    if(plan === "monthly70" || plan === "yearly70") return 70;
+    return 0;
+  }
+
+  function loadPlanSelectedFromPlansPage(){
+    try{
+      var params = new URLSearchParams(window.location.search || "");
+      var plan = params.get("plan") || localStorage.getItem("humateckSelectedPlan") || "";
+      if(plan){ applyHumateckPlan(plan, getHumateckPlanLimit(plan)); }
+    }catch(e){}
+  }
+
+  loadPlanSelectedFromPlansPage();
 
   async function loadHumateckSubscriptionStatus(){
     try{

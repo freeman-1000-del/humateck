@@ -431,7 +431,7 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 <div class="top-left-tools"><a class="miniNavButton" href="index.html">첫페이지 가기</a><a class="miniNavButton" href="order.html">주문페이지 보기</a></div>
 <section class="card"><h1>유튜브 다국어 자막 등록 플랜</h1></section>
 <section class="plans">
-<article class="plan" data-subscription-plan="free7"><div class="currentPlanBadge">현재 활성</div><h2>7일 무료 플랜</h2><div class="price">주요 15개국 / 7일</div><p>손으로 몇 시간씩 하던 일을 단 몇 초만에 해결해 드리는 시스템에 첫발을 딛어 보세요.</p><a class="btn" href="order.html">무료 체험 시작하기</a></article>
+<article class="plan" data-subscription-plan="free7"><div class="currentPlanBadge">현재 활성</div><h2>7일 무료 플랜</h2><div class="price">주요 15개국 / 7일</div><p>손으로 몇 시간씩 하던 일을 단 몇 초만에 해결해 드리는 시스템에 첫발을 딛어 보세요.</p><a class="btn" href="order.html?plan=free7">무료 체험 시작하기</a></article>
 <article class="plan" data-subscription-plan="monthly30"><div class="currentPlanBadge">현재 활성</div><h2>30개국 플랜</h2><div class="price">서비스 준비 중</div><p>30개국 기준 번역의뢰문 생성 지원과 유튜브 다국어 등록 기본 플랜입니다.</p><a class="btn" href="#">서비스 준비 중</a></article>
 <article class="plan" data-subscription-plan="monthly50"><div class="currentPlanBadge">현재 활성</div><h2>50개국 플랜</h2><div class="price">서비스 준비 중</div><p>50개국 기준 번역의뢰문 생성 지원과 유튜브 다국어 등록 확장 플랜입니다.</p><a class="btn" href="#">서비스 준비 중</a></article>
 <article class="plan" data-subscription-plan="monthly70"><div class="currentPlanBadge">현재 활성</div><h2>70개국 플랜</h2><div class="price">서비스 준비 중</div><p>70개국 기준 번역의뢰문 생성 지원과 유튜브 다국어 등록 안정 플랜입니다.</p><a class="btn" href="#">서비스 준비 중</a></article>
@@ -440,7 +440,22 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 
 <script>
 (function(){
-  var plan = window.humateckPaymentSubscriptionPlan;
+  document.addEventListener("click", function(e){
+    var btn = e.target.closest(".plan .btn");
+    if(!btn) return;
+    var planCard = btn.closest(".plan");
+    var plan = planCard ? planCard.getAttribute("data-subscription-plan") : "";
+    if(plan){
+      try{ localStorage.setItem("humateckSelectedPlan", plan); }catch(err){}
+      window.humateckPaymentSubscriptionPlan = plan;
+    }
+  }, true);
+})();
+</script>
+
+<script>
+(function(){
+  var plan = window.humateckPaymentSubscriptionPlan || (function(){try{return localStorage.getItem("humateckSelectedPlan") || "";}catch(e){return "";}})();
   if(!plan) return;
   var target = document.querySelector('[data-subscription-plan="'+plan+'"]');
   if(target){ target.classList.add('blinkActive'); target.classList.add('current'); }
