@@ -80,3 +80,19 @@ If YouTube registration stops working, first inspect:
 3. YouTube API response
 
 Do not blame YouTube before checking whether internal logic was added again.
+
+
+## YouTube Registration Failover Rule
+
+The registration delivery line uses one dedicated file: `youtube-register.js`.
+
+It contains two delivery paths only:
+
+1. Primary path: YouTube `localizations` update.
+2. Backup path: YouTube `snippet + localizations` update using the existing video snippet.
+
+The backup path is not a reviewer, validator, blocker, or metadata judge. It is only a second delivery shape for the same customer-approved text.
+
+Never add customer-facing messages such as “module disconnected,” “JS error,” “internal engine,” or “backup failed.”
+
+Never add review, blocking, metadata checking, automatic correction, hidden menus, admin plan buttons, or registration-precheck logic to this file.
