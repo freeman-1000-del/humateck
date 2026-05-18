@@ -1,6 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!--
+DEVELOPER NOTICE - HUMATECK FIXED RULES
+1. The order form must remain a delivery form only: customer-approved text -> Google browser OAuth result -> YouTube API delivery -> YouTube response display.
+2. Remove unnecessary weight and never add it back. Do not introduce independent JS logic, parser expansion, metadata judgment, content inspection, content correction, pre-blocking, risk-scoring, internal review, or internal gatekeeping into the order form.
+3. Google performs authentication. YouTube decides acceptance/rejection. Humateck must not act as an internal reviewer, editor, blocker, or judge.
+4. English/global PayPal subscription links must stay open. Korean payment flow must not use direct PayPal buttons and must remain separated until a Korean payment method is finalized.
+5. Target set is fixed at 70 countries. Do not restore previous expanded-country wording or previous expanded-country plan logic without explicit approval.
+6. Free 7-day plan is fixed at 15 major countries. Gemini target-country order must follow country importance, not alphabetical order.
+7. Hidden/admin/test menus must not be added to the customer order page. Internal membership/testing must stay server-side and invisible to customers.
+-->
+
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>YouTube Multilingual Registration</title>
@@ -19,8 +31,8 @@ button,input,textarea{font-family:inherit}
 .title{margin:0;color:#4b97ff;font-size:44px;line-height:1.25;font-weight:900;text-shadow:0 0 24px rgba(70,140,255,.22)}
 .subtitle{margin:16px 0 0;color:#fff;font-size:21px;font-weight:800}
 .stage{position:relative;width:840px;height:275px;max-width:100%;margin:36px auto 0}
-.globe{position:absolute;left:50%;top:32px;width:230px;height:230px;transform:translateX(-50%);border-radius:50%;border:2px solid rgba(93,160,255,.72);background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.33),transparent 12%),radial-gradient(circle at 50% 50%,rgba(58,126,255,.42),rgba(4,18,45,.9) 67%),repeating-linear-gradient(90deg,transparent 0 19px,rgba(116,178,255,.19) 20px 21px),repeating-linear-gradient(0deg,transparent 0 19px,rgba(116,178,255,.15) 20px 21px);box-shadow:0 0 48px rgba(83,144,255,.38)}
-.play{position:absolute;left:50%;top:92px;width:116px;height:82px;transform:translateX(-50%);border-radius:22px;background:linear-gradient(145deg,#ffe083,#b98217);box-shadow:0 0 42px rgba(235,180,62,.72)}
+.globe{position:absolute;left:50%;top:32px;width:230px;height:230px;transform:translateX(-50%);border-radius:50%;border:2px solid rgba(93,160,255,.72);background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.33),transparent 12%),radial-gradient(circle at 50% 50%,rgba(58,126,255,.42),rgba(4,18,45,.9) 67%),repeating-linear-gradient(90deg,transparent 0 19px,rgba(116,178,255,.19) 20px 21px),repeating-linear-gradient(0deg,transparent 0 19px,rgba(116,178,255,.15) 20px 21px);box-shadow:0 0 48px rgba(70,144,255,.38)}
+.play{position:absolute;left:50%;top:92px;width:116px;height:82px;transform:translateX(-50%);border-radius:22px;background:linear-gradient(145deg,#ffe070,#b98217);box-shadow:0 0 42px rgba(235,180,62,.72)}
 .play:after{content:"";position:absolute;left:45px;top:22px;border-left:34px solid #1a1307;border-top:20px solid transparent;border-bottom:20px solid transparent}
 .vcard{position:absolute;width:210px;height:118px;border:1px solid rgba(214,176,78,.62);border-radius:18px;background:rgba(10,17,27,.82);box-shadow:0 16px 38px rgba(0,0,0,.45);padding:17px}
 .vcard.left{left:0;top:82px}.vcard.right{right:0;top:82px}.vcard.bottom{left:50%;bottom:0;transform:translateX(-50%)}
@@ -122,8 +134,6 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 .guideModalBox{width:760px;max-width:calc(100vw - 48px);max-height:86vh;overflow:auto;border:1px solid #d4a94f;border-radius:20px;background:#121a23;color:#eee5d5;padding:28px 32px}
 .guideModalBox h2{color:#ffd95a;margin-top:0}.guideModalBox p,.guideModalBox li{line-height:1.75}
 .closeModalBtn{display:inline-flex;margin-top:18px;border:1px solid #caa24e;padding:10px 18px;border-radius:10px;color:#fff}
-.adminSecret{margin-top:18px;border:1px dashed rgba(255,217,90,.45);border-radius:14px;padding:14px;background:rgba(255,217,90,.06)}
-.adminSecret summary{cursor:pointer;color:#ffd95a;font-weight:900}
 .planHookNote{font-size:14px;color:#ffd95a;margin-top:10px}
 @media(max-width:980px){.orderMainGrid,.orderBottomGrid,.commandGrid{grid-template-columns:1fr}}
 </style>
@@ -144,8 +154,6 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 @keyframes humateckBlinkWarn{from{filter:brightness(1)}to{filter:brightness(1.45);text-shadow:0 0 12px rgba(255,217,90,.85)}}
 .oauthCenterButton{display:flex;justify-content:center;margin-top:16px}
 .menuWord{color:#ffd95a!important;font-weight:900}
-.adminLoginBox{margin-top:16px;border:1px dashed rgba(255,217,90,.6);border-radius:14px;padding:14px;background:rgba(255,217,90,.08)}
-.adminLoginBox summary{cursor:pointer;color:#ffd95a;font-weight:900}
 .highlightAction{color:#ffd95a!important;font-weight:900}
 .registerNoticeBelow{margin-top:16px}
 .registerErrorPanel{border:1px solid rgba(255,217,90,.48);border-radius:16px;padding:16px;background:rgba(255,217,90,.08);margin-top:14px}
@@ -259,34 +267,6 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 
 
 <style>
-/* Humateck_New026 admin plan selector */
-.adminPlanButtons{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-  margin-top:12px;
-}
-.adminPlanButton{
-  min-width:0!important;
-  min-height:42px!important;
-  padding:9px 12px!important;
-  font-size:15px!important;
-}
-.adminPlanButton.active{
-  animation:humateckAdminBlink 1s infinite alternate;
-  border-color:#ffd95a!important;
-  box-shadow:0 0 20px rgba(255,217,90,.75)!important;
-}
-@keyframes humateckAdminBlink{
-  from{filter:brightness(1)}
-  to{filter:brightness(1.35)}
-}
-.adminPlanStatus{
-  color:#ffd95a;
-  font-weight:900;
-  margin-top:10px;
-  line-height:1.6;
-}
 </style>
 
 
@@ -371,37 +351,6 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
   width:100%;
   min-height:72px;
   margin-top:10px;
-}
-</style>
-
-
-<style>
-/* Humateck_New046 OAuth receive check only */
-.oauthReceiveCheckBox{
-  margin-top:14px;
-  border:1px solid rgba(255,217,90,.58);
-  border-radius:14px;
-  padding:14px;
-  background:rgba(255,217,90,.08);
-}
-.oauthReceiveTitle{
-  color:#ffd95a;
-  font-weight:900;
-  margin-bottom:8px;
-}
-#oauthReceiveCheck{
-  width:100%;
-  min-height:86px;
-  background:#07101b;
-  color:#f5eddb;
-  border:1px solid rgba(214,176,78,.45);
-  border-radius:10px;
-  padding:10px;
-  line-height:1.6;
-}
-.oauthReceiveOk{
-  box-shadow:0 0 20px rgba(255,217,90,.65);
-  border-color:#ffd95a!important;
 }
 </style>
 
@@ -579,62 +528,10 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 
 
 <style>
-/* Humateck_New074 YouTube official language list */
-.youtubeLanguageAdminBox{
-  margin-top:16px;
-  border:1px solid rgba(255,217,90,.55);
-  border-radius:14px;
-  padding:14px;
-  background:rgba(255,217,90,.07);
-}
-.youtubeLanguageAdminBox h3{
-  color:#ffd95a;
-  margin:0 0 8px;
-}
-#youtubeI18nLanguagesResult{
-  margin-top:10px;
-  min-height:220px;
-  font-size:14px;
-  line-height:1.6;
-}
 </style>
 
 
 <style>
-/* Humateck_New075 YouTube official language list in admin login */
-.youtubeLanguageAdminBox{
-  margin-top:16px;
-  border:1px solid rgba(255,217,90,.55);
-  border-radius:14px;
-  padding:14px;
-  background:rgba(255,217,90,.07);
-}
-.youtubeLanguageAdminBox h3{
-  color:#ffd95a;
-  margin:0 0 8px;
-}
-#youtubeI18nLanguagesResult{
-  margin-top:10px;
-  min-height:220px;
-  font-size:14px;
-  line-height:1.6;
-}
-</style>
-
-
-<style>
-/* Humateck_New083 hide admin plan status text */
-#adminPlanStatus{
-  display:none!important;
-}
-</style>
-
-
-<style>
-/* Humateck_New084 admin status hidden */
-#adminPlanStatus{
-  display:none!important;
-}
 </style>
 
 
@@ -1046,56 +943,6 @@ input,textarea{font-size:16px!important;}
 }
 </style>
 
-<style>
-/* Humateck_New013 calm separate Gemini follow-up command */
-.geminiFollowCommandBox{
-  margin-top:18px;
-  border:1px solid rgba(154,166,178,.46);
-  border-radius:14px;
-  padding:14px;
-  background:rgba(154,166,178,.07);
-}
-.geminiFollowCommandTop{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-  margin-bottom:8px;
-}
-.geminiFollowCommandBox label{
-  display:block;
-  color:#d8d2c5;
-  font-weight:900;
-}
-.geminiFollowCommandTop .btn{
-  min-width:72px!important;
-  min-height:36px!important;
-  padding:7px 12px!important;
-  font-size:14px!important;
-}
-.geminiFollowCommandBox textarea{
-  min-height:62px!important;
-  background:#07101b;
-  border-color:rgba(154,166,178,.46);
-}
-.geminiFollowNotice{
-  display:block;
-  margin-top:10px;
-  padding:11px 13px;
-  border:1px solid rgba(154,166,178,.40);
-  border-radius:12px;
-  background:rgba(154,166,178,.08);
-  color:#d8d2c5!important;
-  font-weight:400;
-  font-size:16px;
-  line-height:1.6;
-}
-.geminiFollowNotice .noticeEmphasis{
-  color:#ffd95a;
-  font-weight:900;
-}
-</style>
-
 </head>
 <body>
 
@@ -1164,14 +1011,6 @@ Description: translated description
 {countryBlock}</textarea>
       <div class="actions"><button class="btn copyButtonVisible" type="button" data-copy-target="geminiPromptText">Copy</button></div>
       <p id="geminiCopyStatus" class="copyStatus"></p><div class="actions"><a class="btn geminiChatButton" href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer">Go to Gemini Chat Translation.</a></div>
-      <div class="geminiFollowCommandBox">
-        <div class="geminiFollowCommandTop">
-          <label for="geminiFollowCommandText">Final Gemini Command</label>
-          <button class="btn" type="button" data-copy-target="geminiFollowCommandText">Copy</button>
-        </div>
-        <textarea id="geminiFollowCommandText" readonly>Delete “Number:” and the number next to it, then Please move to the bottom.</textarea>
-        <div class="geminiFollowNotice">⚠️ <span class="noticeEmphasis">(Important)</span> In the Gemini window, be sure to press the ⧉ (Copy response) button at the end of the last translation above the <span class="noticeEmphasis">“Please move to the bottom.”</span> command, then paste it into the final version field.<br><br>⚠️ <span class="noticeEmphasis">(Important)</span> Be careful not to include extra remarks or unnecessary words other than the translation, as they may cause registration errors.</div>
-      </div>
     </section>
 <section class="oauthInfoBox" id="googleOAuthNotice">
       <h2>Google OAuth Setup Guide Notice</h2>
@@ -1233,16 +1072,8 @@ A) This is because YouTube content display system fixes the default video settin
 </div>
 </details>
 </section>
-    <details class="adminSecret">
-      <summary>Hidden Admin Menu</summary>
-      <p>For testing and customer support responses, the administrator can select any plan.</p>
-      <div class="actions"><button class="btn adminPlanButton" type="button" data-admin-plan="monthly30">30 Countries</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly50">50 Countries</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly70">70 Countries</button></div>
-    </details>
-
 <input type="hidden" id="humateckActivePlanValue" value="">
-<p id="adminPlanStatus" class="adminPlanStatus" style="display:none!important;"></p>
-
-
+<input type="hidden" id="humateckActiveCountryLimit" value="">
 </details>
   </aside>
 </section>
@@ -1332,6 +1163,37 @@ A) This is because YouTube content display system fixes the default video settin
 
 <script>
 (function(){
+  function applyHumateckPlan(plan){
+    if(!plan) return;
+    if(plan === "monthly70") plan = "monthly70";
+    if(plan === "yearly70") plan = "yearly70";
+    var allowed = {free7:true, monthly30:true, monthly50:true, monthly70:true, yearly70:true};
+    if(!allowed[plan]) return;
+    window.humateckPaymentSubscriptionPlan = plan;
+    var hidden = document.getElementById("humateckActivePlanValue");
+    if(hidden) hidden.value = plan;
+    var limitHidden = document.getElementById("humateckActiveCountryLimit");
+    if(limitHidden && arguments.length > 1 && arguments[1]) limitHidden.value = String(arguments[1]);
+  }
+
+  async function loadHumateckSubscriptionStatus(){
+    try{
+      var email = localStorage.getItem("humateckUserEmail") || localStorage.getItem("humateckEmail") || "";
+      var url = "/api/check-subscription" + (email ? ("?email=" + encodeURIComponent(email)) : "");
+      var res = await fetch(url, { credentials:"include", cache:"no-store" });
+      if(!res.ok) return;
+      var data = await res.json().catch(function(){ return {}; });
+      if(data && (data.admin === true || data.is_admin === true)){ applyHumateckPlan(data.plan || data.plan_type || "yearly70", data.country_limit); return; }
+      if(data && (data.active === true || data.status === "active")){ applyHumateckPlan(data.plan || data.plan_type || data.subscription_plan, data.country_limit); }
+    }catch(e){}
+  }
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", loadHumateckSubscriptionStatus);
+  }else{
+    loadHumateckSubscriptionStatus();
+  }
+
   function getValue(id){
     var el = document.getElementById(id);
     return el ? el.value : "";
@@ -1343,15 +1205,17 @@ A) This is because YouTube content display system fixes the default video settin
   }
 
   function getActiveCount(){
+    var limitHidden = document.getElementById("humateckActiveCountryLimit");
+    var directLimit = limitHidden ? parseInt(limitHidden.value, 10) : 0;
+    if(directLimit && directLimit > 0) return Math.min(directLimit, 70);
+
     var hidden = document.getElementById("humateckActivePlanValue");
     var plan = hidden ? hidden.value : "";
-    if(!plan && window.humateckAdminSelectedPlan) plan = window.humateckAdminSelectedPlan;
     if(!plan && window.humateckPaymentSubscriptionPlan) plan = window.humateckPaymentSubscriptionPlan;
 
+    if(plan === "free7") return 15;
     if(plan === "monthly50") return 50;
     if(plan === "monthly70") return 70;
-    if(plan === "monthly83") return 83;
-    if(plan === "yearly83") return 83;
     if(plan === "yearly70") return 70;
     if(plan === "monthly30") return 30;
 
@@ -1366,89 +1230,76 @@ A) This is because YouTube content display system fixes the default video settin
     var countryBlock = [
       "Country Code / Country Name Mapping Table",
       "",
-      "1. af | Afrikaans",
-      "2. am | Amharic",
-      "3. ar | Arabic",
-      "4. as | Assamese",
-      "5. az | Azerbaijani",
-      "6. be | Belarusian",
-      "7. bg | Bulgarian",
-      "8. bn | Bengali",
-      "9. bs | Bosnian",
-      "10. ca | Catalan",
-      "11. cs | Czech",
-      "12. da | Danish",
-      "13. de | German",
-      "14. el | Greek",
-      "15. en-GB | English (United Kingdom)",
-      "16. en-IN | English (India)",
-      "17. en | English",
-      "18. es | Spanish",
-      "19. es-419 | Spanish (Latin America)",
-      "20. es-US | Spanish (United States)",
-      "21. et | Estonian",
-      "22. eu | Basque",
-      "23. fa | Persian",
-      "24. fi | Finnish",
-      "25. fil | Filipino",
-      "26. fr-CA | French (Canada)",
-      "27. fr | French",
-      "28. gl | Galician",
-      "29. gu | Gujarati",
-      "30. hi | Hindi",
-      "31. hr | Croatian",
-      "32. hu | Hungarian",
-      "33. hy | Armenian",
-      "34. id | Indonesian",
-      "35. is | Icelandic",
-      "36. it | Italian",
-      "37. iw | Hebrew",
-      "38. ja | Japanese",
-      "39. ka | Georgian",
-      "40. kk | Kazakh",
-      "41. km | Khmer",
-      "42. kn | Kannada",
-      "43. ko | Korean",
-      "44. ky | Kyrgyz",
-      "45. lo | Lao",
-      "46. lt | Lithuanian",
-      "47. lv | Latvian",
-      "48. mk | Macedonian",
-      "49. ml | Malayalam",
-      "50. mn | Mongolian",
-      "51. mr | Marathi",
-      "52. ms | Malay",
-      "53. my | Burmese",
-      "54. no | Norwegian",
-      "55. ne | Nepali",
-      "56. nl | Dutch",
-      "57. or | Odia",
-      "58. pa | Punjabi",
-      "59. pl | Polish",
-      "60. pt | Portuguese",
-      "61. pt-PT | Portuguese (Portugal)",
-      "62. ro | Romanian",
-      "63. ru | Russian",
-      "64. si | Sinhala",
-      "65. sk | Slovak",
-      "66. sl | Slovenian",
-      "67. sq | Albanian",
-      "68. sr-Latn | Serbian (Latin)",
-      "69. sr | Serbian",
-      "70. sv | Swedish",
-      "71. sw | Swahili",
-      "72. ta | Tamil",
-      "73. te | Telugu",
-      "74. th | Thai",
-      "75. tr | Turkish",
-      "76. uk | Ukrainian",
-      "77. ur | Urdu",
-      "78. uz | Uzbek",
-      "79. vi | Vietnamese",
-      "80. zh-CN | Chinese (China)",
-      "81. zh-HK | Chinese (Hong Kong)",
-      "82. zh-TW | Chinese (Taiwan)",
-      "83. zu | Zulu"
+      "1. en | English",
+      "2. es | Spanish",
+      "3. es-419 | Spanish (Latin America)",
+      "4. es-US | Spanish (United States)",
+      "5. pt | Portuguese",
+      "6. pt-PT | Portuguese (Portugal)",
+      "7. fr | French",
+      "8. fr-CA | French (Canada)",
+      "9. de | German",
+      "10. ja | Japanese",
+      "11. ko | Korean",
+      "12. zh-CN | Chinese (China)",
+      "13. zh-TW | Chinese (Taiwan)",
+      "14. zh-HK | Chinese (Hong Kong)",
+      "15. hi | Hindi",
+      "16. id | Indonesian",
+      "17. ar | Arabic",
+      "18. ru | Russian",
+      "19. it | Italian",
+      "20. tr | Turkish",
+      "21. vi | Vietnamese",
+      "22. th | Thai",
+      "23. fil | Filipino",
+      "24. ms | Malay",
+      "25. nl | Dutch",
+      "26. pl | Polish",
+      "27. uk | Ukrainian",
+      "28. sv | Swedish",
+      "29. no | Norwegian",
+      "30. da | Danish",
+      "31. fi | Finnish",
+      "32. el | Greek",
+      "33. ro | Romanian",
+      "34. hu | Hungarian",
+      "35. cs | Czech",
+      "36. sk | Slovak",
+      "37. bg | Bulgarian",
+      "38. hr | Croatian",
+      "39. sr | Serbian",
+      "40. sr-Latn | Serbian (Latin)",
+      "41. sq | Albanian",
+      "42. mk | Macedonian",
+      "43. et | Estonian",
+      "44. lv | Latvian",
+      "45. lt | Lithuanian",
+      "46. iw | Hebrew",
+      "47. fa | Persian",
+      "48. ur | Urdu",
+      "49. bn | Bengali",
+      "50. ta | Tamil",
+      "51. te | Telugu",
+      "52. mr | Marathi",
+      "53. gu | Gujarati",
+      "54. kn | Kannada",
+      "55. ml | Malayalam",
+      "56. pa | Punjabi",
+      "57. ne | Nepali",
+      "58. my | Burmese",
+      "59. km | Khmer",
+      "60. lo | Lao",
+      "61. am | Amharic",
+      "62. sw | Swahili",
+      "63. af | Afrikaans",
+      "64. az | Azerbaijani",
+      "65. be | Belarusian",
+      "66. bs | Bosnian",
+      "67. ca | Catalan",
+      "68. eu | Basque",
+      "69. gl | Galician",
+      "70. ka | Georgian"
     ].slice(0, activeCount + 2).join("\n");
 
     var prompt =
@@ -1606,11 +1457,9 @@ ${countryBlock}`;
           callback: function(response){
             if(response && response.access_token){
               window.humateckGoogleAccessToken = response.access_token;
-              window.humateckAccessToken = response.access_token;
               window.humateckGoogleOAuthScope = response.scope || YOUTUBE_SCOPE;
               try{
                 sessionStorage.setItem("humateckGoogleAccessToken", response.access_token);
-                sessionStorage.setItem("humateckAccessToken", response.access_token);
                 sessionStorage.setItem("humateckGoogleOAuthScope", response.scope || YOUTUBE_SCOPE);
               }catch(e){}
               setAuthStatus("Google OAuth authorization has been completed. You can now proceed with YouTube registration.", "ok");
@@ -1648,88 +1497,6 @@ ${countryBlock}`;
 })();
 </script>
 
-<script>
-/* Humateck_New043 payload generator only */
-(function(){
-  function getFinalText(){
-    const ids=["finalOutput","finalText"];
-    for(const id of ids){
-      const el=document.getElementById(id);
-      if(el && el.value.trim()) return el.value.trim();
-    }
-    return "";
-  }
-
-  function parseBlocks(text){
-    const blocks=text.split("Country Code:").slice(1);
-    const result={};
-    blocks.forEach(b=>{
-      const lines=b.trim().split("\n");
-      const code=lines[0].trim();
-      let title="";
-      let desc="";
-      let mode="";
-      lines.slice(1).forEach(l=>{
-        if(l.startsWith("Title:")){
-          title=l.replace("Title:","").trim();
-          mode="title";
-        }else if(l.startsWith("Description:")){
-          mode="desc";
-        }else if(mode==="desc"){
-          desc+=l+"\n";
-        }
-      });
-      result[code]={title:title,description:desc.trim()};
-    });
-    return result;
-  }
-
-  window.generateFinalPayloadOnly=function(){
-    const txt=getFinalText();
-    if(!txt){
-      alert("Please paste the final Gemini version.");
-      return null;
-    }
-    const payload=parseBlocks(txt);
-    console.log("PAYLOAD:",payload);
-    return payload;
-  };
-})();
-</script>
-
-
-<script>
-/* Humateck_New046 OAuth receive check only */
-(function(){
-  function showReceiveStatus(message, ok){
-    var auth = document.getElementById("authStatus");
-    if(auth && ok){
-      auth.value = message;
-    }
-
-    var authSide = document.getElementById("authStatusSide");
-    if(authSide && ok){
-      authSide.value = message;
-    }
-  }
-
-  window.addEventListener("message", function(event){
-    if(!event.data) return;
-    if(event.data.type !== "HUMATECK_OAUTH_SUCCESS") return;
-
-    var token = event.data.token || event.data.accessToken || "";
-    var hasToken = !!token;
-    if(hasToken){
-      window.humateckAccessToken = token;
-    }
-
-    showReceiveStatus(
-      "OAuth received\\nToken receipt: " + (hasToken ? "Success" : "Failure") + "\\nNow this token can be connected to register multilingual content in the next step.",
-      hasToken
-    );
-  });
-})();
-</script>
 
 
 <script>
@@ -1747,12 +1514,9 @@ ${countryBlock}`;
 
   function getAccessToken(){
     if(window.humateckGoogleAccessToken) return window.humateckGoogleAccessToken;
-    if(window.humateckAccessToken) return window.humateckAccessToken;
     try{
-      var savedGoogle = sessionStorage.getItem("humateckGoogleAccessToken");
-      if(savedGoogle) return savedGoogle;
-      var savedCommon = sessionStorage.getItem("humateckAccessToken");
-      if(savedCommon) return savedCommon;
+      var saved = sessionStorage.getItem("humateckGoogleAccessToken");
+      if(saved) return saved;
     }catch(e){}
     var token = "";
     var candidates = ["googleAccessToken","accessToken","oauthAccessToken","authToken"];
@@ -1819,11 +1583,6 @@ ${countryBlock}`;
       return String(v || "").replace(/^\s+|\s+$/g, "");
     }
 
-    function isJunkNumberLine(v){
-      var s = cleanLine(v);
-      return /^Number\s*:/i.test(s) || /^number\s*:/i.test(s) || /^\d+\s*[\.\)]?\s*$/.test(s);
-    }
-
     blocks.forEach(function(raw){
       var block = raw.replace(/^\s+/, "");
       var lines = block.split("\n");
@@ -1841,7 +1600,7 @@ ${countryBlock}`;
         if(/^Title\s*:/i.test(trimmed)){
           mode = "title";
           var sameLineTitle = cleanLine(trimmed.replace(/^Title\s*:/i, ""));
-          if(sameLineTitle && !isJunkNumberLine(sameLineTitle)){
+          if(sameLineTitle){
             title = sameLineTitle;
           }
           continue;
@@ -1857,7 +1616,7 @@ ${countryBlock}`;
         }
 
         if(mode === "title"){
-          if(!title && trimmed && !isJunkNumberLine(trimmed)){
+          if(!title && trimmed){
             title = trimmed;
           }
           continue;
@@ -1889,20 +1648,8 @@ ${countryBlock}`;
 
   function hasSubscriberAccess(){
     var hidden = document.getElementById("humateckActivePlanValue");
-    var plan = hidden ? String(hidden.value || "").trim() : "";
-    if(!plan && window.humateckAdminSelectedPlan) plan = String(window.humateckAdminSelectedPlan || "").trim();
-    if(!plan && window.humateckPaymentSubscriptionPlan) plan = String(window.humateckPaymentSubscriptionPlan || "").trim();
-
-    try{
-      if(!plan) plan = String(localStorage.getItem("humateckAdminSelectedPlan") || "").trim();
-      if(!plan) plan = String(localStorage.getItem("humateckSubscriberPlan") || "").trim();
-      if(!plan) plan = String(localStorage.getItem("humateckActivePlan") || "").trim();
-      if(!plan) plan = String(localStorage.getItem("humateckPaymentSubscriptionPlan") || "").trim();
-      var adminMode = String(localStorage.getItem("humateckAdminMode") || "").trim();
-      var adminFlag = String(localStorage.getItem("humateckAdmin") || "").trim();
-      if(!plan && (adminMode === "true" || adminMode === "1" || adminFlag === "true" || adminFlag === "1")) plan = "admin";
-    }catch(e){}
-
+    var plan = hidden ? hidden.value : "";
+    if(!plan && window.humateckPaymentSubscriptionPlan) plan = window.humateckPaymentSubscriptionPlan;
     return !!plan;
   }
 
@@ -1922,20 +1669,6 @@ ${countryBlock}`;
     var nativeTitle = getNativeTitle();
     var nativeDescription = getNativeDescription();
 
-    if(!nativeCode){
-      alert("Please enter the native language code.");
-      return;
-    }
-
-    if(!nativeTitle){
-      alert("Please enter the native language title.");
-      return;
-    }
-
-    if(!nativeDescription){
-      alert("Please enter the native language description.");
-      return;
-    }
 
     var finalText = getFinalText();
     if(!finalText){ alert("Please paste the final Gemini version."); return; }
@@ -2161,253 +1894,5 @@ ${countryBlock}`;
 })();
 </script>
 
-
-<script>
-/* Humateck_New075 YouTube official language list fetch */
-(function(){
-  function $(id){ return document.getElementById(id); }
-
-  async function fetchYoutubeI18nLanguages(){
-    var out = $("youtubeI18nLanguagesResult");
-    if(out) out.value = "Retrieving the official YouTube language list...";
-
-    var token = window.humateckAccessToken || "";
-    if(!token){
-      if(out) out.value = "There is no OAuth token. Please complete Google OAuth authentication first.";
-      alert("Please complete Google OAuth authentication first.");
-      return;
-    }
-
-    try{
-      var res = await fetch("https://www.googleapis.com/youtube/v3/i18nLanguages?part=snippet&hl=en", {
-        headers: { Authorization: "Bearer " + token }
-      });
-      var data = await res.json();
-
-      if(!res.ok){
-        var msg = data && data.error && data.error.message ? data.error.message : "YouTube i18nLanguages.list error";
-        throw new Error(msg);
-      }
-
-      var items = data.items || [];
-      var lines = items.map(function(item, index){
-        var code = item.id || (item.snippet && item.snippet.hl) || "";
-        var name = item.snippet && item.snippet.name ? item.snippet.name : "";
-        return (index + 1) + ". " + code + " | " + name;
-      });
-
-      if(out){
-        out.value = "Number of officially supported YouTube languages: " + items.length + " languages\n\n" + lines.join("\n");
-      }
-    }catch(error){
-      var message = error && error.message ? error.message : error;
-      if(out) out.value = "Failed to retrieve the official YouTube language list:\n" + message;
-      alert("Failed to retrieve the official YouTube language list: " + message);
-    }
-  }
-
-  document.addEventListener("click", function(event){
-    var btn = event.target.closest("#fetchYoutubeI18nLanguagesBtn");
-    if(!btn) return;
-    event.preventDefault();
-    fetchYoutubeI18nLanguages();
-  }, true);
-})();
-</script>
-
-<script>
-/* Humateck_New214 root order direct admin restore
-   This block only restores Hidden Admin Menu selection.
-   It does not change delivery logic, Gemini prompt structure, free folder, or plan page.
-*/
-(function(){
-  function applyAdminPlan(plan, clickedButton){
-    if(!plan) return;
-
-    window.humateckAdminSelectedPlan = plan;
-    window.humateckPaymentSubscriptionPlan = plan;
-
-    try{
-      localStorage.setItem("humateckAdminMode", "true");
-      localStorage.setItem("humateckAdmin", "true");
-      localStorage.setItem("humateckAdminSelectedPlan", plan);
-      localStorage.setItem("humateckActivePlan", plan);
-      localStorage.setItem("humateckSubscriberPlan", plan);
-      localStorage.setItem("humateckPaymentSubscriptionPlan", plan);
-    }catch(e){}
-
-    var hidden = document.getElementById("humateckActivePlanValue");
-    if(hidden) hidden.value = plan;
-
-    var buttons = document.querySelectorAll("[data-admin-plan]");
-    for(var i=0;i<buttons.length;i++){
-      buttons[i].classList.remove("active");
-    }
-    if(clickedButton) clickedButton.classList.add("active");
-
-    var sendBtn = document.getElementById("sendOrderBtn");
-    if(sendBtn){
-      sendBtn.disabled = false;
-      sendBtn.classList.remove("disabled");
-      sendBtn.removeAttribute("disabled");
-    }
-  }
-
-  function isAdminModeActive(){
-    var hidden = document.getElementById("humateckActivePlanValue");
-    var hiddenPlan = hidden && hidden.value ? hidden.value : "";
-    var adminPlan = window.humateckAdminSelectedPlan || "";
-    if(hiddenPlan || adminPlan) return true;
-    try{
-      return !!(
-        localStorage.getItem("humateckAdminSelectedPlan") ||
-        localStorage.getItem("humateckActivePlan") ||
-        localStorage.getItem("humateckSubscriberPlan") ||
-        localStorage.getItem("humateckPaymentSubscriptionPlan") ||
-        localStorage.getItem("humateckAdminMode") === "true" ||
-        localStorage.getItem("humateckAdminMode") === "1" ||
-        localStorage.getItem("humateckAdmin") === "true" ||
-        localStorage.getItem("humateckAdmin") === "1"
-      );
-    }catch(e){ return false; }
-  }
-
-  window.humateckIsAdminModeActive = isAdminModeActive;
-
-  document.addEventListener("click", function(event){
-    var target = event.target;
-    if(!target || !target.closest) return;
-    var adminBtn = target.closest("[data-admin-plan]");
-    if(!adminBtn) return;
-    event.preventDefault();
-    applyAdminPlan(adminBtn.getAttribute("data-admin-plan") || "admin", adminBtn);
-  }, true);
-
-  document.addEventListener("DOMContentLoaded", function(){
-    var plan = "";
-    try{
-      plan = localStorage.getItem("humateckAdminSelectedPlan") ||
-             localStorage.getItem("humateckSubscriberPlan") ||
-             localStorage.getItem("humateckActivePlan") ||
-             localStorage.getItem("humateckPaymentSubscriptionPlan") || "";
-    }catch(e){}
-    if(plan) applyAdminPlan(plan, null);
-  });
-})();
-</script>
-
-
-<script>
-/* HUMATECK NEW215 ADMIN ACTIVE COUNT DIRECT FIX
-   Purpose:
-   - Hidden Admin Menu must control Gemini activeCount immediately.
-   - Selecting 30/50/70/83/Annual 83 must update the generated prompt country count.
-   - This is an admin plan selector bridge only.
-*/
-(function(){
-  function $(id){ return document.getElementById(id); }
-
-  function planToCount(plan){
-    if(plan === "monthly50") return 50;
-    if(plan === "monthly70") return 70;
-    if(plan === "monthly83") return 83;
-    if(plan === "yearly83") return 83;
-    if(plan === "yearly70") return 70;
-    if(plan === "free7") return 15;
-    return 30;
-  }
-
-  function setAdminPlan(plan, btn){
-    if(!plan) return;
-    var count = planToCount(plan);
-
-    window.humateckAdminSelectedPlan = plan;
-    window.humateckPaymentSubscriptionPlan = plan;
-    window.humateckAdminActiveCount = count;
-
-    try{
-      localStorage.setItem("humateckAdminSelectedPlan", plan);
-      localStorage.setItem("humateckActivePlan", plan);
-      localStorage.setItem("humateckSubscriberPlan", plan);
-      localStorage.setItem("humateckPaymentSubscriptionPlan", plan);
-      localStorage.setItem("humateckAdminActiveCount", String(count));
-    }catch(e){}
-
-    var hidden = $("humateckActivePlanValue");
-    if(hidden) hidden.value = plan;
-
-    var buttons = document.querySelectorAll("[data-admin-plan]");
-    for(var i=0;i<buttons.length;i++){
-      buttons[i].classList.remove("active");
-    }
-    if(btn) btn.classList.add("active");
-
-    var geminiText = $("geminiPromptText");
-    if(geminiText){
-      if(typeof window.buildGeminiPrompt === "function"){
-        var title = $("sourceTitle");
-        var desc = $("sourceDescription");
-        // If the user has entered anything, regenerate immediately.
-        if((title && title.value.trim()) || (desc && desc.value.trim())){
-          window.buildGeminiPrompt();
-        }else{
-          // Otherwise update the visible template count only, without changing source content.
-          geminiText.value = geminiText.value
-            .replace(/\{activeCount\}-country/g, count + "-country")
-            .replace(/for the \d+-country set/g, "for the " + count + "-country set")
-            .replace(/for the \{activeCount\}-country set/g, "for the " + count + "-country set");
-        }
-      }
-    }
-
-    var sendBtn = $("sendOrderBtn");
-    if(sendBtn){
-      sendBtn.disabled = false;
-      sendBtn.removeAttribute("disabled");
-      sendBtn.classList.remove("disabled");
-    }
-  }
-
-  // Wrap existing getActiveCount if available after page scripts load.
-  function installGetActiveCountBridge(){
-    try{
-      var oldBuild = window.buildGeminiPrompt;
-      if(typeof oldBuild === "function" && !oldBuild.__humateck215Wrapped){
-        // Existing buildGeminiPrompt already calls its internal getActiveCount.
-        // We make sure the hidden value is current before it runs.
-        var wrapped = function(){
-          var plan = "";
-          try{ plan = localStorage.getItem("humateckAdminSelectedPlan") || ""; }catch(e){}
-          if(!plan && window.humateckAdminSelectedPlan) plan = window.humateckAdminSelectedPlan;
-          var hidden = $("humateckActivePlanValue");
-          if(plan && hidden) hidden.value = plan;
-          return oldBuild.apply(this, arguments);
-        };
-        wrapped.__humateck215Wrapped = true;
-        window.buildGeminiPrompt = wrapped;
-      }
-    }catch(e){}
-  }
-
-  document.addEventListener("click", function(e){
-    var btn = e.target && e.target.closest ? e.target.closest("[data-admin-plan]") : null;
-    if(!btn) return;
-    e.preventDefault();
-    e.stopPropagation();
-    setAdminPlan(btn.getAttribute("data-admin-plan"), btn);
-  }, true);
-
-  document.addEventListener("DOMContentLoaded", function(){
-    installGetActiveCountBridge();
-    var plan = "";
-    try{ plan = localStorage.getItem("humateckAdminSelectedPlan") || ""; }catch(e){}
-    if(plan){
-      setAdminPlan(plan, document.querySelector('[data-admin-plan="' + plan + '"]'));
-    }
-  });
-
-  window.humateckSetAdminPlanDirect = setAdminPlan;
-})();
-</script>
 
 </body></html>
