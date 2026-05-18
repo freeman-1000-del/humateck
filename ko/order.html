@@ -895,6 +895,29 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 /* Humateck Production split: keep Gemini prompt box compact */
 #geminiPromptText{min-height:92px!important;height:92px!important;overflow:auto!important;}
 </style>
+
+
+<style>
+/* Humateck_Production_Order_v12 calm command warning */
+.commandWarningOutside{
+  display:block!important;
+  margin:16px 0 18px!important;
+  padding:13px 15px!important;
+  border:1px solid rgba(96,140,190,.55)!important;
+  border-radius:12px!important;
+  background:rgba(70,105,150,.10)!important;
+  color:#dce8f8!important;
+  font-weight:600!important;
+  line-height:1.65!important;
+  animation:none!important;
+  box-shadow:none!important;
+  text-shadow:none!important;
+}
+.commandWarningOutside .softStrong{
+  color:#f0c85a!important;
+  font-weight:900!important;
+}
+</style>
 </head>
 <body>
 <!--
@@ -932,7 +955,7 @@ Do not add review, blocking, metadata judgment, hidden/admin menu, auto-correcti
 
     <section id="gemini" class="card">
       <h2>제미나이 명령문 복사</h2>
-      <div class="geminiCoreNotice">이 영역이 Humateck의 핵심입니다. 이 명령문을 복사해 제미나이에 붙여넣고, 완성된 번역 결과만 최종본 칸에 다시 붙여넣으시면 됩니다.</div>
+      <div class="geminiCoreNotice">이 영역이 Humateck의 핵심입니다. 이 명령문을 복사해 제미나이에 붙여넣고, 완성된 번역 결과만 최종등록명령에 다시 붙여넣으시면 됩니다.</div>
       <textarea id="geminiPromptText" class="mediumTextarea" readonly>Hello Gemini!
 아무런 설명없이 오직 번역문만 출력해 줘.
 
@@ -976,13 +999,13 @@ Do not delete the language code itself.</textarea></div>
         <div class="commandFullItem"><div class="commandFullTop"><label>명령 5</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText5">복사</button></div><textarea id="commandText5" readonly>Please automatically and carefully check once more for mixed-in other languages, unnatural context, and any other issues.</textarea></div>
         <div class="commandFullItem"><div class="commandFullTop"><label>명령 6</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText6">복사</button></div><textarea id="commandText6" readonly>Please output only the pure translated text without Gemini explanations or commentary.</textarea></div>
         <div class="commandFullItem"><div class="commandFullTop"><label>명령 7</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText7">복사</button></div><textarea id="commandText7" readonly>Please move to the bottom.</textarea></div>
-        <div class="commandWarningOutside">⚠️ 제미나이 창에서는 “Please move to the bottom.” 명령 바로 위 마지막 번역 결과 끝부분의 ⧉ 복사 버튼을 반드시 누른 뒤, 최종본 입력칸에 붙여넣어 주세요.<br><br>⚠️ 번역문 외 제미나이 설명문, 해설, 불필요한 말이 섞이면 유튜브 등록 오류가 날 수 있으니 반드시 번역문만 붙여넣어 주세요.</div>
+        <div class="commandWarningOutside"><span class="softStrong">⚠️ 중요</span> 제미나이 창에서 ⧉ [응답 복사] 버튼을 누른 후 클립보드에 완전히 복사될 때까지 기다리신 후 <span class="softStrong">최종등록명령</span>에 복사 붙여넣기 하세요.<br><br><span class="softStrong">⚠️ 중요</span> 번역문 외 제미나이 설명문, 해설, 불필요한 말이 섞이면 유튜브 등록 오류가 날 수 있으니 반드시 번역문만 붙여넣어 주세요.</div>
       </div>
     </section>
 
     <section class="card" id="finalVersionCard">
-      <h2>최종본 붙여넣기</h2>
-      <textarea id="finalOutput" class="mediumTextarea" placeholder="제미나이 최종 번역 결과를 붙여넣어 주세요."></textarea>
+      <h2>최종등록명령</h2>
+      <textarea id="finalOutput" class="mediumTextarea" placeholder="유튜브 등록용 제미나이 최종 번역 결과를 붙여넣어 주세요."></textarea>
     </section>
 
 
