@@ -1791,7 +1791,9 @@ ${countryBlock}`;
 
 
 <script>
-/* Humateck_New013: customer input reminder only. This does not block registration and does not judge content. */
+/* Humateck_New016: visual-only empty-field reminder.
+   No blocking, no validation, no content judgment.
+   Blue highlight appears only after the customer leaves an empty field or tries a related action. */
 (function(){
   var HUMATECK_CUSTOMER_FIELD_IDS = [
     "nativeLanguageCode",
@@ -1801,24 +1803,59 @@ ${countryBlock}`;
     "googleClientIdInput",
     "finalOutput"
   ];
+  var HUMATECK_TOUCHED_FIELDS = Object.create(null);
 
-  function updateHumateckEmptyFieldLights(){
-    HUMATECK_CUSTOMER_FIELD_IDS.forEach(function(id){
-      var el = document.getElementById(id);
-      if(!el) return;
-      var empty = !String(el.value || "").trim();
-      el.classList.toggle("humateck-empty-blue-warning", empty);
-    });
+  function isEmpty(el){
+    return !String(el && el.value || "").trim();
+  }
+
+  function updateOne(id){
+    var el = document.getElementById(id);
+    if(!el) return;
+    el.classList.toggle("humateck-empty-blue-warning", !!HUMATECK_TOUCHED_FIELDS[id] && isEmpty(el));
+  }
+
+  function updateAll(){
+    HUMATECK_CUSTOMER_FIELD_IDS.forEach(updateOne);
+  }
+
+  function touch(ids){
+    ids.forEach(function(id){ HUMATECK_TOUCHED_FIELDS[id] = true; });
+    updateAll();
   }
 
   document.addEventListener("DOMContentLoaded", function(){
     HUMATECK_CUSTOMER_FIELD_IDS.forEach(function(id){
       var el = document.getElementById(id);
       if(!el) return;
-      el.addEventListener("input", updateHumateckEmptyFieldLights);
-      el.addEventListener("change", updateHumateckEmptyFieldLights);
+      el.addEventListener("blur", function(){
+        HUMATECK_TOUCHED_FIELDS[id] = true;
+        updateOne(id);
+      });
+      el.addEventListener("input", function(){ updateOne(id); });
+      el.addEventListener("change", function(){ updateOne(id); });
     });
-    updateHumateckEmptyFieldLights();
+
+    var promptBtn = document.getElementById("generateGeminiPrompt");
+    if(promptBtn){
+      promptBtn.addEventListener("click", function(){
+        touch(["nativeLanguageCode", "videoUrl", "sourceTitle", "sourceDescription"]);
+      });
+    }
+
+    var oauthBtn = document.getElementById("oauthStartBtn");
+    if(oauthBtn){
+      oauthBtn.addEventListener("click", function(){
+        touch(["googleClientIdInput"]);
+      });
+    }
+
+    var registerBtn = document.getElementById("sendOrderBtn") || document.getElementById("youtubeRegisterBtn");
+    if(registerBtn){
+      registerBtn.addEventListener("click", function(){
+        touch(["videoUrl", "googleClientIdInput", "finalOutput"]);
+      });
+    }
   });
 })();
 </script>
