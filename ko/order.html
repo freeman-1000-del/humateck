@@ -63,7 +63,18 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 .faqItem{border-top:1px solid rgba(255,255,255,.12);padding-top:14px;margin-top:14px}
 .codebox{white-space:pre-wrap;background:#080f18;border:1px solid #334353;border-radius:12px;padding:14px;color:#e9e1d0;line-height:1.6;font-size:14px}
 @media(max-width:980px){.grid2,.order,.plans{grid-template-columns:1fr}.title{font-size:32px}.wrap{max-width:calc(100vw - 28px)}}
-.question{color:#ffd95a!important;font-weight:900}</style>
+.question{color:#ffd95a!important;font-weight:900}
+/* Humateck_New013: visual-only blue warning for empty customer fields. No blocking, no validation. */
+@keyframes humateckBlueBlink{
+  0%,100%{border-color:#2f7cff;box-shadow:0 0 0 1px rgba(47,124,255,.35),0 0 12px rgba(47,124,255,.35);}
+  50%{border-color:#8fc2ff;box-shadow:0 0 0 2px rgba(143,194,255,.65),0 0 22px rgba(47,124,255,.75);}
+}
+.humateck-empty-blue-warning{
+  border-color:#2f7cff!important;
+  animation:humateckBlueBlink 1.15s ease-in-out infinite;
+}
+
+</style>
 
 
 <style>
@@ -974,7 +985,6 @@ Description: translated description
 답) 다국어 번역컨텐츠 등록시 유튜브 다국어 번역컨텐츠 표시시스템상 동영상 기본설정이 미국 영어로 고정되어 있기 때문입니다. 그러나 이는 오류가 아니며, 고객님의 자국어 제목이나 설명문은 언제든지 자국어로 수정하실 수 있사오니 착오 없으시기 바랍니다.</p></div>
 <details><summary>자세히 보기</summary>
 <div class="faqItem"><p class="question"><b>2. 문) 유튜브 다국어 번역컨텐츠 등록하기를 누르니 할당량 초과 메시지가 뜹니다.</b></p><p>답) 유튜브 다국어 번역컨텐츠등록 일일 API 무료할당량이 초과된 경우입니다. 다음날 할당량이 다시 충전될 때까지 기다렸다가 다시 시도하시기 바랍니다.</p></div>
-<div class="faqItem"><p class="question"><b>3. 문) '유튜브 영상 주소에서 videoId를 찾지 못했습니다.'라는 메시지가 뜹니다.</b></p><p>답) 유튜브 주소를 잘못 입력하신 경우입니다. 반드시 유튜브 실제동영상(스튜디오 ×)의 주소를 그대로 복사하여 붙여 넣어 주시기 바랍니다.</p></div>
 <div class="faqItem"><p class="question"><b>4. 문) 구글 OAuth 설정이 무엇인가요? 사용시마다 설정해야 하나요?</b></p><p>답) 내 유튜브 채널에 자막을 등록해도 좋다고 구글에 허락받는 연결 과정입니다. 설정 후 상당기간 재사용되는 것이 일반적입니다.</p></div>
 <div class="faqItem"><p class="question"><b>5. 문) 여러 채널을 운영 중입니다. OAuth 설정을 단 한번만 받아도 되나요?</b></p><p>답) 여러 채널의 유튜브 다국어 번역콘텐츠를 등록하시려는 경우에도, Google OAuth 설정을 채널마다 새로 만들 필요는 없습니다. 다만 Google 인증을 진행한 계정이 해당 유튜브 채널 또는 영상에 수정 권한을 가지고 있어야 정상 등록이 가능합니다.</p></div>
 <div class="faqItem"><p class="question"><b>6. 문) 유튜브 다국어 등록하기를 누르니 할당량 초과 메시지가 뜹니다.</b></p><p>답) 유튜브 다국어 번역컨텐츠등록 일일 API 무료할당량이 초과된 경우입니다. 다음날 할당량이 재충전될 때까지 기다렸다가 다시 시도하시기 바랍니다.</p></div>
@@ -1542,25 +1552,11 @@ ${countryBlock}`;
     return data;
   }
 
-  function hasHumateckActiveSubscription(){
-    var hidden = document.getElementById("humateckActivePlanValue");
-    var plan = hidden ? String(hidden.value || "").trim() : "";
-    if(!plan && window.humateckPaymentSubscriptionPlan) plan = String(window.humateckPaymentSubscriptionPlan || "").trim();
-    return !!plan;
-  }
-
-  function showSubscriberOnlyNotice(){
-    alert("죄송합니다. 다국어 번역 콘텐츠 등록은 구독자님에게만 개방됩니다.");
-  }
-
   async function deliverByYouTubeSpec(){
-    if(!hasHumateckActiveSubscription()){ showSubscriberOnlyNotice(); return; }
-
     var token = getAccessToken();
-    if(!token){ alert("OAuth 토큰이 없습니다. 먼저 Google OAuth 인증을 완료해 주세요."); return; }
 
-    var videoId = extractVideoId(getVideoUrl());
-    if(!videoId){ alert("유튜브 영상 주소에서 videoId를 찾지 못했습니다."); return; }
+    var rawVideoUrl = getVideoUrl();
+    var videoId = extractVideoId(rawVideoUrl) || rawVideoUrl;
 
 
     var nativeCode = getNativeLanguageCode();
@@ -1569,11 +1565,9 @@ ${countryBlock}`;
 
 
     var finalText = getFinalText();
-    if(!finalText){ alert("제미나이 최종 버전(고객 검수)을 붙여넣어 주세요."); return; }
 
     var localizations = parseFinalTextToLocalizations(finalText);
     var codes = Object.keys(localizations);
-    if(codes.length === 0){ alert("Country Code: 기준의 등록용 최종 버전(고객 검수)을 찾지 못했습니다."); return; }
 
     var btn = $("sendOrderBtn") || $("youtubeRegisterBtn");
     if(btn){ btn.disabled = true; btn.textContent = "등록 진행 중"; }
@@ -1588,9 +1582,7 @@ ${countryBlock}`;
       );
 
       var video = existing.items && existing.items[0];
-      if(!video) throw new Error("대상 영상을 찾지 못했습니다.");
-
-      var snippet = video.snippet || {};
+      var snippet = video && video.snippet ? video.snippet : {};
       var mergedLocalizations = Object.assign({}, video.localizations || {}, localizations);
 
       var body = {
@@ -1617,15 +1609,13 @@ ${countryBlock}`;
       showResult(
         "등록 결과\n" +
         "등록 대상 언어 수: " + codes.length + "개\n" +
-        "유튜브 등록 완료 수: " + codes.length + "개\n" +
-        "오류: 0개\n" +
         "등록 시간 : " + seconds + "초"
       );
       alert("유튜브 등록이 완료되었습니다.");
     }catch(error){
       var message = error && error.message ? error.message : String(error);
-      showResult("유튜브 반환 오류:\n" + message);
-      alert("유튜브 반환 오류: " + message);
+      showResult(message);
+      alert(message);
     }finally{
       if(btn){ btn.disabled = false; btn.textContent = "다국어 번역콘텐츠 유튜브 등록"; }
     }
@@ -1792,5 +1782,39 @@ ${countryBlock}`;
 })();
 </script>
 
+
+
+<script>
+/* Humateck_New013: customer input reminder only. This does not block registration and does not judge content. */
+(function(){
+  var HUMATECK_CUSTOMER_FIELD_IDS = [
+    "nativeLanguageCode",
+    "videoUrl",
+    "sourceTitle",
+    "sourceDescription",
+    "googleClientIdInput",
+    "finalOutput"
+  ];
+
+  function updateHumateckEmptyFieldLights(){
+    HUMATECK_CUSTOMER_FIELD_IDS.forEach(function(id){
+      var el = document.getElementById(id);
+      if(!el) return;
+      var empty = !String(el.value || "").trim();
+      el.classList.toggle("humateck-empty-blue-warning", empty);
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){
+    HUMATECK_CUSTOMER_FIELD_IDS.forEach(function(id){
+      var el = document.getElementById(id);
+      if(!el) return;
+      el.addEventListener("input", updateHumateckEmptyFieldLights);
+      el.addEventListener("change", updateHumateckEmptyFieldLights);
+    });
+    updateHumateckEmptyFieldLights();
+  });
+})();
+</script>
 
 </body></html>
