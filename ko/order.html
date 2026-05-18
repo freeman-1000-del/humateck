@@ -3,13 +3,15 @@
 <head>
 <!--
 개발자 공지사항 - HUMATECK 고정 원칙
-1. 오더폼에 독립 JS 로직, 파서 로직, 메타데이터 판단, 내용 검수, 내용 보정, 사전 차단, 위험도 계산을 도입하지 말 것.
-2. 오더폼은 배송 페이지일 뿐이다: 고객 승인본 -> Google 브라우저 OAuth 결과 -> YouTube API 전달 -> YouTube 응답 표시.
-3. 인증은 Google이 하고, 접수/거부 판단은 YouTube가 한다. Humateck는 내부 심사자나 차단자가 되어서는 안 된다.
-4. PayPal 구독 링크를 막지 말 것. 임시 결제 차단 스크립트를 추가하지 말 것.
-5. 대상국은 70개국으로 고정한다. 명시 승인 없이 83개국 문구나 83개국 플랜 로직을 되살리지 말 것.
-6. Gemini 대상국 순서는 알파벳순이 아니라 국가 중요도 중심으로 유지할 것.
+1. 오더폼은 배송장 구조만 유지한다: 고객 승인본 -> Google 브라우저 OAuth 결과 -> YouTube API 전달 -> YouTube 응답 표시.
+2. 군살은 빼고 절대 다시 넣지 않는다. 오더폼에 독립 JS 로직, 파서 확장, 메타데이터 판단, 콘텐츠 검수, 콘텐츠 보정, 사전 차단, 위험도 계산, 내부 심사, 내부 차단을 도입하지 말 것.
+3. 인증은 Google이 수행하고, 접수/거부 판단은 YouTube가 한다. Humateck는 내부 심사자, 편집자, 차단자, 판단자가 아니다.
+4. 한국어판은 PayPal 직접 결제 버튼을 두지 말고, 국내 결제 확정 전까지 서비스 준비 중으로 둔다. 영문/글로벌 결제 흐름과 분리한다.
+5. 대상국은 70개국으로 고정한다. 명시 승인 없이 이전 확장국가 문구나 이전 확장국가 플랜 로직을 되살리지 말 것.
+6. 7일 무료 플랜은 주요 15개국으로 고정한다. 제미나이 대상국 순서는 알파벳순이 아니라 국가 중요도 순으로 둔다.
+7. 고객용 오더페이지에 hidden/admin/test 메뉴를 추가하지 말 것. 내부 회원관리와 테스트 권한은 서버 쪽에서 보이지 않게 처리한다.
 -->
+
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,8 +31,8 @@ button,input,textarea{font-family:inherit}
 .title{margin:0;color:#4b97ff;font-size:44px;line-height:1.25;font-weight:900;text-shadow:0 0 24px rgba(70,140,255,.22)}
 .subtitle{margin:16px 0 0;color:#fff;font-size:21px;font-weight:800}
 .stage{position:relative;width:840px;height:275px;max-width:100%;margin:36px auto 0}
-.globe{position:absolute;left:50%;top:32px;width:230px;height:230px;transform:translateX(-50%);border-radius:50%;border:2px solid rgba(93,160,255,.72);background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.33),transparent 12%),radial-gradient(circle at 50% 50%,rgba(58,126,255,.42),rgba(4,18,45,.9) 67%),repeating-linear-gradient(90deg,transparent 0 19px,rgba(116,178,255,.19) 20px 21px),repeating-linear-gradient(0deg,transparent 0 19px,rgba(116,178,255,.15) 20px 21px);box-shadow:0 0 48px rgba(83,144,255,.38)}
-.play{position:absolute;left:50%;top:92px;width:116px;height:82px;transform:translateX(-50%);border-radius:22px;background:linear-gradient(145deg,#ffe083,#b98217);box-shadow:0 0 42px rgba(235,180,62,.72)}
+.globe{position:absolute;left:50%;top:32px;width:230px;height:230px;transform:translateX(-50%);border-radius:50%;border:2px solid rgba(93,160,255,.72);background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.33),transparent 12%),radial-gradient(circle at 50% 50%,rgba(58,126,255,.42),rgba(4,18,45,.9) 67%),repeating-linear-gradient(90deg,transparent 0 19px,rgba(116,178,255,.19) 20px 21px),repeating-linear-gradient(0deg,transparent 0 19px,rgba(116,178,255,.15) 20px 21px);box-shadow:0 0 48px rgba(70,144,255,.38)}
+.play{position:absolute;left:50%;top:92px;width:116px;height:82px;transform:translateX(-50%);border-radius:22px;background:linear-gradient(145deg,#ffe070,#b98217);box-shadow:0 0 42px rgba(235,180,62,.72)}
 .play:after{content:"";position:absolute;left:45px;top:22px;border-left:34px solid #1a1307;border-top:20px solid transparent;border-bottom:20px solid transparent}
 .vcard{position:absolute;width:210px;height:118px;border:1px solid rgba(214,176,78,.62);border-radius:18px;background:rgba(10,17,27,.82);box-shadow:0 16px 38px rgba(0,0,0,.45);padding:17px}
 .vcard.left{left:0;top:82px}.vcard.right{right:0;top:82px}.vcard.bottom{left:50%;bottom:0;transform:translateX(-50%)}
@@ -133,8 +135,6 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 .guideModalBox{width:760px;max-width:calc(100vw - 48px);max-height:86vh;overflow:auto;border:1px solid #d4a94f;border-radius:20px;background:#121a23;color:#eee5d5;padding:28px 32px}
 .guideModalBox h2{color:#ffd95a;margin-top:0}.guideModalBox p,.guideModalBox li{line-height:1.75}
 .closeModalBtn{display:inline-flex;margin-top:18px;border:1px solid #caa24e;padding:10px 18px;border-radius:10px;color:#fff}
-.adminSecret{margin-top:18px;border:1px dashed rgba(255,217,90,.45);border-radius:14px;padding:14px;background:rgba(255,217,90,.06)}
-.adminSecret summary{cursor:pointer;color:#ffd95a;font-weight:900}
 .planHookNote{font-size:14px;color:#ffd95a;margin-top:10px}
 @media(max-width:980px){.orderMainGrid,.orderBottomGrid,.commandGrid{grid-template-columns:1fr}}
 </style>
@@ -155,8 +155,6 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 @keyframes humateckBlinkWarn{from{filter:brightness(1)}to{filter:brightness(1.45);text-shadow:0 0 12px rgba(255,217,90,.85)}}
 .oauthCenterButton{display:flex;justify-content:center;margin-top:16px}
 .menuWord{color:#ffd95a!important;font-weight:900}
-.adminLoginBox{margin-top:16px;border:1px dashed rgba(255,217,90,.6);border-radius:14px;padding:14px;background:rgba(255,217,90,.08)}
-.adminLoginBox summary{cursor:pointer;color:#ffd95a;font-weight:900}
 .highlightAction{color:#ffd95a!important;font-weight:900}
 .registerNoticeBelow{margin-top:16px}
 .registerErrorPanel{border:1px solid rgba(255,217,90,.48);border-radius:16px;padding:16px;background:rgba(255,217,90,.08);margin-top:14px}
@@ -270,34 +268,6 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 
 
 <style>
-/* Humateck_New026 admin plan selector */
-.adminPlanButtons{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-  margin-top:12px;
-}
-.adminPlanButton{
-  min-width:0!important;
-  min-height:42px!important;
-  padding:9px 12px!important;
-  font-size:15px!important;
-}
-.adminPlanButton.active{
-  animation:humateckAdminBlink 1s infinite alternate;
-  border-color:#ffd95a!important;
-  box-shadow:0 0 20px rgba(255,217,90,.75)!important;
-}
-@keyframes humateckAdminBlink{
-  from{filter:brightness(1)}
-  to{filter:brightness(1.35)}
-}
-.adminPlanStatus{
-  color:#ffd95a;
-  font-weight:900;
-  margin-top:10px;
-  line-height:1.6;
-}
 </style>
 
 
@@ -559,18 +529,10 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 
 
 <style>
-/* Humateck_New083 hide admin plan status text */
-#adminPlanStatus{
-  display:none!important;
-}
 </style>
 
 
 <style>
-/* Humateck_New084 admin status hidden */
-#adminPlanStatus{
-  display:none!important;
-}
 </style>
 
 
@@ -897,7 +859,7 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 
 <div class="wrap" id="top">
 <header class="top"><a href="index.html"><img class="logo" src="FINAL_LOGO01.png" alt="Humateck"></a><div class="lang">◎ 한국어⌄</div></header>
-<div class="orderTopButtons"><a href="index.html">첫페이지 가기</a><a href="plans.html">전체플랜 가기 · 서비스 준비 중</a></div>
+<div class="orderTopButtons"><a href="index.html">첫페이지 가기</a><a href="./plans.html">전체플랜 가기 · 서비스 준비 중</a></div>
 <section class="orderMainGrid">
   <div class="orderLeftColumn">
     <section class="card">
@@ -966,7 +928,7 @@ Description: translated description
       <p>이제부터는 구독하신 분들이 필수적으로 거쳐야 될 Google OAuth 인증 순서입니다. 비구독자분들도 이 인증을 받을 수는 있으나, 최종 유튜브 등록은 반드시 구독자에게만 개방되오니 착오 없으시기 바랍니다.</p>
       <p class="yellowStrong">Google OAuth 인증키를 이미 받으신 분들은 ‘중요설정 길잡이’를 건너 띄시기 바랍니다.</p>
       <center><p class="yellowStrong">채널당 단 한번 !</p></center>
-      <div class="actions"><a class="btn guideOpenButton" href="#oauthGuideModal">중요설정 길잡이</a><a class="btn" href="../plans.html">플랜 구독하러 가기</a></div>
+      <div class="actions"><a class="btn guideOpenButton" href="#oauthGuideModal">중요설정 길잡이</a><a class="btn" href="./plans.html">플랜 구독하러 가기</a></div>
       <div class="oauthPanelBelow">
         <h2>Google OAuth 인증</h2>
         <p>유튜브 등록할 때마다 필히 Google OAuth 인증(인증키 확인)을 받아야 합니다.</p>
@@ -1020,16 +982,8 @@ Description: translated description
 </div>
 </details>
 </section>
-    <details class="adminSecret">
-      <summary>관리자용 히든 메뉴</summary>
-      <p>관리자는 테스트와 고객 CS 대응을 위해 어떤 플랜도 선택할 수 있습니다.</p>
-      <div class="actions"><button class="btn adminPlanButton" type="button" data-admin-plan="monthly30">30개국</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly50">50개국</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly70">70개국</button><button class="btn adminPlanButton" type="button" data-admin-plan="yearly70">연간 70개국</button></div>
-    </details>
-
 <input type="hidden" id="humateckActivePlanValue" value="">
-<p id="adminPlanStatus" class="adminPlanStatus" style="display:none!important;"></p>
-
-
+<input type="hidden" id="humateckActiveCountryLimit" value="">
 </details>
   </aside>
 </section>
@@ -1122,13 +1076,15 @@ Description: translated description
 (function(){
   function applyHumateckPlan(plan){
     if(!plan) return;
-    if(plan === "monthly83") plan = "monthly70";
-    if(plan === "yearly83") plan = "yearly70";
-    var allowed = {monthly30:true, monthly50:true, monthly70:true, yearly70:true};
+    if(plan === "monthly70") plan = "monthly70";
+    if(plan === "yearly70") plan = "yearly70";
+    var allowed = {free7:true, monthly30:true, monthly50:true, monthly70:true, yearly70:true};
     if(!allowed[plan]) return;
     window.humateckPaymentSubscriptionPlan = plan;
     var hidden = document.getElementById("humateckActivePlanValue");
     if(hidden) hidden.value = plan;
+    var limitHidden = document.getElementById("humateckActiveCountryLimit");
+    if(limitHidden && arguments.length > 1 && arguments[1]) limitHidden.value = String(arguments[1]);
   }
 
   async function loadHumateckSubscriptionStatus(){
@@ -1138,8 +1094,8 @@ Description: translated description
       var res = await fetch(url, { credentials:"include", cache:"no-store" });
       if(!res.ok) return;
       var data = await res.json().catch(function(){ return {}; });
-      if(data && (data.admin === true || data.is_admin === true)){ applyHumateckPlan(data.plan || "yearly70"); return; }
-      if(data && (data.active === true || data.status === "active")){ applyHumateckPlan(data.plan || data.subscription_plan); }
+      if(data && (data.admin === true || data.is_admin === true)){ applyHumateckPlan(data.plan || data.plan_type || "yearly70", data.country_limit); return; }
+      if(data && (data.active === true || data.status === "active")){ applyHumateckPlan(data.plan || data.plan_type || data.subscription_plan, data.country_limit); }
     }catch(e){}
   }
 
@@ -1160,15 +1116,17 @@ Description: translated description
   }
 
   function getActiveCount(){
+    var limitHidden = document.getElementById("humateckActiveCountryLimit");
+    var directLimit = limitHidden ? parseInt(limitHidden.value, 10) : 0;
+    if(directLimit && directLimit > 0) return Math.min(directLimit, 70);
+
     var hidden = document.getElementById("humateckActivePlanValue");
     var plan = hidden ? hidden.value : "";
-    if(!plan && window.humateckAdminSelectedPlan) plan = window.humateckAdminSelectedPlan;
     if(!plan && window.humateckPaymentSubscriptionPlan) plan = window.humateckPaymentSubscriptionPlan;
 
+    if(plan === "free7") return 15;
     if(plan === "monthly50") return 50;
     if(plan === "monthly70") return 70;
-    if(plan === "monthly83") return 83;
-    if(plan === "yearly83") return 83;
     if(plan === "yearly70") return 70;
     if(plan === "monthly30") return 30;
 
@@ -1587,7 +1545,6 @@ ${countryBlock}`;
   function hasHumateckActiveSubscription(){
     var hidden = document.getElementById("humateckActivePlanValue");
     var plan = hidden ? String(hidden.value || "").trim() : "";
-    if(!plan && window.humateckAdminSelectedPlan) plan = String(window.humateckAdminSelectedPlan || "").trim();
     if(!plan && window.humateckPaymentSubscriptionPlan) plan = String(window.humateckPaymentSubscriptionPlan || "").trim();
     return !!plan;
   }
@@ -1610,20 +1567,6 @@ ${countryBlock}`;
     var nativeTitle = getNativeTitle();
     var nativeDescription = getNativeDescription();
 
-    if(!nativeCode){
-      alert("자국어 코드를 입력해 주세요.");
-      return;
-    }
-
-    if(!nativeTitle){
-      alert("자국어 제목을 입력해 주세요.");
-      return;
-    }
-
-    if(!nativeDescription){
-      alert("자국어 설명문을 입력해 주세요.");
-      return;
-    }
 
     var finalText = getFinalText();
     if(!finalText){ alert("제미나이 최종 버전(고객 검수)을 붙여넣어 주세요."); return; }

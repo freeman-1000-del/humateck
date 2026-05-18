@@ -1,9 +1,21 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+<!--
+개발자 공지사항 - HUMATECK 고정 원칙
+1. 오더폼은 배송장 구조만 유지한다: 고객 승인본 -> Google 브라우저 OAuth 결과 -> YouTube API 전달 -> YouTube 응답 표시.
+2. 군살은 빼고 절대 다시 넣지 않는다. 오더폼에 독립 JS 로직, 파서 확장, 메타데이터 판단, 콘텐츠 검수, 콘텐츠 보정, 사전 차단, 위험도 계산, 내부 심사, 내부 차단을 도입하지 말 것.
+3. 인증은 Google이 수행하고, 접수/거부 판단은 YouTube가 한다. Humateck는 내부 심사자, 편집자, 차단자, 판단자가 아니다.
+4. 한국어판은 PayPal 직접 결제 버튼을 두지 말고, 국내 결제 확정 전까지 서비스 준비 중으로 둔다. 영문/글로벌 결제 흐름과 분리한다.
+5. 대상국은 70개국으로 고정한다. 명시 승인 없이 이전 확장국가 문구나 이전 확장국가 플랜 로직을 되살리지 말 것.
+6. 7일 무료 플랜은 주요 15개국으로 고정한다. 제미나이 대상국 순서는 알파벳순이 아니라 국가 중요도 순으로 둔다.
+7. 고객용 오더페이지에 hidden/admin/test 메뉴를 추가하지 말 것. 내부 회원관리와 테스트 권한은 서버 쪽에서 보이지 않게 처리한다.
+-->
+
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Humateck 전체 플랜</title>
+<title>YouTube Multilingual Subtitle Registration Plan</title>
 
 
 <style>
@@ -21,8 +33,8 @@ button,input,textarea{font-family:inherit}
 .title{margin:0;color:#4b97ff;font-size:44px;line-height:1.25;font-weight:900;text-shadow:0 0 24px rgba(70,140,255,.22)}
 .subtitle{margin:16px 0 0;color:#fff;font-size:21px;font-weight:800}
 .stage{position:relative;width:840px;height:275px;max-width:100%;margin:36px auto 0}
-.globe{position:absolute;left:50%;top:32px;width:230px;height:230px;transform:translateX(-50%);border-radius:50%;border:2px solid rgba(93,160,255,.72);background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.33),transparent 12%),radial-gradient(circle at 50% 50%,rgba(58,126,255,.42),rgba(4,18,45,.9) 67%),repeating-linear-gradient(90deg,transparent 0 19px,rgba(116,178,255,.19) 20px 21px),repeating-linear-gradient(0deg,transparent 0 19px,rgba(116,178,255,.15) 20px 21px);box-shadow:0 0 48px rgba(83,144,255,.38)}
-.play{position:absolute;left:50%;top:92px;width:116px;height:82px;transform:translateX(-50%);border-radius:22px;background:linear-gradient(145deg,#ffe083,#b98217);box-shadow:0 0 42px rgba(235,180,62,.72)}
+.globe{position:absolute;left:50%;top:32px;width:230px;height:230px;transform:translateX(-50%);border-radius:50%;border:2px solid rgba(93,160,255,.72);background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.33),transparent 12%),radial-gradient(circle at 50% 50%,rgba(58,126,255,.42),rgba(4,18,45,.9) 67%),repeating-linear-gradient(90deg,transparent 0 19px,rgba(116,178,255,.19) 20px 21px),repeating-linear-gradient(0deg,transparent 0 19px,rgba(116,178,255,.15) 20px 21px);box-shadow:0 0 48px rgba(70,144,255,.38)}
+.play{position:absolute;left:50%;top:92px;width:116px;height:82px;transform:translateX(-50%);border-radius:22px;background:linear-gradient(145deg,#ffe070,#b98217);box-shadow:0 0 42px rgba(235,180,62,.72)}
 .play:after{content:"";position:absolute;left:45px;top:22px;border-left:34px solid #1a1307;border-top:20px solid transparent;border-bottom:20px solid transparent}
 .vcard{position:absolute;width:210px;height:118px;border:1px solid rgba(214,176,78,.62);border-radius:18px;background:rgba(10,17,27,.82);box-shadow:0 16px 38px rgba(0,0,0,.45);padding:17px}
 .vcard.left{left:0;top:82px}.vcard.right{right:0;top:82px}.vcard.bottom{left:50%;bottom:0;transform:translateX(-50%)}
@@ -46,7 +58,7 @@ button,input,textarea{font-family:inherit}
 .gear summary{list-style:none;width:72px;height:72px;border-radius:50%;border:2px solid #e5bd55;background:#080b10;color:#e5bd55;font-size:37px;cursor:pointer;display:flex;align-items:center;justify-content:center}.gear summary::-webkit-details-marker{display:none}
 .menu{position:absolute;right:0;bottom:86px;width:245px;border:1px solid rgba(214,176,78,.62);border-radius:18px;background:rgba(14,18,24,.98);padding:14px 18px;box-shadow:0 18px 45px rgba(0,0,0,.55)}
 .menu a{display:block;padding:13px 4px;border-bottom:1px solid rgba(255,255,255,.12);font-size:17px}.menu a:last-child{border-bottom:0}.danger{color:#ff6b5d}
-.plans{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}.plan{border:1px solid rgba(214,176,78,.72);border-radius:22px;background:rgba(16,23,31,.94);padding:26px 22px;min-height:315px;display:flex;flex-direction:column}.price{color:#fff;font-size:30px;font-weight:900;margin:16px 0}.plan .btn{min-width:0;width:100%;font-size:17px;margin-top:auto}
+.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}.plan{border:1px solid rgba(214,176,78,.72);border-radius:22px;background:rgba(16,23,31,.94);padding:26px 22px;min-height:315px;display:flex;flex-direction:column}.price{color:#fff;font-size:30px;font-weight:900;margin:16px 0}.plan .btn{min-width:0;width:100%;font-size:17px;margin-top:auto}
 .order{display:grid;grid-template-columns:190px 1fr 310px;gap:18px;align-items:start}.side,.right{border:1px solid rgba(214,176,78,.56);border-radius:20px;background:rgba(16,23,31,.95);padding:20px}.side a{display:block;padding:13px 10px;border-bottom:1px solid rgba(255,255,255,.1)}.side a:last-child{border-bottom:0}
 input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1px solid #4b5d6d;border-radius:12px;font-size:15px;margin:8px 0 14px}textarea{min-height:300px;line-height:1.72;resize:vertical}
 .notice{border:1px solid rgba(214,176,78,.48);border-radius:16px;padding:16px;background:rgba(214,176,78,.1);color:#f0dfb4;line-height:1.7;margin-top:14px}
@@ -105,8 +117,6 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 .guideModalBox{width:760px;max-width:calc(100vw - 48px);max-height:86vh;overflow:auto;border:1px solid #d4a94f;border-radius:20px;background:#121a23;color:#eee5d5;padding:28px 32px}
 .guideModalBox h2{color:#ffd95a;margin-top:0}.guideModalBox p,.guideModalBox li{line-height:1.75}
 .closeModalBtn{display:inline-flex;margin-top:18px;border:1px solid #caa24e;padding:10px 18px;border-radius:10px;color:#fff}
-.adminSecret{margin-top:18px;border:1px dashed rgba(255,217,90,.45);border-radius:14px;padding:14px;background:rgba(255,217,90,.06)}
-.adminSecret summary{cursor:pointer;color:#ffd95a;font-weight:900}
 .planHookNote{font-size:14px;color:#ffd95a;margin-top:10px}
 @media(max-width:980px){.orderMainGrid,.orderBottomGrid,.commandGrid{grid-template-columns:1fr}}
 </style>
@@ -127,8 +137,6 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 @keyframes humateckBlinkWarn{from{filter:brightness(1)}to{filter:brightness(1.45);text-shadow:0 0 12px rgba(255,217,90,.85)}}
 .oauthCenterButton{display:flex;justify-content:center;margin-top:16px}
 .menuWord{color:#ffd95a!important;font-weight:900}
-.adminLoginBox{margin-top:16px;border:1px dashed rgba(255,217,90,.6);border-radius:14px;padding:14px;background:rgba(255,217,90,.08)}
-.adminLoginBox summary{cursor:pointer;color:#ffd95a;font-weight:900}
 .highlightAction{color:#ffd95a!important;font-weight:900}
 .registerNoticeBelow{margin-top:16px}
 .registerErrorPanel{border:1px solid rgba(255,217,90,.48);border-radius:16px;padding:16px;background:rgba(255,217,90,.08);margin-top:14px}
@@ -163,6 +171,11 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 </style>
 
 <script defer src="/_vercel/insights/script.js"></script>
+
+<style>
+/* Humateck_011 targeted plan description font-size update only */
+.plan .price + p{font-size:19px!important;line-height:1.86!important;}
+</style>
 
 <style>
 /* Humateck_027 tiny transparent website account UI only */
@@ -219,14 +232,14 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 
 
 <style>
-/* Humateck  extension shortcut plan button patch */
-.plans a.btn.humateckShortcutPlanButton{
-  opacity:1!important;
-  cursor:pointer!important;
-  border-color:#ffd95a!important;
-  color:#fff!important;
-  background:linear-gradient(180deg,#5c4315,#15110a)!important;
-  box-shadow:0 0 20px rgba(255,217,90,.45)!important;
+/* Humateck temporary service-ready plan button patch */
+.plans a.btn.humateckServiceReadyPlanButton{
+  opacity:.58!important;
+  cursor:not-allowed!important;
+  background:#272c33!important;
+  border-color:#59616d!important;
+  color:#d7dde6!important;
+  box-shadow:none!important;
 }
 </style>
 
@@ -396,17 +409,16 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 </head>
 <body>
 
-<div class="wrap"><header class="top"><a href="index.html"><img class="logo" src="../FINAL_LOGO01.png" alt="Humateck"></a></header>
-<div class="top-left-tools"><a class="miniNavButton" href="index.html">첫페이지로</a><a class="miniNavButton" href="order.html">주문페이지 바로가기</a></div>
-<section class="card"><h1>유튜브 다국어 등록 플랜</h1></section>
+<div class="wrap"><header class="top"><a href="index.html"><img class="logo" src="FINAL_LOGO01.png" alt="Humateck"></a></header>
+<div class="top-left-tools"><a class="miniNavButton" href="index.html">첫페이지 가기</a><a class="miniNavButton" href="order.html">주문페이지 보기</a></div>
+<section class="card"><h1>유튜브 다국어 자막 등록 플랜</h1></section>
 <section class="plans">
-<article class="plan" data-subscription-plan="free7"><div class="currentPlanBadge">현재 이용 중</div><h2>7일 무료플랜</h2><div class="price">0원 / 7일</div><p>15개국 기준 유튜브 다국어 등록 무료체험 플랜입니다.</p><a class="humateckShortcutPlanButton btn" href="free/start.html" data-google-signup-first="true">7일 무료플랜 시작하기</a></article>
-<article class="plan" data-subscription-plan="monthly30"><div class="currentPlanBadge">현재 이용 중</div><h2>30개국 플랜</h2><div class="price">16,500원 / 월</div><p>30개국 기준 번역의뢰문 생성과 유튜브 다국어 등록을 이용하는 기본 플랜입니다.</p><a class="humateckShortcutPlanButton btn" href="https://chromewebstore.google.com/detail/ceomjdlbdopcnbpmelofnckbkiagknoe" target="_blank" rel="noopener noreferrer"> 서비스 준비중</a></article>
-<article class="plan" data-subscription-plan="monthly50"><div class="currentPlanBadge">현재 이용 중</div><h2>50개국 플랜</h2><div class="price">25,000원 / 월</div><p>50개국 기준 번역의뢰문 생성과 유튜브 다국어 등록을 이용하는 확장 플랜입니다.</p><a class="humateckShortcutPlanButton btn" href="https://chromewebstore.google.com/detail/ceomjdlbdopcnbpmelofnckbkiagknoe" target="_blank" rel="noopener noreferrer"> 서비스 준비중</a></article>
-<article class="plan" data-subscription-plan="monthly70"><div class="currentPlanBadge">현재 이용 중</div><h2>70개국 플랜</h2><div class="price">32,500원 / 월</div><p>70개국 기준 번역의뢰문 생성과 유튜브 다국어 등록을 이용하는 안정 플랜입니다.</p><a class="humateckShortcutPlanButton btn" href="https://chromewebstore.google.com/detail/ceomjdlbdopcnbpmelofnckbkiagknoe" target="_blank" rel="noopener noreferrer"> 서비스 준비중</a></article>
-<article class="plan" data-subscription-plan="monthly83"><div class="currentPlanBadge">현재 이용 중</div><h2>83개국 플랜</h2><div class="price">39,500원 / 월</div><p>유튜브 공식 지원 언어 83개 기준 번역의뢰문 생성과 유튜브 다국어 등록을 테스트하는 전체 확장 플랜입니다.</p><a class="humateckShortcutPlanButton btn" href="https://chromewebstore.google.com/detail/ceomjdlbdopcnbpmelofnckbkiagknoe" target="_blank" rel="noopener noreferrer"> 서비스 준비중</a></article>
-<article class="plan" data-subscription-plan="yearly83"><div class="currentPlanBadge">현재 이용 중</div><h2>83개국 연간 플랜</h2><div class="price">292,500원 / 년</div><p>83개국 기준 서비스를 연간 단위로 이용하는 플랜입니다.</p><a class="humateckShortcutPlanButton btn" href="https://chromewebstore.google.com/detail/ceomjdlbdopcnbpmelofnckbkiagknoe" target="_blank" rel="noopener noreferrer"> 서비스 준비중</a></article>
-</section><footer class="footer"><a href="terms.html">이용약관</a><span>|</span><a href="privacy.html">개인정보 처리방침</a><span>|</span><a href="refund.html">환불정책</a></footer></div><div class="account"><a href="#" title="Google 공식 인증">G</a><a href="#" title="Apple 공식 인증">●</a><a href="#" title="Email 공식 인증">@</a></div>
+<article class="plan" data-subscription-plan="free7"><div class="currentPlanBadge">현재 활성</div><h2>7일 무료 플랜</h2><div class="price">주요 15개국 / 7일</div><p>제미나이 의뢰문 흐름과 유튜브 등록 흐름을 먼저 확인할 수 있는 주요 15개국 무료 체험 플랜입니다.</p><a class="btn" href="order.html">무료 체험 시작하기</a></article>
+<article class="plan" data-subscription-plan="monthly30"><div class="currentPlanBadge">현재 활성</div><h2>30개국 플랜</h2><div class="price">서비스 준비 중</div><p>30개국 기준 번역의뢰문 생성 지원과 유튜브 다국어 등록 기본 플랜입니다.</p><a class="btn" href="#">서비스 준비 중</a></article>
+<article class="plan" data-subscription-plan="monthly50"><div class="currentPlanBadge">현재 활성</div><h2>50개국 플랜</h2><div class="price">서비스 준비 중</div><p>50개국 기준 번역의뢰문 생성 지원과 유튜브 다국어 등록 확장 플랜입니다.</p><a class="btn" href="#">서비스 준비 중</a></article>
+<article class="plan" data-subscription-plan="monthly70"><div class="currentPlanBadge">현재 활성</div><h2>70개국 플랜</h2><div class="price">서비스 준비 중</div><p>70개국 기준 번역의뢰문 생성 지원과 유튜브 다국어 등록 안정 플랜입니다.</p><a class="btn" href="#">서비스 준비 중</a></article>
+<article class="plan" data-subscription-plan="yearly70"><div class="currentPlanBadge">현재 활성</div><h2>70개국 연간 플랜</h2><div class="price">서비스 준비 중</div><p>70개국 기준 번역의뢰문 생성 지원과 유튜브 다국어 등록 연간 플랜입니다.</p><a class="btn" href="#">서비스 준비 중</a></article>
+</section><footer class="footer"><a href="terms.html">이용약관</a><span>|</span><a href="privacy.html">개인정보처리방침</a><span>|</span><a href="refund.html">환불정책</a></footer></div><div class="account"><a href="#" title="Google 공식 인증">G</a><a href="#" title="Apple 공식 인증">●</a><a href="#" title="Email 공식 인증">@</a></div>
 
 <script>
 (function(){
@@ -416,5 +428,6 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
   if(target){ target.classList.add('blinkActive'); target.classList.add('current'); }
 })();
 </script>
+
 </body>
 </html>
