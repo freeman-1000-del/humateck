@@ -431,7 +431,7 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 <div class="top-left-tools"><a class="miniNavButton" href="index.html">Back to First Page</a><a class="miniNavButton" href="order.html">View Order Page</a></div>
 <section class="card"><h1>YouTube Multilingual Subtitle Registration Plan</h1></section>
 <section class="plans">
-<article class="plan" data-subscription-plan="free7"><div class="currentPlanBadge">Currently Active</div><h2>7-Day Free Plan</h2><div class="price">USD 0 / 7 days</div><p>Take your first step into a system that solves in just a few seconds what used to take hours by hand.</p><a class="btn" href="order.html">Start Free Trial</a></article>
+<article class="plan" data-subscription-plan="free7"><div class="currentPlanBadge">Currently Active</div><h2>7-Day Free Plan</h2><div class="price">USD 0 / 7 days</div><p>Take your first step into a system that solves in just a few seconds what used to take hours by hand.</p><a class="btn" href="order.html?plan=free7">Start Free Trial</a></article>
 <article class="plan" data-subscription-plan="monthly30"><div class="currentPlanBadge">Currently Active</div><h2>30-Country Plan</h2><div class="price">USD 12 / month</div><p>Multilingual translation support and content registration basic plan based on 30 countries.</p><a class="btn" href="https://www.paypal.com/webapps/billing/plans/subscribe?plan_id=P-0NR97490A8670131FNH6DHPA" target="_blank" rel="noopener noreferrer" data-payment-link-preserved="true">Subscribe</a></article>
 <article class="plan" data-subscription-plan="monthly50"><div class="currentPlanBadge">Currently Active</div><h2>50-Country Plan</h2><div class="price">USD 19 / month</div><p>Multilingual translation support and content registration expanded plan based on 50 countries.</p><a class="btn" href="https://www.paypal.com/webapps/billing/plans/subscribe?plan_id=P-86V63300B15314135NH6ENDQ" target="_blank" rel="noopener noreferrer" data-payment-link-preserved="true">Subscribe</a></article>
 <article class="plan" data-subscription-plan="monthly70"><div class="currentPlanBadge">Currently Active</div><h2>70-Country Plan</h2><div class="price">USD 25 / month</div><p>Multilingual translation support and content registration stable plan based on 70 countries.</p><a class="btn" href="https://www.paypal.com/webapps/billing/plans/subscribe?plan_id=P-752827993G859572ANH6EHKQ" target="_blank" rel="noopener noreferrer" data-payment-link-preserved="true">Subscribe</a></article>
@@ -440,7 +440,22 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 
 <script>
 (function(){
-  var plan = window.humateckPaymentSubscriptionPlan;
+  document.addEventListener("click", function(e){
+    var btn = e.target.closest(".plan .btn");
+    if(!btn) return;
+    var planCard = btn.closest(".plan");
+    var plan = planCard ? planCard.getAttribute("data-subscription-plan") : "";
+    if(plan){
+      try{ localStorage.setItem("humateckSelectedPlan", plan); }catch(err){}
+      window.humateckPaymentSubscriptionPlan = plan;
+    }
+  }, true);
+})();
+</script>
+
+<script>
+(function(){
+  var plan = window.humateckPaymentSubscriptionPlan || (function(){try{return localStorage.getItem("humateckSelectedPlan") || "";}catch(e){return "";}})();
   if(!plan) return;
   var target = document.querySelector('[data-subscription-plan="'+plan+'"]');
   if(target){ target.classList.add('blinkActive'); target.classList.add('current'); }

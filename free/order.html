@@ -1045,11 +1045,9 @@ Without any explanation, output only the translated registration text.</textarea
       <h2>Gemini Command Copy-and-Paste Sequence</h2>
       <div class="commandFullRows">
         <div class="commandFullItem"><div class="commandFullTop"><label>Command 1</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText1">Copy</button></div><textarea id="commandText1" readonly>Please automatically and carefully check for mixed-in other languages, unnatural context, and any other issues.</textarea></div>
-        <div class="commandFullItem"><div class="commandFullTop"><label>Command 2</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText2">Copy</button></div><textarea id="commandText2" readonly>Please give only the translated text and absolutely no explanation.
-If Gemini explanations are included in the translation text for YouTube registration, serious registration errors may occur.</textarea></div>
-        <div class="commandFullItem"><div class="commandFullTop"><label>Command 3</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText3">Copy</button></div><textarea id="commandText3" readonly>Please delete the Number: , Country Name:, Country Code:.</textarea></div>
-        <div class="commandFullItem"><div class="commandFullTop"><label>Command 4</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText4">Copy</button></div><textarea id="commandText4" readonly>Carefully check once more for mixed-in other languages, unnatural context, and any other issues.</textarea></div>
-        <div class="commandFullItem"><div class="commandFullTop"><label>Command 5</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText5">Copy</button></div><textarea id="commandText5" readonly>Please move to the bottom.</textarea></div>
+        <div class="commandFullItem"><div class="commandFullTop"><label>Command 2</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText2">Copy</button></div><textarea id="commandText2" readonly>Please delete the Number: , Country Name:, Country Code:.</textarea></div>
+        <div class="commandFullItem"><div class="commandFullTop"><label>Command 3</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText3">Copy</button></div><textarea id="commandText3" readonly>Carefully check once more for mixed-in other languages, unnatural context, and any other issues.</textarea></div>
+        <div class="commandFullItem"><div class="commandFullTop"><label>Command 4</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText4">Copy</button></div><textarea id="commandText4" readonly>Please move to the bottom.</textarea></div>
       </div>
     </section>
 
@@ -1222,6 +1220,24 @@ A) This is because YouTube content display system fixes the default video settin
     var limitHidden = document.getElementById("humateckActiveCountryLimit");
     if(limitHidden && arguments.length > 1 && arguments[1]) limitHidden.value = String(arguments[1]);
   }
+
+  function getHumateckPlanLimit(plan){
+    if(plan === "free7") return 15;
+    if(plan === "monthly30") return 30;
+    if(plan === "monthly50") return 50;
+    if(plan === "monthly70" || plan === "yearly70") return 70;
+    return 0;
+  }
+
+  function loadPlanSelectedFromPlansPage(){
+    try{
+      var params = new URLSearchParams(window.location.search || "");
+      var plan = params.get("plan") || localStorage.getItem("humateckSelectedPlan") || "";
+      if(plan){ applyHumateckPlan(plan, getHumateckPlanLimit(plan)); }
+    }catch(e){}
+  }
+
+  loadPlanSelectedFromPlansPage();
 
   async function loadHumateckSubscriptionStatus(){
     try{
