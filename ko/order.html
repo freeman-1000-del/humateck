@@ -863,6 +863,28 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
   font-weight:800;
   line-height:1.7;
 }
+
+/* Production v3: Gemini prompt is the core order flow */
+#gemini{
+  border:2px solid rgba(76,154,255,.95)!important;
+  box-shadow:0 0 0 3px rgba(76,154,255,.16), 0 14px 36px rgba(0,0,0,.32)!important;
+}
+#gemini h2{
+  color:#7db7ff!important;
+}
+.geminiCoreNotice{
+  border:1px solid rgba(76,154,255,.75);
+  background:rgba(76,154,255,.12);
+  color:#dcecff;
+  border-radius:12px;
+  padding:10px 12px;
+  font-weight:900;
+  line-height:1.65;
+  margin:10px 0 12px;
+}
+#geminiPromptText{
+  min-height:360px!important;
+}
 </style>
 
 </head>
@@ -890,50 +912,63 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
       <input id="sourceTitle" type="text" placeholder="자국어 제목을 입력하세요">
       <label>자국어 설명문</label>
       <textarea id="sourceDescription" class="mediumTextarea" placeholder="자국어 설명문을 입력하세요"></textarea>
-      <div class="actions"><button class="btn copyButtonVisible" type="button" id="generateGeminiPrompt">제미나이 명령문 생성</button></div>
+      <div class="actions"><button class="btn copyButtonVisible" type="button" id="generateGeminiPrompt">1. 제미나이 명령문 생성</button></div>
       <div class="notice">여기서 제미나이 명령문을 생성한 뒤 복사하여 제미나이에 붙여넣고, 완료된 제미나이 결과물을 다시 이 주문서에 붙여넣으시면 됩니다.</div>
     </section>
 
     <section id="gemini" class="card">
-      <h2>제미나이 명령문 복사</h2>
+      <h2>1단계. 제미나이 명령문 복사</h2>
+      <div class="geminiCoreNotice">이 영역이 Humateck의 핵심입니다. 이 명령문을 복사해 제미나이에 붙여넣고, 완성된 번역 결과만 최종본 칸에 다시 붙여넣으시면 됩니다.</div>
       <textarea id="geminiPromptText" class="mediumTextarea" readonly>Hello Gemini!
-Please naturally localize and translate the title and description below for the {activeCount}-country set.
-Please continue translating from beginning to end without stopping midway.
+아무런 설명없이 오직 번역문만 출력해 줘.
 
-Important:
-- You must output all {activeCount} Country Codes without omission.
-- Do not change the number or order of the Country Codes.
-- Do not add explanations, opinions, notes, or extra remarks.
-- Keep the exact format:
-  Number:
-  Country Code:
-  Title:
-  Description:
-- Output only the final translated results.
-- When the work is finished, move to the bottom.
+아래 유튜브 제목과 설명문을 {activeCount}개 국가 세트에 맞춰 번역해 줘.
+처음부터 끝까지 중간에 끊지 말고 계속 번역해 줘.
 
-[Source Information]
-Native Language Code: {nativeLanguageCode}
-YouTube Video URL: {videoUrl}
-
-[Source Text]
+[원문]
 Title:
 {sourceTitle}
 
 Description:
 {sourceDescription}
 
-[Output Format]
-Number: sequence
-Country Code: language code
-Title: translated title
-Description: translated description
+[출력 형식]
+Number:
+Country Code:
+Country Name:
+Title:
+Description:
+
+아무런 설명없이 오직 번역문만 출력해 줘.
 
 [Country Code List]
-{countryBlock}</textarea>
-      <div class="actions"><button class="btn copyButtonVisible" type="button" data-copy-target="geminiPromptText">제미나이 명령문 복사</button></div>
+{countryBlock}
+
+아무런 설명없이 오직 번역문만 출력해 줘.</textarea>
+      <div class="actions"><button class="btn copyButtonVisible" type="button" data-copy-target="geminiPromptText">2. 제미나이 명령문 복사</button></div>
       <p id="geminiCopyStatus" class="copyStatus"></p><div class="actions"><a class="btn geminiChatButton" href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer">제미나이 챗번역 하러 가기</a></div>
     </section>
+
+    <section class="card" id="geminiCommandCard">
+      <h2>제미나이 명령 복사/붙여넣기 순서</h2>
+      <div class="commandFullRows">
+        <div class="commandFullItem"><div class="commandFullTop"><label>명령 1</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText1">복사</button></div><textarea id="commandText1" readonly>Please automatically and carefully check for mixed-in other languages, unnatural context, and any other issues.</textarea></div>
+        <div class="commandFullItem"><div class="commandFullTop"><label>명령 2</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText2">복사</button></div><textarea id="commandText2" readonly>Please give only the translated text and absolutely no explanation.
+If Gemini explanations are included in the translation text for YouTube registration, serious registration errors may occur.</textarea></div>
+        <div class="commandFullItem"><div class="commandFullTop"><label>명령 3</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText3">복사</button></div><textarea id="commandText3" readonly>Please delete the Number: , Country Name:, Country Code:.</textarea></div>
+        <div class="commandFullItem"><div class="commandFullTop"><label>명령 4</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText4">복사</button></div><textarea id="commandText4" readonly>Carefully check once more for mixed-in other languages, unnatural context, and any other issues.</textarea></div>
+        <div class="commandFullItem"><div class="commandFullTop"><label>명령 5</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText5">복사</button></div><textarea id="commandText5" readonly>Please move to the bottom.</textarea></div>
+      </div>
+    </section>
+
+
+    
+    <section class="card" id="finalVersionCard">
+      <h2>최종본 붙여넣기</h2>
+      <textarea id="finalOutput" class="mediumTextarea" placeholder="제미나이 최종 번역 결과를 붙여넣어 주세요."></textarea>
+    </section>
+
+
 <section class="oauthInfoBox" id="googleOAuthNotice">
       <h2>Google OAuth 인증관련 안내</h2>
       <p>이제부터는 구독하신 분들이 필수적으로 거쳐야 될 Google OAuth 인증 순서입니다. 비구독자분들도 이 인증을 받을 수는 있으나, 최종 유튜브 등록은 반드시 구독자에게만 개방되오니 착오 없으시기 바랍니다.</p>
@@ -949,13 +984,6 @@ Description: translated description
   <button id="oauthStartBtn" class="btn" type="button">OAuth 인증받기</button>
 </div></div>
     </section>
-
-    
-    <section class="card" id="finalVersionCard">
-      <h2>최종 버전(고객 검수)</h2>
-      <textarea id="finalOutput" class="mediumTextarea" placeholder="고객님이 검수한 제미나이 최종 버전을 붙여넣어 주세요."></textarea>
-    </section>
-
 <section class="card">
       <h2>유튜브 등록</h2>
       <div class="actions"><button class="btn" type="button" id="sendOrderBtn">유튜브 등록</button></div>
@@ -1110,7 +1138,7 @@ Description: translated description
       var res = await fetch(url, { credentials:"include", cache:"no-store" });
       if(!res.ok) return;
       var data = await res.json().catch(function(){ return {}; });
-      if(data && (data.admin === true || data.is_admin === true)){ applyHumateckPlan(data.plan || data.plan_type || "yearly70", data.country_limit); return; }
+      if(data && (data.admin === true || data.is_admin === true)){ window.humateckIsAdminMember = true; applyHumateckPlan("yearly70", 70); return; }
       if(data && (data.active === true || data.status === "active")){ applyHumateckPlan(data.plan || data.plan_type || data.subscription_plan, data.country_limit); }
     }catch(e){}
   }
@@ -1230,35 +1258,32 @@ Description: translated description
     ].slice(0, activeCount + 2).join("\n");
 
     var prompt =
-`안녕 제미나이!
-아래 제목과 설명문을 ${activeCount}개 국가 세트에 맞춰 자연스럽게 현지화 번역해 줘.
+`Hello Gemini!
+아무런 설명없이 오직 번역문만 출력해 줘.
+
+아래 유튜브 제목과 설명문을 ${activeCount}개 국가 세트에 맞춰 번역해 줘.
 처음부터 끝까지 중간에 끊지 말고 계속 번역해 줘.
 
 [원문]
-Title: ${sourceTitle}
+Title:
+${sourceTitle}
 
 Description:
 ${sourceDescription}
 
 [출력 형식]
-Number: 순번
-Country Code: 언어코드
-Country Name: 영어 국가명
-Title: 번역된 제목
+Number:
+Country Code:
+Country Name:
+Title:
 Description:
-번역된 설명문
 
-[핵심 원칙]
-1. 처음부터 끝까지 절대 끊지 말고 계속 번역해 줘.
-2. 작업내용 설명, 머리말, 맺음말, 해설문은 넣지 말아 줘.
-3. 아래 대응표의 Country Code와 Country Name을 그대로 사용할 것
-4. 블록 순서는 절대 바꾸지 말 것
-5. 각 블록은 반드시 Country Code로 시작할 것
-6. Description의 문단 구조와 줄바꿈은 원문 흐름을 유지할 것
-7. 제목, 설명문 외의 군소리, 키워드 줄, 해시태그, 코드블록, HTML은 넣지 말 것
-8. 작업이 끝났으면 아래로 이동해 줘.
+아무런 설명없이 오직 번역문만 출력해 줘.
 
-${countryBlock}`;
+[Country Code List]
+${countryBlock}
+
+아무런 설명없이 오직 번역문만 출력해 줘.`;
 
     setValue("geminiPromptText", prompt);
     var gemini = document.getElementById("gemini");
@@ -1486,6 +1511,19 @@ ${countryBlock}`;
     return "";
   }
 
+
+  function getCountryCodeOrder(){
+    return [
+      "en","es","es-419","es-US","pt","pt-PT","fr","fr-CA","de","ja",
+      "ko","zh-CN","zh-TW","zh-HK","hi","id","ar","ru","it","tr",
+      "vi","th","fil","ms","nl","pl","uk","sv","no","da",
+      "fi","el","ro","hu","cs","sk","bg","hr","sr","sr-Latn",
+      "sq","mk","et","lv","lt","iw","fa","ur","bn","ta",
+      "te","mr","gu","kn","ml","pa","ne","sw","af","am",
+      "az","be","bs","ca","eu","gl","hy","ka","kk","km"
+    ].slice(0, getActiveCount());
+  }
+
   function parseFinalTextToLocalizations(finalText){
     var normalized = String(finalText || "").replace(/\r/g, "");
     var blocks = normalized.split("Country Code:").slice(1);
@@ -1544,6 +1582,34 @@ ${countryBlock}`;
         description: description.replace(/\n+$/g, "")
       };
     });
+
+    if(Object.keys(localizations).length === 0){
+      var order = getCountryCodeOrder();
+      var pattern = /(?:^|
+)\s*Title\s*:\s*([^
+]*)([\s\S]*?)(?=
+\s*Title\s*:|$)/gi;
+      var match;
+      var index = 0;
+      while((match = pattern.exec(normalized)) && index < order.length){
+        var title = cleanLine(match[1] || "");
+        var body = match[2] || "";
+        var desc = "";
+        var d = body.search(/
+\s*Description\s*:/i);
+        if(d >= 0){
+          desc = body.slice(d).replace(/^
+\s*Description\s*:\s*/i, "").replace(/
++$/g, "");
+        }else{
+          desc = body.replace(/^
++/, "").replace(/
++$/g, "");
+        }
+        localizations[order[index]] = { title: title, description: desc };
+        index++;
+      }
+    }
 
     return localizations;
   }
