@@ -952,6 +952,28 @@ input,textarea{font-size:16px!important;}
   font-weight:800;
   line-height:1.7;
 }
+
+/* Production v3: Gemini prompt is the core order flow */
+#gemini{
+  border:2px solid rgba(76,154,255,.95)!important;
+  box-shadow:0 0 0 3px rgba(76,154,255,.16), 0 14px 36px rgba(0,0,0,.32)!important;
+}
+#gemini h2{
+  color:#7db7ff!important;
+}
+.geminiCoreNotice{
+  border:1px solid rgba(76,154,255,.75);
+  background:rgba(76,154,255,.12);
+  color:#dcecff;
+  border-radius:12px;
+  padding:10px 12px;
+  font-weight:900;
+  line-height:1.65;
+  margin:10px 0 12px;
+}
+#geminiPromptText{
+  min-height:360px!important;
+}
 </style>
 
 </head>
@@ -979,31 +1001,18 @@ input,textarea{font-size:16px!important;}
       <input id="sourceTitle" type="text" placeholder="Enter the native language title">
       <label>Native Language Description</label>
       <textarea id="sourceDescription" class="mediumTextarea" placeholder="Enter the native language description"></textarea>
-      <div class="actions"><button class="btn copyButtonVisible" type="button" id="generateGeminiPrompt">Generate Gemini Request Prompt</button></div>
+      <div class="actions"><button class="btn copyButtonVisible" type="button" id="generateGeminiPrompt">1. Generate Gemini Request Prompt</button></div>
       <div class="notice">Generate the Gemini request prompt here, copy it, paste it into Gemini, and then paste the completed Gemini result back into this order form.</div>
     </section>
 
     <section id="gemini" class="card">
-      <h2>Gemini Request Prompt Copy</h2>
+      <h2>STEP 1. Gemini Request Prompt Copy</h2>
+      <div class="geminiCoreNotice">This is the core of Humateck. Copy this prompt, paste it into Gemini, and paste only the completed translation result back into the final version box.</div>
       <textarea id="geminiPromptText" class="mediumTextarea" readonly>Hello Gemini!
-Please naturally localize and translate the title and description below for the {activeCount}-country set.
-Please continue translating from beginning to end without stopping midway.
+Without any explanation, output only the translated registration text.
 
-Important:
-- You must output all {activeCount} Country Codes without omission.
-- Do not change the number or order of the Country Codes.
-- Do not add explanations, opinions, notes, or extra remarks.
-- Keep the exact format:
-  Number:
-  Country Code:
-  Title:
-  Description:
-- Output only the final translated results.
-- When the work is finished, move to the bottom.
-
-[Source Information]
-Native Language Code: {nativeLanguageCode}
-YouTube Video URL: {videoUrl}
+Translate the following YouTube title and description for the {activeCount}-country set.
+Continue from beginning to end without stopping.
 
 [Source Text]
 Title:
@@ -1013,16 +1022,42 @@ Description:
 {sourceDescription}
 
 [Output Format]
-Number: sequence
-Country Code: language code
-Title: translated title
-Description: translated description
+Number:
+Country Code:
+Country Name:
+Title:
+Description:
+
+Without any explanation, output only the translated registration text.
 
 [Country Code List]
-{countryBlock}</textarea>
-      <div class="actions"><button class="btn copyButtonVisible" type="button" data-copy-target="geminiPromptText">Copy Gemini Prompt</button></div>
+{countryBlock}
+
+Without any explanation, output only the translated registration text.</textarea>
+      <div class="actions"><button class="btn copyButtonVisible" type="button" data-copy-target="geminiPromptText">2. Copy Gemini Prompt</button></div>
       <p id="geminiCopyStatus" class="copyStatus"></p><div class="actions"><a class="btn geminiChatButton" href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer">Open Gemini Chat Translation</a></div>
     </section>
+
+    <section class="card" id="geminiCommandCard">
+      <h2>Gemini Command Copy-and-Paste Sequence</h2>
+      <div class="commandFullRows">
+        <div class="commandFullItem"><div class="commandFullTop"><label>Command 1</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText1">Copy</button></div><textarea id="commandText1" readonly>Please automatically and carefully check for mixed-in other languages, unnatural context, and any other issues.</textarea></div>
+        <div class="commandFullItem"><div class="commandFullTop"><label>Command 2</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText2">Copy</button></div><textarea id="commandText2" readonly>Please give only the translated text and absolutely no explanation.
+If Gemini explanations are included in the translation text for YouTube registration, serious registration errors may occur.</textarea></div>
+        <div class="commandFullItem"><div class="commandFullTop"><label>Command 3</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText3">Copy</button></div><textarea id="commandText3" readonly>Please delete the Number: , Country Name:, Country Code:.</textarea></div>
+        <div class="commandFullItem"><div class="commandFullTop"><label>Command 4</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText4">Copy</button></div><textarea id="commandText4" readonly>Carefully check once more for mixed-in other languages, unnatural context, and any other issues.</textarea></div>
+        <div class="commandFullItem"><div class="commandFullTop"><label>Command 5</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText5">Copy</button></div><textarea id="commandText5" readonly>Please move to the bottom.</textarea></div>
+      </div>
+    </section>
+
+
+    
+    <section class="card" id="finalVersionCard">
+      <h2>Paste Final Version</h2>
+      <textarea id="finalOutput" class="mediumTextarea" placeholder="Paste the final Gemini translation result."></textarea>
+    </section>
+
+
 <section class="oauthInfoBox" id="googleOAuthNotice">
       <h2>Google OAuth Setup Guide Notice</h2>
       <p>From here, this is the Google OAuth authentication sequence that subscribers must complete. Non-subscribers may also complete this authentication, but final register multilingual content is open only to subscribers. Please do not misunderstand this point.</p>
@@ -1040,13 +1075,6 @@ Description: translated description
 <div id="oauthSuccessBadge" class="oauthSuccessBadge">Authentication Successful</div>
 </div>
     </section>
-
-    
-    <section class="card" id="finalVersionCard">
-      <h2>Final Version (Customer Review)</h2>
-      <textarea id="finalOutput" class="mediumTextarea" placeholder="Paste the customer-reviewed final version from Gemini here."></textarea>
-    </section>
-
 <section class="card">
       <h2>YouTube Subtitle Registration</h2>
       <div class="actions"><button class="btn humateckOnlyButton" type="button" id="sendOrderBtn">YouTube Subtitle Registration</button></div>
@@ -1199,7 +1227,7 @@ A) This is because YouTube content display system fixes the default video settin
       var res = await fetch(url, { credentials:"include", cache:"no-store" });
       if(!res.ok) return;
       var data = await res.json().catch(function(){ return {}; });
-      if(data && (data.admin === true || data.is_admin === true)){ applyHumateckPlan(data.plan || data.plan_type || "yearly70", data.country_limit); return; }
+      if(data && (data.admin === true || data.is_admin === true)){ window.humateckIsAdminMember = true; applyHumateckPlan("yearly70", 70); return; }
       if(data && (data.active === true || data.status === "active")){ applyHumateckPlan(data.plan || data.plan_type || data.subscription_plan, data.country_limit); }
     }catch(e){}
   }
@@ -1320,34 +1348,31 @@ A) This is because YouTube content display system fixes the default video settin
 
     var prompt =
 `Hello Gemini!
-Please naturally localize and translate the title and description below for the ${activeCount}-country set.
-Please continue translating from beginning to end without stopping midway.
+Without any explanation, output only the translated registration text.
+
+Translate the following YouTube title and description for the ${activeCount}-country set.
+Continue from beginning to end without stopping.
 
 [Source Text]
-Title: ${sourceTitle}
+Title:
+${sourceTitle}
 
 Description:
 ${sourceDescription}
 
 [Output Format]
-Number: sequence number
-Country Code: language code
-Country Name: English country name
-Title: translated title
+Number:
+Country Code:
+Country Name:
+Title:
 Description:
-translated description
 
-[Core Principles]
-1. Never stop midway; continue translating from beginning to end.
-2. Do not include work explanations, introductions, closing remarks, or commentary.
-3. Use the Country Code and Country Name in the mapping table below exactly as written.
-4. Never change the order of the blocks.
-5. Each block must start with Country Code.
-6. Maintain the paragraph structure and line breaks of the Description according to the flow of the source text.
-7. Do not include any extra remarks, keyword lines, hashtags, code blocks, or HTML other than the title and description.
-8. When the work is finished, move to the bottom.
+Without any explanation, output only the translated registration text.
 
-${countryBlock}`;
+[Country Code List]
+${countryBlock}
+
+Without any explanation, output only the translated registration text.`;
 
     setValue("geminiPromptText", prompt);
     var gemini = document.getElementById("gemini");
@@ -1590,6 +1615,19 @@ ${countryBlock}`;
     return "";
   }
 
+
+  function getCountryCodeOrder(){
+    return [
+      "en","es","es-419","es-US","pt","pt-PT","fr","fr-CA","de","ja",
+      "ko","zh-CN","zh-TW","zh-HK","hi","id","ar","ru","it","tr",
+      "vi","th","fil","ms","nl","pl","uk","sv","no","da",
+      "fi","el","ro","hu","cs","sk","bg","hr","sr","sr-Latn",
+      "sq","mk","et","lv","lt","iw","fa","ur","bn","ta",
+      "te","mr","gu","kn","ml","pa","ne","sw","af","am",
+      "az","be","bs","ca","eu","gl","hy","ka","kk","km"
+    ].slice(0, getActiveCount());
+  }
+
   function parseFinalTextToLocalizations(finalText){
     var normalized = String(finalText || "").replace(/\r/g, "");
     var blocks = normalized.split("Country Code:").slice(1);
@@ -1648,6 +1686,34 @@ ${countryBlock}`;
         description: description.replace(/\n+$/g, "")
       };
     });
+
+    if(Object.keys(localizations).length === 0){
+      var order = getCountryCodeOrder();
+      var pattern = /(?:^|
+)\s*Title\s*:\s*([^
+]*)([\s\S]*?)(?=
+\s*Title\s*:|$)/gi;
+      var match;
+      var index = 0;
+      while((match = pattern.exec(normalized)) && index < order.length){
+        var title = cleanLine(match[1] || "");
+        var body = match[2] || "";
+        var desc = "";
+        var d = body.search(/
+\s*Description\s*:/i);
+        if(d >= 0){
+          desc = body.slice(d).replace(/^
+\s*Description\s*:\s*/i, "").replace(/
++$/g, "");
+        }else{
+          desc = body.replace(/^
++/, "").replace(/
++$/g, "");
+        }
+        localizations[order[index]] = { title: title, description: desc };
+        index++;
+      }
+    }
 
     return localizations;
   }
