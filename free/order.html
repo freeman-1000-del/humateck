@@ -1140,12 +1140,11 @@ Without any explanation, output only the translated registration text.</textarea
     <section class="card" id="geminiCommandCard">
       <h2>Gemini Command Copy-and-Paste Sequence</h2>
       <div class="commandFullRows">
-        <div class="commandFullItem"><div class="commandFullTop"><label>Command 1</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText1">Copy</button></div><textarea id="commandText1" readonly>Please automatically and carefully check for mixed-in other languages, unnatural context, and any other issues.
-
-⚠️ Large Gemini translation copies may take time. After pressing the Gemini copy button, please wait until the translation is fully copied to the clipboard.</textarea></div>
+        <div class="commandFullItem"><div class="commandFullTop"><label>Command 1</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText1">Copy</button></div><textarea id="commandText1" readonly>Please automatically and carefully check for mixed-in other languages, unnatural context, and any other issues.</textarea></div>
         <div class="commandFullItem"><div class="commandFullTop"><label>Command 2</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText2">Copy</button></div><textarea id="commandText2" readonly>Please delete the Number: , Country Name:.</textarea></div>
         <div class="commandFullItem"><div class="commandFullTop"><label>Command 3</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText4">Copy</button></div><textarea id="commandText4" readonly>Carefully check once more for mixed-in other languages, unnatural context, and any other issues.</textarea></div>
-        <div class="commandFullItem"><div class="commandFullTop"><label>Command 4</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText7">Copy</button></div><textarea id="commandText7" readonly>Please move to the bottom.</textarea></div>
+        <div class="commandFullItem"><div class="commandFullTop"><label>Command 4</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText5">Copy</button></div><textarea id="commandText5" readonly>제미나이의 설명문이나 해설 등을 모두 빼고 다시 출력해 줘.</textarea></div>
+        <div class="commandFullItem"><div class="commandFullTop"><label>Command 5</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText7">Copy</button></div><textarea id="commandText7" readonly>Please move to the bottom.</textarea></div>
         <div class="commandWarningOutside"><span class="softStrong">⚠️ Important</span> Be sure to press the ⧉ [Copy response] button at the end of the translated text above “Please move to the bottom.” Wait until it is fully copied to the clipboard, then paste it into <span class="softStrong">Final Registration Command</span>.<br><br><span class="softStrong">⚠️ Important</span> Be careful not to include Gemini explanations, commentary, or unnecessary words other than the translation, as they may cause YouTube registration errors.</div>
       </div>
     </section>
@@ -1348,10 +1347,17 @@ A) This is because YouTube content display system fixes the default video settin
     }catch(e){}
   }
 
+  var humateckSubscriptionStatusPromise = null;
+
+  function refreshHumateckSubscriptionStatus(){
+    humateckSubscriptionStatusPromise = loadHumateckSubscriptionStatus();
+    return humateckSubscriptionStatusPromise;
+  }
+
   if(document.readyState === "loading"){
-    document.addEventListener("DOMContentLoaded", loadHumateckSubscriptionStatus);
+    document.addEventListener("DOMContentLoaded", refreshHumateckSubscriptionStatus);
   }else{
-    loadHumateckSubscriptionStatus();
+    refreshHumateckSubscriptionStatus();
   }
 
   function getValue(id){
@@ -1372,6 +1378,8 @@ A) This is because YouTube content display system fixes the default video settin
     var hidden = document.getElementById("humateckActivePlanValue");
     var plan = hidden ? hidden.value : "";
     if(!plan && window.humateckPaymentSubscriptionPlan) plan = window.humateckPaymentSubscriptionPlan;
+
+    if(window.humateckIsAdminMember === true) return 70;
 
     if(plan === "free7") return 15;
     if(plan === "monthly50") return 50;
@@ -1517,10 +1525,14 @@ Without any explanation, output only the translated registration text.`;
     }
   }
 
-  document.addEventListener("click", function(e){
+  document.addEventListener("click", async function(e){
     var generate = e.target.closest("#generateGeminiPrompt");
     if(generate){
       e.preventDefault();
+      if(humateckSubscriptionStatusPromise){
+        try{ await humateckSubscriptionStatusPromise; }catch(_e){}
+      }
+      try{ await refreshHumateckSubscriptionStatus(); }catch(_e){}
       buildGeminiPrompt();
       return;
     }

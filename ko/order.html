@@ -1051,12 +1051,11 @@ Description:
     <section class="card" id="geminiCommandCard">
       <h2>제미나이 복붙 명령 순서</h2>
       <div class="commandFullRows">
-        <div class="commandFullItem"><div class="commandFullTop"><label>명령 1</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText1">복사</button></div><textarea id="commandText1" readonly>Please automatically and carefully check for mixed-in other languages, unnatural context, and any other issues.
-
-⚠️ 대용량의 제미나이 번역 복사에는 시간이 걸립니다. 반드시 제미나이 복사 버튼을 누른 뒤, 클립보드에 완전히 복사될 때까지 기다려 주세요.</textarea></div>
+        <div class="commandFullItem"><div class="commandFullTop"><label>명령 1</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText1">복사</button></div><textarea id="commandText1" readonly>Please automatically and carefully check for mixed-in other languages, unnatural context, and any other issues.</textarea></div>
         <div class="commandFullItem"><div class="commandFullTop"><label>명령 2</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText2">복사</button></div><textarea id="commandText2" readonly>Please delete the Number: , Country Name:.</textarea></div>
         <div class="commandFullItem"><div class="commandFullTop"><label>명령 3</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText4">복사</button></div><textarea id="commandText4" readonly>Carefully check once more for mixed-in other languages, unnatural context, and any other issues.</textarea></div>
-        <div class="commandFullItem"><div class="commandFullTop"><label>명령 4</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText7">복사</button></div><textarea id="commandText7" readonly>Please move to the bottom.</textarea></div>
+        <div class="commandFullItem"><div class="commandFullTop"><label>명령 4</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText5">복사</button></div><textarea id="commandText5" readonly>제미나이의 설명문이나 해설 등을 모두 빼고 다시 출력해 줘.</textarea></div>
+        <div class="commandFullItem"><div class="commandFullTop"><label>명령 5</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText7">복사</button></div><textarea id="commandText7" readonly>Please move to the bottom.</textarea></div>
         <div class="commandWarningOutside"><span class="softStrong">⚠️ 중요</span> 반드시 “Please move to the bottom.” 위의 번역문 끝부분 ⧉ [응답 복사] 버튼을 누른 후 클립보드에 완전히 복사될 때까지 기다리신 후 <span class="softStrong">최종등록명령</span>에 복사 붙여넣기 하세요.<br><br><span class="softStrong">⚠️ 중요</span> 번역문 외 제미나이 설명문, 해설, 불필요한 말이 섞이면 유튜브 등록 오류가 날 수 있으니 반드시 번역문만 붙여넣어 주세요.</div>
       </div>
     </section>
@@ -1259,10 +1258,17 @@ Description:
     }catch(e){}
   }
 
+  var humateckSubscriptionStatusPromise = null;
+
+  function refreshHumateckSubscriptionStatus(){
+    humateckSubscriptionStatusPromise = loadHumateckSubscriptionStatus();
+    return humateckSubscriptionStatusPromise;
+  }
+
   if(document.readyState === "loading"){
-    document.addEventListener("DOMContentLoaded", loadHumateckSubscriptionStatus);
+    document.addEventListener("DOMContentLoaded", refreshHumateckSubscriptionStatus);
   }else{
-    loadHumateckSubscriptionStatus();
+    refreshHumateckSubscriptionStatus();
   }
 
   function getValue(id){
@@ -1283,6 +1289,8 @@ Description:
     var hidden = document.getElementById("humateckActivePlanValue");
     var plan = hidden ? hidden.value : "";
     if(!plan && window.humateckPaymentSubscriptionPlan) plan = window.humateckPaymentSubscriptionPlan;
+
+    if(window.humateckIsAdminMember === true) return 70;
 
     if(plan === "free7") return 15;
     if(plan === "monthly50") return 50;
@@ -1428,10 +1436,14 @@ ${countryBlock}
     }
   }
 
-  document.addEventListener("click", function(e){
+  document.addEventListener("click", async function(e){
     var generate = e.target.closest("#generateGeminiPrompt");
     if(generate){
       e.preventDefault();
+      if(humateckSubscriptionStatusPromise){
+        try{ await humateckSubscriptionStatusPromise; }catch(_e){}
+      }
+      try{ await refreshHumateckSubscriptionStatus(); }catch(_e){}
       buildGeminiPrompt();
       return;
     }

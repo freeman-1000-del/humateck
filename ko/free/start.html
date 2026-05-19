@@ -35,6 +35,7 @@ const humateckSupabase = window.supabase.createClient(
   HUMATECK_SUPABASE_URL,
   HUMATECK_SUPABASE_ANON_KEY
 );
+const HUMATECK_FREE_LOCALE = "ko";
 </script>
 
 </head>
@@ -81,7 +82,18 @@ async function loadOrCreateFreePlan(email){
     .maybeSingle();
 
   if(existing.data){
-    localStorage.setItem("humateckFreeOnlyEmail", email);
+    try{
+      if(existing.data.locale !== HUMATECK_FREE_LOCALE){
+        await humateckSupabase
+          .from("free_trial_members")
+          .update({ locale: HUMATECK_FREE_LOCALE })
+          .eq("id", existing.data.id);
+      }
+      localStorage.setItem("humateckFreeOnlyEmail", email);
+      localStorage.setItem("humateckUserEmail", email);
+      localStorage.setItem("humateckEmail", email);
+      localStorage.setItem("humateckFreeLocale", HUMATECK_FREE_LOCALE);
+    }catch(e){}
     return {
       fresh:false,
       end:existing.data.trial_end
@@ -98,11 +110,19 @@ async function loadOrCreateFreePlan(email){
       plan_type: "free7",
       country_limit: 15,
       status: "active",
+      locale: HUMATECK_FREE_LOCALE,
       trial_start: now.toISOString(),
       trial_end: end.toISOString()
     }])
     .select()
     .single();
+
+  try{
+    localStorage.setItem("humateckFreeOnlyEmail", email);
+    localStorage.setItem("humateckUserEmail", email);
+    localStorage.setItem("humateckEmail", email);
+    localStorage.setItem("humateckFreeLocale", HUMATECK_FREE_LOCALE);
+  }catch(e){}
 
   return {
     fresh:true,
