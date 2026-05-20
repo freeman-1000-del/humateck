@@ -966,10 +966,11 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 <section class="orderMainGrid">
   <div class="orderLeftColumn">
     <section class="card">
-      <h1>다국어 자막 등록 주문서</h1>
+      <h1>주요 10개국 다국어 자막 등록양식</h1>
       <div class="order-intro-note">
-        <p>1. 본 주문양식은 제미나이AI 챗번역 체험을 위해 누구나에게 개방되어 있습니다.</p>
-        <p>2. 단, 번역결과를 최종적으로 유튜브에 등록할 권한은 본 서비스 구독자님들에게만 열리오니 착오 없으시기 바랍니다.</p>
+        <p>1. 주요 10개국 유튜브자막을 초스피드로 당신의 채널에 등록하세요.</p>
+        <p>2. 본 양식에는 제미나이 번역을 기본 가이드로 보여드리지만, 아래의 자국어 코드, 유튜브 영상 주소, 주국어 제목, 자국어 설명문을 채우시고 최종등록결과에 준비하신 번역문을 채우시면 유튜브 등록이 즉시 가능합니다.</p>
+        <p>3. 본 등록을 위한 전제조건으로 유튜브 API를 사용하기 위해 '아래의 중요설정 길잡이'를 참고로 구글인증키를 발급 받아 두시면 반복적으로 관히하시는 여러 채널에 골고루 사용이 가능합니다.</p>  
       </div>
       <div class="nativeCodeLabelRow">
   <label for="nativeLanguageCode">자국어 코드</label>
@@ -1044,8 +1045,8 @@ Description: translated description
 
     
     <section class="card" id="finalVersionCard">
-      <h2>최종 버전(고객 검수)</h2>
-      <textarea id="finalOutput" class="mediumTextarea" placeholder="고객님이 검수한 제미나이 최종 버전을 붙여넣어 주세요."></textarea>
+      <h2>최종 버전(사용자 검수)</h2>
+      <textarea id="finalOutput" class="mediumTextarea" placeholder="사용자님께서 검수한 제미나이 최종 버전을 붙여넣어 주세요."></textarea>
     </section>
 
 <section class="card">
@@ -1054,7 +1055,7 @@ Description: translated description
     </section>
 <section class="card registerNoticeBelow">
       <h2>유튜브 등록관련 공지사항</h2>
-      <p>당사는 고객님의 번역 승인본에 대해 어떠한 <span class="highlightAction">검수나 차단 · 변경 · 추가</span>를 하지 않으며, 고객 승인 내용 그대로 발송합니다.</p>
+      <p>당사는 사용자님의 번역 승인본에 대해 어떠한 <span class="highlightAction">검수나 차단 · 변경 · 추가</span>를 하지 않으며, 사용자 승인 내용 그대로 발송합니다.</p>
       <p>모든 번역문은 유튜브 채널에 즉시 등록되며, 접수측이 실제로 거부한 언어는 보류 언어로 분리 표시됩니다.</p>
     <section class="card" id="deliveryResultCard">
       <h2>등록결과</h2>
@@ -1074,7 +1075,7 @@ Description: translated description
 <summary>유튜브 AI 챗번역 FAQ</summary>
 <div class="faqDetails">
 <div class="faqItem"><p class="question"><b>1. 문) 동영상 기본어 설정을 분명히 자국어로 했습니다. 그런데 다국어 번역컨텐츠 등록 후 확인해보니, 동영상 언어 설정이 미국 영어로 변했습니다. 이유가 뭘까요?</b></p><p>
-답) 다국어 번역컨텐츠 등록시 유튜브 다국어 번역컨텐츠 표시시스템상 동영상 기본설정이 미국 영어로 고정되어 있기 때문입니다. 그러나 이는 오류가 아니며, 고객님의 자국어 제목이나 설명문은 언제든지 자국어로 수정하실 수 있사오니 착오 없으시기 바랍니다.</p></div>
+답) 다국어 번역컨텐츠 등록시 유튜브 다국어 번역컨텐츠 표시시스템상 동영상 기본설정이 미국 영어로 고정되어 있기 때문입니다. 그러나 이는 오류가 아니며, 사용자님의 자국어 제목이나 설명문은 언제든지 자국어로 수정하실 수 있사오니 착오 없으시기 바랍니다.</p></div>
 <details><summary>자세히 보기</summary>
 <div class="faqItem"><p class="question"><b>2. 문) 유튜브 다국어 번역컨텐츠 등록하기를 누르니 할당량 초과 메시지가 뜹니다.</b></p><p>답) 유튜브 다국어 번역컨텐츠등록 일일 API 무료할당량이 초과된 경우입니다. 다음날 할당량이 다시 충전될 때까지 기다렸다가 다시 시도하시기 바랍니다.</p></div>
 <div class="faqItem"><p class="question"><b>3. 문) '유튜브 영상 주소에서 videoId를 찾지 못했습니다.'라는 메시지가 뜹니다.</b></p><p>답) 유튜브 주소를 잘못 입력하신 경우입니다. 반드시 유튜브 실제동영상(스튜디오 ×)의 주소를 그대로 복사하여 붙여 넣어 주시기 바랍니다.</p></div>
@@ -1087,7 +1088,7 @@ Description: translated description
 </section>
     <details class="adminSecret">
       <summary>관리자용 히든 메뉴</summary>
-      <p>관리자는 테스트와 고객 CS 대응을 위해 어떤 플랜도 선택할 수 있습니다.</p>
+      <p>관리자는 테스트와 사용자 CS 대응을 위해 어떤 플랜도 선택할 수 있습니다.</p>
       <div class="actions"><button class="btn adminPlanButton" type="button" data-admin-plan="trial7">7일 무료 15개국</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly30">30개국</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly50">50개국</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly70">70개국</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly83">83개국</button><button class="btn adminPlanButton" type="button" data-admin-plan="yearly83">연간 83개국</button></div>
     </details>
 
@@ -1105,7 +1106,7 @@ Description: translated description
     <p class="guideSubTitle">처음 사용자를 위한 Google OAuth 승인방법입니다.</p>
 
     <div class="guideIntroBox">
-      <p>처음에는 조금 낯설 수 있습니다. 하지만 이 설정은 고객님의 유튜브 채널에 다국어 번역콘텐츠를 등록하기 위해 필요한 Google 공식 승인 절차입니다.</p>
+      <p>처음에는 조금 낯설 수 있습니다. 하지만 이 설정은 사용자님의 유튜브 채널에 다국어 번역콘텐츠를 등록하기 위해 필요한 Google 공식 승인 절차입니다.</p>
       <p><span class="guidePoint">Google OAuth Client ID는 설정 후 상당기간 재사용되는 것이 일반적이지만, 사용량 과다로 인한 토큰 만료, 기타 이유로 재설정이 필요할 수도 있습니다.</span></p>
     </div>
 
@@ -1113,7 +1114,7 @@ Description: translated description
       <h3>1단계. Google Cloud로 이동해 주세요</h3>
       <p>아래 버튼을 눌러 Google Cloud 설정 화면으로 이동해 주세요.</p>
       <a class="guideCloudBtn" href="https://console.cloud.google.com/auth/audience?hl=ko&project=fourth-cedar-489307-b1" target="_blank" rel="noopener noreferrer">Google Cloud 바로가기</a>
-      <p>Google Cloud에 접속한 뒤, 유튜브 등록에 사용할 고객님의 Google 계정으로 로그인해 주세요.</p>
+      <p>Google Cloud에 접속한 뒤, 유튜브 등록에 사용할 사용자님의 Google 계정으로 로그인해 주세요.</p>
     </div>
 
     <div class="guideSection">
@@ -1126,8 +1127,8 @@ Description: translated description
       <h3>3단계. Branding 정보를 입력해 주세요</h3>
       <p>왼쪽 메뉴에서 <span class="guideCode">Branding</span>을 눌러 주세요.</p>
       <ul class="guideList">
-        <li><span class="guidePoint">App name</span>에는 고객님이 알아보기 쉬운 이름을 적어 주세요.</li>
-        <li><span class="guidePoint">User support email</span>에는 고객님의 Google 이메일을 선택해 주세요.</li>
+        <li><span class="guidePoint">App name</span>에는 사용자님이 알아보기 쉬운 이름을 적어 주세요.</li>
+        <li><span class="guidePoint">User support email</span>에는 사용자님의 Google 이메일을 선택해 주세요.</li>
         <li><span class="guidePoint">Developer contact information</span>에도 연락 가능한 이메일을 적어 주세요.</li>
       </ul>
     </div>
@@ -1528,7 +1529,7 @@ ${countryBlock}`;
   window.generateFinalPayloadOnly=function(){
     const txt=getFinalText();
     if(!txt){
-      alert("제미나이 최종 버전(고객 검수)을 붙여넣어 주세요.");
+      alert("제미나이 최종 버전(아용자 검수)을 붙여넣어 주세요.");
       return null;
     }
     const payload=parseBlocks(txt);
@@ -1784,11 +1785,11 @@ ${countryBlock}`;
     }
 
     var finalText = getFinalText();
-    if(!finalText){ alert("제미나이 최종 버전(고객 검수)을 붙여넣어 주세요."); return; }
+    if(!finalText){ alert("제미나이 최종 버전(사용자 검수)을 붙여넣어 주세요."); return; }
 
     var localizations = parseFinalTextToLocalizations(finalText);
     var codes = Object.keys(localizations);
-    if(codes.length === 0){ alert("Country Code: 기준의 등록용 최종 버전(고객 검수)을 찾지 못했습니다."); return; }
+    if(codes.length === 0){ alert("Country Code: 기준의 등록용 최종 버전(사용자 검수)을 찾지 못했습니다."); return; }
 
     var btn = $("sendOrderBtn") || $("youtubeRegisterBtn");
     if(btn){ btn.disabled = true; btn.textContent = "등록 진행 중"; }
