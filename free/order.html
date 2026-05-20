@@ -1069,6 +1069,21 @@ input,textarea{font-size:16px!important;}
 }
 </style>
 
+
+<style>
+/* Humateck universal translation-source positioning */
+.universalTranslationNotice{
+  border:1px solid rgba(202,178,122,.58);
+  border-radius:14px;
+  padding:14px 16px;
+  margin:14px 0 16px;
+  background:rgba(202,178,122,.075);
+  color:#e8dcc5;
+  line-height:1.72;
+  font-weight:700;
+}
+.universalTranslationNotice strong{color:#d8bf83;font-weight:900;}
+</style>
 </head>
 <body>
 <!--
@@ -1089,6 +1104,7 @@ Do not add review, blocking, metadata judgment, hidden/admin menu, auto-correcti
         <p>1. This order form is open to everyone for experiencing Gemini AI chat translation.</p>
         <p>2. However, the authority to finally register the translation results on YouTube is open only to subscribers of this service. Please do not misunderstand this point.</p>
       </div>
+      <div class="universalTranslationNotice"><strong>Flexible translation source:</strong> Humateck is not limited to Gemini translation. You may use Gemini, ChatGPT, DeepL, another AI translator, or your own prepared translation. As long as the final text follows the required <strong>Country Code / Title / Description</strong> format, Humateck can register it to YouTube.</div>
       <div class="nativeCodeLabelRow">
   <label for="nativeLanguageCode">Native Language Code</label>
   <button id="openNativeCodeListBtn" class="nativeCodeListBtn" type="button">70 Country Names / Language Codes List</button>
@@ -1143,7 +1159,7 @@ Without any explanation, output only the translated registration text.</textarea
         <div class="commandFullItem"><div class="commandFullTop"><label>Command 1</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText1">Copy</button></div><textarea id="commandText1" readonly>Please automatically and carefully check for mixed-in other languages, unnatural context, and any other issues.</textarea></div>
         <div class="commandFullItem"><div class="commandFullTop"><label>Command 2</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText2">Copy</button></div><textarea id="commandText2" readonly>Please delete the Number: , Country Name:.</textarea></div>
         <div class="commandFullItem"><div class="commandFullTop"><label>Command 3</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText4">Copy</button></div><textarea id="commandText4" readonly>Carefully check once more for mixed-in other languages, unnatural context, and any other issues.</textarea></div>
-        <div class="commandFullItem"><div class="commandFullTop"><label>Command 4</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText5">Copy</button></div><textarea id="commandText5" readonly>Please remove all Gemini explanations, commentary, and extra text, then output only the pure translated registration text again.</textarea></div>
+        <div class="commandFullItem"><div class="commandFullTop"><label>Command 4</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText5">Copy</button></div><textarea id="commandText5" readonly>제미나이의 설명문이나 해설 등을 모두 빼고 다시 출력해 줘.</textarea></div>
         <div class="commandFullItem"><div class="commandFullTop"><label>Command 5</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText7">Copy</button></div><textarea id="commandText7" readonly>Please move to the bottom.</textarea></div>
         <div class="commandWarningOutside"><span class="softStrong">⚠️ Important</span> Be sure to press the ⧉ [Copy response] button at the end of the translated text above “Please move to the bottom.” Wait until it is fully copied to the clipboard, then paste it into <span class="softStrong">Final Registration Command</span>.<br><br><span class="softStrong">⚠️ Important</span> Be careful not to include Gemini explanations, commentary, or unnecessary words other than the translation, as they may cause YouTube registration errors.</div>
       </div>
