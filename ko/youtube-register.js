@@ -89,16 +89,16 @@ Failover principle:
       .replace(/^\s*Country\s*Name\s*:\s*.*$/gmi, "");
   }
 
+  /* 🛠️ [수정 완료] 맨 첫 줄에 나오는 첫 번째 국가 코드도 누락 없이 완벽히 세도록 로직 보완 */
   function parseLabeledCountryCode(finalText){
-    var text = stripNumberAndCountryName(String(finalText || "").replace(/\r/g, ""));
-    var parts = text.split(/\n\s*Country\s*Code\s*:\s*/i);
-    if(parts.length <= 1){
-      parts = text.split(/^\s*Country\s*Code\s*:\s*/gmi);
-    }
+    var text = stripNumberAndCountryName(String(finalText || "").replace(/\r/g, "")).trim();
+    
+    // 줄바꿈 기호(\n) 의존성을 없애고 'Country Code :' 단어 자체로 안전하게 분할합니다.
+    var parts = text.split(/\s*Country\s*Code\s*:\s*/i);
     var localizations = {};
 
-    for(var i=1;i<parts.length;i++){
-      var block = parts[i].replace(/^\s+/, "");
+    for(var i=1; i<parts.length; i++){
+      var block = parts[i];
       var lines = block.split("\n");
       var code = clean(lines.shift() || "");
       if(!code) continue;
