@@ -985,7 +985,7 @@ Do not add review, blocking, metadata judgment, hidden/admin menu, auto-correcti
     <section class="card">
       <h1>다국어 자막 등록 주문서</h1>
       <div class="order-intro-note">
-        <p>1. 주요 10개국 유튜브자막을 초스피드로 당신의 채널에 등록하세요.
+        <p>1. 주요 3개국 유튜브자막을 초스피드로 당신의 채널에 등록하세요.
         <p>2. 본 양식에는 제미나이 번역을 기본 가이드로 보여드리지만, 아래의 '자국어 코드', '유튜브 영상 주소', '자국어 제목', '자국어 설명문'을 채우시고 '최종등록결과(사용자 검수)'에 준비하신 번역문을 채우시면 유튜브 등록이 즉시 가능합니다.
         <p>3. 본 등록을 위한 전제조건으로 유튜브 API를 사용하기 위해 아래 소개해 드리는 '중요설정 길잡이'를 따라 구글인증키를 발급 받아 두시면 반복적으로 관리하시는 여러 채널에 골고루 사용이 가능합니다.
       </div>
@@ -1063,7 +1063,7 @@ Description:
       <div class="actions"><a class="btn guideOpenButton" href="#oauthGuideModal">중요설정 길잡이</a><a class="btn" href="./plans.html">플랜 구독하러 가기</a></div>
       <div class="oauthPanelBelow">
         <h2>Google OAuth 인증</h2>
-        <p>구글 정첵에 따라 유튜브 컨텐츠 등록에는 필히 Google OAuth 인증키 확인과정이 필요합니다.</p>
+        <p>일단 키를 맞추셨으니(설정하셨으니), 매번 열쇠 비번을 사용하여 유튜브 등록의 문을 여는 것이 Google OAuth 인증키 확인절차입니다.</p>
         <label for="googleClientIdInput">Google OAuth Web Client ID</label>
         <input id="googleClientIdInput" type="password" autocomplete="off" placeholder="Google OAuth Web Client ID를 붙여넣으세요">
         <div class="oauthCenterButton">
@@ -1101,7 +1101,7 @@ Description:
 <div class="faqItem"><p class="question"><b>3. 문) 구글 OAuth 설정이 무엇인가요? 사용시마다 설정해야 하나요?</b></p><p>답) 내 유튜브 채널에 자막을 등록해도 좋다고 구글에 허락받는 연결키입니다. 한 번 설정 후 장기간 여러 채널에 쓰실 수 있습니다.</p></div>
 <div class="faqItem"><p class="question"><b>4. 문) 구글 OAuth 인증키는 프로그램이나 서버에 보관되나요?</b></p><p>답) 당 프로그램의 개발자들은 개인정보에 관한 어떤 사항도 본 프로그램이나 서버에 보관하는 위험을 무릅쓰지 않습니다.
 <div class="faqItem"><p class="question"><b>5. 문) 여러 채널을 운영 중입니다. OAuth 설정을 단 한번만 받아도 되나요?</b></p><p>답) 여러 채널의 유튜브 다국어 번역콘텐츠를 등록하시려는 경우에도, Google OAuth 설정을 채널마다 새로 만들 필요는 없습니다. 다만 Google 인증을 진행한 계정이 해당 유튜브 채널 또는 영상에 수정 권한을 가지고 있어야 정상 등록이 가능합니다.</p></div>
-<div class="faqItem"><p class="question"><b>6. 문) 이 등록시스템이 혹시나 등록 오류가 잦을까봐 선뜻 쓰기가 꺼려집니다.</b></p><p>답) 사용자님의 그 마음 충분히 이해합니다. 그러나 시스템이 너무 심플해서, 어떤 불가항력적인 외부 악조건이 발생하거나 유튜브가 미리 정한 번역문 서술규칙을 사용자가 어기지 않는한 그 어떤 훼방도 없이 준비하신 컨텐츠가 초고속으로 유튜브에 등록되는 시스템입니다.</p></div>
+<div class="faqItem"><p class="question"><b>6. 문) 이 등록시스템은 등록오류가 많이 있나요?</b></p><p>답) 원치 않는 돌발 오류에 대한 사용자님의 우려를 충분히 이해합니다. 그러나 어떤 불가항력적인 외부 악조건이 발생하거나 유튜브가 미리 정해놓은 번역문 서술규칙이 준수되는 한 그 어떤 훼방도 없이 준비하신 컨텐츠가 초고속으로 유튜브에 등록되는 시스템임을 보증합니다.</p></div>
 </details>
 </div>
 </details>
@@ -1114,11 +1114,11 @@ Description:
 <div id="oauthGuideModal" class="guideModal">
   <div class="guideModalBox">
     <h2>중요설정 길잡이</h2>
-        <p class="oauthLaunchNotice">본 인증은 사용자들의 유튜브컨텐츠 등록을 위한 Google 공식 승인 절차입니다.</p>
-    <p class="guideSubTitle">처음 사용자를 위한 Google OAuth 승인방법입니다.</p>
+        <p class="oauthLaunchNotice">본 인증은 사용자들의 유튜브컨텐츠 등록을 위한 Google의 공식 승인 절차입니다.</p>
+    <p class="guideSubTitle">최초 사용자들께서는 한번만 Google OAuth 승인방법 안내를 따라가시면 됩니다.</p>
 
     <div class="guideIntroBox">
-      <p>처음에는 조금 낯설고 다소 귀찮을 수 있습니다. 그러나 어차피 대기업의 보안 정책 때문에 불가피한 절차이기에, 머지 않아 마치 집 열쇠처럼 친근한 일상이 될 것입니다.</p>
+      <p>처음에는 조금 낯설고 다소 귀찮을 수 있습니다. 그러나 머지 않아 마치 집 열쇠처럼 친근한 일상이 될 것입니다.</p>
       <p><span class="guidePoint">Google OAuth Client ID는 설정 후 상당기간 재사용되는 것이 일반적이지만, 사용량 과다로 인한 토큰 만료, 기타 이유로 재설정이 필요할 수도 있습니다.</span></p>
     </div>
 
