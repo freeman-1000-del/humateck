@@ -1,6 +1,15 @@
 /*
-[Humateck Developer Restored Line]
-10개 언어 오더페이지 서식과 70개 언어 범용 로직 간의 ID 매칭을 완벽히 동기화한 버전입니다.
+[Humateck Developer Warning]
+This file is the ONLY YouTube registration delivery line.
+Allowed: use the Google OAuth result and deliver the customer-approved text to YouTube API.
+Forbidden: review, block, judge, pre-validate, modify, auto-correct, add metadata logic, add hidden/admin/test menus, or create self-made registration errors.
+Humateck is a delivery system. Google handles authentication. YouTube handles registration response.
+Do not move this logic back into order.html.
+
+Failover principle:
+- Primary delivery path: localizations-only update.
+- Backup delivery path: snippet + localizations update using the existing YouTube snippet.
+- The backup path is not a reviewer. It only retries the same customer-approved delivery with a safer YouTube request shape.
 */
 (function(){
   "use strict";
@@ -22,17 +31,14 @@
     if(box){
       box.value = message;
       box.scrollTop = box.scrollHeight;
-    } else {
-      // 로그창이 없을 경우 브라우저 콘솔에도 기록을 남겨 먹통 방지
-      console.log("[YouTube Register Log]", message);
     }
   }
 
   function setButtonBusy(isBusy){
-    var btn = $("youtubeRegisterBtn") || $("sendOrderBtn");
+    var btn = $("sendOrderBtn") || $("youtubeRegisterBtn");
     if(!btn) return;
     btn.disabled = !!isBusy;
-    btn.textContent = isBusy ? "다국어 등록 진행 중..." : "YouTube 다국어 등록 시작";
+    btn.textContent = isBusy ? "Registration in Progress" : "YouTube Multilingual Registration";
   }
 
   function getValue(ids){
@@ -53,7 +59,6 @@
   }
 
   function getVideoUrl(){ return getValue(["videoUrl", "sourceVideoUrl", "youtubeUrl"]); }
-  // 10개 언어 오더창에 설정된 finalOutput을 최우선으로 수집합니다.
   function getFinalText(){ return getValue(["finalOutput", "finalText", "finalResultText"]); }
   function getNativeLanguageCode(){ return getValue(["nativeLanguageCode"]) || "en"; }
   function getNativeTitle(){ return getValue(["sourceTitle"]); }
@@ -84,158 +89,174 @@
       .replace(/^\s*Country\s*Name\s*:\s*.*$/gmi, "");
   }
 
-  function parseTitleDescription(textBlock){
-    var lines = String(textBlock || "").split("\n");
-    var title = "";
-    var descLines = [];
-    var foundDescHeader = false;
-
-    for(var i=0; i<lines.length; i++){
-      var line = lines[i];
-      if(/^\s*Title\s*:\s*/i.test(line)){
-        title = clean(line.replace(/^\s*Title\s*:\s*/i, ""));
-        continue;
-      }
-      if(/^\s*Description\s*:\s*/i.test(line)){
-        foundDescHeader = true;
-        var firstDescLine = line.replace(/^\s*Description\s*:\s*/i, "");
-        if(clean(firstDescLine)){
-          descLines.push(clean(firstDescLine));
-        }
-        continue;
-      }
-      if(foundDescHeader){
-        descLines.push(line);
-      } else {
-        if(clean(line) && !title){
-          title = clean(line);
-        }
-      }
-    }
-    return { title: title || "Multilingual Title", description: descLines.join("\n").trim() };
-  }
-
-  function chooseLocalizations(finalText){
-    var text = stripNumberAndCountryName(String(finalText || "").replace(/\r/g, ""));
-    var parts = text.split(/\n\s*Country\s*Code\s*:\s*/i);
-    if(parts.length <= 1){
-      parts = text.split(/^\s*Country\s*Code\s*:\s*/gmi);
-    }
+  /* 🛠️ [수정 완료] 맨 첫 줄에 나오는 첫 번째 국가 코드도 누락 없이 완벽히 세도록 로직 보완 */
+  function parseLabeledCountryCode(finalText){
+    var text = stripNumberAndCountryName(String(finalText || "").replace(/\r/g, "")).trim();
+    
+    // 줄바꿈 기호(\n) 의존성을 없애고 'Country Code :' 단어 자체로 안전하게 분할합니다.
+    var parts = text.split(/\s*Country\s*Code\s*:\s*/i);
     var localizations = {};
-    for(var i=1;i<parts.length;i++){
-      var block = parts[i].replace(/^\s+/, "");
+
+    for(var i=1; i<parts.length; i++){
+      var block = parts[i];
       var lines = block.split("\n");
       var code = clean(lines.shift() || "");
       if(!code) continue;
-      
-      // 70개 규격 외에 10개 코드만 등록되어 있어도 유연하게 수집하도록 보완
       var parsed = parseTitleDescription(lines.join("\n"));
-      localizations[code] = { title: parsed.title, description: parsed.description };
+      localizations[code] = parsed;
     }
     return localizations;
   }
 
-  async function callYouTubeAPI(path, token, body){
-    var url = "https://www.googleapis.com/youtube/v3/" + path;
-    return fetch(url, {
+  function parseCodeLineBlocks(finalText){
+    var text = stripNumberAndCountryName(String(finalText || "").replace(/\r/g, ""));
+    var localizations = {};
+    var codes = COUNTRY_ORDER_70.slice();
+
+    for(var i=0;i<codes.length;i++){
+      var code = codes[i].replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      var nextCodes = codes.slice(i+1).map(function(c){ return c.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }).join("|");
+      var end = nextCodes ? "(?=\\n\\s*(?:" + nextCodes + ")\\s*\\n|$)" : "(?=$)";
+      var re = new RegExp("(?:^|\\n)\\s*(" + code + ")\\s*\\n([\\s\\S]*?)" + end, "i");
+      var m = text.match(re);
+      if(m){
+        localizations[codes[i]] = parseTitleDescription(m[2]);
+      }
+    }
+    return localizations;
+  }
+
+  function parseSequentialTitleDescription(finalText){
+    var text = stripNumberAndCountryName(String(finalText || "").replace(/\r/g, ""));
+    var localizations = {};
+    var pattern = /(?:^|\n)\s*Title\s*:\s*([^\n]*)([\s\S]*?)(?=\n\s*Title\s*:|$)/gi;
+    var match;
+    var index = 0;
+    while((match = pattern.exec(text)) && index < COUNTRY_ORDER_70.length){
+      var title = clean(match[1]);
+      var body = match[2] || "";
+      var description = "";
+      var d = body.search(/\n\s*Description\s*:/i);
+      if(d >= 0){
+        description = body.slice(d).replace(/^\n\s*Description\s*:\s*/i, "").replace(/\n+$/g, "");
+      }else{
+        description = body.replace(/^\n+/, "").replace(/\n+$/g, "");
+      }
+      localizations[COUNTRY_ORDER_70[index]] = { title: title, description: description };
+      index++;
+    }
+    return localizations;
+  }
+
+  function parseTitleDescription(text){
+    var source = String(text || "");
+    var title = "";
+    var description = "";
+    var titleMatch = source.match(/(?:^|\n)\s*Title\s*:\s*([^\n]*)/i);
+    if(titleMatch) title = clean(titleMatch[1]);
+    var descMatch = source.match(/(?:^|\n)\s*Description\s*:\s*([\s\S]*)/i);
+    if(descMatch) description = String(descMatch[1] || "").replace(/^\n+/, "").replace(/\n+$/g, "");
+    return { title: title, description: description };
+  }
+
+  function chooseLocalizations(finalText){
+    var first = parseLabeledCountryCode(finalText);
+    if(Object.keys(first).length) return first;
+    var second = parseCodeLineBlocks(finalText);
+    if(Object.keys(second).length) return second;
+    return parseSequentialTitleDescription(finalText);
+  }
+
+  async function youtubeJson(url, options){
+    var res = await fetch(url, options || {});
+    var data = await res.json().catch(function(){ return {}; });
+    if(!res.ok){
+      var msg = data && data.error && data.error.message ? data.error.message : "Temporary YouTube registration response was not accepted.";
+      throw new Error(msg);
+    }
+    return data;
+  }
+
+  async function engineLocalizationsOnly(ctx){
+    await youtubeJson("https://www.googleapis.com/youtube/v3/videos?part=localizations", {
       method: "PUT",
       headers: {
-        "Authorization": "Bearer " + token,
+        Authorization: "Bearer " + ctx.token,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ id: ctx.videoId, localizations: ctx.localizations })
+    });
+  }
+
+  async function engineSnippetMerge(ctx){
+    var existing = await youtubeJson(
+      "https://www.googleapis.com/youtube/v3/videos?part=snippet,localizations&id=" + encodeURIComponent(ctx.videoId),
+      { headers: { Authorization: "Bearer " + ctx.token } }
+    );
+    var video = existing.items && existing.items[0] ? existing.items[0] : {};
+    var snippet = video.snippet || {};
+    var merged = Object.assign({}, video.localizations || {}, ctx.localizations || {});
+    var body = {
+      id: ctx.videoId,
+      snippet: {
+        title: getNativeTitle() || snippet.title || "",
+        description: getNativeDescription() || snippet.description || "",
+        categoryId: snippet.categoryId || "22",
+        defaultLanguage: getNativeLanguageCode() || snippet.defaultLanguage || "en"
+      },
+      localizations: merged
+    };
+    await youtubeJson("https://www.googleapis.com/youtube/v3/videos?part=snippet,localizations", {
+      method: "PUT",
+      headers: {
+        Authorization: "Bearer " + ctx.token,
         "Content-Type": "application/json"
       },
       body: JSON.stringify(body)
     });
   }
 
-  async function engineLocalizationsOnly(ctx){
-    var body = {
-      id: ctx.videoId,
-      localizations: ctx.localizations
-    };
-    var res = await callYouTubeAPI("videos?part=localizations", ctx.token, body);
-    if(!res.ok){
-      var errText = await res.text();
-      throw new Error(errText || "Primary route registration failed.");
-    }
-    return true;
-  }
-
-  async function engineSnippetMerge(ctx){
-    var url = "https://www.googleapis.com/youtube/v3/videos?part=snippet&id=" + ctx.videoId;
-    var getRes = await fetch(url, {
-      headers: { "Authorization": "Bearer " + ctx.token }
-    });
-    if(!getRes.ok) throw new Error("Failed to load original video snippet for failover path.");
-    var data = await getRes.json();
-    if(!data.items || !data.items[0]) throw new Error("Target video details could not be found on YouTube.");
-    
-    var currentSnippet = data.items[0].snippet;
-    var body = {
-      id: ctx.videoId,
-      snippet: {
-        categoryId: currentSnippet.categoryId,
-        defaultLanguage: currentSnippet.defaultLanguage || getNativeLanguageCode(),
-        description: currentSnippet.description || getNativeDescription(),
-        title: currentSnippet.title || getNativeTitle(),
-        tags: currentSnippet.tags || []
-      },
-      localizations: ctx.localizations
-    };
-    var res = await callYouTubeAPI("videos?part=snippet,localizations", ctx.token, body);
-    if(!res.ok){
-      var errData = await res.text();
-      throw new Error(errData || "Failover route data sync failed.");
-    }
-    return true;
-  }
-
   async function deliver(){
     var started = Date.now();
     var token = getAccessToken();
-    var videoUrl = getVideoUrl();
-    var videoId = extractVideoId(videoUrl);
+    var videoId = extractVideoId(getVideoUrl());
     var finalText = getFinalText();
-
-    if(!token){
-      showResult("오류: 구글 로그인 인증 토큰이 존재하지 않습니다. 구글 로그인을 먼저 진행해 주세요.");
-      return;
-    }
-    if(!videoId){
-      showResult("오류: 올바른 YouTube 영상 주소(URL)를 입력창에 적어주세요.");
-      return;
-    }
-    if(!finalText){
-      showResult("오류: 등록할 번역 텍스트 결과(finalOutput)가 비어 있습니다.");
-      return;
-    }
-
     var localizations = chooseLocalizations(finalText);
     var codes = Object.keys(localizations);
-    
-    if(codes.length === 0){
-      showResult("오류: 텍스트에서 추출된 국가 코드(Country Code)가 없습니다. 서식을 확인하세요.");
-      return;
-    }
-
     var ctx = { token: token, videoId: videoId, localizations: localizations };
 
     setButtonBusy(true);
-    showResult("유튜브 다국어 등록을 전송하는 중입니다...");
+    showResult("YouTube multilingual registration is in progress.");
 
     try{
       try{
         await engineLocalizationsOnly(ctx);
       }catch(primaryError){
-        console.warn("Primary path failed, trying snippet failover...", primaryError);
         await engineSnippetMerge(ctx);
       }
       var seconds = Math.max(1, Math.round((Date.now() - started) / 1000));
       showResult(
-        "🎉 유튜브 등록 성공!\n" +
-        "■ 등록 완료 국가: " + codes.length + "개 언어 지역\n" +
-        "■ 반영 시간: " + seconds + "초 소요"
+        "Registration Results\n" +
+        "Number of target registration languages: " + codes.length + " languages\n" +
+        "Registration time: " + seconds + " seconds"
       );
     }catch(error){
-      var message = error && error.message ? error.message : String(error || "알 수 없는 전송 지연 오류가 발생했습니다.");
-      showResult("❌ 등록 실패 원인:\n" + message);
-    }finally{\n      setButtonBusy(false);\n    }\n  }\n\n  window.HumateckYouTubeRegister = {\n    deliver: deliver,\n    parse: chooseLocalizations\n  };\n\n  // 버튼 클릭 시 정상적으로 가로채 전송(deliver)을 수행하도록 통합 설정\n  document.addEventListener("click", function(event){\n    var btn = event.target.closest("#youtubeRegisterBtn, #sendOrderBtn");\n    if(!btn) return;\n    event.preventDefault();\n    deliver();\n  });\n})();\n
+      var message = error && error.message ? error.message : String(error || "Temporary registration delay occurred.");
+      showResult(message);
+    }finally{
+      setButtonBusy(false);
+    }
+  }
+
+  window.HumateckYouTubeRegister = {
+    deliver: deliver,
+    parse: chooseLocalizations
+  };
+
+  document.addEventListener("click", function(event){
+    var btn = event.target.closest("#sendOrderBtn, #youtubeRegisterBtn");
+    if(!btn) return;
+    event.preventDefault();
+    deliver();
+  }, true);
+})();
