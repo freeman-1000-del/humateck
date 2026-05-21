@@ -10,8 +10,7 @@ html,body{margin:0;padding:0;background:#050b14;color:#f4f1e8;font-family:Arial,
 a{color:inherit;text-decoration:none}
 button,input,textarea{font-family:inherit}
 .wrap{width:1180px;max-width:calc(100vw - 48px);margin:0 auto;padding:24px 0 60px}
-/* 로고와 우측 타이틀이 수평으로 알맞게 정렬되도록 정비 */
-.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
 .logo{width:210px;height:auto;display:block}
 .lang{border:1px solid rgba(214,176,78,.55);border-radius:999px;padding:8px 14px;color:#e8d8a8;background:rgba(255,255,255,.03)}
 .hero{position:relative;overflow:hidden;border:1px solid rgba(214,176,78,.72);border-radius:30px;background:radial-gradient(circle at 68% 20%,rgba(75,151,255,.24),transparent 35%),radial-gradient(circle at 30% 42%,rgba(214,176,78,.18),transparent 35%),linear-gradient(180deg,#0b1423,#070b11);min-height:520px;padding:38px 38px 32px;box-shadow:0 22px 70px rgba(0,0,0,.46)}
@@ -50,4 +49,327 @@ button,input,textarea{font-family:inherit}
 input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1px solid #4b5d6d;border-radius:12px;font-size:15px;margin:8px 0 14px}textarea{min-height:300px;line-height:1.72;resize:vertical}
 .notice{border:1px solid rgba(214,176,78,.48);border-radius:16px;padding:16px;background:rgba(214,176,78,.1);color:#f0dfb4;line-height:1.7;margin-top:14px}
 .faqItem{border-top:1px solid rgba(255,255,255,.12);padding-top:14px;margin-top:14px}
-.codebox
+.codebox{white-space:pre-wrap;background:#080f18;border:1px solid #334353;border-radius:12px;padding:14px;color:#e9e1d0;line-height:1.6;font-size:14px}
+@media(max-width:980px){.grid2,.order,.plans{grid-template-columns:1fr}.title{font-size:32px}.wrap{max-width:calc(100vw - 28px)}}
+.question{color:#ffd95a!important;font-weight:900}.questionBox{width:100%;min-height:120px;margin-top:10px}.closeRow{text-align:right;margin-top:18px}.btn.small{min-width:auto;min-height:auto;font-size:15px;padding:9px 14px}.siteTitleText{color:#d8bf83;font-size:22px;font-weight:900;letter-spacing:.2px}</style>
+
+
+<style>
+
+.top-left-tools{
+  display:flex;
+  gap:10px;
+  margin:0 0 18px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.miniNavButton{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:10px 16px;
+  border:1px solid rgba(214,176,78,.68);
+  border-radius:999px;
+  color:#f4d16d;
+  background:rgba(214,176,78,.12);
+  font-weight:800;
+}
+.closeRow{margin-top:16px;text-align:right}
+.question{color:#ffd95a!important;font-weight:900}
+.faqSummary{cursor:pointer;color:#ffd95a;font-weight:900;margin:10px 0}
+.faqDetails{margin-top:10px}
+.blinkActive{animation:humateckPlanBlink 1.1s infinite alternate;box-shadow:0 0 26px rgba(255,217,90,.95)!important;border-color:#ffd95a!important}
+@keyframes humateckPlanBlink{from{filter:brightness(1)}to{filter:brightness(1.35)}}
+.orderMainGrid{display:grid;grid-template-columns:1fr 330px;gap:18px;align-items:start}
+.orderLeftColumn{display:grid;gap:18px}
+.orderBottomGrid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
+.smallTextarea{min-height:72px!important}
+.mediumTextarea{min-height:150px!important}
+.compactTextarea{min-height:58px!important}
+.command7Textarea{min-height:116px!important}
+.commandGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.commandGrid .commandBox:nth-child(7){grid-column:1 / -1}
+.copyCommandWrap{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start;margin-bottom:12px}
+.commandCopyBtn{min-width:72px!important;min-height:38px!important;padding:8px 12px!important;font-size:14px!important}
+.yellowStrong,.yellowNotice{color:#ffd95a!important;font-weight:900}
+.copyButtonVisible{display:inline-flex;animation:humateckPlanBlink 1.1s infinite alternate}
+.oauthInfoBox{border:1px solid rgba(255,217,90,.62);border-radius:16px;padding:18px;margin:20px 0;background:rgba(255,217,90,.09);line-height:1.75}
+.oauthInfoBox h2{color:#ffd95a!important;margin-top:0}
+.guideOpenButton{animation:humateckGuideBlink 1.05s infinite alternate;border-color:#ffd95a!important;color:#fff!important;box-shadow:0 0 24px rgba(255,217,90,.75)!important}
+@keyframes humateckGuideBlink{from{filter:brightness(1)}to{filter:brightness(1.36)}}
+.oauthPanelBelow{border:1px solid rgba(214,176,78,.56);border-radius:16px;padding:18px;margin-top:16px;background:rgba(16,23,31,.95)}
+.guideModal{display:none;position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.72);align-items:center;justify-content:center;padding:24px}
+.guideModal:target{display:flex}
+.guideModalBox{width:760px;max-width:calc(100vw - 48px);max-height:86vh;overflow:auto;border:1px solid #d4a94f;border-radius:20px;background:#121a23;color:#eee5d5;padding:28px 32px}
+.guideModalBox h2{color:#ffd95a;margin-top:0}.guideModalBox p,.guideModalBox li{line-height:1.75}
+.closeModalBtn{display:inline-flex;margin-top:18px;border:1px solid #caa24e;padding:10px 18px;border-radius:10px;color:#fff}
+.adminSecret{margin-top:18px;border:1px dashed rgba(255,217,90,.45);border-radius:14px;padding:14px;background:rgba(255,217,90,.06)}
+.adminSecret summary{cursor:pointer;color:#ffd95a;font-weight:900}
+.planHookNote{font-size:14px;color:#ffd95a;margin-top:10px}
+@media(max-width:980px){.orderMainGrid,.orderBottomGrid,.commandGrid{grid-template-columns:1fr}}
+</style>
+
+
+<style>
+
+.orderTopButtons{display:flex;gap:10px;margin:0 0 16px;flex-wrap:wrap}
+.orderTopButtons a{display:inline-flex;align-items:center;justify-content:center;padding:10px 16px;border:1px solid rgba(214,176,78,.68);border-radius:999px;color:#f4d16d;background:rgba(214,176,78,.12);font-weight:800}
+.commandFullRows{display:grid;grid-template-columns:1fr;gap:14px}
+.commandFullItem{border:1px solid rgba(214,176,78,.35);border-radius:14px;padding:14px;background:rgba(5,11,20,.48)}
+.commandFullTop{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:8px}
+.commandFullTop label{font-size:18px;font-weight:900;color:#ffd95a}
+.commandFullItem textarea{min-height:88px!important;font-size:16px!important;line-height:1.65!important}
+.commandFullItem.commandSeven textarea{min-height:155px!important}
+.copyCommandButton{min-width:78px!important;min-height:40px!important;padding:8px 14px!important;font-size:15px!important}
+.blinkWarn{animation:humateckBlinkWarn 1s infinite alternate;color:#ffd95a!important;font-weight:900}
+@keyframes humateckBlinkWarn{from{filter:brightness(1)}to{filter:brightness(1.45);text-shadow:0 0 12px rgba(255,217,90,.85)}}
+.oauthCenterButton{display:flex;justify-content:center;margin-top:16px}
+.menuWord{color:#ffd95a!important;font-weight:900}
+.adminLoginBox{margin-top:16px;border:1px dashed rgba(255,217,90,.6);border-radius:14px;padding:14px;background:rgba(255,217,90,.08)}
+.adminLoginBox summary{cursor:pointer;color:#ffd95a;font-weight:900}
+.highlightAction{color:#ffd95a!important;font-weight:900}
+.registerNoticeBelow{margin-top:16px}
+.registerErrorPanel{border:1px solid rgba(255,217,90,.48);border-radius:16px;padding:16px;background:rgba(255,217,90,.08);margin-top:14px}
+.errorCopyBox{width:100%;min-height:80px!important}
+.faqCollapsed details{border-top:1px solid rgba(255,255,255,.12);padding-top:12px;margin-top:12px}
+.faqCollapsed summary{cursor:pointer;color:#ffd95a;font-weight:900}
+</style>
+
+
+<style>
+
+.top-left-tools,.indexTopButtons,.orderTopButtons{
+  display:flex;
+  gap:10px;
+  margin:0 0 16px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.top-left-tools a,.indexTopButtons a,.orderTopButtons a{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:10px 16px;
+  border:1px solid rgba(214,176,78,.68);
+  border-radius:999px;
+  color:#f4d16d;
+  background:rgba(214,176,78,.12);
+  font-weight:800;
+}
+.account,.account-icons{
+  position:fixed!important;
+  left:22px!important;
+  bottom:22px!important;
+  z-index:999!important;
+  display:flex!important;
+  gap:9px!important;
+  padding:9px 13px!important;
+  background:rgba(8,12,18,.94)!important;
+  border:1px solid rgba(214,176,78,.46)!important;
+  border-radius:999px!important;
+}
+.account a,.account-icons a,.account-icons span{
+  width:34px!important;
+  height:34px!important;
+  border-radius:50%!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border:1px solid rgba(214,176,78,.38)!important;
+  font-weight:900!important;
+  color:#f4d16d!important;
+}
+.guideModal:target{display:flex!important}
+.guideModalBox{color:#eee5d5!important}
+.guideModalBox h2,.guideModalBox h3{color:#ffd95a!important}
+.guideModalBox p,.guideModalBox li{line-height:1.75!important;color:#eee5d5!important}
+.menuWord{color:#ffd95a!important;font-weight:900}
+.closeModalBtn,.closeRow .btn{
+  display:inline-flex;
+  margin-top:18px;
+  border:1px solid #caa24e;
+  padding:10px 18px;
+  border-radius:10px;
+  color:#fff;
+}
+</style>
+
+
+<style>
+
+#support,#service,#pricing,#account,#cancel{
+  display:none;
+}
+#support:target,#service:target,#pricing:target,#account:target,#cancel:target{
+  display:block;
+  position:fixed;
+  z-index:90;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:860px;
+  max-width:calc(100vw - 48px);
+  max-height:82vh;
+  overflow:auto;
+  background:#111923;
+  border:1px solid rgba(214,176,78,.8);
+  border-radius:22px;
+  padding:28px 34px;
+  box-shadow:0 24px 80px rgba(0,0,0,.72);
+}
+#support:target::before,#service:target::before,#pricing:target::before,#account:target::before,#cancel:target::before{
+  content:"";
+  position:fixed;
+  inset:-100vh;
+  background:rgba(0,0,0,.58);
+  z-index:-1;
+}
+.closeRow{
+  text-align:right;
+  margin-top:18px;
+}
+.closeRow .btn,.btn.small{
+  min-width:auto!important;
+  min-height:auto!important;
+  padding:9px 15px!important;
+  font-size:15px!important;
+}
+</style>
+
+
+
+<style>
+/* 유튜브 자막 등록_024 vertical compact account UI on intro/plans only */
+.account{
+  left:12px!important;
+  bottom:14px!important;
+  flex-direction:column!important;
+  gap:5px!important;
+  padding:6px!important;
+  border-radius:18px!important;
+  width:auto!important;
+}
+.account a{
+  width:26px!important;
+  height:26px!important;
+  font-size:12px!important;
+}
+.footer{
+  padding-left:54px!important;
+  padding-right:88px!important;
+  margin-bottom:72px!important;
+}
+</style>
+
+
+<style>
+/* 유튜브 자막 등록_026 tiny transparent account UI only */
+.account{
+  left:8px!important;
+  bottom:10px!important;
+  flex-direction:column!important;
+  gap:3px!important;
+  padding:4px!important;
+  border-radius:14px!important;
+  width:auto!important;
+  opacity:.22!important;
+  transition:opacity .18s ease!important;
+}
+.account:hover{
+  opacity:.85!important;
+}
+.account a{
+  width:20px!important;
+  height:20px!important;
+  font-size:10px!important;
+  line-height:1!important;
+}
+</style>
+
+
+<style>
+/* 유튜브 자막 등록 Chrome professional intro message */
+.universalMessageBox{
+  border:1px solid rgba(216,191,131,.54);
+  border-radius:18px;
+  padding:20px 22px;
+  margin:24px 0;
+  background:rgba(216,191,131,.08);
+  color:#eadfca;
+  line-height:1.72;
+}
+.universalMessageBox h2{color:#d8bf83!important;margin:0 0 10px!important;font-size:21px!important;line-height:1.45!important;}
+.universalMessageBox p{margin:7px 0!important;font-size:17px!important;line-height:1.72!important;}
+</style>
+
+
+<style>
+/* Humateck Chrome universal message size patch */
+.universalMessageBox h2{font-size:21px!important;line-height:1.45!important;}
+.universalMessageBox p{font-size:17px!important;line-height:1.72!important;}
+</style>
+
+</head>
+<body id="top">
+
+<div class="wrap">
+<header class="top"><span class="siteTitleText">주요 10개국 유튜브 자막 등록</span></header>
+<main class="hero">
+<section class="heroText"><h1 class="title">주요 10개국 유튜브 자막 등록</h1><p class="subtitle">형식만 맞으면 다양한 번역 결과를 유튜브에 바로 등록할 수 있습니다.</p></section>
+<section class="stage"><div class="vcard left"><div class="line gold"></div><div class="line"></div><div class="line blue"></div><div class="line"></div></div><div class="vcard right"><div class="line blue"></div><div class="line"></div><div class="line gold"></div><div class="line"></div></div><div class="vcard bottom"><div class="line gold"></div><div class="line blue"></div><div class="line"></div></div><div class="globe"></div><div class="play"></div><div class="dots"><span></span><span></span><span></span><span></span></div></section>
+</main>
+<div class="sectionTitle">이제 번역 품질은 주문자가 결정합니다.</div>
+<section class="card humateckServiceDefinition"><h2>유튜브 자막 등록 서비스 안내</h2><p><b>유튜브 자막 등록은 다음과 같은 서비스를 제공하는 업체입니다.</b></p><p>1) AI와 유튜브 크리에이터들에게 대화식 번역 공간과 효과적인 프롬프트를 지원하여 고품질의 현지화 맥락번역 또는 고객맞춤형 번역을 이끌어내고,</p><p>2) 이를 통해 고객의 최종 승인을 받은 다국어 번역문을, 크리에이터의 채널에 신속히 전송 및 등록 대행을 합니다.</p></section>
+<div class="universalMessageBox">
+<h2 style="color:#d8bf83;font-size:28px;margin-bottom:18px;">이제 번역 품질은 번역의뢰자가 결정합니다.</h2>
+
+<h3 style="color:#d8bf83;">유튜브 자막 등록 프로그램 안내</h3>
+
+<p>이 프로그램은 다음과 같은 목적으로 개발되었습니다.</p>
+
+<p>1) AI와 유튜브 크리에이터들에게 대화식 번역 공간과 효과적인 프롬프트를 지원하여 고품질의 현지화 맥락번역 또는 고객맞춤형 번역을 이끌어내고,</p>
+
+<p>2) 이를 통해 고객의 최종 승인을 받은 다국어 번역문을, 크리에이터의 채널에 초고속으로 등록하여 유튜브 크리에이터의 마우스 등록노동을 제거했습니다.</p>
+
+<h3 style="color:#d8bf83;">미리 준비한 번역문도 사용할 수 있습니다.</h3>
+
+<p>이 도구는 특정 AI 번역만 사용하는 방식이 아닙니다.</p>
+
+<p>안내된 유튜브 등록 형식만 맞으면, Gemini, ChatGPT, DeepL, 다른 AI 번역기, 전문 번역가 또는 직접 준비한 번역문도 자유롭게 사용할 수 있습니다.</p>
+
+<p>번역문의 형식만 맞으면, 별도의 검수나 차단 없이 고객님의 번역 결과를 유튜브에 빠르게 등록합니다.</p>
+
+<h3 style="color:#d8bf83;">고품질 AI챗번역이란?</h3>
+
+<p>기계식 번역이 아닌, 자연스럽고 세밀한 번역 결과를 원하는 사용자에게 적합합니다.</p>
+
+<p>직접 AI와 대화하며 고객님의 취향과 의도에 맞추어 번역 결과를 준비하는 방식입니다.</p>
+
+<p>현지어 맥락 반영과 반복 검수 주문이 얼마든지 가능한 심층 AI 번역방식입니다.</p>
+
+<h3 style="color:#d8bf83;">사용 구조</h3>
+
+<p>유튜브 API를 사용 (할당량 범위 내 무료)합니다.</p>
+
+<p>사용자는 맞춤번역을, 본 프로그램은 수초 이내 유튜브 자막 등록을 책임집니다.</p>
+</div>
+<section class="card"><div class="grid2"><div><h2>고품질 AI챗번역이란?</h2><p>기계식 번역이 아닌, 자연스럽고 세밀한 번역 결과를 원하는 고객님께 적합합니다.</p><p>직접 AI와 대화하며 고객님의 취향과 의도에 맞추어 번역 결과를 준비하는 방식입니다.</p><p>현지어 맥락 반영과 반복 검수 주문이 얼마든지 가능한 심층 AI 번역방식입니다.</p></div><aside class="sidebox"><div class="monitor"></div><h2>사용 구조</h2><p>유튜브 API를 사용 (할당량 범위 내 무료)합니다.</p><p>고객님은 맞춤번역을, 유튜브 자막 등록은 수초 이내 다국어 등록을 책임집니다.</p></aside></div>
+
+<div class="actions"><a class="btn" href="http://humateck.com/ko/free10/order.html" target="_blank" rel="noopener noreferrer">다국어 번역/등록 바로가기</a></div>
+
+</section>
+
+
+
+
+<section id="service" class="card"><h2>서비스</h2><p>이 서비스는 고객이 필요에 따라 웹사이트와 크롬 확장 프로그램 중 한 가지를 선택하여 사용할 수 있도록 설계되었습니다.</p><div class="closeRow"><a class="btn small" href="#top">닫기</a></div></section>
+
+
+
+
+<section id="cancel" class="card"><h2>구독취소</h2><p>이미 결제된 구독기간에 대한 환불은 불가하며, 현재 계약 종료일까지는 계속 이용 가능합니다.</p><div class="closeRow"><a class="btn small" href="#top">닫기</a></div></section>
+
+</div><div class="account"><a href="#" title="Google 공식 인증">G</a><a href="#" title="Apple 공식 인증">●</a><a href="#" title="Email 공식 인증">@</a></div><details class="gear"><summary>⚙</summary><nav class="menu"><a href="#support">☊ 고객센터</a><a href="#service">▣ 서비스</a><a href="#pricing">▤ 구독요금</a><a href="#account">♙ 구독자 계정</a><a class="danger" href="#cancel">⊗ 구독취소</a></nav></details>
+
+</body>
+</html>
