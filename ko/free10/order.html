@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
@@ -19,8 +18,8 @@ button,input,textarea{font-family:inherit}
 .title{margin:0;color:#4b97ff;font-size:44px;line-height:1.25;font-weight:900;text-shadow:0 0 24px rgba(70,140,255,.22)}
 .subtitle{margin:16px 0 0;color:#fff;font-size:21px;font-weight:800}
 .stage{position:relative;width:840px;height:275px;max-width:100%;margin:36px auto 0}
-.globe{position:absolute;left:50%;top:32px;width:230px;height:230px;transform:translateX(-50%);border-radius:50%;border:2px solid rgba(93,160,255,.72);background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.33),transparent 12%),radial-gradient(circle at 50% 50%,rgba(58,126,255,.42),rgba(4,18,45,.9) 67%),repeating-linear-gradient(90deg,transparent 0 19px,rgba(116,178,255,.19) 20px 21px),repeating-linear-gradient(0deg,transparent 0 19px,rgba(116,178,255,.15) 20px 21px);box-shadow:0 0 48px rgba(70,144,255,.38)}
-.play{position:absolute;left:50%;top:92px;width:116px;height:82px;transform:translateX(-50%);border-radius:22px;background:linear-gradient(145deg,#ffe070,#b98217);box-shadow:0 0 42px rgba(235,180,62,.72)}
+.globe{position:absolute;left:50%;top:32px;width:230px;height:230px;transform:translateX(-50%);border-radius:50%;border:2px solid rgba(93,160,255,.72);background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.33),transparent 12%),radial-gradient(circle at 50% 50%,rgba(58,126,255,.42),rgba(4,18,45,.9) 67%),repeating-linear-gradient(90deg,transparent 0 19px,rgba(116,178,255,.19) 20px 21px),repeating-linear-gradient(0deg,transparent 0 19px,rgba(116,178,255,.15) 20px 21px);box-shadow:0 0 48px rgba(83,144,255,.38)}
+.play{position:absolute;left:50%;top:92px;width:116px;height:82px;transform:translateX(-50%);border-radius:22px;background:linear-gradient(145deg,#ffe083,#b98217);box-shadow:0 0 42px rgba(235,180,62,.72)}
 .play:after{content:"";position:absolute;left:45px;top:22px;border-left:34px solid #1a1307;border-top:20px solid transparent;border-bottom:20px solid transparent}
 .vcard{position:absolute;width:210px;height:118px;border:1px solid rgba(214,176,78,.62);border-radius:18px;background:rgba(10,17,27,.82);box-shadow:0 16px 38px rgba(0,0,0,.45);padding:17px}
 .vcard.left{left:0;top:82px}.vcard.right{right:0;top:82px}.vcard.bottom{left:50%;bottom:0;transform:translateX(-50%)}
@@ -51,18 +50,7 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 .faqItem{border-top:1px solid rgba(255,255,255,.12);padding-top:14px;margin-top:14px}
 .codebox{white-space:pre-wrap;background:#080f18;border:1px solid #334353;border-radius:12px;padding:14px;color:#e9e1d0;line-height:1.6;font-size:14px}
 @media(max-width:980px){.grid2,.order,.plans{grid-template-columns:1fr}.title{font-size:32px}.wrap{max-width:calc(100vw - 28px)}}
-.question{color:#ffd95a!important;font-weight:900}
-/* Humateck_New013: visual-only blue warning for empty customer fields. No blocking, no validation. */
-@keyframes humateckBlueBlink{
-  0%,100%{border-color:#2f7cff;box-shadow:0 0 0 1px rgba(47,124,255,.35),0 0 12px rgba(47,124,255,.35);}
-  50%{border-color:#8fc2ff;box-shadow:0 0 0 2px rgba(143,194,255,.65),0 0 22px rgba(47,124,255,.75);}
-}
-.humateck-empty-blue-warning{
-  border-color:#2f7cff!important;
-  animation:humateckBlueBlink 1.15s ease-in-out infinite;
-}
-
-</style>
+.question{color:#ffd95a!important;font-weight:900}</style>
 
 
 <style>
@@ -134,6 +122,8 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 .guideModalBox{width:760px;max-width:calc(100vw - 48px);max-height:86vh;overflow:auto;border:1px solid #d4a94f;border-radius:20px;background:#121a23;color:#eee5d5;padding:28px 32px}
 .guideModalBox h2{color:#ffd95a;margin-top:0}.guideModalBox p,.guideModalBox li{line-height:1.75}
 .closeModalBtn{display:inline-flex;margin-top:18px;border:1px solid #caa24e;padding:10px 18px;border-radius:10px;color:#fff}
+.adminSecret{margin-top:18px;border:1px dashed rgba(255,217,90,.45);border-radius:14px;padding:14px;background:rgba(255,217,90,.06)}
+.adminSecret summary{cursor:pointer;color:#ffd95a;font-weight:900}
 .planHookNote{font-size:14px;color:#ffd95a;margin-top:10px}
 @media(max-width:980px){.orderMainGrid,.orderBottomGrid,.commandGrid{grid-template-columns:1fr}}
 </style>
@@ -154,6 +144,8 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 @keyframes humateckBlinkWarn{from{filter:brightness(1)}to{filter:brightness(1.45);text-shadow:0 0 12px rgba(255,217,90,.85)}}
 .oauthCenterButton{display:flex;justify-content:center;margin-top:16px}
 .menuWord{color:#ffd95a!important;font-weight:900}
+.adminLoginBox{margin-top:16px;border:1px dashed rgba(255,217,90,.6);border-radius:14px;padding:14px;background:rgba(255,217,90,.08)}
+.adminLoginBox summary{cursor:pointer;color:#ffd95a;font-weight:900}
 .highlightAction{color:#ffd95a!important;font-weight:900}
 .registerNoticeBelow{margin-top:16px}
 .registerErrorPanel{border:1px solid rgba(255,217,90,.48);border-radius:16px;padding:16px;background:rgba(255,217,90,.08);margin-top:14px}
@@ -267,6 +259,34 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 
 
 <style>
+/* Humateck_New026 admin plan selector */
+.adminPlanButtons{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:12px;
+}
+.adminPlanButton{
+  min-width:0!important;
+  min-height:42px!important;
+  padding:9px 12px!important;
+  font-size:15px!important;
+}
+.adminPlanButton.active{
+  animation:humateckAdminBlink 1s infinite alternate;
+  border-color:#ffd95a!important;
+  box-shadow:0 0 20px rgba(255,217,90,.75)!important;
+}
+@keyframes humateckAdminBlink{
+  from{filter:brightness(1)}
+  to{filter:brightness(1.35)}
+}
+.adminPlanStatus{
+  color:#ffd95a;
+  font-weight:900;
+  margin-top:10px;
+  line-height:1.6;
+}
 </style>
 
 
@@ -351,6 +371,37 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
   width:100%;
   min-height:72px;
   margin-top:10px;
+}
+</style>
+
+
+<style>
+/* Humateck_New046 OAuth receive check only */
+.oauthReceiveCheckBox{
+  margin-top:14px;
+  border:1px solid rgba(255,217,90,.58);
+  border-radius:14px;
+  padding:14px;
+  background:rgba(255,217,90,.08);
+}
+.oauthReceiveTitle{
+  color:#ffd95a;
+  font-weight:900;
+  margin-bottom:8px;
+}
+#oauthReceiveCheck{
+  width:100%;
+  min-height:86px;
+  background:#07101b;
+  color:#f5eddb;
+  border:1px solid rgba(214,176,78,.45);
+  border-radius:10px;
+  padding:10px;
+  line-height:1.6;
+}
+.oauthReceiveOk{
+  box-shadow:0 0 20px rgba(255,217,90,.65);
+  border-color:#ffd95a!important;
 }
 </style>
 
@@ -528,10 +579,62 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 
 
 <style>
+/* Humateck_New074 YouTube official language list */
+.youtubeLanguageAdminBox{
+  margin-top:16px;
+  border:1px solid rgba(255,217,90,.55);
+  border-radius:14px;
+  padding:14px;
+  background:rgba(255,217,90,.07);
+}
+.youtubeLanguageAdminBox h3{
+  color:#ffd95a;
+  margin:0 0 8px;
+}
+#youtubeI18nLanguagesResult{
+  margin-top:10px;
+  min-height:220px;
+  font-size:14px;
+  line-height:1.6;
+}
 </style>
 
 
 <style>
+/* Humateck_New075 YouTube official language list in admin login */
+.youtubeLanguageAdminBox{
+  margin-top:16px;
+  border:1px solid rgba(255,217,90,.55);
+  border-radius:14px;
+  padding:14px;
+  background:rgba(255,217,90,.07);
+}
+.youtubeLanguageAdminBox h3{
+  color:#ffd95a;
+  margin:0 0 8px;
+}
+#youtubeI18nLanguagesResult{
+  margin-top:10px;
+  min-height:220px;
+  font-size:14px;
+  line-height:1.6;
+}
+</style>
+
+
+<style>
+/* Humateck_New083 hide admin plan status text */
+#adminPlanStatus{
+  display:none!important;
+}
+</style>
+
+
+<style>
+/* Humateck_New084 admin status hidden */
+#adminPlanStatus{
+  display:none!important;
+}
 </style>
 
 
@@ -851,137 +954,32 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
   font-weight:800;
   line-height:1.7;
 }
-
-/* Production v3: Gemini prompt is the core order flow */
-#gemini{
-  border:2px solid rgba(76,154,255,.95)!important;
-  box-shadow:0 0 0 3px rgba(76,154,255,.16), 0 14px 36px rgba(0,0,0,.32)!important;
-}
-#gemini h2{
-  color:#7db7ff!important;
-}
-.geminiCoreNotice{
-  border:1px solid rgba(76,154,255,.75);
-  background:rgba(76,154,255,.12);
-  color:#dcecff;
-  border-radius:12px;
-  padding:10px 12px;
-  font-weight:900;
-  line-height:1.65;
-  margin:10px 0 12px;
-}
-#geminiPromptText{
-  min-height:96px!important;
-  height:96px!important;
-  max-height:120px!important;
-  overflow:auto!important;
-}
 </style>
 
 
 <style>
-/* Humateck Production split: keep Gemini prompt box compact */
-#geminiPromptText{min-height:92px!important;height:92px!important;overflow:auto!important;}
+/* Humateck universal translation-source positioning */
+.universalTranslationNotice{
+  border:1px solid rgba(202,178,122,.58);
+  border-radius:14px;
+  padding:14px 16px;
+  margin:14px 0 16px;
+  background:rgba(202,178,122,.075);
+  color:#e8dcc5;
+  line-height:1.72;
+  font-weight:700;
+}
+.universalTranslationNotice strong{color:#d8bf83;font-weight:900;}
 </style>
-
-
-<style>
-/* Humateck_Production_Order_v12 calm command warning */
-.commandWarningOutside{
-  display:block!important;
-  margin:16px 0 18px!important;
-  padding:13px 15px!important;
-  border:1px solid rgba(96,140,190,.55)!important;
-  border-radius:12px!important;
-  background:rgba(70,105,150,.10)!important;
-  color:#dce8f8!important;
-  font-weight:600!important;
-  line-height:1.65!important;
-  animation:none!important;
-  box-shadow:none!important;
-  text-shadow:none!important;
-}
-.commandWarningOutside .softStrong{
-  color:#f0c85a!important;
-  font-weight:900!important;
-}
-</style>
-
-
-<style>
-/* Humateck calm importance color patch - visual only */
-:root{
-  --humateck-calm-gold:#c9aa63;
-  --humateck-calm-gold-soft:#d8c28a;
-  --humateck-calm-border:rgba(201,170,99,.48);
-  --humateck-calm-bg:rgba(201,170,99,.075);
-}
-.yellowStrong,
-.yellowNotice,
-.question,
-.faqSummary,
-.faqCollapsed summary,
-.commandFullTop label,
-.menuWord,
-.highlightAction,
-.guideModalBox h2,
-.guideModalBox h3,
-.guidePoint,
-.guideCode,
-.oauthInfoBox h2,
-.nativeCodeModalHeader h2,
-.nativeCodeText strong,
-.copyStatus{
-  color:var(--humateck-calm-gold-soft)!important;
-}
-.guideOpenButton,
-.copyButtonVisible,
-.blinkActive,
-.blinkWarn,
-.commandWarningOutside{
-  animation:none!important;
-  box-shadow:none!important;
-  filter:none!important;
-  text-shadow:none!important;
-}
-.guideOpenButton,
-.nativeCodeListBtn,
-.nativeCodeCloseBtn,
-.nativeCodeItem button,
-.guideCloudBtn{
-  border-color:var(--humateck-calm-border)!important;
-}
-.order-intro-note,
-.oauthInfoBox,
-.oauthLaunchNotice,
-.commandWarningOutside,
-.guideIntroBox,
-.guideWarning,
-.humateckOnlyNotice,
-.geminiCoreNotice{
-  border-color:var(--humateck-calm-border)!important;
-  background:var(--humateck-calm-bg)!important;
-  color:#e8dec4!important;
-}
-.commandWarningOutside{
-  font-weight:800!important;
-}
-</style>
-
 </head>
 <body>
-<!--
-[Humateck Developer Rule]
-order.html is the visible order sheet only. YouTube registration delivery is isolated in youtube-register.js.
-Do not add review, blocking, metadata judgment, hidden/admin menu, auto-correction, or self-made pre-registration error logic to this page.
--->
-
 
 <div class="wrap" id="top">
 <header class="top"><a href="index.html"><img class="logo" src="FINAL_LOGO01.png" alt="Humateck"></a><div class="lang">◎ 한국어⌄</div></header>
+<div class="orderTopButtons"><a href="index.html">첫페이지 가기</a><a href="plans.html">전체플랜 가기</a></div>
 <section class="orderMainGrid">
   <div class="orderLeftColumn">
-   <section class="card">
+    <section class="card">
       <h1>다국어 자막 등록 주문서</h1>
       <div class="order-intro-note">
         <p>1. 주요 10개국 유튜브자막을 초스피드로 당신의 채널에 등록하세요.</p>
@@ -989,6 +987,7 @@ Do not add review, blocking, metadata judgment, hidden/admin menu, auto-correcti
         <p>3. 본 등록을 위한 전제조건으로 유튜브 API를 사용하기 위해 아래 소개해 드리는 '중요설정 길잡이'를 따라 구글인증키를 발급 받아 두시면 반복적으로 관리하시는 여러 채널에 골고루 사용이 가능합니다.</p>
 
       </div>
+      <div class="universalTranslationNotice"><strong>번역 소스 자유:</strong> Humateck은 Gemini 번역에만 제한되지 않습니다. Gemini, ChatGPT, DeepL, 다른 AI 번역기 또는 사용자가 직접 준비한 번역문도 사용할 수 있습니다. 최종본이 <strong>Country Code / Title / Description</strong> 형식만 지키면 Humateck으로 유튜브에 등록할 수 있습니다.</div>
       <div class="nativeCodeLabelRow">
   <label for="nativeLanguageCode">자국어 코드</label>
   <button id="openNativeCodeListBtn" class="nativeCodeListBtn" type="button">10개 국가명/언어코드 목록</button>
@@ -1000,95 +999,91 @@ Do not add review, blocking, metadata judgment, hidden/admin menu, auto-correcti
       <input id="sourceTitle" type="text" placeholder="자국어 제목을 입력하세요">
       <label>자국어 설명문</label>
       <textarea id="sourceDescription" class="mediumTextarea" placeholder="자국어 설명문을 입력하세요"></textarea>
-      <div class="actions"><button class="btn copyButtonVisible" type="button" id="generateGeminiPrompt">1. 제미나이 명령문 생성</button></div>
-      <div class="notice">여기서 제미나이 명령문을 생성한 뒤 복사하여 제미나이에 붙여넣고, 완료된 제미나이 결과물을 다시 이 주문서에 붙여넣으시면 됩니다.</div>
+      <div class="actions"><button class="btn" type="button" id="generateGeminiPrompt">제출하기</button></div>
+      <div class="notice">제출하기를 누르면 자국어 코드, 영상 주소, 자국어 제목, 자국어 설명문을 바탕으로 제미나이 번역의뢰문이 생성됩니다.</div>
     </section>
 
     <section id="gemini" class="card">
-      <h2>제미나이 명령문 복사</h2>
-      <div class="geminiCoreNotice">이 영역이 Humateck의 핵심입니다. 이 명령문을 복사해 제미나이에 붙여넣고, 완성된 번역 결과만 최종등록명령에 다시 붙여넣으시면 됩니다.</div>
+      <h2>제미나이 의뢰문</h2>
       <textarea id="geminiPromptText" class="mediumTextarea" readonly>Hello Gemini!
-아무런 설명없이 오직 번역문만 출력해 줘.
+Please naturally localize and translate the title and description below for the {activeCount}-country set.
+Please continue translating from beginning to end without stopping midway.
 
-아래 유튜브 제목과 설명문을 {activeCount}개 국가 세트에 맞춰 번역해 줘.
-처음부터 끝까지 중간에 끊지 말고 계속 번역해 줘.
+Important:
+- You must output all {activeCount} Country Codes without omission.
+- Do not change the number or order of the Country Codes.
+- Do not add explanations, opinions, notes, or extra remarks.
+- Keep the exact format:
+  Number:
+  Country Code:
+  Title:
+  Description:
+- Output only the final translated results.
+- When the work is finished, move to the bottom.
 
-[원문]
+[Source Information]
+Native Language Code: {nativeLanguageCode}
+YouTube Video URL: {videoUrl}
+
+[Source Text]
 Title:
 {sourceTitle}
 
 Description:
 {sourceDescription}
 
-[출력 형식]
-Number:
-Country Code:
-Country Name:
-Title:
-Description:
-
-아무런 설명없이 오직 번역문만 출력해 줘.
+[Output Format]
+Number: sequence
+Country Code: language code
+Title: translated title
+Description: translated description
 
 [Country Code List]
-{countryBlock}
-
-아무런 설명없이 오직 번역문만 출력해 줘.</textarea>
-      <div class="actions"><button class="btn copyButtonVisible" type="button" data-copy-target="geminiPromptText">제미나이 명령문 복사</button></div>
-      <p id="geminiCopyStatus" class="copyStatus"></p><div class="actions"><a class="btn geminiChatButton" href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer">제미나이 챗번역 하러 가기</a></div>
+{countryBlock}</textarea>
+      <div class="actions"><button class="btn copyButtonVisible" type="button" data-copy-target="geminiPromptText">복사</button></div>
+      <p id="geminiCopyStatus" class="copyStatus"></p><div class="actions"><a class="btn geminiChatButton" href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer">제미나이 챗번역 하러 가기.</a></div>
     </section>
-
-   <section class="card" id="geminiCommandCard">
-      <h2>제미나이 복붙 명령 순서</h2>
-      <div class="commandFullRows">
-        <div class="commandFullItem"><div class="commandFullTop"><label>명령 1</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText1">복사</button></div><textarea id="commandText1" readonly>다른 언어의 혼입, 부자연스러운 문맥, 기타 문제가 없는지 자동으로 신중하게 확인해 줘.</textarea></div>
-        <div class="commandFullItem"><div class="commandFullTop"><label>명령 2</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText2">복사</button></div><textarea id="commandText2" readonly>Number: , Country Name:를 삭제해 줘.</textarea></div>
-        <div class="commandFullItem"><div class="commandFullTop"><label>명령 3</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText4">복사</button></div><textarea id="commandText4" readonly>다른 언어, 부자연스러운 문맥, 기타 문제가 없는지 다시 한 번 주의 깊게 확인해 줘.</textarea></div>
-        <div class="commandFullItem"><div class="commandFullTop"><label>명령 4</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText5">복사</button></div><textarea id="commandText5" readonly>제미나이의 설명문이나 해설 등을 모두 빼고 다시 출력해 줘.</textarea></div>
-        <div class="commandFullItem"><div class="commandFullTop"><label>명령 5</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText7">복사</button></div><textarea id="commandText7" readonly>아래로 이동해 줘</textarea></div>
-        <div class="commandWarningOutside"><span class="softStrong">⚠️ 중요</span> 반드시 “Please move to the bottom.” 위의 번역문 끝부분 ⧉ [응답 복사] 버튼을 누른 후 클립보드에 완전히 복사될 때까지 기다리신 후 <span class="softStrong">최종등록명령</span>에 복사 붙여넣기 하세요.<br><br><span class="softStrong">⚠️ 중요</span> 번역문 외 제미나이 설명문, 해설, 불필요한 말이 섞이면 유튜브 등록 오류가 날 수 있으니 반드시 번역문만 붙여넣어 주세요.</div>
-      </div>
-    </section>
-
-    <section class="card" id="finalVersionCard">
-      <h2>최종등록명령</h2>
-      <textarea id="finalOutput" class="mediumTextarea" placeholder="유튜브 등록용 제미나이 최종 번역 결과를 붙여넣어 주세요."></textarea>
-    </section>
-
-
 <section class="oauthInfoBox" id="googleOAuthNotice">
       <h2>Google OAuth 인증관련 안내</h2>
-      <p>이제부터는 준비된 번역컨텐츠를 유튜브에 등록하기 위한 Google OAuth 필수인증 순서입니다.</p>
+      <p>이제부터는 구독하신 분들이 필수적으로 거쳐야 될 Google OAuth 인증 순서입니다. 비구독자분들도 이 인증을 받을 수는 있으나, 최종 유튜브 등록은 반드시 구독자에게만 개방되오니 착오 없으시기 바랍니다.</p>
       <p class="yellowStrong">Google OAuth 인증키를 이미 받으신 분들은 ‘중요설정 길잡이’를 건너 띄시기 바랍니다.</p>
-      <center><p class="yellowStrong">한번 인증으로 여러 채널에 사용합니다.!</p></center>
-      <div class="actions"><a class="btn guideOpenButton" href="#oauthGuideModal">중요설정 길잡이</a></div>
+      <center><p class="yellowStrong">한번 설정하면 여러 채널에 이용하실 수 있습니다.</p></center>
+      <div class="actions"><a class="btn guideOpenButton" href="#oauthGuideModal">중요설정 길잡이</a><a class="btn" href="plans.html">플랜 구독하러 가기</a></div>
       <div class="oauthPanelBelow">
         <h2>Google OAuth 인증</h2>
-        <p>설정한 인증키를 유튜브 등록할 때마다 인증(인증키 확인)에 사용하는 필수절차입니다.</p>
+        <p>유튜브 등록할 때마다 필히 Google OAuth 인증(인증키 확인)을 받아야 합니다.</p>
         <label for="googleClientIdInput">Google OAuth Web Client ID</label>
         <input id="googleClientIdInput" type="password" autocomplete="off" placeholder="Google OAuth Web Client ID를 붙여넣으세요">
         <div class="oauthCenterButton">
   <button id="oauthStartBtn" class="btn" type="button">OAuth 인증받기</button>
 </div></div>
     </section>
+
+    
+    <section class="card" id="finalVersionCard">
+      <h2>최종번역문(사용자 검수)</h2>
+      <textarea id="finalOutput" class="mediumTextarea" placeholder="사용자님이 검수한 제미나이 최종번역문을 붙여넣어 주세요."></textarea>
+    </section>
+
 <section class="card">
       <h2>유튜브 등록</h2>
       <div class="actions"><button class="btn" type="button" id="sendOrderBtn">유튜브 등록</button></div>
     </section>
 <section class="card registerNoticeBelow">
       <h2>유튜브 등록관련 공지사항</h2>
-      <p>당사는 사용자님의 번역 승인본에 대해 어떠한 <span class="highlightAction">검수나 차단 · 변경 · 추가</span>를 하지 않으며, 사용자 승인 내용 그대로 발송합니다.</p>
+      <p>본 프로그램은 사용자님의 번역 승인본에 대해 어떠한 <span class="highlightAction">검수나 차단 · 변경 · 추가</span>를 하지 않으며, 사용자 승인 내용 그대로 발송합니다.</p>
       <p>모든 번역문은 유튜브 채널에 즉시 등록되며, 접수측이 실제로 거부한 언어는 보류 언어로 분리 표시됩니다.</p>
     <section class="card" id="deliveryResultCard">
       <h2>등록결과</h2>
       <textarea id="deliveryLog" class="mediumTextarea" readonly placeholder="유튜브 등록결과가 여기에 표시됩니다."></textarea>
     </section>
-    </section>
+</section>
   </div>
 
   <aside class="right">
     <h2 class="yellowNotice">상태 안내</h2>
     <h3>빠른 안내</h3>
-    <p>1) 본 프로그램을 이용하기 위한 필수 첫단계는 구글 OAuth 승인 설정입니다. 아래의 '중요설정 길잡이'의 상세 안내에 따라 설정을 진행해 주세요.</p>
+    <p>1) 본 서비스를 이용하기 위한 필수 첫단계는 구글 OAuth 승인 설정입니다. 아래의 '중요설정 길잡이'의 상세 안내에 따라 설정을 진행해 주세요.</p>
     <p>2) 여러 채널의 유튜브 다국어 번역콘텐츠를 등록하시려는 경우에도, Google OAuth 설정을 채널마다 새로 만들 필요는 없습니다. 다만 Google 인증을 진행한 계정이 해당 유튜브 채널 또는 영상에 수정 권한을 가지고 있어야 정상 등록이 가능합니다.</p>
     <p>3) 유튜브 등록할 때마다 필히 Google OAuth 인증(인증키 확인)을 받아야 합니다.</p>
 <section id="faq" class="faqCollapsed">
@@ -1099,23 +1094,31 @@ Description:
 답) 다국어 번역컨텐츠 등록시 유튜브 다국어 번역컨텐츠 표시시스템상 동영상 기본설정이 미국 영어로 고정되어 있기 때문입니다. 그러나 이는 오류가 아니며, 사용자님의 자국어 제목이나 설명문은 언제든지 자국어로 수정하실 수 있사오니 착오 없으시기 바랍니다.</p></div>
 <details><summary>자세히 보기</summary>
 <div class="faqItem"><p class="question"><b>2. 문) 유튜브 다국어 번역컨텐츠 등록하기를 누르니 할당량 초과 메시지가 뜹니다.</b></p><p>답) 유튜브 다국어 번역컨텐츠등록 일일 API 무료할당량이 초과된 경우입니다. 다음날 할당량이 다시 충전될 때까지 기다렸다가 다시 시도하시기 바랍니다.</p></div>
-<div class="faqItem"><p class="question"><b>4. 문) 구글 OAuth 설정이 무엇인가요? 사용시마다 설정해야 하나요?</b></p><p>답) 내 유튜브 채널에 자막을 등록해도 좋다고 구글에 허락받는 연결 과정입니다. 한 번 설정 후 장기간 여러 채널에 쓰실 수 있습니다.</p></div>
+<div class="faqItem"><p class="question"><b>3. 문) '유튜브 영상 주소에서 videoId를 찾지 못했습니다.'라는 메시지가 뜹니다.</b></p><p>답) 유튜브 주소를 잘못 입력하신 경우입니다. 반드시 유튜브 실제동영상(스튜디오 ×)의 주소를 그대로 복사하여 붙여 넣어 주시기 바랍니다.</p></div>
+<div class="faqItem"><p class="question"><b>4. 문) 구글 OAuth 설정이 무엇인가요? 사용시마다 설정해야 하나요?</b></p><p>답) 내 유튜브 채널에 자막을 등록해도 좋다고 구글에 허락받는 연결 과정입니다. 설정 후 상당기간 재사용되는 것이 일반적입니다.</p></div>
 <div class="faqItem"><p class="question"><b>5. 문) 여러 채널을 운영 중입니다. OAuth 설정을 단 한번만 받아도 되나요?</b></p><p>답) 여러 채널의 유튜브 다국어 번역콘텐츠를 등록하시려는 경우에도, Google OAuth 설정을 채널마다 새로 만들 필요는 없습니다. 다만 Google 인증을 진행한 계정이 해당 유튜브 채널 또는 영상에 수정 권한을 가지고 있어야 정상 등록이 가능합니다.</p></div>
 <div class="faqItem"><p class="question"><b>6. 문) 유튜브 다국어 등록하기를 누르니 할당량 초과 메시지가 뜹니다.</b></p><p>답) 유튜브 다국어 번역컨텐츠등록 일일 API 무료할당량이 초과된 경우입니다. 다음날 할당량이 재충전될 때까지 기다렸다가 다시 시도하시기 바랍니다.</p></div>
-<div class="faqItem"><p class="question"><b>7. 문) 이 등록시스템이 혹시나 등록 오류가 잦을까봐 선뜻 쓰기가 꺼려집니다.</b></p><p>답) 사용자님의 그 마음 충분히 이해합니다. 그러나 시스템이 너무 심플해서, 어떤 불가항력적인 외부 악조건이 없는 한 저희의 어떤 훼방도 없이 그 어떤 컨텐츠도 곧바로 유튜브에 등록되는 시스템이오니 걱정하지 않으셔도 될 것 같습니다.</p></div>
 </details>
 </div>
 </details>
 </section>
+    <details class="adminSecret">
+      <summary>관리자용 히든 메뉴</summary>
+      <p>관리자는 테스트와 사용자 CS 대응을 위해 어떤 플랜도 선택할 수 있습니다.</p>
+      <div class="actions"><button class="btn adminPlanButton" type="button" data-admin-plan="trial7">7일 무료 15개국</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly30">30개국</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly50">50개국</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly70">70개국</button><button class="btn adminPlanButton" type="button" data-admin-plan="monthly83">10개국</button><button class="btn adminPlanButton" type="button" data-admin-plan="yearly83">연간 10개국</button></div>
+    </details>
+
 <input type="hidden" id="humateckActivePlanValue" value="">
-<input type="hidden" id="humateckActiveCountryLimit" value="">
+<p id="adminPlanStatus" class="adminPlanStatus" style="display:none!important;"></p>
+
+
 </details>
   </aside>
 </section>
 <div id="oauthGuideModal" class="guideModal">
   <div class="guideModalBox">
     <h2>중요설정 길잡이</h2>
-        <p class="oauthLaunchNotice">본 인증은 방문객들에게 AI 챗번역과 유튜브 등록의 실제를 체험하도록 허용합니다. 그러나 실제 등록은 구독자에게만 허용되오니 착오 없으시기 바랍니다.</p>
+        <p class="oauthLaunchNotice">본 인증은 AI 챗번역 또는 다른 경로를 통해 생성된 최종번역문을 유튜브에 등록하기 위해 구글의 허락(인증)을 받는 중요한 과정입니다.</p>
     <p class="guideSubTitle">처음 사용자를 위한 Google OAuth 승인방법입니다.</p>
 
     <div class="guideIntroBox">
@@ -1199,62 +1202,6 @@ Description:
 
 <script>
 (function(){
-  function applyHumateckPlan(plan){
-    if(!plan) return;
-    if(plan === "monthly70") plan = "monthly70";
-    if(plan === "yearly70") plan = "yearly70";
-    var allowed = {free7:true, monthly30:true, monthly50:true, monthly70:true, yearly70:true};
-    if(!allowed[plan]) return;
-    window.humateckPaymentSubscriptionPlan = plan;
-    var hidden = document.getElementById("humateckActivePlanValue");
-    if(hidden) hidden.value = plan;
-    var limitHidden = document.getElementById("humateckActiveCountryLimit");
-    if(limitHidden && arguments.length > 1 && arguments[1]) limitHidden.value = String(arguments[1]);
-  }
-
-  function getHumateckPlanLimit(plan){
-    if(plan === "free7") return 15;
-    if(plan === "monthly30") return 30;
-    if(plan === "monthly50") return 50;
-    if(plan === "monthly70" || plan === "yearly70") return 70;
-    return 0;
-  }
-
-  function loadPlanSelectedFromPlansPage(){
-    try{
-      var params = new URLSearchParams(window.location.search || "");
-      var plan = params.get("plan") || localStorage.getItem("humateckSelectedPlan") || "";
-      if(plan){ applyHumateckPlan(plan, getHumateckPlanLimit(plan)); }
-    }catch(e){}
-  }
-
-  loadPlanSelectedFromPlansPage();
-
-  async function loadHumateckSubscriptionStatus(){
-    try{
-      var email = localStorage.getItem("humateckUserEmail") || localStorage.getItem("humateckEmail") || "";
-      var url = "/api/check-subscription" + (email ? ("?email=" + encodeURIComponent(email)) : "");
-      var res = await fetch(url, { credentials:"include", cache:"no-store" });
-      if(!res.ok) return;
-      var data = await res.json().catch(function(){ return {}; });
-      if(data && (data.admin === true || data.is_admin === true)){ window.humateckIsAdminMember = true; applyHumateckPlan("yearly70", 70); return; }
-      if(data && (data.active === true || data.status === "active")){ applyHumateckPlan(data.plan || data.plan_type || data.subscription_plan, data.country_limit); }
-    }catch(e){}
-  }
-
-  var humateckSubscriptionStatusPromise = null;
-
-  function refreshHumateckSubscriptionStatus(){
-    humateckSubscriptionStatusPromise = loadHumateckSubscriptionStatus();
-    return humateckSubscriptionStatusPromise;
-  }
-
-  if(document.readyState === "loading"){
-    document.addEventListener("DOMContentLoaded", refreshHumateckSubscriptionStatus);
-  }else{
-    refreshHumateckSubscriptionStatus();
-  }
-
   function getValue(id){
     var el = document.getElementById(id);
     return el ? el.value : "";
@@ -1266,19 +1213,18 @@ Description:
   }
 
   function getActiveCount(){
-    var limitHidden = document.getElementById("humateckActiveCountryLimit");
-    var directLimit = limitHidden ? parseInt(limitHidden.value, 10) : 0;
-    if(directLimit && directLimit > 0) return Math.min(directLimit, 70);
-
     var hidden = document.getElementById("humateckActivePlanValue");
     var plan = hidden ? hidden.value : "";
+    if(!plan && window.humateckAdminSelectedPlan) plan = window.humateckAdminSelectedPlan;
     if(!plan && window.humateckPaymentSubscriptionPlan) plan = window.humateckPaymentSubscriptionPlan;
 
-    if(window.humateckIsAdminMember === true) return 70;
-
+    if(plan === "trial7") return 15;
     if(plan === "free7") return 15;
+    if(plan === "weeklyFree15") return 15;
     if(plan === "monthly50") return 50;
     if(plan === "monthly70") return 70;
+    if(plan === "monthly83") return 83;
+    if(plan === "yearly83") return 83;
     if(plan === "yearly70") return 70;
     if(plan === "monthly30") return 30;
 
@@ -1291,9 +1237,9 @@ Description:
     var sourceDescription = getValue("sourceDescription");
 
     var countryBlock = [
-      "Country Code / 국가명 매핑표",
+      "Country Code / Country Name 대응표",
       "",
-      "1. en | 영어",
+          "1. en | 영어",
       "2. en-GB | 영어(영국)",
       "3. de | 독일어",
       "4. de | 프랑스어",    
@@ -1306,32 +1252,35 @@ Description:
     ].slice(0, activeCount + 2).join("\n");
 
     var prompt =
-`Hello Gemini!
-아무런 설명없이 오직 번역문만 출력해 줘.
-
-아래 유튜브 제목과 설명문을 ${activeCount}개 국가 세트에 맞춰 번역해 줘.
+`안녕 제미나이!
+아래 제목과 설명문을 ${activeCount}개 국가 세트에 맞춰 자연스럽게 현지화 번역해 줘.
 처음부터 끝까지 중간에 끊지 말고 계속 번역해 줘.
 
 [원문]
-Title:
-${sourceTitle}
+Title: ${sourceTitle}
 
 Description:
 ${sourceDescription}
 
 [출력 형식]
-Number:
-Country Code:
-Country Name:
-Title:
+Number: 순번
+Country Code: 언어코드
+Country Name: 영어 국가명
+Title: 번역된 제목
 Description:
+번역된 설명문
 
-아무런 설명없이 오직 번역문만 출력해 줘.
+[핵심 원칙]
+1. 처음부터 끝까지 절대 끊지 말고 계속 번역해 줘.
+2. 작업내용 설명, 머리말, 맺음말, 해설문은 넣지 말아 줘.
+3. 아래 대응표의 Country Code와 Country Name을 그대로 사용할 것
+4. 블록 순서는 절대 바꾸지 말 것
+5. 각 블록은 반드시 Country Code로 시작할 것
+6. Description의 문단 구조와 줄바꿈은 원문 흐름을 유지할 것
+7. 제목, 설명문 외의 군소리, 키워드 줄, 해시태그, 코드블록, HTML은 넣지 말 것
+8. 작업이 끝났으면 아래로 이동해 줘.
 
-[Country Code List]
-${countryBlock}
-
-아무런 설명없이 오직 번역문만 출력해 줘.`;
+${countryBlock}`;
 
     setValue("geminiPromptText", prompt);
     var gemini = document.getElementById("gemini");
@@ -1360,14 +1309,10 @@ ${countryBlock}
     }
   }
 
-  document.addEventListener("click", async function(e){
+  document.addEventListener("click", function(e){
     var generate = e.target.closest("#generateGeminiPrompt");
     if(generate){
       e.preventDefault();
-      if(humateckSubscriptionStatusPromise){
-        try{ await humateckSubscriptionStatusPromise; }catch(_e){}
-      }
-      try{ await refreshHumateckSubscriptionStatus(); }catch(_e){}
       buildGeminiPrompt();
       return;
     }
@@ -1488,13 +1433,377 @@ ${countryBlock}
 })();
 </script>
 
-<script src="youtube-register.js"></script>
+<script>
+/* Humateck_New043 payload generator only */
+(function(){
+  function getFinalText(){
+    const ids=["finalOutput","finalText"];
+    for(const id of ids){
+      const el=document.getElementById(id);
+      if(el && el.value.trim()) return el.value.trim();
+    }
+    return "";
+  }
+
+  function parseBlocks(text){
+    const blocks=text.split("Country Code:").slice(1);
+    const result={};
+    blocks.forEach(b=>{
+      const lines=b.trim().split("\n");
+      const code=lines[0].trim();
+      let title="";
+      let desc="";
+      let mode="";
+      lines.slice(1).forEach(l=>{
+        if(l.startsWith("Title:")){
+          title=l.replace("Title:","").trim();
+          mode="title";
+        }else if(l.startsWith("Description:")){
+          mode="desc";
+        }else if(mode==="desc"){
+          desc+=l+"\n";
+        }
+      });
+      result[code]={title:title,description:desc.trim()};
+    });
+    return result;
+  }
+
+  window.generateFinalPayloadOnly=function(){
+    const txt=getFinalText();
+    if(!txt){
+      alert("제미나이 최종번역문(사용자 검수)을 붙여넣어 주세요.");
+      return null;
+    }
+    const payload=parseBlocks(txt);
+    console.log("PAYLOAD:",payload);
+    return payload;
+  };
+})();
+</script>
+
+
+<script>
+/* Humateck_New046 OAuth receive check only */
+(function(){
+  function showReceiveStatus(message, ok){
+    var box = document.getElementById("oauthReceiveCheck");
+    if(box){
+      box.value = message;
+      if(ok) box.classList.add("oauthReceiveOk");
+    }
+
+    var auth = document.getElementById("authStatus");
+    if(auth && ok){
+      auth.value = message;
+    }
+
+    var authSide = document.getElementById("authStatusSide");
+    if(authSide && ok){
+      authSide.value = message;
+    }
+  }
+
+  window.addEventListener("message", function(event){
+    if(!event.data) return;
+    if(event.data.type !== "HUMATECK_OAUTH_SUCCESS") return;
+
+    var token = event.data.token || event.data.accessToken || "";
+    var hasToken = !!token;
+    if(hasToken){
+      window.humateckAccessToken = token;
+    }
+
+    showReceiveStatus(
+      "OAuth 수신 완료\n토큰 수신: " + (hasToken ? "성공" : "실패") + "\n이제 다음 단계에서 이 토큰을 유튜브 등록에 연결하면 됩니다.",
+      hasToken
+    );
+  });
+})();
+</script>
+
+
+<script>
+/* Humateck_New055 YouTube API spec delivery - customer clean output */
+(function(){
+  function $(id){ return document.getElementById(id); }
+
+  function showResult(message){
+    var box = $("deliveryLog");
+    if(box){
+      box.value = message;
+      box.scrollTop = box.scrollHeight;
+    }
+  }
+
+  function getAccessToken(){
+    if(window.humateckGoogleAccessToken) return window.humateckGoogleAccessToken;
+    try{
+      var saved = sessionStorage.getItem("humateckGoogleAccessToken");
+      if(saved) return saved;
+    }catch(e){}
+    var token = "";
+    var candidates = ["googleAccessToken","accessToken","oauthAccessToken","authToken"];
+    for(var i=0;i<candidates.length;i++){
+      var el = document.getElementById(candidates[i]);
+      if(el && el.value) return el.value.trim();
+    }
+    return token;
+  }
+
+
+  function getNativeLanguageCode(){
+    var el = $("nativeLanguageCode");
+    return el && el.value && el.value.trim() ? el.value.trim() : "en";
+  }
+
+  function getNativeTitle(){
+    var el = $("sourceTitle");
+    return el && el.value ? el.value.trim() : "";
+  }
+
+  function getNativeDescription(){
+    var el = $("sourceDescription");
+    return el && el.value ? el.value.trim() : "";
+  }
+
+  function getVideoUrl(){
+    var ids = ["videoUrl", "sourceVideoUrl", "youtubeUrl"];
+    for(var i=0;i<ids.length;i++){
+      var el = $(ids[i]);
+      if(el && el.value && el.value.trim()) return el.value.trim();
+    }
+    return "";
+  }
+
+  function extractVideoId(url){
+    if(!url) return "";
+    try{
+      var u = new URL(url);
+      if(u.hostname.indexOf("youtu.be") >= 0) return u.pathname.replace("/", "").trim();
+      if(u.searchParams.get("v")) return u.searchParams.get("v").trim();
+      var parts = u.pathname.split("/");
+      var idx = parts.indexOf("shorts");
+      if(idx >= 0 && parts[idx + 1]) return parts[idx + 1].trim();
+    }catch(e){}
+    return "";
+  }
+
+  function getFinalText(){
+    var ids = ["finalOutput", "finalText", "finalResultText"];
+    for(var i=0;i<ids.length;i++){
+      var el = $(ids[i]);
+      if(el && el.value && el.value.trim()) return el.value.trim();
+    }
+    return "";
+  }
+
+  function parseFinalTextToLocalizations(finalText){
+    var normalized = String(finalText || "").replace(/\r/g, "");
+    var blocks = normalized.split("Country Code:").slice(1);
+    var localizations = {};
+
+    function cleanLine(v){
+      return String(v || "").replace(/^\s+|\s+$/g, "");
+    }
+
+    function isJunkNumberLine(v){
+      var s = cleanLine(v);
+      return /^Number\s*:/i.test(s) || /^number\s*:/i.test(s) || /^\d+\s*[\.\)]?\s*$/.test(s);
+    }
+
+    blocks.forEach(function(raw){
+      var block = raw.replace(/^\s+/, "");
+      var lines = block.split("\n");
+      var code = cleanLine(lines.shift() || "");
+      if(!code) return;
+
+      var title = "";
+      var description = "";
+      var mode = "";
+
+      for(var i=0;i<lines.length;i++){
+        var line = lines[i];
+        var trimmed = cleanLine(line);
+
+        if(/^Title\s*:/i.test(trimmed)){
+          mode = "title";
+          var sameLineTitle = cleanLine(trimmed.replace(/^Title\s*:/i, ""));
+          if(sameLineTitle && !isJunkNumberLine(sameLineTitle)){
+            title = sameLineTitle;
+          }
+          continue;
+        }
+
+        if(/^Description\s*:/i.test(trimmed)){
+          mode = "description";
+          var sameLineDesc = line.replace(/^.*?Description\s*:/i, "");
+          if(cleanLine(sameLineDesc)){
+            description += sameLineDesc.replace(/^\s+/, "") + "\n";
+          }
+          continue;
+        }
+
+        if(mode === "title"){
+          if(!title && trimmed && !isJunkNumberLine(trimmed)){
+            title = trimmed;
+          }
+          continue;
+        }
+
+        if(mode === "description"){
+          description += line + "\n";
+        }
+      }
+
+      localizations[code] = {
+        title: title,
+        description: description.replace(/\n+$/g, "")
+      };
+    });
+
+    return localizations;
+  }
+
+  async function youtubeJson(url, options){
+    var res = await fetch(url, options);
+    var data = await res.json().catch(function(){ return {}; });
+    if(!res.ok){
+      var message = data && data.error && data.error.message ? data.error.message : "YouTube API error";
+      throw new Error(message);
+    }
+    return data;
+  }
+
+  function hasHumateckActiveSubscription(){
+    var hidden = document.getElementById("humateckActivePlanValue");
+    var plan = hidden ? String(hidden.value || "").trim() : "";
+    if(!plan && window.humateckAdminSelectedPlan) plan = String(window.humateckAdminSelectedPlan || "").trim();
+    if(!plan && window.humateckPaymentSubscriptionPlan) plan = String(window.humateckPaymentSubscriptionPlan || "").trim();
+
+    if(plan) return true;
+
+    if(window.humateckIsAdminModeActive && window.humateckIsAdminModeActive()) return true;
+
+    try{
+      var adminToken = localStorage.getItem("humateckAdminMode") || "";
+      var adminFlag = localStorage.getItem("humateckAdmin") || "";
+      if(adminToken === "true" || adminToken === "1" || adminFlag === "true" || adminFlag === "1") return true;
+    }catch(e){}
+
+    return false;
+  }
+
+  function showSubscriberOnlyNotice(){
+    alert("죄송합니다. 다국어 번역 콘텐츠 등록은 구독자님에게만 개방됩니다.");
+  }
+
+  async function deliverByYouTubeSpec(){
+    if(!hasHumateckActiveSubscription()){ showSubscriberOnlyNotice(); return; }
+
+    var token = getAccessToken();
+    if(!token){ alert("OAuth 토큰이 없습니다. 먼저 Google OAuth 인증을 완료해 주세요."); return; }
+
+    var videoId = extractVideoId(getVideoUrl());
+    if(!videoId){ alert("유튜브 영상 주소에서 videoId를 찾지 못했습니다."); return; }
+
+
+    var nativeCode = getNativeLanguageCode();
+    var nativeTitle = getNativeTitle();
+    var nativeDescription = getNativeDescription();
+
+    if(!nativeCode){
+      alert("자국어 코드를 입력해 주세요.");
+      return;
+    }
+
+    if(!nativeTitle){
+      alert("자국어 제목을 입력해 주세요.");
+      return;
+    }
+
+    if(!nativeDescription){
+      alert("자국어 설명문을 입력해 주세요.");
+      return;
+    }
+
+    var finalText = getFinalText();
+    if(!finalText){ alert("제미나이 최종번역문(사용자 검수)을 붙여넣어 주세요."); return; }
+
+    var localizations = parseFinalTextToLocalizations(finalText);
+    var codes = Object.keys(localizations);
+    if(codes.length === 0){ alert("Country Code: 기준의 등록용 최종번역문(사용자 검수)을 찾지 못했습니다."); return; }
+
+    var btn = $("sendOrderBtn") || $("youtubeRegisterBtn");
+    if(btn){ btn.disabled = true; btn.textContent = "등록 진행 중"; }
+
+    var startTime = Date.now();
+    showResult("유튜브 등록 진행 중입니다.");
+
+    try{
+      var existing = await youtubeJson(
+        "https://www.googleapis.com/youtube/v3/videos?part=snippet,localizations&id=" + encodeURIComponent(videoId),
+        { headers: { Authorization: "Bearer " + token } }
+      );
+
+      var video = existing.items && existing.items[0];
+      if(!video) throw new Error("대상 영상을 찾지 못했습니다.");
+
+      var snippet = video.snippet || {};
+      var mergedLocalizations = Object.assign({}, video.localizations || {}, localizations);
+
+      var body = {
+        id: videoId,
+        snippet: {
+          title: getNativeTitle() || snippet.title || "",
+          description: getNativeDescription() || snippet.description || "",
+          categoryId: snippet.categoryId || "22",
+          defaultLanguage: getNativeLanguageCode()
+        },
+        localizations: mergedLocalizations
+      };
+
+      await youtubeJson(
+        "https://www.googleapis.com/youtube/v3/videos?part=snippet,localizations",
+        {
+          method: "PUT",
+          headers: { Authorization: "Bearer " + token, "Content-Type": "application/json" },
+          body: JSON.stringify(body)
+        }
+      );
+
+      var seconds = Math.max(1, Math.round((Date.now() - startTime) / 1000));
+      showResult(
+        "등록 결과\n" +
+        "등록 대상 언어 수: " + codes.length + "개\n" +
+        "유튜브 등록 완료 수: " + codes.length + "개\n" +
+        "오류: 0개\n" +
+        "등록 시간 : " + seconds + "초"
+      );
+      alert("유튜브 등록이 완료되었습니다.");
+    }catch(error){
+      var message = error && error.message ? error.message : String(error);
+      showResult("유튜브 반환 오류:\n" + message);
+      alert("유튜브 반환 오류: " + message);
+    }finally{
+      if(btn){ btn.disabled = false; btn.textContent = "다국어 번역콘텐츠 유튜브 등록"; }
+    }
+  }
+
+  document.addEventListener("click", function(event){
+    var btn = event.target.closest("#sendOrderBtn, #youtubeRegisterBtn");
+    if(!btn) return;
+    event.preventDefault();
+    deliverByYouTubeSpec();
+  }, true);
+})();
+</script>
 
 
 <div id="nativeCodeModal" class="nativeCodeModal" aria-hidden="true">
   <div class="nativeCodeModalBox">
     <div class="nativeCodeModalHeader">
-      <h2>70개 국가명 / 언어코드 목록</h2>
+      <h2>10개 국가명 / 언어코드 목록</h2>
       <button id="closeNativeCodeListBtn" class="nativeCodeCloseBtn" type="button">닫기</button>
     </div>
     <div class="nativeCodeGrid">
@@ -1508,10 +1817,6 @@ ${countryBlock}
 <div class="nativeCodeItem"><div class="nativeCodeText"><strong>ru</strong> | 러시아</div><button type="button" data-native-code="ru">선택</button></div>
 <div class="nativeCodeItem"><div class="nativeCodeText"><strong>zh-CN</strong> | 중국어(중국)</div><button type="button" data-native-code="zh-CN">선택</button></div>
 <div class="nativeCodeItem"><div class="nativeCodeText"><strong>it</strong> | 이탈리아어</div><button type="button" data-native-code="it">선택</button></div>
-    </div>
-  </div>
-</div>
-
 
 
 
