@@ -1513,6 +1513,19 @@ ${countryBlock}
 </div>
 
 
+
+
+
+
+
+
+
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>zh-CN</strong> | 중국어(중국)</div><button type="button" data-native-code="zh-CN">선택</button></div>
+   </div>
+  </div>
+</div>
+
+
 <script>
 /* Humateck_New070 native code list popup only */
 (function(){
@@ -1570,74 +1583,102 @@ ${countryBlock}
 </script>
 
 
+<script>
+/* Humateck_New075 YouTube official language list fetch */
+(function(){
+  function $(id){ return document.getElementById(id); }
+
+  async function fetchYoutubeI18nLanguages(){
+    var out = $("youtubeI18nLanguagesResult");
+    if(out) out.value = "유튜브 공식 언어목록을 가져오는 중입니다...";
+
+    var token = window.humateckAccessToken || "";
+    if(!token){
+      if(out) out.value = "OAuth 토큰이 없습니다. 먼저 Google OAuth 인증을 완료해 주세요.";
+      alert("먼저 Google OAuth 인증을 완료해 주세요.");
+      return;
+    }
+
+    try{
+      var res = await fetch("https://www.googleapis.com/youtube/v3/i18nLanguages?part=snippet&hl=ko", {
+        headers: { Authorization: "Bearer " + token }
+      });
+      var data = await res.json();
+
+      if(!res.ok){
+        var msg = data && data.error && data.error.message ? data.error.message : "YouTube i18nLanguages.list 오류";
+        throw new Error(msg);
+      }
+
+      var items = data.items || [];
+      var lines = items.map(function(item, index){
+        var code = item.id || (item.snippet && item.snippet.hl) || "";
+        var name = item.snippet && item.snippet.name ? item.snippet.name : "";
+        return (index + 1) + ". " + code + " | " + name;
+      });
+
+      if(out){
+        out.value = "유튜브 공식 지원 언어 수: " + items.length + "개\n\n" + lines.join("\n");
+      }
+    }catch(error){
+      var message = error && error.message ? error.message : error;
+      if(out) out.value = "유튜브 공식 언어목록 가져오기 실패:\n" + message;
+      alert("유튜브 공식 언어목록 가져오기 실패: " + message);
+    }
+  }
+
+  document.addEventListener("click", function(event){
+    var btn = event.target.closest("#fetchYoutubeI18nLanguagesBtn");
+    if(!btn) return;
+    event.preventDefault();
+    fetchYoutubeI18nLanguages();
+  }, true);
+})();
+</script>
 
 <script>
-/* Humateck_New016: visual-only empty-field reminder.
-   No blocking, no validation, no content judgment.
-   Blue highlight appears only after the customer leaves an empty field or tries a related action. */
+/* Humateck_New012 admin registration permission restore */
 (function(){
-  var HUMATECK_CUSTOMER_FIELD_IDS = [
-    "nativeLanguageCode",
-    "videoUrl",
-    "sourceTitle",
-    "sourceDescription",
-    "googleClientIdInput",
-    "finalOutput"
-  ];
-  var HUMATECK_TOUCHED_FIELDS = Object.create(null);
+  function isAdminModeActive(){
+    var adminPlan = window.humateckAdminSelectedPlan || "";
+    var hidden = document.getElementById("humateckActivePlanValue");
+    var hiddenPlan = hidden && hidden.value ? hidden.value : "";
+    var adminToken = localStorage.getItem("humateckAdminMode") || "";
+    var adminFlag = localStorage.getItem("humateckAdmin") || "";
 
-  function isEmpty(el){
-    return !String(el && el.value || "").trim();
+    return !!(
+      adminPlan ||
+      hiddenPlan ||
+      adminToken === "true" ||
+      adminToken === "1" ||
+      adminFlag === "true" ||
+      adminFlag === "1"
+    );
   }
 
-  function updateOne(id){
-    var el = document.getElementById(id);
-    if(!el) return;
-    el.classList.toggle("humateck-empty-blue-warning", !!HUMATECK_TOUCHED_FIELDS[id] && isEmpty(el));
-  }
+  window.humateckIsAdminModeActive = isAdminModeActive;
 
-  function updateAll(){
-    HUMATECK_CUSTOMER_FIELD_IDS.forEach(updateOne);
-  }
+  document.addEventListener("click", function(event){
+    var adminBtn = event.target.closest("[data-admin-plan]");
+    if(!adminBtn) return;
 
-  function touch(ids){
-    ids.forEach(function(id){ HUMATECK_TOUCHED_FIELDS[id] = true; });
-    updateAll();
-  }
+    localStorage.setItem("humateckAdminMode", "true");
+    var plan = adminBtn.getAttribute("data-admin-plan") || "admin";
+    window.humateckAdminSelectedPlan = plan;
+    window.humateckPaymentSubscriptionPlan = plan;
 
-  document.addEventListener("DOMContentLoaded", function(){
-    HUMATECK_CUSTOMER_FIELD_IDS.forEach(function(id){
-      var el = document.getElementById(id);
-      if(!el) return;
-      el.addEventListener("blur", function(){
-        HUMATECK_TOUCHED_FIELDS[id] = true;
-        updateOne(id);
-      });
-      el.addEventListener("input", function(){ updateOne(id); });
-      el.addEventListener("change", function(){ updateOne(id); });
-    });
+    document.querySelectorAll("[data-admin-plan]").forEach(function(btn){ btn.classList.remove("active"); });
+    adminBtn.classList.add("active");
 
-    var promptBtn = document.getElementById("generateGeminiPrompt");
-    if(promptBtn){
-      promptBtn.addEventListener("click", function(){
-        touch(["nativeLanguageCode", "videoUrl", "sourceTitle", "sourceDescription"]);
-      });
+    var hidden = document.getElementById("humateckActivePlanValue");
+    if(hidden) hidden.value = plan;
+
+    var sendBtn = document.getElementById("sendOrderBtn");
+    if(sendBtn){
+      sendBtn.disabled = false;
+      sendBtn.classList.remove("disabled");
     }
-
-    var oauthBtn = document.getElementById("oauthStartBtn");
-    if(oauthBtn){
-      oauthBtn.addEventListener("click", function(){
-        touch(["googleClientIdInput"]);
-      });
-    }
-
-    var registerBtn = document.getElementById("sendOrderBtn") || document.getElementById("youtubeRegisterBtn");
-    if(registerBtn){
-      registerBtn.addEventListener("click", function(){
-        touch(["videoUrl", "googleClientIdInput", "finalOutput"]);
-      });
-    }
-  });
+  }, true);
 })();
 </script>
 
