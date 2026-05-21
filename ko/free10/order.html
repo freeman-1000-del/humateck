@@ -1,21 +1,9 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<!--
-개발자 공지사항 - HUMATECK 고정 원칙
-1. 오더폼은 배송장 구조만 유지한다: 고객 승인본 -> Google 브라우저 OAuth 결과 -> YouTube API 전달 -> YouTube 응답 표시.
-2. 군살은 빼고 절대 다시 넣지 않는다. 오더폼에 독립 JS 로직, 파서 확장, 메타데이터 판단, 콘텐츠 검수, 콘텐츠 보정, 사전 차단, 위험도 계산, 내부 심사, 내부 차단을 도입하지 말 것.
-3. 인증은 Google이 수행하고, 접수/거부 판단은 YouTube가 한다. Humateck는 내부 심사자, 편집자, 차단자, 판단자가 아니다.
-4. 한국어판은 PayPal 직접 결제 버튼을 두지 말고, 국내 결제 확정 전까지 서비스 준비 중으로 둔다. 영문/글로벌 결제 흐름과 분리한다.
-5. 대상국은 70개국으로 고정한다. 명시 승인 없이 이전 확장국가 문구나 이전 확장국가 플랜 로직을 되살리지 말 것.
-6. 7일 무료 플랜은 주요 15개국으로 고정한다. 제미나이 대상국 순서는 알파벳순이 아니라 국가 중요도 순으로 둔다.
-7. 고객용 오더페이지에 hidden/admin/test 메뉴를 추가하지 말 것. 내부 회원관리와 테스트 권한은 서버 쪽에서 보이지 않게 처리한다.
--->
-
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Humateck 전체 등록플랜</title>
 <style>
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;background:#050b14;color:#f4f1e8;font-family:Arial,"Noto Sans KR",sans-serif}
@@ -1069,13 +1057,13 @@ Description:
 
 <section class="oauthInfoBox" id="googleOAuthNotice">
       <h2>Google OAuth 인증관련 안내</h2>
-      <p>이제부터는 구독하신 분들이 필수적으로 거쳐야 될 Google OAuth 인증 순서입니다. 비구독자분들도 이 인증을 받을 수는 있으나, 최종 유튜브 등록은 반드시 구독자에게만 개방되오니 착오 없으시기 바랍니다.</p>
+      <p>이제부터는 준비된 번역컨텐츠를 유튜브에 등록하기 위한 Google OAuth 필수인증 순서입니다.</p>
       <p class="yellowStrong">Google OAuth 인증키를 이미 받으신 분들은 ‘중요설정 길잡이’를 건너 띄시기 바랍니다.</p>
-      <center><p class="yellowStrong">채널당 단 한번 !</p></center>
-      <div class="actions"><a class="btn guideOpenButton" href="#oauthGuideModal">중요설정 길잡이</a><a class="btn" href="./plans.html">플랜 구독하러 가기</a></div>
+      <center><p class="yellowStrong">한번 인증으로 여러 채널에 사용합니다.!</p></center>
+      <div class="actions"><a class="btn guideOpenButton" href="#oauthGuideModal">중요설정 길잡이</a></div>
       <div class="oauthPanelBelow">
         <h2>Google OAuth 인증</h2>
-        <p>유튜브 등록할 때마다 필히 Google OAuth 인증(인증키 확인)을 받아야 합니다.</p>
+        <p>설정한 인증키를 유튜브 등록할 때마다 인증(인증키 확인)에 사용하는 필수절차입니다.</p>
         <label for="googleClientIdInput">Google OAuth Web Client ID</label>
         <input id="googleClientIdInput" type="password" autocomplete="off" placeholder="Google OAuth Web Client ID를 붙여넣으세요">
         <div class="oauthCenterButton">
@@ -1088,24 +1076,19 @@ Description:
     </section>
 <section class="card registerNoticeBelow">
       <h2>유튜브 등록관련 공지사항</h2>
-      <p>당사는 고객님의 번역 승인본에 대해 어떠한 <span class="highlightAction">검수나 차단 · 변경 · 추가</span>를 하지 않으며, 고객 승인 내용 그대로 발송합니다.</p>
+      <p>당사는 사용자님의 번역 승인본에 대해 어떠한 <span class="highlightAction">검수나 차단 · 변경 · 추가</span>를 하지 않으며, 사용자 승인 내용 그대로 발송합니다.</p>
       <p>모든 번역문은 유튜브 채널에 즉시 등록되며, 접수측이 실제로 거부한 언어는 보류 언어로 분리 표시됩니다.</p>
     <section class="card" id="deliveryResultCard">
       <h2>등록결과</h2>
       <textarea id="deliveryLog" class="mediumTextarea" readonly placeholder="유튜브 등록결과가 여기에 표시됩니다."></textarea>
     </section>
-    <section class="card" id="customerComplaintCard">
-      <h2>고객 불만 접수</h2>
-      <p>사용 중 불편한 점이 있으시면 적어 주세요. 저희 스탭이 신속히 해결해 드리겠습니다.</p>
-      <textarea id="customerComplaintText" class="mediumTextarea" placeholder="사용 중 불편한 점을 적어 주세요."></textarea>
     </section>
-</section>
   </div>
 
   <aside class="right">
     <h2 class="yellowNotice">상태 안내</h2>
     <h3>빠른 안내</h3>
-    <p>1) 본 서비스를 이용하기 위한 필수 첫단계는 구글 OAuth 승인 설정입니다. 아래의 '중요설정 길잡이'의 상세 안내에 따라 설정을 진행해 주세요.</p>
+    <p>1) 본 프로그램을 이용하기 위한 필수 첫단계는 구글 OAuth 승인 설정입니다. 아래의 '중요설정 길잡이'의 상세 안내에 따라 설정을 진행해 주세요.</p>
     <p>2) 여러 채널의 유튜브 다국어 번역콘텐츠를 등록하시려는 경우에도, Google OAuth 설정을 채널마다 새로 만들 필요는 없습니다. 다만 Google 인증을 진행한 계정이 해당 유튜브 채널 또는 영상에 수정 권한을 가지고 있어야 정상 등록이 가능합니다.</p>
     <p>3) 유튜브 등록할 때마다 필히 Google OAuth 인증(인증키 확인)을 받아야 합니다.</p>
 <section id="faq" class="faqCollapsed">
@@ -1113,13 +1096,13 @@ Description:
 <summary>유튜브 AI 챗번역 FAQ</summary>
 <div class="faqDetails">
 <div class="faqItem"><p class="question"><b>1. 문) 동영상 기본어 설정을 분명히 자국어로 했습니다. 그런데 다국어 번역컨텐츠 등록 후 확인해보니, 동영상 언어 설정이 미국 영어로 변했습니다. 이유가 뭘까요?</b></p><p>
-답) 다국어 번역컨텐츠 등록시 유튜브 다국어 번역컨텐츠 표시시스템상 동영상 기본설정이 미국 영어로 고정되어 있기 때문입니다. 그러나 이는 오류가 아니며, 고객님의 자국어 제목이나 설명문은 언제든지 자국어로 수정하실 수 있사오니 착오 없으시기 바랍니다.</p></div>
+답) 다국어 번역컨텐츠 등록시 유튜브 다국어 번역컨텐츠 표시시스템상 동영상 기본설정이 미국 영어로 고정되어 있기 때문입니다. 그러나 이는 오류가 아니며, 사용자님의 자국어 제목이나 설명문은 언제든지 자국어로 수정하실 수 있사오니 착오 없으시기 바랍니다.</p></div>
 <details><summary>자세히 보기</summary>
 <div class="faqItem"><p class="question"><b>2. 문) 유튜브 다국어 번역컨텐츠 등록하기를 누르니 할당량 초과 메시지가 뜹니다.</b></p><p>답) 유튜브 다국어 번역컨텐츠등록 일일 API 무료할당량이 초과된 경우입니다. 다음날 할당량이 다시 충전될 때까지 기다렸다가 다시 시도하시기 바랍니다.</p></div>
 <div class="faqItem"><p class="question"><b>4. 문) 구글 OAuth 설정이 무엇인가요? 사용시마다 설정해야 하나요?</b></p><p>답) 내 유튜브 채널에 자막을 등록해도 좋다고 구글에 허락받는 연결 과정입니다. 한 번 설정 후 장기간 여러 채널에 쓰실 수 있습니다.</p></div>
 <div class="faqItem"><p class="question"><b>5. 문) 여러 채널을 운영 중입니다. OAuth 설정을 단 한번만 받아도 되나요?</b></p><p>답) 여러 채널의 유튜브 다국어 번역콘텐츠를 등록하시려는 경우에도, Google OAuth 설정을 채널마다 새로 만들 필요는 없습니다. 다만 Google 인증을 진행한 계정이 해당 유튜브 채널 또는 영상에 수정 권한을 가지고 있어야 정상 등록이 가능합니다.</p></div>
 <div class="faqItem"><p class="question"><b>6. 문) 유튜브 다국어 등록하기를 누르니 할당량 초과 메시지가 뜹니다.</b></p><p>답) 유튜브 다국어 번역컨텐츠등록 일일 API 무료할당량이 초과된 경우입니다. 다음날 할당량이 재충전될 때까지 기다렸다가 다시 시도하시기 바랍니다.</p></div>
-<div class="faqItem"><p class="question"><b>7. 문) 이 등록시스템이 혹시나 등록 오류가 잦을까봐 선뜻 쓰기가 꺼려집니다.</b></p><p>답) 고객님의 그 마음 충분히 이해합니다. 그러나 시스템이 너무 심플해서, 어떤 불가항력적인 외부 악조건이 없는 한 저희의 어떤 훼방도 없이 그 어떤 컨텐츠도 곧바로 유튜브에 등록되는 시스템이오니 걱정하지 않으셔도 될 것 같습니다.</p></div>
+<div class="faqItem"><p class="question"><b>7. 문) 이 등록시스템이 혹시나 등록 오류가 잦을까봐 선뜻 쓰기가 꺼려집니다.</b></p><p>답) 사용자님의 그 마음 충분히 이해합니다. 그러나 시스템이 너무 심플해서, 어떤 불가항력적인 외부 악조건이 없는 한 저희의 어떤 훼방도 없이 그 어떤 컨텐츠도 곧바로 유튜브에 등록되는 시스템이오니 걱정하지 않으셔도 될 것 같습니다.</p></div>
 </details>
 </div>
 </details>
@@ -1136,7 +1119,7 @@ Description:
     <p class="guideSubTitle">처음 사용자를 위한 Google OAuth 승인방법입니다.</p>
 
     <div class="guideIntroBox">
-      <p>처음에는 조금 낯설 수 있습니다. 하지만 이 설정은 고객님의 유튜브 채널에 다국어 번역콘텐츠를 등록하기 위해 필요한 Google 공식 승인 절차입니다.</p>
+      <p>처음에는 조금 낯설 수 있습니다. 하지만 이 설정은 사용자님의 유튜브 채널에 다국어 번역콘텐츠를 등록하기 위해 필요한 Google 공식 승인 절차입니다.</p>
       <p><span class="guidePoint">Google OAuth Client ID는 설정 후 상당기간 재사용되는 것이 일반적이지만, 사용량 과다로 인한 토큰 만료, 기타 이유로 재설정이 필요할 수도 있습니다.</span></p>
     </div>
 
@@ -1144,7 +1127,7 @@ Description:
       <h3>1단계. Google Cloud로 이동해 주세요</h3>
       <p>아래 버튼을 눌러 Google Cloud 설정 화면으로 이동해 주세요.</p>
       <a class="guideCloudBtn" href="https://console.cloud.google.com/auth/audience?hl=ko&project=fourth-cedar-489307-b1" target="_blank" rel="noopener noreferrer">Google Cloud 바로가기</a>
-      <p>Google Cloud에 접속한 뒤, 유튜브 등록에 사용할 고객님의 Google 계정으로 로그인해 주세요.</p>
+      <p>Google Cloud에 접속한 뒤, 유튜브 등록에 사용할 사용자님의 Google 계정으로 로그인해 주세요.</p>
     </div>
 
     <div class="guideSection">
@@ -1157,8 +1140,8 @@ Description:
       <h3>3단계. Branding 정보를 입력해 주세요</h3>
       <p>왼쪽 메뉴에서 <span class="guideCode">Branding</span>을 눌러 주세요.</p>
       <ul class="guideList">
-        <li><span class="guidePoint">App name</span>에는 고객님이 알아보기 쉬운 이름을 적어 주세요.</li>
-        <li><span class="guidePoint">User support email</span>에는 고객님의 Google 이메일을 선택해 주세요.</li>
+        <li><span class="guidePoint">App name</span>에는 사용자님이 알아보기 쉬운 이름을 적어 주세요.</li>
+        <li><span class="guidePoint">User support email</span>에는 사용자님의 Google 이메일을 선택해 주세요.</li>
         <li><span class="guidePoint">Developer contact information</span>에도 연락 가능한 이메일을 적어 주세요.</li>
       </ul>
     </div>
@@ -1311,75 +1294,15 @@ Description:
       "Country Code / 국가명 매핑표",
       "",
       "1. en | 영어",
-      "2. es | 스페인어",
-      "3. es-419 | 스페인어(라틴 아메리카)",
-      "4. es-US | 스페인어(미국)",
-      "5. pt | 포르투갈어",
-      "6. pt-PT | 포르투갈어(포르투갈)",
-      "7. fr | 프랑스어",
-      "8. fr-CA | 프랑스어(캐나다)",
-      "9. de | 독일어",
-      "10. ja | 일본어",
-      "11. ko | 한국어",
-      "12. zh-CN | 중국어(중국)",
-      "13. zh-TW | 중국어(대만)",
-      "14. zh-HK | 중국어(홍콩)",
-      "15. hi | 힌디어",
-      "16. id | 인도네시아어",
-      "17. ar | 아랍어",
-      "18. ru | 러시아어",
-      "19. it | 이탈리아어",
-      "20. tr | 튀르키예어",
-      "21. vi | 베트남어",
-      "22. th | 태국어",
-      "23. fil | 필리핀어",
-      "24. ms | 말레이어",
-      "25. nl | 네덜란드어",
-      "26. pl | 폴란드어",
-      "27. uk | 우크라이나어",
-      "28. sv | 스웨덴어",
-      "29. no | 노르웨이어",
-      "30. da | 덴마크어",
-      "31. fi | 핀란드어",
-      "32. el | 그리스어",
-      "33. ro | 루마니아어",
-      "34. hu | 헝가리어",
-      "35. cs | 체코어",
-      "36. sk | 슬로바키아어",
-      "37. bg | 불가리아어",
-      "38. hr | 크로아티아어",
-      "39. sr | 세르비아어",
-      "40. sr-Latn | 세르비아어(라틴)",
-      "41. sq | 알바니아어",
-      "42. mk | 마케도니아어",
-      "43. et | 에스토니아어",
-      "44. lv | 라트비아어",
-      "45. lt | 리투아니아어",
-      "46. iw | 히브리어",
-      "47. fa | 페르시아어",
-      "48. ur | 우르두어",
-      "49. bn | 벵골어",
-      "50. ta | 타밀어",
-      "51. te | 텔루구어",
-      "52. mr | 마라티어",
-      "53. gu | 구자라트어",
-      "54. kn | 칸나다어",
-      "55. ml | 말라얄람어",
-      "56. pa | 펀자브어",
-      "57. ne | 네팔어",
-      "58. my | 버마어",
-      "59. km | 크메르어",
-      "60. lo | 라오어",
-      "61. am | 암하라어",
-      "62. sw | 스와힐리어",
-      "63. af | 아프리칸스어",
-      "64. az | 아제르바이잔어",
-      "65. be | 벨라루스어",
-      "66. bs | 보스니아어",
-      "67. ca | 카탈로니아어",
-      "68. eu | 바스크어",
-      "69. gl | 갈리시아어",
-      "70. ka | 조지아어"
+      "2. en-GB | 영어(영국)",
+      "3. de | 독일어",
+      "4. de | 프랑스어",    
+      "5. es | 스페인어",
+      "6. ja | 일본어",
+      "7. ko | 한국어",
+      "8. ru | 러시아어",
+      "9. zh-CN | 중국어(중국)",
+      "10.it | 이탈리아",
     ].slice(0, activeCount + 2).join("\n");
 
     var prompt =
