@@ -980,81 +980,6 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 }
 </style>
 
-
-<style>
-/* 플랜 선택 아코디언 */
-#inOrderPlanSection details { border:none; }
-#inOrderPlanSection summary {
-  list-style:none;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:14px 18px;
-  border:1px solid rgba(255,217,90,.6);
-  border-radius:14px;
-  background:rgba(255,217,90,.08);
-  color:#ffd95a;
-  font-weight:900;
-  font-size:17px;
-  user-select:none;
-}
-#inOrderPlanSection summary::-webkit-details-marker{ display:none; }
-#inOrderPlanSection summary .arrow{ transition:transform .25s; }
-#inOrderPlanSection details[open] summary .arrow{ transform:rotate(180deg); }
-#inOrderPlanSection .selectedPlanLabel{
-  margin-left:auto;
-  font-size:14px;
-  color:#aaa;
-  font-weight:400;
-}
-#inOrderPlanSection details[open] .selectedPlanLabel{ display:none; }
-#inOrderPlanSection .planGrid{
-  padding:16px 0 4px;
-}
-</style>
-
-<style>
-/* 플랜 만료 카운트다운 */
-#planExpiryBox{
-  border:1px solid rgba(255,217,90,.55);
-  border-radius:16px;
-  padding:16px 20px;
-  background:rgba(255,217,90,.07);
-  margin-bottom:18px;
-  display:none;
-}
-#planExpiryBox.show{ display:block; }
-#planExpiryBox .expiryLabel{
-  color:#aaa; font-size:13px; margin:0 0 8px;
-}
-#planExpiryBox .expiryPlanName{
-  color:#ffd95a; font-weight:900; font-size:16px; margin:0 0 10px;
-}
-#planExpiryBox .countdownRow{
-  display:flex; gap:10px; flex-wrap:wrap; align-items:center;
-}
-#planExpiryBox .cdUnit{
-  text-align:center;
-  background:rgba(0,0,0,.3);
-  border:1px solid rgba(255,217,90,.3);
-  border-radius:10px;
-  padding:8px 14px;
-  min-width:64px;
-}
-#planExpiryBox .cdNum{
-  font-size:26px; font-weight:900; color:#ffd95a; line-height:1;
-}
-#planExpiryBox .cdLbl{
-  font-size:11px; color:#aaa; margin-top:3px;
-}
-#planExpiryBox .expiryExpired{
-  color:#ff6b5d; font-weight:900; font-size:15px;
-}
-#planExpiryBox .expirySoon{
-  color:#ff9966;
-}
-</style>
 </head>
 <body>
 <!--
@@ -1065,48 +990,12 @@ Do not add review, blocking, metadata judgment, hidden/admin menu, auto-correcti
 
 
 <div class="wrap" id="top">
-<header class="top"><a href="../index.html"><img class="logo" src="../FINAL_LOGO01.png" alt="Humateck"></a><div class="lang">◎ 한국어⌄</div></header>
-<div class="orderTopButtons"><a href="../index.html">첫페이지 가기</a><a href="plans.html">전체플랜 가기 · 서비스 준비 중</a></div>
+<header class="top"><a href="index.html"><img class="logo" src="FINAL_LOGO01.png" alt="Humateck"></a><div class="lang">◎ 한국어⌄</div></header>
+<div class="orderTopButtons"><a href="index.html">첫페이지 가기</a><a href="./plans.html">전체플랜 가기 · 서비스 준비 중</a></div>
 <section class="orderMainGrid">
   <div class="orderLeftColumn">
     <section class="card">
-
-<!-- ====== 플랜 미러링 (주문페이지 내 플랜 선택) ====== -->
-<section class="card" id="inOrderPlanSection" style="margin-bottom:18px;">
-<details id="planAccordion">
-<summary><span>📋 플랜 선택</span><span class="arrow">▼</span><span class="selectedPlanLabel" id="selectedPlanLabel">선택된 플랜 없음</span></summary>
-<div class="planGrid">
-<section class="card"><h1>유튜브 다국어 자막 등록 플랜</h1><p style="color:#e6e0d4;font-size:15px;margin:8px 0 0;">전 상품 균일가 <strong style="color:#ffd95a;">₩39,000 / 월</strong> · 월구독 · 언제든지 해지 가능 · <span style="color:#ff9966;">결제 후 환불 불가</span><br><span style="font-size:13px;color:#aaa;">번역은 고객님이, 등록은 휴마텍이 — 유튜브 형식에 맞는 번역물이면 어떤 도구든 사용 가능합니다.</span></p></section>
-<section class="plans">
-<article class="plan" data-subscription-plan="asia30"><div class="currentPlanBadge">현재 활성</div><h2>아시아 플랜</h2><div class="price">₩39,000<span style="font-size:16px;font-weight:400;color:#aaa;"> / 월</span></div><p>대한민국·일본·중국·베트남·인도·태국·인도네시아·말레이시아·필리핀 등 아시아 30개국 — 유튜브 대륙 알고리즘 최적화 등록</p><a class="btn" href="#" data-select-plan="asia30">이 플랜 선택</a></article>
-<article class="plan" data-subscription-plan="europe30"><div class="currentPlanBadge">현재 활성</div><h2>유럽 플랜</h2><div class="price">₩39,000<span style="font-size:16px;font-weight:400;color:#aaa;"> / 월</span></div><p>영국·프랑스·독일·이탈리아·스페인·네덜란드·폴란드·포르투갈·스웨덴 등 유럽 30개국 — 유튜브 대륙 알고리즘 최적화 등록</p><a class="btn" href="#" data-select-plan="europe30">이 플랜 선택</a></article>
-<article class="plan" data-subscription-plan="africa30"><div class="currentPlanBadge">현재 활성</div><h2>아프리카 플랜</h2><div class="price">₩39,000<span style="font-size:16px;font-weight:400;color:#aaa;"> / 월</span></div><p>이집트·남아공·케냐·나이지리아·에티오피아·가나·탄자니아·모로코·알제리 등 아프리카 30개국 — 유튜브 대륙 알고리즘 최적화 등록</p><a class="btn" href="#" data-select-plan="africa30">이 플랜 선택</a></article>
-<article class="plan" data-subscription-plan="america30"><div class="currentPlanBadge">현재 활성</div><h2>아메리카 플랜</h2><div class="price">₩39,000<span style="font-size:16px;font-weight:400;color:#aaa;"> / 월</span></div><p>미국·캐나다·멕시코·브라질·아르헨티나·콜롬비아·페루·칠레·에콰도르 등 아메리카 30개국 — 유튜브 대륙 알고리즘 최적화 등록</p><a class="btn" href="#" data-select-plan="america30">이 플랜 선택</a></article>
-<article class="plan" data-subscription-plan="oceania30"><div class="currentPlanBadge">현재 활성</div><h2>오세아니아 플랜</h2><div class="price">₩39,000<span style="font-size:16px;font-weight:400;color:#aaa;"> / 월</span></div><p>호주·뉴질랜드·피지·파푸아뉴기니·사모아·통가·솔로몬제도 등 오세아니아 전체 + 보완 글로벌 30개국</p><a class="btn" href="#" data-select-plan="oceania30">이 플랜 선택</a></article>
-<article class="plan" data-subscription-plan="global50"><div class="currentPlanBadge">현재 활성</div><h2>글로벌 50개국</h2><div class="price">₩39,000<span style="font-size:16px;font-weight:400;color:#aaa;"> / 월</span></div><p>전 세계 중요도 순 50개국 — 5대 대륙 핵심 시장을 한 번에 커버하는 확장 등록 플랜</p><a class="btn" href="#" data-select-plan="global50">이 플랜 선택</a></article>
-<article class="plan" data-subscription-plan="global70"><div class="currentPlanBadge">현재 활성</div><h2>글로벌 70개국</h2><div class="price">₩39,000<span style="font-size:16px;font-weight:400;color:#aaa;"> / 월</span></div><p>전 세계 중요도 순 70개국 전체 커버 — 5개국이든 70개국이든 등록 시간은 똑같이 수 초</p><a class="btn" href="#" data-select-plan="global70">이 플랜 선택</a></article>
-</section>
-</div>
-</details>
-</section>
-<!-- ====== /플랜 미러링 ====== -->
       <h1>다국어 자막 등록 주문서</h1>
-
-<!-- 플랜 만료 카운트다운 -->
-<div id="planExpiryBox">
-  <p class="expiryLabel">현재 구독 플랜</p>
-  <p class="expiryPlanName" id="expiryPlanName">—</p>
-  <p class="expiryLabel">플랜 종료까지 남은 시간</p>
-  <div class="countdownRow" id="countdownRow">
-    <div class="cdUnit"><div class="cdNum" id="cdDays">—</div><div class="cdLbl">일</div></div>
-    <div class="cdUnit"><div class="cdNum" id="cdHours">—</div><div class="cdLbl">시</div></div>
-    <div class="cdUnit"><div class="cdNum" id="cdMins">—</div><div class="cdLbl">분</div></div>
-    <div class="cdUnit"><div class="cdNum" id="cdSecs">—</div><div class="cdLbl">초</div></div>
-  </div>
-  <p id="expiryDateText" style="color:#888;font-size:13px;margin:10px 0 0;"></p>
-</div>
-<!-- /플랜 만료 카운트다운 -->
-
       <div class="order-intro-note">
         <p>1. 본 주문양식은 제미나이AI 챗번역 체험을 위해 누구나에게 개방되어 있습니다.</p>
         <p>2. 단, 번역결과를 최종적으로 유튜브에 등록할 권한은 본 서비스 구독자님들에게만 열리오니 착오 없으시기 바랍니다.</p>
@@ -1172,11 +1061,7 @@ Description:
     </section>
 
     <section class="card" id="finalVersionCard">
-      <h2>최종등록명령 <span style="font-size:14px;font-weight:400;color:#ff9966;">※ 영상주소 필수 확인</span></h2>
-      <div id="finalVideoUrlDisplay" style="border:1px solid rgba(255,217,90,.5);border-radius:10px;padding:10px 14px;background:rgba(255,217,90,.07);margin-bottom:10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-  <span style="color:#aaa;font-size:13px;white-space:nowrap;">📹 등록 대상 영상:</span>
-  <span id="finalVideoUrlText" style="color:#ffd95a;font-weight:900;font-size:14px;word-break:break-all;">— 영상주소 미입력 —</span>
-</div>
+      <h2>최종등록명령</h2>
       <textarea id="finalOutput" class="mediumTextarea" placeholder="유튜브 등록용 제미나이 최종 번역 결과를 붙여넣어 주세요."></textarea>
     </section>
 
@@ -1186,7 +1071,7 @@ Description:
       <p>이제부터는 구독하신 분들이 필수적으로 거쳐야 될 Google OAuth 인증 순서입니다. 비구독자분들도 이 인증을 받을 수는 있으나, 최종 유튜브 등록은 반드시 구독자에게만 개방되오니 착오 없으시기 바랍니다.</p>
       <p class="yellowStrong">Google OAuth 인증키를 이미 받으신 분들은 ‘중요설정 길잡이’를 건너 띄시기 바랍니다.</p>
       <center><p class="yellowStrong">채널당 단 한번 !</p></center>
-      <div class="actions"><a class="btn guideOpenButton" href="#oauthGuideModal">중요설정 길잡이</a><a class="btn" href="plans.html">플랜 구독하러 가기</a></div>
+      <div class="actions"><a class="btn guideOpenButton" href="#oauthGuideModal">중요설정 길잡이</a><a class="btn" href="./plans.html">플랜 구독하러 가기</a></div>
       <div class="oauthPanelBelow">
         <h2>Google OAuth 인증</h2>
         <p>유튜브 등록할 때마다 필히 Google OAuth 인증(인증키 확인)을 받아야 합니다.</p>
@@ -1333,7 +1218,8 @@ Description:
   function applyHumateckPlan(plan){
     if(!plan) return;
     if(plan === "monthly70") plan = "monthly70";
-    var allowed = {asia30:true, europe30:true, africa30:true, america30:true, oceania30:true, global50:true, global70:true};
+    if(plan === "yearly70") plan = "yearly70";
+    var allowed = {free7:true, monthly30:true, monthly50:true, monthly70:true, yearly70:true};
     if(!allowed[plan]) return;
     window.humateckPaymentSubscriptionPlan = plan;
     var hidden = document.getElementById("humateckActivePlanValue");
@@ -1343,10 +1229,11 @@ Description:
   }
 
   function getHumateckPlanLimit(plan){
-    if(plan === "asia30" || plan === "europe30" || plan === "africa30" || plan === "america30" || plan === "oceania30") return 30;
-    if(plan === "global50") return 50;
-    if(plan === "global70") return 70;
-    return 30;
+    if(plan === "free7") return 15;
+    if(plan === "monthly30") return 30;
+    if(plan === "monthly50") return 50;
+    if(plan === "monthly70" || plan === "yearly70") return 70;
+    return 0;
   }
 
   function loadPlanSelectedFromPlansPage(){
@@ -1366,7 +1253,7 @@ Description:
       var res = await fetch(url, { credentials:"include", cache:"no-store" });
       if(!res.ok) return;
       var data = await res.json().catch(function(){ return {}; });
-      if(data && (data.admin === true || data.is_admin === true)){ window.humateckIsAdminMember = true; applyHumateckPlan("global70", 70); return; }
+      if(data && (data.admin === true || data.is_admin === true)){ window.humateckIsAdminMember = true; applyHumateckPlan("yearly70", 70); return; }
       if(data && (data.active === true || data.status === "active")){ applyHumateckPlan(data.plan || data.plan_type || data.subscription_plan, data.country_limit); }
     }catch(e){}
   }
@@ -1405,7 +1292,11 @@ Description:
 
     if(window.humateckIsAdminMember === true) return 70;
 
+    if(plan === "free7") return 15;
+    if(plan === "monthly50") return 50;
     if(plan === "monthly70") return 70;
+    if(plan === "yearly70") return 70;
+    if(plan === "monthly30") return 30;
 
     return 30;
   }
@@ -1415,95 +1306,80 @@ Description:
     var sourceTitle = getValue("sourceTitle");
     var sourceDescription = getValue("sourceDescription");
 
-    // ── 플랜별 국가코드 리스트 (YouTube 시장 중요도순) ──
-    var PLAN_COUNTRY_LISTS = {
-      "global70": [
-        "1. en | 영어(미국/영국/호주 등)","2. hi | 힌디어(인도)","3. pt | 포르투갈어(브라질)",
-        "4. id | 인도네시아어","5. es-419 | 스페인어(라틴아메리카)","6. ja | 일본어",
-        "7. ru | 러시아어","8. de | 독일어","9. tr | 튀르키예어","10. ko | 한국어",
-        "11. fr | 프랑스어","12. vi | 베트남어","13. th | 태국어","14. fil | 필리핀어",
-        "15. ar | 아랍어(중동/북아프리카)","16. it | 이탈리아어","17. ms | 말레이어",
-        "18. zh-TW | 중국어(대만)","19. uk | 우크라이나어","20. pl | 폴란드어",
-        "21. nl | 네덜란드어","22. es | 스페인어(스페인)","23. sv | 스웨덴어",
-        "24. ro | 루마니아어","25. cs | 체코어","26. hu | 헝가리어","27. el | 그리스어",
-        "28. zh-HK | 중국어(홍콩)","29. ur | 우르두어(파키스탄)","30. bn | 벵골어(방글라데시)",
-        "31. pt-PT | 포르투갈어(포르투갈)","32. fa | 페르시아어(이란)","33. iw | 히브리어(이스라엘)",
-        "34. sw | 스와힐리어(동아프리카)","35. am | 암하라어(에티오피아)","36. af | 아프리칸스어(남아공)",
-        "37. ta | 타밀어(인도/스리랑카)","38. te | 텔루구어(인도)","39. mr | 마라티어(인도)",
-        "40. my | 버마어(미얀마)","41. km | 크메르어(캄보디아)","42. ne | 네팔어",
-        "43. lo | 라오어(라오스)","44. gu | 구자라트어(인도)","45. kn | 칸나다어(인도)",
-        "46. ml | 말라얄람어(인도)","47. pa | 펀자브어(인도/파키스탄)","48. no | 노르웨이어",
-        "49. da | 덴마크어","50. fi | 핀란드어","51. sk | 슬로바키아어","52. bg | 불가리아어",
-        "53. hr | 크로아티아어","54. sr | 세르비아어","55. lt | 리투아니아어","56. lv | 라트비아어",
-        "57. et | 에스토니아어","58. az | 아제르바이잔어","59. ka | 조지아어","60. be | 벨라루스어",
-        "61. bs | 보스니아어","62. mk | 마케도니아어","63. sq | 알바니아어","64. fr-CA | 프랑스어(캐나다)",
-        "65. es-US | 스페인어(미국)","66. sr-Latn | 세르비아어(라틴)","67. ca | 카탈로니아어",
-        "68. eu | 바스크어","69. gl | 갈리시아어","70. zh-CN | 중국어(중국본토)"
-      ],
-      "asia30": [
-        "1. hi | 힌디어(인도)","2. id | 인도네시아어","3. ja | 일본어","4. ko | 한국어",
-        "5. vi | 베트남어","6. th | 태국어","7. fil | 필리핀어","8. ms | 말레이어",
-        "9. zh-TW | 중국어(대만)","10. zh-HK | 중국어(홍콩)","11. ur | 우르두어(파키스탄)",
-        "12. bn | 벵골어(방글라데시)","13. fa | 페르시아어(이란)","14. iw | 히브리어(이스라엘)",
-        "15. ar | 아랍어(중동)","16. ta | 타밀어(인도/스리랑카)","17. te | 텔루구어(인도)",
-        "18. mr | 마라티어(인도)","19. my | 버마어(미얀마)","20. km | 크메르어(캄보디아)",
-        "21. ne | 네팔어","22. lo | 라오어(라오스)","23. gu | 구자라트어(인도)",
-        "24. kn | 칸나다어(인도)","25. ml | 말라얄람어(인도)","26. pa | 펀자브어(인도/파키스탄)",
-        "27. az | 아제르바이잔어","28. ka | 조지아어","29. en | 영어","30. ru | 러시아어"
-      ],
-      "europe30": [
-        "1. ru | 러시아어","2. de | 독일어","3. fr | 프랑스어","4. tr | 튀르키예어",
-        "5. it | 이탈리아어","6. es | 스페인어(스페인)","7. pl | 폴란드어","8. uk | 우크라이나어",
-        "9. nl | 네덜란드어","10. sv | 스웨덴어","11. ro | 루마니아어","12. cs | 체코어",
-        "13. hu | 헝가리어","14. el | 그리스어","15. pt-PT | 포르투갈어(포르투갈)",
-        "16. no | 노르웨이어","17. da | 덴마크어","18. fi | 핀란드어","19. sk | 슬로바키아어",
-        "20. bg | 불가리아어","21. hr | 크로아티아어","22. sr | 세르비아어","23. lt | 리투아니아어",
-        "24. lv | 라트비아어","25. et | 에스토니아어","26. be | 벨라루스어","27. bs | 보스니아어",
-        "28. mk | 마케도니아어","29. sq | 알바니아어","30. ka | 조지아어"
-      ],
-      "africa30": [
-        "1. ar | 아랍어(이집트/북아프리카)","2. en | 영어(나이지리아/가나/케냐/남아공)",
-        "3. fr | 프랑스어(서/중앙아프리카)","4. sw | 스와힐리어(케냐/탄자니아)",
-        "5. am | 암하라어(에티오피아)","6. af | 아프리칸스어(남아공)","7. pt | 포르투갈어(앙골라/모잠비크)",
-        "8. hi | 힌디어(인도)","9. id | 인도네시아어","10. ja | 일본어","11. ko | 한국어",
-        "12. vi | 베트남어","13. th | 태국어","14. fil | 필리핀어","15. ms | 말레이어",
-        "16. zh-TW | 중국어(대만)","17. zh-HK | 중국어(홍콩)","18. ur | 우르두어(파키스탄)",
-        "19. bn | 벵골어(방글라데시)","20. fa | 페르시아어(이란)","21. iw | 히브리어(이스라엘)",
-        "22. ru | 러시아어","23. de | 독일어","24. tr | 튀르키예어","25. it | 이탈리아어",
-        "26. es | 스페인어","27. pl | 폴란드어","28. nl | 네덜란드어","29. uk | 우크라이나어",
-        "30. sv | 스웨덴어"
-      ],
-      "america30": [
-        "1. en | 영어(미국/캐나다)","2. es-419 | 스페인어(라틴아메리카)","3. pt | 포르투갈어(브라질)",
-        "4. es | 스페인어","5. es-US | 스페인어(미국)","6. fr-CA | 프랑스어(캐나다)",
-        "7. hi | 힌디어(인도)","8. id | 인도네시아어","9. ja | 일본어","10. ko | 한국어",
-        "11. vi | 베트남어","12. th | 태국어","13. fil | 필리핀어","14. ms | 말레이어",
-        "15. zh-TW | 중국어(대만)","16. zh-HK | 중국어(홍콩)","17. ur | 우르두어(파키스탄)",
-        "18. bn | 벵골어(방글라데시)","19. fa | 페르시아어(이란)","20. iw | 히브리어(이스라엘)",
-        "21. ar | 아랍어","22. ru | 러시아어","23. de | 독일어","24. tr | 튀르키예어",
-        "25. fr | 프랑스어","26. it | 이탈리아어","27. nl | 네덜란드어","28. pl | 폴란드어",
-        "29. uk | 우크라이나어","30. sv | 스웨덴어"
-      ],
-      "oceania30": [
-        "1. en | 영어(호주/뉴질랜드/태평양)","2. fil | 필리핀어(태평양 필리핀계)",
-        "3. hi | 힌디어(인도)","4. id | 인도네시아어","5. ja | 일본어","6. ko | 한국어",
-        "7. vi | 베트남어","8. th | 태국어","9. ms | 말레이어","10. zh-TW | 중국어(대만)",
-        "11. zh-HK | 중국어(홍콩)","12. ur | 우르두어(파키스탄)","13. bn | 벵골어(방글라데시)",
-        "14. fa | 페르시아어(이란)","15. iw | 히브리어(이스라엘)","16. ar | 아랍어",
-        "17. ru | 러시아어","18. de | 독일어","19. tr | 튀르키예어","20. fr | 프랑스어",
-        "21. it | 이탈리아어","22. es | 스페인어","23. nl | 네덜란드어","24. pl | 폴란드어",
-        "25. uk | 우크라이나어","26. sv | 스웨덴어","27. ro | 루마니아어","28. cs | 체코어",
-        "29. hu | 헝가리어","30. el | 그리스어"
-      ]
-    };
-    // global50 = global70 앞 50개
-    PLAN_COUNTRY_LISTS["global50"] = PLAN_COUNTRY_LISTS["global70"].slice(0, 50);
-
-    var activePlan = window.humateckPaymentSubscriptionPlan ||
-      (function(){ try{ return localStorage.getItem("humateckSelectedPlan") || ""; }catch(e){ return ""; } })();
-    var planList = PLAN_COUNTRY_LISTS[activePlan] || PLAN_COUNTRY_LISTS["global70"];
-    var countryBlock = ["Country Code / 국가명 매핑표", ""].concat(planList).join("
-");
+    var countryBlock = [
+      "Country Code / 국가명 매핑표",
+      "",
+      "1. en | 영어",
+      "2. es | 스페인어",
+      "3. es-419 | 스페인어(라틴 아메리카)",
+      "4. es-US | 스페인어(미국)",
+      "5. pt | 포르투갈어",
+      "6. pt-PT | 포르투갈어(포르투갈)",
+      "7. fr | 프랑스어",
+      "8. fr-CA | 프랑스어(캐나다)",
+      "9. de | 독일어",
+      "10. ja | 일본어",
+      "11. ko | 한국어",
+      "12. zh-CN | 중국어(중국)",
+      "13. zh-TW | 중국어(대만)",
+      "14. zh-HK | 중국어(홍콩)",
+      "15. hi | 힌디어",
+      "16. id | 인도네시아어",
+      "17. ar | 아랍어",
+      "18. ru | 러시아어",
+      "19. it | 이탈리아어",
+      "20. tr | 튀르키예어",
+      "21. vi | 베트남어",
+      "22. th | 태국어",
+      "23. fil | 필리핀어",
+      "24. ms | 말레이어",
+      "25. nl | 네덜란드어",
+      "26. pl | 폴란드어",
+      "27. uk | 우크라이나어",
+      "28. sv | 스웨덴어",
+      "29. no | 노르웨이어",
+      "30. da | 덴마크어",
+      "31. fi | 핀란드어",
+      "32. el | 그리스어",
+      "33. ro | 루마니아어",
+      "34. hu | 헝가리어",
+      "35. cs | 체코어",
+      "36. sk | 슬로바키아어",
+      "37. bg | 불가리아어",
+      "38. hr | 크로아티아어",
+      "39. sr | 세르비아어",
+      "40. sr-Latn | 세르비아어(라틴)",
+      "41. sq | 알바니아어",
+      "42. mk | 마케도니아어",
+      "43. et | 에스토니아어",
+      "44. lv | 라트비아어",
+      "45. lt | 리투아니아어",
+      "46. iw | 히브리어",
+      "47. fa | 페르시아어",
+      "48. ur | 우르두어",
+      "49. bn | 벵골어",
+      "50. ta | 타밀어",
+      "51. te | 텔루구어",
+      "52. mr | 마라티어",
+      "53. gu | 구자라트어",
+      "54. kn | 칸나다어",
+      "55. ml | 말라얄람어",
+      "56. pa | 펀자브어",
+      "57. ne | 네팔어",
+      "58. my | 버마어",
+      "59. km | 크메르어",
+      "60. lo | 라오어",
+      "61. am | 암하라어",
+      "62. sw | 스와힐리어",
+      "63. af | 아프리칸스어",
+      "64. az | 아제르바이잔어",
+      "65. be | 벨라루스어",
+      "66. bs | 보스니아어",
+      "67. ca | 카탈로니아어",
+      "68. eu | 바스크어",
+      "69. gl | 갈리시아어",
+      "70. ka | 조지아어"
+    ].slice(0, activeCount + 2).join("\n");
 
     var prompt =
 `Hello Gemini!
@@ -1688,7 +1564,7 @@ ${countryBlock}
 })();
 </script>
 
-<script src="../youtube-register.js"></script>
+<script src="youtube-register.js"></script>
 
 
 <div id="nativeCodeModal" class="nativeCodeModal" aria-hidden="true">
@@ -1914,147 +1790,4 @@ ${countryBlock}
 })();
 </script>
 
-
-<script>
-/* 최종등록명령 영상주소 실시간 표시 */
-(function(){
-  function syncVideoUrl(){
-    var src = document.getElementById('videoUrl');
-    var dst = document.getElementById('finalVideoUrlText');
-    if(!src || !dst) return;
-    var v = src.value.trim();
-    dst.textContent = v || '— 영상주소 미입력 —';
-    dst.style.color = v ? '#ffd95a' : '#ff6b5d';
-  }
-  document.addEventListener('DOMContentLoaded', function(){
-    var src = document.getElementById('videoUrl');
-    if(src){
-      src.addEventListener('input', syncVideoUrl);
-      src.addEventListener('change', syncVideoUrl);
-      syncVideoUrl();
-    }
-  });
-})();
-</script>
-
-<script>
-/* 주문페이지 내 플랜 선택 버튼 */
-(function(){
-  document.addEventListener('click', function(e){
-    var btn = e.target.closest('[data-select-plan]');
-    if(!btn) return;
-    e.preventDefault();
-    var plan = btn.getAttribute('data-select-plan');
-    if(!plan) return;
-    try{ localStorage.setItem('humateckSelectedPlan', plan); }catch(ex){}
-    window.humateckPaymentSubscriptionPlan = plan;
-    // 모든 플랜 카드 초기화 후 선택 카드 강조
-    document.querySelectorAll('#inOrderPlanSection .plan').forEach(function(el){
-      el.classList.remove('blinkActive','current');
-    });
-    var card = btn.closest('.plan');
-    if(card){ card.classList.add('blinkActive','current'); }
-    // 주문폼으로 스크롤
-    // 아코디언 닫기 + 선택 라벨 업데이트
-    var accordion = document.getElementById('planAccordion');
-    if(accordion) accordion.removeAttribute('open');
-    var label = document.getElementById('selectedPlanLabel');
-    if(label) label.textContent = btn.closest('.plan').querySelector('h2').textContent;
-    var form = document.getElementById('orderFormCard') || document.querySelector('.card h1');
-    if(form) form.scrollIntoView({behavior:'smooth', block:'start'});
-  });
-})();
-</script>
-
-<script>
-/* 플랜 만료일 카운트다운 */
-(function(){
-  var _expiryTime = null;
-  var _cdTimer = null;
-
-  function pad(n){ return String(n).padStart(2,'0'); }
-
-  function startCountdown(expiryDate, planName){
-    _expiryTime = new Date(expiryDate).getTime();
-    if(isNaN(_expiryTime)){ return; }
-
-    var box = document.getElementById('planExpiryBox');
-    var nameEl = document.getElementById('expiryPlanName');
-    var dateEl = document.getElementById('expiryDateText');
-    if(!box) return;
-    box.classList.add('show');
-    if(nameEl && planName) nameEl.textContent = planName;
-    if(dateEl){
-      var d = new Date(_expiryTime);
-      dateEl.textContent = '만료일시: ' + d.getFullYear() + '.' +
-        pad(d.getMonth()+1) + '.' + pad(d.getDate()) + ' ' +
-        pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
-    }
-
-    if(_cdTimer) clearInterval(_cdTimer);
-    function tick(){
-      var now = Date.now();
-      var diff = _expiryTime - now;
-      var dEl = document.getElementById('cdDays');
-      var hEl = document.getElementById('cdHours');
-      var mEl = document.getElementById('cdMins');
-      var sEl = document.getElementById('cdSecs');
-      if(!dEl) return;
-      if(diff <= 0){
-        dEl.textContent = hEl.textContent = mEl.textContent = sEl.textContent = '00';
-        box.classList.add('expirySoon');
-        clearInterval(_cdTimer);
-        return;
-      }
-      var days  = Math.floor(diff / 86400000);
-      var hours = Math.floor((diff % 86400000) / 3600000);
-      var mins  = Math.floor((diff % 3600000) / 60000);
-      var secs  = Math.floor((diff % 60000) / 1000);
-      dEl.textContent = pad(days);
-      hEl.textContent = pad(hours);
-      mEl.textContent = pad(mins);
-      sEl.textContent = pad(secs);
-      if(days < 3) box.classList.add('expirySoon');
-    }
-    tick();
-    _cdTimer = setInterval(tick, 1000);
-  }
-
-  // check-subscription 응답에서 만료일 추출
-  var _origLoad = window._humateckLoadSubscription;
-  var PLAN_NAMES_KO = {
-    asia30:'아시아 플랜', europe30:'유럽 플랜', africa30:'아프리카 플랜',
-    america30:'아메리카 플랜', oceania30:'오세아니아 플랜',
-    global50:'글로벌 50개국', global70:'글로벌 70개국'
-  };
-  var PLAN_NAMES_EN = {
-    asia30:'Asia Plan', europe30:'Europe Plan', africa30:'Africa Plan',
-    america30:'Americas Plan', oceania30:'Oceania Plan',
-    global50:'Global 50 Countries', global70:'Global 70 Countries'
-  };
-  var PNAMES = (document.documentElement.lang === 'ko') ? PLAN_NAMES_KO : PLAN_NAMES_EN;
-
-  // check-subscription fetch 후 만료일 처리
-  var _origFetch = window.fetch;
-  window.fetch = function(url, opts){
-    var p = _origFetch.apply(this, arguments);
-    if(typeof url === 'string' && url.indexOf('check-subscription') !== -1){
-      p.then(function(res){
-        return res.clone().json().catch(function(){ return {}; });
-      }).then(function(data){
-        if(!data) return;
-        // 만료일 필드: expires_at, end_date, valid_until, current_period_end, expiry_date
-        var expiry = data.expires_at || data.end_date || data.valid_until ||
-                     data.current_period_end || data.expiry_date || data.expiry || null;
-        var planKey = data.plan || data.plan_type || data.subscription_plan || '';
-        var planName = PNAMES[planKey] || planKey;
-        if(expiry){ startCountdown(expiry, planName); }
-      }).catch(function(){});
-    }
-    return p;
-  };
-
-  window._humateckStartCountdown = startCountdown;
-})();
-</script>
 </body></html>
