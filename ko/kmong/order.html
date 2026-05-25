@@ -1056,8 +1056,8 @@ Do not add review, blocking, metadata judgment, hidden/admin menu, auto-correcti
 <!-- /플랜 만료 카운트다운 -->
 
       <div class="order-intro-note">
-        <p>1. 본 주문양식은 제미나이AI 챗번역 체험을 위해 누구나에게 개방되어 있습니다.</p>
-        <p>2. 단, 번역결과를 최종적으로 유튜브에 등록할 권한은 본 서비스 구독자님들에게만 열리오니 착오 없으시기 바랍니다.</p>
+        <p>1. 본 주문양식은 구글의 검증된 보안 프로토콜인 OAuth2.0을 사용하므로 고객님의 개인정보를 일체 서버에 보관하지 않습니다.</p>
+        <p>2. 주문폼에 가이드된 제미나이AI 챗번역은 당사의 실험을 거친 최적 프롬프트입니다. 그러나, 본 유튜브 주문양식에 맞출 경우 고객님이 다른 번역툴로 준비하신 내용이나 전문가의 번역도 얼마든지 사용이 가능합니다.</p>
       </div>
       <div class="nativeCodeLabelRow">
   <label for="nativeLanguageCode">자국어 코드</label>
@@ -1120,12 +1120,8 @@ Description:
     </section>
 
     <section class="card" id="finalVersionCard">
-      <h2>최종등록명령 <span style="font-size:14px;font-weight:400;color:#ff9966;">※ 영상주소 필수 확인</span></h2>
-      <div id="finalVideoUrlDisplay" style="border:1px solid rgba(255,217,90,.5);border-radius:10px;padding:10px 14px;background:rgba(255,217,90,.07);margin-bottom:10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-  <span style="color:#aaa;font-size:13px;white-space:nowrap;">📹 등록 대상 영상:</span>
-  <span id="finalVideoUrlText" style="color:#ffd95a;font-weight:900;font-size:14px;word-break:break-all;">— 영상주소 미입력 —</span>
-</div>
-      <textarea id="finalOutput" class="mediumTextarea" placeholder="유튜브 등록용 제미나이 최종 번역 결과를 붙여넣어 주세요."></textarea>
+      <h2>최종등록명령</h2>
+            <textarea id="finalOutput" class="mediumTextarea" placeholder="유튜브 등록용 제미나이 최종 번역 결과를 붙여넣어 주세요."></textarea>
     </section>
 
 
@@ -1863,27 +1859,6 @@ ${countryBlock}
 </script>
 
 
-<script>
-/* 최종등록명령 영상주소 실시간 표시 */
-(function(){
-  function syncVideoUrl(){
-    var src = document.getElementById('videoUrl');
-    var dst = document.getElementById('finalVideoUrlText');
-    if(!src || !dst) return;
-    var v = src.value.trim();
-    dst.textContent = v || '— 영상주소 미입력 —';
-    dst.style.color = v ? '#ffd95a' : '#ff6b5d';
-  }
-  document.addEventListener('DOMContentLoaded', function(){
-    var src = document.getElementById('videoUrl');
-    if(src){
-      src.addEventListener('input', syncVideoUrl);
-      src.addEventListener('change', syncVideoUrl);
-      syncVideoUrl();
-    }
-  });
-})();
-</script>
 
 
 <script>
