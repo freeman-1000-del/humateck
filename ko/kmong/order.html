@@ -982,39 +982,6 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 
 
 <style>
-/* 플랜 선택 아코디언 */
-#inOrderPlanSection details { border:none; }
-#inOrderPlanSection summary {
-  list-style:none;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:14px 18px;
-  border:1px solid rgba(255,217,90,.6);
-  border-radius:14px;
-  background:rgba(255,217,90,.08);
-  color:#ffd95a;
-  font-weight:900;
-  font-size:17px;
-  user-select:none;
-}
-#inOrderPlanSection summary::-webkit-details-marker{ display:none; }
-#inOrderPlanSection summary .arrow{ transition:transform .25s; }
-#inOrderPlanSection details[open] summary .arrow{ transform:rotate(180deg); }
-#inOrderPlanSection .selectedPlanLabel{
-  margin-left:auto;
-  font-size:14px;
-  color:#aaa;
-  font-weight:400;
-}
-#inOrderPlanSection details[open] .selectedPlanLabel{ display:none; }
-#inOrderPlanSection .planGrid{
-  padding:16px 0 4px;
-}
-</style>
-
-<style>
 /* 플랜 만료 카운트다운 */
 #planExpiryBox{
   border:1px solid rgba(255,217,90,.55);
@@ -1071,25 +1038,6 @@ Do not add review, blocking, metadata judgment, hidden/admin menu, auto-correcti
   <div class="orderLeftColumn">
     <section class="card">
 
-<!-- ====== 플랜 미러링 (주문페이지 내 플랜 선택) ====== -->
-<section class="card" id="inOrderPlanSection" style="margin-bottom:18px;">
-<details id="planAccordion">
-<summary><span>📋 플랜 선택</span><span class="arrow">▼</span><span class="selectedPlanLabel" id="selectedPlanLabel">선택된 플랜 없음</span></summary>
-<div class="planGrid">
-<section class="card"><h1>유튜브 다국어 자막 등록 플랜</h1><p style="color:#e6e0d4;font-size:15px;margin:8px 0 0;">전 상품 균일가 <strong style="color:#ffd95a;">₩39,000 / 월</strong> · 월구독 · 언제든지 해지 가능 · <span style="color:#ff9966;">결제 후 환불 불가</span><br><span style="font-size:13px;color:#aaa;">번역은 고객님이, 등록은 휴마텍이 — 유튜브 형식에 맞는 번역물이면 어떤 도구든 사용 가능합니다.</span></p></section>
-<section class="plans">
-<article class="plan" data-subscription-plan="asia30"><div class="currentPlanBadge">현재 활성</div><h2>아시아 플랜</h2><div class="price">₩39,000<span style="font-size:16px;font-weight:400;color:#aaa;"> / 월</span></div><p>대한민국·일본·중국·베트남·인도·태국·인도네시아·말레이시아·필리핀 등 아시아 30개국 — 유튜브 대륙 알고리즘 최적화 등록</p><a class="btn" href="#" data-select-plan="asia30">이 플랜 선택</a></article>
-<article class="plan" data-subscription-plan="europe30"><div class="currentPlanBadge">현재 활성</div><h2>유럽 플랜</h2><div class="price">₩39,000<span style="font-size:16px;font-weight:400;color:#aaa;"> / 월</span></div><p>영국·프랑스·독일·이탈리아·스페인·네덜란드·폴란드·포르투갈·스웨덴 등 유럽 30개국 — 유튜브 대륙 알고리즘 최적화 등록</p><a class="btn" href="#" data-select-plan="europe30">이 플랜 선택</a></article>
-<article class="plan" data-subscription-plan="africa30"><div class="currentPlanBadge">현재 활성</div><h2>아프리카 플랜</h2><div class="price">₩39,000<span style="font-size:16px;font-weight:400;color:#aaa;"> / 월</span></div><p>이집트·남아공·케냐·나이지리아·에티오피아·가나·탄자니아·모로코·알제리 등 아프리카 30개국 — 유튜브 대륙 알고리즘 최적화 등록</p><a class="btn" href="#" data-select-plan="africa30">이 플랜 선택</a></article>
-<article class="plan" data-subscription-plan="america30"><div class="currentPlanBadge">현재 활성</div><h2>아메리카 플랜</h2><div class="price">₩39,000<span style="font-size:16px;font-weight:400;color:#aaa;"> / 월</span></div><p>미국·캐나다·멕시코·브라질·아르헨티나·콜롬비아·페루·칠레·에콰도르 등 아메리카 30개국 — 유튜브 대륙 알고리즘 최적화 등록</p><a class="btn" href="#" data-select-plan="america30">이 플랜 선택</a></article>
-<article class="plan" data-subscription-plan="oceania30"><div class="currentPlanBadge">현재 활성</div><h2>오세아니아 플랜</h2><div class="price">₩39,000<span style="font-size:16px;font-weight:400;color:#aaa;"> / 월</span></div><p>호주·뉴질랜드·피지·파푸아뉴기니·사모아·통가·솔로몬제도 등 오세아니아 전체 + 보완 글로벌 30개국</p><a class="btn" href="#" data-select-plan="oceania30">이 플랜 선택</a></article>
-<article class="plan" data-subscription-plan="global50"><div class="currentPlanBadge">현재 활성</div><h2>글로벌 50개국</h2><div class="price">₩39,000<span style="font-size:16px;font-weight:400;color:#aaa;"> / 월</span></div><p>전 세계 중요도 순 50개국 — 5대 대륙 핵심 시장을 한 번에 커버하는 확장 등록 플랜</p><a class="btn" href="#" data-select-plan="global50">이 플랜 선택</a></article>
-<article class="plan" data-subscription-plan="global70"><div class="currentPlanBadge">현재 활성</div><h2>글로벌 70개국</h2><div class="price">₩39,000<span style="font-size:16px;font-weight:400;color:#aaa;"> / 월</span></div><p>전 세계 중요도 순 70개국 전체 커버 — 5개국이든 70개국이든 등록 시간은 똑같이 수 초</p><a class="btn" href="#" data-select-plan="global70">이 플랜 선택</a></article>
-</section>
-</div>
-</details>
-</section>
-<!-- ====== /플랜 미러링 ====== -->
       <h1>다국어 자막 등록 주문서</h1>
 
 <!-- 플랜 만료 카운트다운 -->
@@ -1937,34 +1885,6 @@ ${countryBlock}
 })();
 </script>
 
-<script>
-/* 주문페이지 내 플랜 선택 버튼 */
-(function(){
-  document.addEventListener('click', function(e){
-    var btn = e.target.closest('[data-select-plan]');
-    if(!btn) return;
-    e.preventDefault();
-    var plan = btn.getAttribute('data-select-plan');
-    if(!plan) return;
-    try{ localStorage.setItem('humateckSelectedPlan', plan); }catch(ex){}
-    window.humateckPaymentSubscriptionPlan = plan;
-    // 모든 플랜 카드 초기화 후 선택 카드 강조
-    document.querySelectorAll('#inOrderPlanSection .plan').forEach(function(el){
-      el.classList.remove('blinkActive','current');
-    });
-    var card = btn.closest('.plan');
-    if(card){ card.classList.add('blinkActive','current'); }
-    // 주문폼으로 스크롤
-    // 아코디언 닫기 + 선택 라벨 업데이트
-    var accordion = document.getElementById('planAccordion');
-    if(accordion) accordion.removeAttribute('open');
-    var label = document.getElementById('selectedPlanLabel');
-    if(label) label.textContent = btn.closest('.plan').querySelector('h2').textContent;
-    var form = document.getElementById('orderFormCard') || document.querySelector('.card h1');
-    if(form) form.scrollIntoView({behavior:'smooth', block:'start'});
-  });
-})();
-</script>
 
 <script>
 /* 플랜 만료일 카운트다운 */
