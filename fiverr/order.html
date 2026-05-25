@@ -1053,39 +1053,6 @@ input,textarea{font-size:16px!important;}
 </style>
 
 <style>
-/* 플랜 선택 아코디언 */
-#inOrderPlanSection details { border:none; }
-#inOrderPlanSection summary {
-  list-style:none;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:14px 18px;
-  border:1px solid rgba(255,217,90,.6);
-  border-radius:14px;
-  background:rgba(255,217,90,.08);
-  color:#ffd95a;
-  font-weight:900;
-  font-size:17px;
-  user-select:none;
-}
-#inOrderPlanSection summary::-webkit-details-marker{ display:none; }
-#inOrderPlanSection summary .arrow{ transition:transform .25s; }
-#inOrderPlanSection details[open] summary .arrow{ transform:rotate(180deg); }
-#inOrderPlanSection .selectedPlanLabel{
-  margin-left:auto;
-  font-size:14px;
-  color:#aaa;
-  font-weight:400;
-}
-#inOrderPlanSection details[open] .selectedPlanLabel{ display:none; }
-#inOrderPlanSection .planGrid{
-  padding:16px 0 4px;
-}
-</style>
-
-<style>
 /* 플랜 만료 카운트다운 */
 #planExpiryBox{
   border:1px solid rgba(255,217,90,.55);
@@ -1142,25 +1109,6 @@ Do not add review, blocking, metadata judgment, hidden/admin menu, auto-correcti
   <div class="orderLeftColumn">
     <section class="card">
       
-<!-- ====== Plan Mirror (In-Order Plan Selection) ====== -->
-<section class="card" id="inOrderPlanSection" style="margin-bottom:18px;">
-<details id="planAccordion">
-<summary><span>📋 Select Your Plan</span><span class="arrow">▼</span><span class="selectedPlanLabel" id="selectedPlanLabel">No plan selected</span></summary>
-<div class="planGrid">
-<section class="card"><h1>YouTube Multilingual Subtitle Registration Plan</h1><p style="color:#e6e0d4;font-size:15px;margin:8px 0 0;">All plans <strong style="color:#ffd95a;">USD 29 / month</strong> · Monthly subscription · Cancel anytime · <span style="color:#ff9966;">No refunds after payment</span><br><span style="font-size:13px;color:#aaa;">Translation is yours. Delivery is ours. — Any translation tool works as long as it meets YouTube format.</span></p></section>
-<section class="plans">
-<article class="plan" data-subscription-plan="asia30"><div class="currentPlanBadge">Currently Active</div><h2>Asia Plan</h2><div class="price">USD 29<span style="font-size:16px;font-weight:400;color:#aaa;"> / mo</span></div><p>Korea, Japan, China, Vietnam, India, Thailand, Indonesia, Malaysia, Philippines and more — 30 Asian countries, YouTube algorithm-optimized.</p><a class="btn" href="#" data-select-plan="asia30">Select This Plan</a></article>
-<article class="plan" data-subscription-plan="europe30"><div class="currentPlanBadge">Currently Active</div><h2>Europe Plan</h2><div class="price">USD 29<span style="font-size:16px;font-weight:400;color:#aaa;"> / mo</span></div><p>UK, France, Germany, Italy, Spain, Netherlands, Poland, Portugal, Sweden and more — 30 European countries, YouTube algorithm-optimized.</p><a class="btn" href="#" data-select-plan="europe30">Select This Plan</a></article>
-<article class="plan" data-subscription-plan="africa30"><div class="currentPlanBadge">Currently Active</div><h2>Africa Plan</h2><div class="price">USD 29<span style="font-size:16px;font-weight:400;color:#aaa;"> / mo</span></div><p>Egypt, South Africa, Kenya, Nigeria, Ethiopia, Ghana, Tanzania, Morocco, Algeria and more — 30 African countries, YouTube algorithm-optimized.</p><a class="btn" href="#" data-select-plan="africa30">Select This Plan</a></article>
-<article class="plan" data-subscription-plan="america30"><div class="currentPlanBadge">Currently Active</div><h2>Americas Plan</h2><div class="price">USD 29<span style="font-size:16px;font-weight:400;color:#aaa;"> / mo</span></div><p>USA, Canada, Mexico, Brazil, Argentina, Colombia, Peru, Chile, Ecuador and more — 30 countries across the Americas, YouTube algorithm-optimized.</p><a class="btn" href="#" data-select-plan="america30">Select This Plan</a></article>
-<article class="plan" data-subscription-plan="oceania30"><div class="currentPlanBadge">Currently Active</div><h2>Oceania Plan</h2><div class="price">USD 29<span style="font-size:16px;font-weight:400;color:#aaa;"> / mo</span></div><p>Australia, New Zealand, Fiji, Papua New Guinea, Samoa, Tonga, Solomon Islands and more — Full Oceania + supplemental global 30 countries.</p><a class="btn" href="#" data-select-plan="oceania30">Select This Plan</a></article>
-<article class="plan" data-subscription-plan="global50"><div class="currentPlanBadge">Currently Active</div><h2>Global 50 Countries</h2><div class="price">USD 29<span style="font-size:16px;font-weight:400;color:#aaa;"> / mo</span></div><p>Top 50 countries worldwide by importance — covers key markets across all 5 continents in one registration.</p><a class="btn" href="#" data-select-plan="global50">Select This Plan</a></article>
-<article class="plan" data-subscription-plan="global70"><div class="currentPlanBadge">Currently Active</div><h2>Global 70 Countries</h2><div class="price">USD 29<span style="font-size:16px;font-weight:400;color:#aaa;"> / mo</span></div><p>Full 70-country global coverage — whether 5 or 70 countries, registration completes in seconds either way.</p><a class="btn" href="#" data-select-plan="global70">Select This Plan</a></article>
-</section>
-</div>
-</details>
-</section>
-<!-- ====== /Plan Mirror ====== -->
 <h1>Multilingual Subtitle Registration Order Form</h1>
 
 <!-- Plan expiry countdown -->
@@ -2023,34 +1971,6 @@ Without any explanation, output only the translated registration text.`;
 })();
 </script>
 
-<script>
-/* 주문페이지 내 플랜 선택 버튼 */
-(function(){
-  document.addEventListener('click', function(e){
-    var btn = e.target.closest('[data-select-plan]');
-    if(!btn) return;
-    e.preventDefault();
-    var plan = btn.getAttribute('data-select-plan');
-    if(!plan) return;
-    try{ localStorage.setItem('humateckSelectedPlan', plan); }catch(ex){}
-    window.humateckPaymentSubscriptionPlan = plan;
-    // 모든 플랜 카드 초기화 후 선택 카드 강조
-    document.querySelectorAll('#inOrderPlanSection .plan').forEach(function(el){
-      el.classList.remove('blinkActive','current');
-    });
-    var card = btn.closest('.plan');
-    if(card){ card.classList.add('blinkActive','current'); }
-    // 주문폼으로 스크롤
-    // 아코디언 닫기 + 선택 라벨 업데이트
-    var accordion = document.getElementById('planAccordion');
-    if(accordion) accordion.removeAttribute('open');
-    var label = document.getElementById('selectedPlanLabel');
-    if(label) label.textContent = btn.closest('.plan').querySelector('h2').textContent;
-    var form = document.getElementById('orderFormCard') || document.querySelector('.card h1');
-    if(form) form.scrollIntoView({behavior:'smooth', block:'start'});
-  });
-})();
-</script>
 
 <script>
 /* 플랜 만료일 카운트다운 */
