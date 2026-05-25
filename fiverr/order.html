@@ -1193,11 +1193,7 @@ Without any explanation, output only the translated registration text.</textarea
 
     <section class="card" id="finalVersionCard">
       <h2>Paste Final Version</h2>
-      <div id="finalVideoUrlDisplay" style="border:1px solid rgba(255,217,90,.5);border-radius:10px;padding:10px 14px;background:rgba(255,217,90,.07);margin-bottom:10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-  <span style="color:#aaa;font-size:13px;white-space:nowrap;">📹 등록 대상 영상:</span>
-  <span id="finalVideoUrlText" style="color:#ffd95a;font-weight:900;font-size:14px;word-break:break-all;">— 영상주소 미입력 —</span>
-</div>
-      <textarea id="finalOutput" id="finalOutput" class="mediumTextarea" placeholder="Paste the final Gemini translation result."></textarea>
+            <textarea id="finalOutput" id="finalOutput" class="mediumTextarea" placeholder="Paste the final Gemini translation result."></textarea>
     </section>
 
 
@@ -1949,27 +1945,6 @@ Without any explanation, output only the translated registration text.`;
 </script>
 
 
-<script>
-/* 최종등록명령 영상주소 실시간 표시 */
-(function(){
-  function syncVideoUrl(){
-    var src = document.getElementById('videoUrl');
-    var dst = document.getElementById('finalVideoUrlText');
-    if(!src || !dst) return;
-    var v = src.value.trim();
-    dst.textContent = v || '— 영상주소 미입력 —';
-    dst.style.color = v ? '#ffd95a' : '#ff6b5d';
-  }
-  document.addEventListener('DOMContentLoaded', function(){
-    var src = document.getElementById('videoUrl');
-    if(src){
-      src.addEventListener('input', syncVideoUrl);
-      src.addEventListener('change', syncVideoUrl);
-      syncVideoUrl();
-    }
-  });
-})();
-</script>
 
 
 <script>
