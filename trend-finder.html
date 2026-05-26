@@ -366,28 +366,55 @@ header{
 
 <script>
 // ── STATE ─────────────────────────────────────────
-const PROXIES = [
-  url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
-  url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
-  url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+// Piped API 인스턴스 (오픈소스 YouTube 프론트엔드, CORS 허용, 프록시 불필요)
+const PIPED_INSTANCES = [
+  'https://pipedapi.kavin.rocks',
+  'https://pipedapi.tokhmi.xyz',
+  'https://pipedapi.moomoo.me',
+  'https://api.piped.yt',
 ];
 
-async function fetchRSS(url){
-  for(const makeProxy of PROXIES){
+// Google Trends 프록시 (트렌드 키워드용만 유지)
+const TREND_PROXIES = [
+  url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+  url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
+];
+
+async function fetchPiped(region='US'){
+  for(const base of PIPED_INSTANCES){
     try{
-      const r = await fetchWithTimeout(makeProxy(url), 8000);
-      const text = await r.text();
-      // allorigins는 JSON {contents:...}, 나머지는 raw XML
-      try{
-        const json = JSON.parse(text);
-        if(json.contents) return json.contents;
-      }catch{}
-      return text;
-    }catch(e){
-      continue;
-    }
+      const r = await fetchWithTimeout(`${base}/trending?region=${region}`, 7000);
+      if(!r.ok) continue;
+      const data = await r.json();
+      if(Array.isArray(data) && data.length > 0) return data;
+    }catch{ continue; }
   }
-  throw new Error('모든 프록시 실패');
+  return null;
+}
+
+async function fetchTrendKeywords(geo='US'){
+  const url = `https://trends.google.com/trends/trendingsearches/daily/rss?geo=${geo}`;
+  for(const makeProxy of TREND_PROXIES){
+    try{
+      const r = await fetchWithTimeout(makeProxy(url), 6000);
+      const text = await r.text();
+      let xml_text = text;
+      try{ const j=JSON.parse(text); if(j.contents) xml_text=j.contents; }catch{}
+      const xml = new DOMParser().parseFromString(xml_text,'application/xml');
+      const items = xml.querySelectorAll('item');
+      if(items.length > 0){
+        const kws=[];
+        items.forEach((item,i)=>{
+          if(i>=15)return;
+          const title=item.querySelector('title')?.textContent||'';
+          const traffic=item.querySelector('approx_traffic')?.textContent||'';
+          if(title) kws.push({title,traffic,pct:Math.max(20,100-i*6)});
+        });
+        return kws;
+      }
+    }catch{ continue; }
+  }
+  return [];
 }
 let country = {geo:'US', hl:'en'};
 let isGlobalMode = true;
@@ -533,55 +560,45 @@ async function fetchWithTimeout(url, ms=8000){
 async function fetchFreeYT(){
   if(isGlobalMode){
     document.getElementById('trendingTitle').textContent='🌍 전세계 트렌드 수집 중...';
+    const regions=['US','KR','JP','GB','DE','FR','IN','BR','MX','AU','CA','ID'];
     const seen=new Set();
-    const tasks = GLOBAL_COUNTRIES.map(async c=>{
+    const tasks=regions.map(async geo=>{
       try{
-        const url=`https://www.youtube.com/feeds/videos.xml?chart=mostpopular&hl=${c.hl}&gl=${c.geo}&videoCategoryId=0`;
-        const contents = await fetchRSS(url);
-        if(!contents) return [];
-        const xml=new DOMParser().parseFromString(contents,'application/xml');
-        const items=[];
-        xml.querySelectorAll('entry').forEach(e=>{
-          const id=e.querySelector('videoId')?.textContent||'';
-          if(!id||seen.has(id))return;
+        const data=await fetchPiped(geo);
+        if(!data) return [];
+        return data.map(v=>{
+          const id=v.url?.replace('/watch?v=','')||'';
+          if(!id||seen.has(id)) return null;
           seen.add(id);
-          const title=e.querySelector('title')?.textContent||'';
-          const author=e.querySelector('name')?.textContent||'';
-          const published=e.querySelector('published')?.textContent||'';
-          const views=parseInt(e.querySelector('statistics')?.getAttribute('views')||'0');
-          const thumb=`https://i.ytimg.com/vi/${id}/mqdefault.jpg`;
-          if(title) items.push({id,title,author,published,views,thumb,country:c.geo});
-        });
-        return items;
+          return{id,title:v.title||'',author:v.uploaderName||'',
+            published:v.uploaded?new Date(v.uploaded).toISOString():'',
+            views:v.views||0,
+            thumb:v.thumbnail||`https://i.ytimg.com/vi/${id}/mqdefault.jpg`,
+            country:geo};
+        }).filter(Boolean);
       }catch{return [];}
     });
-    const results = await Promise.allSettled(tasks);
+    const results=await Promise.allSettled(tasks);
     results.forEach(r=>{if(r.status==='fulfilled') freeItems.push(...r.value);});
   } else {
-    // 국가별: 카테고리 0(전체)만 우선 수집
-    const seen=new Set();
     try{
-      const url=`https://www.youtube.com/feeds/videos.xml?chart=mostpopular&hl=${country.hl}&gl=${country.geo}&videoCategoryId=0`;
-      const contents = await fetchRSS(url);
-      if(!contents) throw new Error('no contents');
-      const xml=new DOMParser().parseFromString(contents,'application/xml');
-      xml.querySelectorAll('entry').forEach(e=>{
-        const id=e.querySelector('videoId')?.textContent||'';
-        if(!id||seen.has(id))return;
-        seen.add(id);
-        const title=e.querySelector('title')?.textContent||'';
-        const author=e.querySelector('name')?.textContent||'';
-        const published=e.querySelector('published')?.textContent||'';
-        const views=parseInt(e.querySelector('statistics')?.getAttribute('views')||'0');
-        const thumb=`https://i.ytimg.com/vi/${id}/mqdefault.jpg`;
-        if(title) freeItems.push({id,title,author,published,views,thumb,country:country.geo});
+      const data=await fetchPiped(country.geo);
+      if(!data||data.length===0) throw new Error('데이터 없음');
+      data.forEach(v=>{
+        const id=v.url?.replace('/watch?v=','')||'';
+        if(!id) return;
+        freeItems.push({id,title:v.title||'',author:v.uploaderName||'',
+          published:v.uploaded?new Date(v.uploaded).toISOString():'',
+          views:v.views||0,
+          thumb:v.thumbnail||`https://i.ytimg.com/vi/${id}/mqdefault.jpg`,
+          country:country.geo});
       });
     }catch(e){
-      console.warn('YT RSS 오류:', e.message);
+      console.warn('Piped API 오류:',e.message);
       document.getElementById('trendEmpty').innerHTML=`
         <div class="empty-icon">⚠️</div>
         <div style="font-size:14px;color:var(--red);margin-bottom:6px">데이터를 불러오지 못했습니다</div>
-        <div style="font-size:12px">프록시 서버가 일시적으로 느릴 수 있습니다.<br>잠시 후 다시 시도해 주세요.</div>
+        <div style="font-size:12px;line-height:1.8">서버가 일시적으로 응답하지 않습니다.<br>잠시 후 다시 시도해 주세요.</div>
         <button onclick="loadFree()" style="margin-top:1rem;padding:8px 20px;background:var(--accent);border:none;color:#000;border-radius:8px;cursor:pointer;font-size:13px;font-family:inherit">🔄 다시 시도</button>
       `;
     }
@@ -590,18 +607,9 @@ async function fetchFreeYT(){
 
 async function fetchTrends(){
   try{
-    const geo = isGlobalMode ? 'US' : country.geo;
+    const geo=isGlobalMode?'US':country.geo;
     const url=`https://trends.google.com/trends/trendingsearches/daily/rss?geo=${geo}`;
-    const contents = await fetchRSS(url);
-    const xml=new DOMParser().parseFromString(contents,'application/xml');
-    const items=xml.querySelectorAll('item');
-    const kws=[];
-    items.forEach((item,i)=>{
-      if(i>=15)return;
-      const title=item.querySelector('title')?.textContent||'';
-      const traffic=item.querySelector('approx_traffic')?.textContent||'';
-      if(title) kws.push({title,traffic,pct:Math.max(20,100-i*6)});
-    });
+    const kws=await fetchTrendKeywords(geo);
     if(kws.length){
       document.getElementById('kwList').innerHTML=kws.map((k,i)=>`
         <div class="kw-item" onclick="qs2('${escJ(k.title)}')">
@@ -613,6 +621,8 @@ async function fetchTrends(){
           <span class="kw-traffic">${k.traffic}</span>
         </div>
       `).join('');
+    } else {
+      document.getElementById('kwList').innerHTML='<div style="font-size:12px;color:var(--muted);padding:.5rem">트렌드 키워드를 불러올 수 없습니다</div>';
     }
   }catch{
     document.getElementById('kwList').innerHTML='<div style="font-size:12px;color:var(--muted);padding:.5rem">데이터를 불러올 수 없습니다</div>';
