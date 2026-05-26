@@ -356,7 +356,7 @@ async function dec(b64){
 async function startApp(){
   const raw=document.getElementById('gateKey').value.trim();
   if(!raw){toast('API 키를 입력해주세요');return;}
-  if(!raw.startsWith('AIza')){toast('올바른 키 형식이 아닙니다 (AIzaSy...)');return;}
+  
   await saveKey(raw);launch();
 }
 async function saveKey(raw){
