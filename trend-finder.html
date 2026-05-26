@@ -275,8 +275,8 @@ header{
 
 <!-- COUNTRY TABS -->
 <div class="country-bar" id="countryBar">
-  <div class="ctab active" onclick="setGlobal(this)">🌍 전세계</div>
-  <div class="ctab" onclick="setCountry(this,'US','en')">🇺🇸 미국</div>
+  <div class="ctab" onclick="setGlobal(this)">🌍 전세계</div>
+  <div class="ctab active" onclick="setCountry(this,'US','en')">🇺🇸 미국</div>
   <div class="ctab" onclick="setCountry(this,'KR','ko')">🇰🇷 한국</div>
   <div class="ctab" onclick="setCountry(this,'JP','ja')">🇯🇵 일본</div>
   <div class="ctab" onclick="setCountry(this,'GB','en')">🇬🇧 영국</div>
@@ -494,16 +494,30 @@ async function loadFree(){
   }
 }
 
+// 타임아웃 fetch 유틸
+async function fetchWithTimeout(url, ms=8000){
+  const controller = new AbortController();
+  const timer = setTimeout(()=>controller.abort(), ms);
+  try{
+    const r = await fetch(url, {signal:controller.signal});
+    clearTimeout(timer);
+    return r;
+  }catch(e){
+    clearTimeout(timer);
+    throw e;
+  }
+}
+
 async function fetchFreeYT(){
   if(isGlobalMode){
-    // 전세계: 12개국 병렬 수집 후 조회수 상위 정렬
     document.getElementById('trendingTitle').textContent='🌍 전세계 트렌드 수집 중...';
     const seen=new Set();
     const tasks = GLOBAL_COUNTRIES.map(async c=>{
       try{
         const url=`https://www.youtube.com/feeds/videos.xml?chart=mostpopular&hl=${c.hl}&gl=${c.geo}&videoCategoryId=0`;
-        const r=await fetch(PROXY+encodeURIComponent(url));
+        const r=await fetchWithTimeout(PROXY+encodeURIComponent(url), 8000);
         const d=await r.json();
+        if(!d.contents) return [];
         const xml=new DOMParser().parseFromString(d.contents,'application/xml');
         const items=[];
         xml.querySelectorAll('entry').forEach(e=>{
@@ -523,32 +537,34 @@ async function fetchFreeYT(){
     const results = await Promise.allSettled(tasks);
     results.forEach(r=>{if(r.status==='fulfilled') freeItems.push(...r.value);});
   } else {
-    // 국가별: 3개 카테고리 병렬 수집
+    // 국가별: 카테고리 0(전체)만 우선 수집
     const seen=new Set();
-    const cats=['0','28','26'];
-    const tasks = cats.map(async cid=>{
-      try{
-        const url=`https://www.youtube.com/feeds/videos.xml?chart=mostpopular&hl=${country.hl}&gl=${country.geo}&videoCategoryId=${cid}`;
-        const r=await fetch(PROXY+encodeURIComponent(url));
-        const d=await r.json();
-        const xml=new DOMParser().parseFromString(d.contents,'application/xml');
-        const items=[];
-        xml.querySelectorAll('entry').forEach(e=>{
-          const id=e.querySelector('videoId')?.textContent||'';
-          if(!id||seen.has(id))return;
-          seen.add(id);
-          const title=e.querySelector('title')?.textContent||'';
-          const author=e.querySelector('name')?.textContent||'';
-          const published=e.querySelector('published')?.textContent||'';
-          const views=parseInt(e.querySelector('statistics')?.getAttribute('views')||'0');
-          const thumb=`https://i.ytimg.com/vi/${id}/mqdefault.jpg`;
-          if(title) items.push({id,title,author,published,views,thumb,country:country.geo});
-        });
-        return items;
-      }catch{return [];}
-    });
-    const results = await Promise.allSettled(tasks);
-    results.forEach(r=>{if(r.status==='fulfilled') freeItems.push(...r.value);});
+    try{
+      const url=`https://www.youtube.com/feeds/videos.xml?chart=mostpopular&hl=${country.hl}&gl=${country.geo}&videoCategoryId=0`;
+      const r=await fetchWithTimeout(PROXY+encodeURIComponent(url), 8000);
+      const d=await r.json();
+      if(!d.contents) throw new Error('no contents');
+      const xml=new DOMParser().parseFromString(d.contents,'application/xml');
+      xml.querySelectorAll('entry').forEach(e=>{
+        const id=e.querySelector('videoId')?.textContent||'';
+        if(!id||seen.has(id))return;
+        seen.add(id);
+        const title=e.querySelector('title')?.textContent||'';
+        const author=e.querySelector('name')?.textContent||'';
+        const published=e.querySelector('published')?.textContent||'';
+        const views=parseInt(e.querySelector('statistics')?.getAttribute('views')||'0');
+        const thumb=`https://i.ytimg.com/vi/${id}/mqdefault.jpg`;
+        if(title) freeItems.push({id,title,author,published,views,thumb,country:country.geo});
+      });
+    }catch(e){
+      console.warn('YT RSS 오류:', e.message);
+      document.getElementById('trendEmpty').innerHTML=`
+        <div class="empty-icon">⚠️</div>
+        <div style="font-size:14px;color:var(--red);margin-bottom:6px">데이터를 불러오지 못했습니다</div>
+        <div style="font-size:12px">프록시 서버가 일시적으로 느릴 수 있습니다.<br>잠시 후 다시 시도해 주세요.</div>
+        <button onclick="loadFree()" style="margin-top:1rem;padding:8px 20px;background:var(--accent);border:none;color:#000;border-radius:8px;cursor:pointer;font-size:13px;font-family:inherit">🔄 다시 시도</button>
+      `;
+    }
   }
 }
 
@@ -706,7 +722,8 @@ function showToast(m){
 
 // ── INIT ──────────────────────────────────────────
 (async()=>{
-  isGlobalMode = true;
+  isGlobalMode = false;
+  country = {geo:'US', hl:'en'};
   await loadSavedKey();
   await loadFree();
 })();
