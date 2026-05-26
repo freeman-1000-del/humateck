@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TrendFinder — 지금 전세계에서 팔리는 것들</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Pretendard:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#07080b;--s1:#0f1116;--s2:#161a22;--s3:#1d2230;
+  --border:#1e2535;--border2:#252d3d;
+  --accent:#f5a623;--red:#e8534a;--green:#2dd4a0;--blue:#5b9cf6;--purple:#9b7ff4;
+  --text:#d8dce8;--muted:#4e5668;--muted2:#333b4d;
+  --hot:#ff4757;
+}
+body{font-family:'Pretendard','sans-serif';background:var(--bg);color:var(--text);min-height:100vh}
+
+/* ── HEADER ── */
+header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.9rem 1.8rem;border-bottom:1px solid var(--border);
+  background:rgba(7,8,11,.97);backdrop-filter:blur(16px);
+  position:sticky;top:0;z-index:200
+}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-mark{
+  width:32px;height:32px;background:var(--accent);border-radius:7px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Space Mono',monospace;font-weight:700;font-size:12px;color:#000;letter-spacing:-.5px
+}
+.logo-text{font-family:'Space Mono',monospace;font-size:13px;font-weight:700}
+.logo-sub{font-size:10px;color:var(--muted);margin-top:1px;letter-spacing:.04em}
+.hdr-right{display:flex;align-items:center;gap:10px}
+.live-badge{
+  display:flex;align-items:center;gap:5px;
+  font-size:11px;color:var(--green);
+  background:rgba(45,212,160,.1);border:1px solid rgba(45,212,160,.25);
+  padding:4px 10px;border-radius:20px
+}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 1.4s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.btn-setup{
+  background:none;border:1px solid var(--border2);color:var(--muted);
+  padding:5px 12px;border-radius:7px;cursor:pointer;font-size:12px;
+  font-family:inherit;transition:all .18s;display:flex;align-items:center;gap:5px
+}
+.btn-setup:hover{border-color:var(--accent);color:var(--accent)}
+.key-status{font-size:11px;display:flex;align-items:center;gap:5px}
+.key-dot{width:7px;height:7px;border-radius:50%;background:var(--muted2)}
+.key-dot.on{background:var(--green);box-shadow:0 0 5px var(--green)}
+
+/* ── HERO ── */
+.hero{
+  text-align:center;padding:2.5rem 1.5rem 1.5rem;
+  background:linear-gradient(180deg,rgba(245,166,35,.04) 0%,transparent 100%)
+}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:.1em;
+  margin-bottom:.9rem
+}
+.hero-title{
+  font-family:'Space Mono',monospace;font-size:clamp(22px,4vw,32px);
+  font-weight:700;line-height:1.25;margin-bottom:.7rem
+}
+.hero-title span{color:var(--accent)}
+.hero-sub{font-size:14px;color:var(--muted);line-height:1.7;max-width:520px;margin:0 auto 1.5rem}
+
+/* ── COUNTRY TABS ── */
+.country-bar{
+  display:flex;gap:0;overflow-x:auto;border-bottom:1px solid var(--border);
+  background:var(--s1);padding:0 1.5rem;scrollbar-width:none
+}
+.country-bar::-webkit-scrollbar{display:none}
+.ctab{
+  padding:11px 16px;font-size:13px;cursor:pointer;
+  border-bottom:2px solid transparent;color:var(--muted);
+  transition:all .18s;white-space:nowrap;flex-shrink:0;display:flex;align-items:center;gap:5px
+}
+.ctab:hover{color:var(--text)}
+.ctab.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* ── MAIN GRID LAYOUT ── */
+.main{max-width:1100px;margin:0 auto;padding:1.4rem 1.5rem 4rem;display:grid;grid-template-columns:1fr 280px;gap:1.4rem}
+@media(max-width:780px){.main{grid-template-columns:1fr}}
+
+/* ── TRENDING CARDS ── */
+.trending-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.trending-head h2{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:500}
+.sort-pills{display:flex;gap:5px}
+.spill{padding:4px 11px;border-radius:14px;border:1px solid var(--border);font-size:11px;cursor:pointer;color:var(--muted);background:var(--s1);transition:all .15s}
+.spill.active{border-color:var(--accent);color:var(--accent);background:rgba(245,166,35,.07)}
+
+.card-grid{display:grid;gap:9px}
+.vcard{
+  background:var(--s1);border:1px solid var(--border);border-radius:12px;
+  display:flex;gap:11px;padding:.95rem 1.1rem;cursor:pointer;
+  transition:border-color .18s,background .18s;text-decoration:none;color:inherit;
+  align-items:flex-start
+}
+.vcard:hover{border-color:rgba(245,166,35,.45);background:var(--s2)}
+.vcard-rank{
+  font-family:'Space Mono',monospace;font-size:10px;color:var(--muted2);
+  min-width:20px;padding-top:2px;flex-shrink:0
+}
+.vcard-rank.top3{color:var(--accent);font-weight:700}
+.vcard-thumb{
+  width:96px;height:64px;border-radius:7px;object-fit:cover;
+  background:var(--s3);flex-shrink:0
+}
+.vcard-thumb-ph{
+  width:96px;height:64px;border-radius:7px;background:var(--s3);
+  display:flex;align-items:center;justify-content:center;font-size:24px;
+  flex-shrink:0;color:var(--muted2)
+}
+.vcard-body{flex:1;min-width:0}
+.vcard-title{
+  font-size:13px;font-weight:500;line-height:1.45;margin-bottom:6px;
+  overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical
+}
+.vcard-meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.vm{font-size:11px;color:var(--muted)}
+.vm b{color:var(--text);font-weight:500}
+.pill{font-size:9px;padding:2px 7px;border-radius:9px;font-weight:700;letter-spacing:.03em;text-transform:uppercase}
+.pill-hot{background:rgba(255,71,87,.15);color:var(--hot);border:1px solid rgba(255,71,87,.3)}
+.pill-viral{background:rgba(245,166,35,.15);color:var(--accent);border:1px solid rgba(245,166,35,.3)}
+.pill-new{background:rgba(91,156,246,.15);color:var(--blue);border:1px solid rgba(91,156,246,.3)}
+.vcard-right{text-align:right;flex-shrink:0}
+.view-n{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:var(--green);white-space:nowrap}
+.view-l{font-size:9px;color:var(--muted);margin-top:2px}
+.btn-huma{
+  margin-top:6px;display:block;font-size:10px;padding:3px 8px;
+  border-radius:5px;border:1px solid rgba(155,127,244,.35);
+  color:var(--purple);background:none;cursor:pointer;
+  font-family:inherit;transition:all .15s;white-space:nowrap
+}
+.btn-huma:hover{background:rgba(155,127,244,.12);border-color:var(--purple)}
+
+/* ── SIDEBAR ── */
+.sidebar{}
+.sidebar-card{
+  background:var(--s1);border:1px solid var(--border);border-radius:12px;
+  padding:1.1rem;margin-bottom:1rem
+}
+.sidebar-title{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.9rem;font-weight:500}
+
+/* KEYWORD LIST */
+.kw-list{display:grid;gap:6px}
+.kw-item{
+  display:flex;align-items:center;gap:8px;padding:7px 9px;
+  border-radius:8px;cursor:pointer;transition:background .15s;
+  background:var(--s2)
+}
+.kw-item:hover{background:var(--s3)}
+.kw-num{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted2);min-width:18px}
+.kw-text{font-size:13px;font-weight:500;flex:1}
+.kw-bar-wrap{height:3px;background:var(--s3);border-radius:2px;margin-top:3px}
+.kw-bar{height:3px;background:var(--accent);border-radius:2px;transition:width .5s ease}
+.kw-traffic{font-size:10px;color:var(--muted)}
+
+/* STATS */
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stat-mini{background:var(--s2);border-radius:8px;padding:.75rem;text-align:center}
+.stat-n{font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--accent)}
+.stat-l{font-size:10px;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:.04em}
+
+/* SEARCH BOX (pro) */
+.search-section{background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:1.1rem;margin-bottom:1rem}
+.search-locked{text-align:center;padding:.5rem 0}
+.lock-icon{font-size:28px;margin-bottom:.5rem}
+.lock-text{font-size:13px;color:var(--muted);margin-bottom:.8rem;line-height:1.6}
+.search-unlocked{display:none}
+.s-input{
+  width:100%;background:var(--s2);border:1px solid var(--border);border-radius:8px;
+  padding:9px 11px;font-size:13px;font-family:inherit;color:var(--text);outline:none;
+  margin-bottom:7px
+}
+.s-input:focus{border-color:var(--accent)}
+.s-input::placeholder{color:var(--muted)}
+.btn-s{
+  width:100%;background:var(--accent);border:none;color:#000;
+  padding:8px;border-radius:8px;font-size:13px;font-weight:600;
+  cursor:pointer;font-family:inherit
+}
+.btn-s:hover{opacity:.85}
+
+/* ── SETUP MODAL ── */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:500;display:none;align-items:center;justify-content:center;padding:1rem}
+.overlay.open{display:flex}
+.modal{background:var(--s1);border:1px solid var(--border2);border-radius:16px;width:100%;max-width:420px;padding:1.8rem}
+.modal-title{font-family:'Space Mono',monospace;font-size:14px;margin-bottom:.5rem}
+.modal-sub{font-size:12px;color:var(--muted);margin-bottom:1.4rem;line-height:1.7}
+.m-label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:6px}
+.m-input{
+  width:100%;background:var(--s2);border:1px solid var(--border);border-radius:8px;
+  padding:10px 12px;font-size:13px;font-family:'Space Mono',monospace;color:var(--text);outline:none;margin-bottom:.4rem
+}
+.m-input:focus{border-color:var(--accent)}
+.m-hint{font-size:11px;color:var(--muted);margin-bottom:1.2rem;line-height:1.6}
+.enc-notice{
+  background:rgba(45,212,160,.07);border:1px solid rgba(45,212,160,.2);
+  border-radius:8px;padding:10px 12px;font-size:11px;color:var(--green);
+  margin-bottom:1.2rem;line-height:1.7
+}
+.modal-btns{display:flex;gap:8px}
+.btn-save{flex:1;background:var(--accent);border:none;color:#000;padding:10px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.btn-cancel{background:none;border:1px solid var(--border2);color:var(--muted);padding:10px 16px;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit}
+.btn-cancel:hover{color:var(--text)}
+
+/* ── LOADING / EMPTY ── */
+.skeleton{background:linear-gradient(90deg,var(--s2) 25%,var(--s3) 50%,var(--s2) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:8px}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skel-card{height:82px;margin-bottom:9px}
+.empty{text-align:center;padding:3rem;color:var(--muted)}
+.spinner{width:28px;height:28px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto .8rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--s3);color:var(--text);padding:9px 18px;border-radius:8px;font-size:12px;z-index:9999;border:1px solid var(--border2);white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,.4)}
+</style>
+</head>
+<body>
+
+<!-- SETUP MODAL -->
+<div class="overlay" id="setupOverlay">
+  <div class="modal">
+    <div class="modal-title">🔑 YouTube 정밀 분석 설정</div>
+    <div class="modal-sub">
+      API 키를 입력하면 키워드 정밀 검색이 가능합니다.<br>
+      <b style="color:var(--green)">단 1회 입력 후 영구 사용</b> — 다음 방문부터는 자동으로 연결됩니다.
+    </div>
+    <label class="m-label">YouTube Data API v3 키</label>
+    <input class="m-input" id="setupKey" type="password" placeholder="AIzaSy...">
+    <div class="m-hint">
+      Google Cloud Console → YouTube Data API v3 → 사용 설정 → API 키 생성<br>
+      <a href="https://console.cloud.google.com" target="_blank" style="color:var(--blue)">console.cloud.google.com</a> | 하루 10,000 유닛 무료
+    </div>
+    <div class="enc-notice">
+      🔒 입력한 키는 <b>이 기기의 브라우저 정보</b>로 AES-256 암호화되어<br>
+      이 기기 로컬에만 저장됩니다. 서버 전송 없음. 타인 해독 불가.
+    </div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeSetup()">취소</button>
+      <button class="btn-save" onclick="saveKey()">암호화 저장 →</button>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <div class="logo-mark">TF</div>
+    <div>
+      <div class="logo-text">TRENDFINDER</div>
+      <div class="logo-sub">Global Product Intelligence</div>
+    </div>
+  </div>
+  <div class="hdr-right">
+    <div class="live-badge"><span class="live-dot"></span>LIVE</div>
+    <div class="key-status">
+      <span class="key-dot" id="keyDot"></span>
+      <span id="keyLabel" style="font-size:11px;color:var(--muted)">기본 모드</span>
+    </div>
+    <button class="btn-setup" onclick="openSetup()">⚙ 정밀 분석 설정</button>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">🌍 실시간 글로벌 트렌드</div>
+  <div class="hero-title">지금 전세계에서<br><span>가장 팔리는 것들</span></div>
+  <div class="hero-sub">어떤 설치도, 로그인도 필요 없습니다.<br>열자마자 전세계 트렌딩 제품이 자동으로 펼쳐집니다.</div>
+</div>
+
+<!-- COUNTRY TABS -->
+<div class="country-bar" id="countryBar">
+  <div class="ctab active" onclick="setGlobal(this)">🌍 전세계</div>
+  <div class="ctab" onclick="setCountry(this,'US','en')">🇺🇸 미국</div>
+  <div class="ctab" onclick="setCountry(this,'KR','ko')">🇰🇷 한국</div>
+  <div class="ctab" onclick="setCountry(this,'JP','ja')">🇯🇵 일본</div>
+  <div class="ctab" onclick="setCountry(this,'GB','en')">🇬🇧 영국</div>
+  <div class="ctab" onclick="setCountry(this,'DE','de')">🇩🇪 독일</div>
+  <div class="ctab" onclick="setCountry(this,'FR','fr')">🇫🇷 프랑스</div>
+  <div class="ctab" onclick="setCountry(this,'IN','hi')">🇮🇳 인도</div>
+  <div class="ctab" onclick="setCountry(this,'BR','pt')">🇧🇷 브라질</div>
+  <div class="ctab" onclick="setCountry(this,'MX','es')">🇲🇽 멕시코</div>
+  <div class="ctab" onclick="setCountry(this,'AU','en')">🇦🇺 호주</div>
+  <div class="ctab" onclick="setCountry(this,'CA','en')">🇨🇦 캐나다</div>
+  <div class="ctab" onclick="setCountry(this,'ID','id')">🇮🇩 인도네시아</div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- LEFT: TRENDING VIDEOS -->
+  <div>
+    <div class="trending-head">
+      <h2 id="trendingTitle">🔥 트렌딩 영상 로딩 중...</h2>
+      <div class="sort-pills">
+        <div class="spill active" id="sp-views" onclick="setFreeSort('views')">조회수</div>
+        <div class="spill" id="sp-date" onclick="setFreeSort('date')">최신</div>
+      </div>
+    </div>
+
+    <!-- 스켈레톤 로딩 -->
+    <div id="skelCards">
+      <div class="skeleton skel-card"></div>
+      <div class="skeleton skel-card"></div>
+      <div class="skeleton skel-card"></div>
+      <div class="skeleton skel-card"></div>
+      <div class="skeleton skel-card"></div>
+    </div>
+
+    <div class="card-grid" id="trendingCards" style="display:none"></div>
+    <div id="trendEmpty" class="empty" style="display:none">
+      <div class="spinner"></div>
+      <div style="margin-top:.5rem;font-size:13px">데이터를 불러오는 중입니다...</div>
+    </div>
+  </div>
+
+  <!-- RIGHT: SIDEBAR -->
+  <div class="sidebar">
+
+    <!-- 정밀 검색 -->
+    <div class="search-section">
+      <div class="sidebar-title">🔍 키워드 정밀 검색</div>
+      <div class="search-locked" id="searchLocked">
+        <div class="lock-icon">🔓</div>
+        <div class="lock-text">YouTube API 키를 1회 설정하면<br>키워드 정밀 검색이 활성화됩니다</div>
+        <button class="btn-s" onclick="openSetup()">설정하기 →</button>
+      </div>
+      <div class="search-unlocked" id="searchUnlocked">
+        <input class="s-input" id="proSearch" placeholder="키워드 입력..." onkeydown="if(event.key==='Enter')runProSearch()">
+        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:7px">
+          <span onclick="qs('wireless earbuds')" style="font-size:11px;color:var(--blue);cursor:pointer">무선이어폰</span>
+          <span onclick="qs('kitchen gadget viral')" style="font-size:11px;color:var(--blue);cursor:pointer">주방가젯</span>
+          <span onclick="qs('smart home 2025')" style="font-size:11px;color:var(--blue);cursor:pointer">스마트홈</span>
+          <span onclick="qs('car accessories')" style="font-size:11px;color:var(--blue);cursor:pointer">자동차용품</span>
+        </div>
+        <button class="btn-s" onclick="runProSearch()">정밀 분석 →</button>
+        <div id="proLoading" style="display:none;text-align:center;padding:1rem"><div class="spinner"></div></div>
+        <div class="card-grid" id="proResults" style="margin-top:10px"></div>
+      </div>
+    </div>
+
+    <!-- 트렌드 키워드 -->
+    <div class="sidebar-card">
+      <div class="sidebar-title">🔥 실시간 검색어</div>
+      <div id="kwList"><div class="skeleton" style="height:200px;border-radius:8px"></div></div>
+    </div>
+
+    <!-- 통계 -->
+    <div class="sidebar-card" id="statsCard" style="display:none">
+      <div class="sidebar-title">📊 현재 통계</div>
+      <div class="stat-grid">
+        <div class="stat-mini"><div class="stat-n" id="stTotal">0</div><div class="stat-l">영상</div></div>
+        <div class="stat-mini"><div class="stat-n" id="stViews">0</div><div class="stat-l">총 조회</div></div>
+        <div class="stat-mini"><div class="stat-n" id="stViral">0</div><div class="stat-l">바이럴</div></div>
+        <div class="stat-mini"><div class="stat-n" id="stScore">-</div><div class="stat-l">트렌드</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── STATE ─────────────────────────────────────────
+const PROXY = 'https://api.allorigins.win/get?url=';
+let country = {geo:'US', hl:'en'};
+let isGlobalMode = true;
+let freeItems = [];
+let freeSortMode = 'views';
+let proItems = [];
+let ytKey = null;
+
+const GLOBAL_COUNTRIES = [
+  {geo:'US',hl:'en'},{geo:'KR',hl:'ko'},{geo:'JP',hl:'ja'},
+  {geo:'GB',hl:'en'},{geo:'DE',hl:'de'},{geo:'FR',hl:'fr'},
+  {geo:'IN',hl:'hi'},{geo:'BR',hl:'pt'},{geo:'MX',hl:'es'},
+  {geo:'AU',hl:'en'},{geo:'CA',hl:'en'},{geo:'ID',hl:'id'},
+];
+
+// ── CRYPTO (AES-GCM + 브라우저 핑거프린트) ─────────
+async function getFingerprint(){
+  const raw = [
+    navigator.userAgent,
+    navigator.language,
+    screen.width+'x'+screen.height+':'+screen.colorDepth,
+    Intl.DateTimeFormat().resolvedOptions().timeZone,
+    navigator.hardwareConcurrency||'',
+    navigator.platform||''
+  ].join('||');
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(raw));
+  return new Uint8Array(buf);
+}
+
+async function getCryptoKey(){
+  const fp = await getFingerprint();
+  const base = await crypto.subtle.importKey('raw',fp,{name:'PBKDF2'},false,['deriveKey']);
+  return crypto.subtle.deriveKey(
+    {name:'PBKDF2',salt:new TextEncoder().encode('tf-salt-v1'),iterations:120000,hash:'SHA-256'},
+    base,{name:'AES-GCM',length:256},false,['encrypt','decrypt']
+  );
+}
+
+async function encryptStr(str){
+  const key = await getCryptoKey();
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const ct = await crypto.subtle.encrypt({name:'AES-GCM',iv},key,new TextEncoder().encode(str));
+  const combined = new Uint8Array(12+ct.byteLength);
+  combined.set(iv);combined.set(new Uint8Array(ct),12);
+  return btoa(String.fromCharCode(...combined));
+}
+
+async function decryptStr(b64){
+  try{
+    const key = await getCryptoKey();
+    const combined = Uint8Array.from(atob(b64),c=>c.charCodeAt(0));
+    const iv = combined.slice(0,12);
+    const ct = combined.slice(12);
+    const pt = await crypto.subtle.decrypt({name:'AES-GCM',iv},key,ct);
+    return new TextDecoder().decode(pt);
+  }catch{return null;}
+}
+
+async function saveKey(){
+  const raw = document.getElementById('setupKey').value.trim();
+  if(!raw){showToast('API 키를 입력해주세요');return;}
+  const enc = await encryptStr(raw);
+  localStorage.setItem('tf_k','1');
+  localStorage.setItem('tf_v',enc);
+  ytKey = raw;
+  closeSetup();
+  activateProMode();
+  showToast('🔒 암호화 저장 완료 — 다음부터 자동 연결됩니다');
+}
+
+async function loadSavedKey(){
+  if(localStorage.getItem('tf_k')==='1'){
+    const enc = localStorage.getItem('tf_v');
+    if(enc){
+      const dec = await decryptStr(enc);
+      if(dec){ytKey=dec;activateProMode();}
+    }
+  }
+}
+
+function activateProMode(){
+  document.getElementById('searchLocked').style.display='none';
+  document.getElementById('searchUnlocked').style.display='block';
+  document.getElementById('keyDot').className='key-dot on';
+  document.getElementById('keyLabel').textContent='정밀 분석 ON';
+  document.getElementById('keyLabel').style.color='var(--green)';
+}
+
+// ── SETUP MODAL ────────────────────────────────────
+function openSetup(){
+  document.getElementById('setupOverlay').classList.add('open');
+  document.getElementById('setupKey').value='';
+  document.getElementById('setupKey').focus();
+}
+function closeSetup(){document.getElementById('setupOverlay').classList.remove('open')}
+document.getElementById('setupOverlay').addEventListener('click',e=>{if(e.target.id==='setupOverlay')closeSetup()});
+
+// ── COUNTRY ───────────────────────────────────────
+function setGlobal(el){
+  isGlobalMode = true;
+  document.querySelectorAll('.ctab').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  loadFree();
+}
+function setCountry(el,geo,hl){
+  isGlobalMode = false;
+  country={geo,hl};
+  document.querySelectorAll('.ctab').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  loadFree();
+}
+
+// ── FREE TRENDING ─────────────────────────────────
+async function loadFree(){
+  showSkel(true);
+  document.getElementById('trendingCards').style.display='none';
+  document.getElementById('trendEmpty').style.display='none';
+  document.getElementById('statsCard').style.display='none';
+  freeItems=[];
+  await Promise.allSettled([fetchFreeYT(), fetchTrends()]);
+  showSkel(false);
+  if(freeItems.length>0){
+    renderFree();
+  } else {
+    document.getElementById('trendEmpty').style.display='block';
+  }
+}
+
+async function fetchFreeYT(){
+  if(isGlobalMode){
+    // 전세계: 12개국 병렬 수집 후 조회수 상위 정렬
+    document.getElementById('trendingTitle').textContent='🌍 전세계 트렌드 수집 중...';
+    const seen=new Set();
+    const tasks = GLOBAL_COUNTRIES.map(async c=>{
+      try{
+        const url=`https://www.youtube.com/feeds/videos.xml?chart=mostpopular&hl=${c.hl}&gl=${c.geo}&videoCategoryId=0`;
+        const r=await fetch(PROXY+encodeURIComponent(url));
+        const d=await r.json();
+        const xml=new DOMParser().parseFromString(d.contents,'application/xml');
+        const items=[];
+        xml.querySelectorAll('entry').forEach(e=>{
+          const id=e.querySelector('videoId')?.textContent||'';
+          if(!id||seen.has(id))return;
+          seen.add(id);
+          const title=e.querySelector('title')?.textContent||'';
+          const author=e.querySelector('name')?.textContent||'';
+          const published=e.querySelector('published')?.textContent||'';
+          const views=parseInt(e.querySelector('statistics')?.getAttribute('views')||'0');
+          const thumb=`https://i.ytimg.com/vi/${id}/mqdefault.jpg`;
+          if(title) items.push({id,title,author,published,views,thumb,country:c.geo});
+        });
+        return items;
+      }catch{return [];}
+    });
+    const results = await Promise.allSettled(tasks);
+    results.forEach(r=>{if(r.status==='fulfilled') freeItems.push(...r.value);});
+  } else {
+    // 국가별: 3개 카테고리 병렬 수집
+    const seen=new Set();
+    const cats=['0','28','26'];
+    const tasks = cats.map(async cid=>{
+      try{
+        const url=`https://www.youtube.com/feeds/videos.xml?chart=mostpopular&hl=${country.hl}&gl=${country.geo}&videoCategoryId=${cid}`;
+        const r=await fetch(PROXY+encodeURIComponent(url));
+        const d=await r.json();
+        const xml=new DOMParser().parseFromString(d.contents,'application/xml');
+        const items=[];
+        xml.querySelectorAll('entry').forEach(e=>{
+          const id=e.querySelector('videoId')?.textContent||'';
+          if(!id||seen.has(id))return;
+          seen.add(id);
+          const title=e.querySelector('title')?.textContent||'';
+          const author=e.querySelector('name')?.textContent||'';
+          const published=e.querySelector('published')?.textContent||'';
+          const views=parseInt(e.querySelector('statistics')?.getAttribute('views')||'0');
+          const thumb=`https://i.ytimg.com/vi/${id}/mqdefault.jpg`;
+          if(title) items.push({id,title,author,published,views,thumb,country:country.geo});
+        });
+        return items;
+      }catch{return [];}
+    });
+    const results = await Promise.allSettled(tasks);
+    results.forEach(r=>{if(r.status==='fulfilled') freeItems.push(...r.value);});
+  }
+}
+
+async function fetchTrends(){
+  try{
+    const geo = isGlobalMode ? 'US' : country.geo;
+    const url=`https://trends.google.com/trends/trendingsearches/daily/rss?geo=${geo}`;
+    const r=await fetch(PROXY+encodeURIComponent(url));
+    const d=await r.json();
+    const xml=new DOMParser().parseFromString(d.contents,'application/xml');
+    const items=xml.querySelectorAll('item');
+    const kws=[];
+    items.forEach((item,i)=>{
+      if(i>=15)return;
+      const title=item.querySelector('title')?.textContent||'';
+      const traffic=item.querySelector('approx_traffic')?.textContent||'';
+      if(title) kws.push({title,traffic,pct:Math.max(20,100-i*6)});
+    });
+    if(kws.length){
+      document.getElementById('kwList').innerHTML=kws.map((k,i)=>`
+        <div class="kw-item" onclick="qs2('${escJ(k.title)}')">
+          <span class="kw-num">${i+1}</span>
+          <div style="flex:1;min-width:0">
+            <div class="kw-text">${escH(k.title)}</div>
+            <div class="kw-bar-wrap"><div class="kw-bar" style="width:${k.pct}%"></div></div>
+          </div>
+          <span class="kw-traffic">${k.traffic}</span>
+        </div>
+      `).join('');
+    }
+  }catch{
+    document.getElementById('kwList').innerHTML='<div style="font-size:12px;color:var(--muted);padding:.5rem">데이터를 불러올 수 없습니다</div>';
+  }
+}
+
+function setFreeSort(m){
+  freeSortMode=m;
+  document.getElementById('sp-views').classList.toggle('active',m==='views');
+  document.getElementById('sp-date').classList.toggle('active',m==='date');
+  renderFree();
+}
+
+function renderFree(){
+  const items=[...freeItems];
+  if(freeSortMode==='views') items.sort((a,b)=>b.views-a.views);
+  else items.sort((a,b)=>new Date(b.published)-new Date(a.published));
+
+  const total=items.reduce((s,i)=>s+i.views,0);
+  const viral=items.filter(i=>i.views>1000000).length;
+  const avg=items.length?Math.round(total/items.length):0;
+  document.getElementById('stTotal').textContent=items.length;
+  document.getElementById('stViews').textContent=fmtN(total);
+  document.getElementById('stViral').textContent=viral;
+  document.getElementById('stScore').textContent=avg>5000000?'🔥🔥🔥':avg>1000000?'🔥🔥':avg>100000?'🔥':'📈';
+  document.getElementById('statsCard').style.display='block';
+
+  const flag = isGlobalMode ? '🌍 전세계' : (document.querySelector('.ctab.active')?.textContent?.trim()||'🌍');
+  document.getElementById('trendingTitle').textContent=`${flag} 가장 뜨는 영상 TOP ${items.length}`;
+
+  document.getElementById('trendingCards').innerHTML=items.map((v,i)=>`
+    <a class="vcard" href="https://youtube.com/watch?v=${v.id}" target="_blank">
+      <div class="vcard-rank ${i<3?'top3':''}">#${i+1}</div>
+      <img class="vcard-thumb" src="${v.thumb}" loading="lazy" onerror="this.style.display='none'">
+      <div class="vcard-body">
+        <div class="vcard-title">${escH(v.title)}</div>
+        <div class="vcard-meta">
+          <span class="vm">📺 <b>${escH(v.author)}</b></span>
+          <span class="vm">📅 <b>${fmtDate(v.published)}</b></span>
+          ${v.views>5000000?'<span class="pill pill-hot">🔥 HOT</span>':''}
+          ${v.views>1000000&&v.views<=5000000?'<span class="pill pill-viral">VIRAL</span>':''}
+          ${isNew(v.published)?'<span class="pill pill-new">NEW</span>':''}
+        </div>
+      </div>
+      <div class="vcard-right">
+        <div class="view-n">${fmtN(v.views)}</div>
+        <div class="view-l">조회수</div>
+        <button class="btn-huma" onclick="event.preventDefault();sendHuma('${v.id}','${escJ(v.title)}')">🔗 Humateck 배포</button>
+      </div>
+    </a>
+  `).join('');
+  document.getElementById('trendingCards').style.display='grid';
+}
+
+// ── PRO SEARCH ────────────────────────────────────
+function qs(q){document.getElementById('proSearch').value=q;runProSearch();}
+function qs2(q){
+  if(ytKey){document.getElementById('proSearch').value=q;runProSearch();}
+  else{openSetup();showToast('API 키 설정 후 키워드 검색이 가능합니다');}
+}
+
+async function runProSearch(){
+  const q=document.getElementById('proSearch').value.trim();
+  if(!q||!ytKey)return;
+  document.getElementById('proLoading').style.display='block';
+  document.getElementById('proResults').innerHTML='';
+  try{
+    const r1=await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(q)}&type=video&order=viewCount&maxResults=10&key=${ytKey}`);
+    const d1=await r1.json();
+    if(d1.error)throw new Error(d1.error.message);
+    const ids=d1.items.map(i=>i.id.videoId).join(',');
+    const r2=await fetch(`https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet&id=${ids}&key=${ytKey}`);
+    const d2=await r2.json();
+    proItems=d2.items.map(v=>({
+      id:v.id,title:v.snippet.title,channel:v.snippet.channelTitle,
+      published:v.snippet.publishedAt,thumb:v.snippet.thumbnails?.medium?.url||'',
+      views:parseInt(v.statistics.viewCount||0),likes:parseInt(v.statistics.likeCount||0)
+    }));
+    proItems.sort((a,b)=>b.views-a.views);
+    document.getElementById('proLoading').style.display='none';
+    document.getElementById('proResults').innerHTML=proItems.map((v,i)=>`
+      <a class="vcard" href="https://youtube.com/watch?v=${v.id}" target="_blank" style="padding:.7rem .8rem">
+        <div class="vcard-rank ${i<3?'top3':''}">#${i+1}</div>
+        <img class="vcard-thumb" src="${escH(v.thumb)}" loading="lazy" onerror="this.style.display='none'" style="width:72px;height:48px">
+        <div class="vcard-body">
+          <div class="vcard-title" style="font-size:12px">${escH(v.title)}</div>
+          <div class="vcard-meta">
+            <span class="vm" style="font-size:10px">👍 <b>${fmtN(v.likes)}</b></span>
+            ${v.views>1000000?'<span class="pill pill-hot" style="font-size:8px">HOT</span>':''}
+          </div>
+        </div>
+        <div class="vcard-right">
+          <div class="view-n" style="font-size:12px">${fmtN(v.views)}</div>
+          <button class="btn-huma" style="font-size:9px" onclick="event.preventDefault();sendHuma('${v.id}','${escJ(v.title)}')">Humateck</button>
+        </div>
+      </a>
+    `).join('');
+  }catch(e){
+    document.getElementById('proLoading').style.display='none';
+    document.getElementById('proResults').innerHTML=`<div style="font-size:12px;color:var(--red);padding:.5rem">${escH(e.message)}</div>`;
+  }
+}
+
+// ── HUMATECK 연동 ─────────────────────────────────
+function sendHuma(id,title){
+  showToast('Humateck으로 연결 중...');
+  window.open(`https://humateck.com/app?videoId=${id}&title=${encodeURIComponent(title)}`,'_blank');
+}
+
+// ── UTILS ─────────────────────────────────────────
+function showSkel(b){document.getElementById('skelCards').style.display=b?'block':'none'}
+function fmtN(n){if(!n||isNaN(n))return'-';if(n>=1000000)return(n/1000000).toFixed(1)+'M';if(n>=1000)return(n/1000).toFixed(1)+'K';return n.toString()}
+function fmtDate(d){const diff=Math.floor((Date.now()-new Date(d))/86400000);if(diff===0)return '오늘';if(diff<7)return diff+'일 전';if(diff<30)return Math.floor(diff/7)+'주 전';if(diff<365)return Math.floor(diff/30)+'개월 전';return Math.floor(diff/365)+'년 전'}
+function isNew(d){return Math.floor((Date.now()-new Date(d))/86400000)<3}
+function escH(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function escJ(s){return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'")}
+let toastTimer;
+function showToast(m){
+  document.querySelectorAll('.toast').forEach(t=>t.remove());
+  const t=document.createElement('div');
+  t.className='toast';t.textContent=m;
+  document.body.appendChild(t);
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.remove(),2500);
+}
+
+// ── INIT ──────────────────────────────────────────
+(async()=>{
+  isGlobalMode = true;
+  await loadSavedKey();
+  await loadFree();
+})();
+</script>
+</body>
+</html>
