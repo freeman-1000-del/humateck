@@ -1934,7 +1934,15 @@ Without any explanation, output only the translated registration text.`;
 
   <!-- 인증 전 안내 -->
   <div id="sfAuthNeeded" class="sf-auth-needed">
-    🔒 위에서 Google OAuth 인증을 완료하면 ShopFinder가 자동으로 활성화됩니다.
+    🔒 위에서 Google OAuth 인증을 완료한 후 아래 버튼을 눌러주세요.
+  </div>
+
+  <!-- OAuth 완료 후 버튼 -->
+  <div id="sfStartWrap" style="display:none;text-align:center;padding:1rem 0">
+    <button onclick="sfActivate()" style="background:#f5a623;border:none;color:#000;padding:12px 32px;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit">
+      🛍️ ShopFinder 시작 →
+    </button>
+    <div style="font-size:12px;color:#4e5668;margin-top:8px">OAuth 인증된 계정으로 바로 실행됩니다</div>
   </div>
 
   <!-- 인증 후 메인 -->
@@ -1999,58 +2007,64 @@ Without any explanation, output only the translated registration text.`;
   var sfRegion='global', sfCat='all', sfSort='views', sfItems=[];
   var SF_REGIONS=['US','KR','JP','GB','DE','FR','IN','BR','AU','CA'];
   var SF_QUERIES={
-    all:     'product review best 2025',
-    review:  'best product review honest',
+    all:'product review best 2025',
+    review:'best product review honest',
     unboxing:'unboxing viral product',
     electronics:'best electronics gadget 2025',
-    beauty:  'skincare beauty product review',
-    kitchen: 'kitchen gadget viral 2025',
-    fitness: 'fitness equipment review 2025',
-    car:     'car accessories review best',
-    home:    'smart home gadget review',
-    pet:     'pet product review best'
+    beauty:'skincare beauty product review',
+    kitchen:'kitchen gadget viral 2025',
+    fitness:'fitness equipment review 2025',
+    car:'car accessories review best',
+    home:'smart home gadget review',
+    pet:'pet product review best'
   };
 
-  // OAuth 토큰 가져오기
   function sfGetToken(){
     return window.humateckGoogleAccessToken ||
            sessionStorage.getItem('humateckGoogleAccessToken') || null;
   }
 
-  // OAuth 완료 감지 → ShopFinder 자동 활성화
-  var sfCheckTimer = setInterval(function(){
+  // OAuth 완료 감지 → 버튼 표시
+  var sfCheckTimer=setInterval(function(){
     if(sfGetToken()){
       clearInterval(sfCheckTimer);
       document.getElementById('sfAuthNeeded').style.display='none';
-      document.getElementById('sfMain').style.display='block';
-      sfLoad();
+      document.getElementById('sfStartWrap').style.display='block';
     }
-  }, 1000);
+  },1000);
 
-  // YouTube API 호출 (OAuth 토큰 사용)
-  async function sfYtSearch(query, region){
-    var token = sfGetToken();
+  // 버튼 클릭 시 실행
+  window.sfActivate=function(){
+    document.getElementById('sfStartWrap').style.display='none';
+    document.getElementById('sfMain').style.display='block';
+    sfLoad();
+  };
+
+  async function sfYtSearch(query,region){
+    var token=sfGetToken();
     if(!token) throw new Error('인증 토큰이 없습니다');
-    var r1 = await fetch(
+    var r1=await fetch(
       'https://www.googleapis.com/youtube/v3/search?part=snippet&q='+encodeURIComponent(query)+'&type=video&order=viewCount&maxResults=15&regionCode='+region+'&relevanceLanguage=en',
       {headers:{Authorization:'Bearer '+token}}
     );
     if(r1.status===401) throw new Error('인증이 만료되었습니다. 다시 OAuth 인증해주세요.');
-    var d1 = await r1.json();
+    var d1=await r1.json();
     if(d1.error) throw new Error(d1.error.message);
     if(!d1.items||!d1.items.length) return [];
-    var ids = d1.items.map(function(i){return i.id.videoId;}).join(',');
-    var r2 = await fetch(
+    var ids=d1.items.map(function(i){return i.id.videoId;}).join(',');
+    var r2=await fetch(
       'https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet&id='+ids,
       {headers:{Authorization:'Bearer '+token}}
     );
-    var d2 = await r2.json();
+    var d2=await r2.json();
     return (d2.items||[]).map(function(v){return{
-      id:v.id, title:v.snippet.title, channel:v.snippet.channelTitle,
+      id:v.id,
+      title:v.snippet.title,
+      channel:v.snippet.channelTitle,
       published:v.snippet.publishedAt,
-      thumb:v.snippet.thumbnails&&v.snippet.thumbnails.medium?v.snippet.thumbnails.medium.url:'',
-      views:parseInt(v.statistics&&v.statistics.viewCount||0),
-      likes:parseInt(v.statistics&&v.statistics.likeCount||0),
+      thumb:(v.snippet.thumbnails&&v.snippet.thumbnails.medium)?v.snippet.thumbnails.medium.url:'',
+      views:parseInt((v.statistics&&v.statistics.viewCount)||0),
+      likes:parseInt((v.statistics&&v.statistics.likeCount)||0),
       region:region
     };});
   }
@@ -2060,11 +2074,11 @@ Without any explanation, output only the translated registration text.`;
     document.getElementById('sfSkel').style.display='block';
     document.getElementById('sfCards').style.display='none';
     document.getElementById('sfError').style.display='none';
-    var query = SF_QUERIES[sfCat]||SF_QUERIES['all'];
+    var query=SF_QUERIES[sfCat]||SF_QUERIES['all'];
     try{
       if(sfRegion==='global'){
         sfShowProgress(true,0,SF_REGIONS.length);
-        var done=0, seen={};
+        var done=0,seen={};
         await Promise.allSettled(SF_REGIONS.map(async function(r){
           try{
             var res=await sfYtSearch(query,r);
@@ -2073,7 +2087,7 @@ Without any explanation, output only the translated registration text.`;
           }catch(e){done++;sfUpdateProgress(done,SF_REGIONS.length);}
         }));
         sfShowProgress(false);
-      } else {
+      }else{
         var res=await sfYtSearch(query,sfRegion);
         sfItems=res;
       }
@@ -2090,43 +2104,65 @@ Without any explanation, output only the translated registration text.`;
     }
   }
 
+  function fmtN(n){
+    if(!n||isNaN(n)) return '0';
+    if(n>=1000000) return (n/1000000).toFixed(1)+'M';
+    if(n>=1000) return (n/1000).toFixed(1)+'K';
+    return String(n);
+  }
+  function fmtDate(d){
+    if(!d) return '';
+    var diff=Math.floor((Date.now()-new Date(d))/86400000);
+    if(diff===0) return '오늘';
+    if(diff<7) return diff+'일 전';
+    if(diff<30) return Math.floor(diff/7)+'주 전';
+    return Math.floor(diff/30)+'개월 전';
+  }
+  function escH(s){
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  function escJ(s){
+    return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+  }
+
   function sfRender(){
     var sorted=sfItems.slice();
     if(sfSort==='views') sorted.sort(function(a,b){return b.views-a.views;});
     else if(sfSort==='likes') sorted.sort(function(a,b){return b.likes-a.likes;});
     else sorted.sort(function(a,b){return new Date(b.published)-new Date(a.published);});
+
     var tab=document.querySelector('.sf-ctab.active');
-    var tabLabel=tab?tab.textContent.trim():'';
-    document.getElementById('sfTitle').textContent=tabLabel+' 트렌딩 쇼핑 TOP '+sorted.length;
-    document.getElementById('sfCards').innerHTML=sorted.map(function(v,i){
-      var diff=Math.floor((Date.now()-new Date(v.published))/86400000);
-      var dateStr=diff===0?'오늘':diff<7?diff+'일 전':diff<30?Math.floor(diff/7)+'주 전':Math.floor(diff/30)+'개월 전';
-      var views=v.views>=1000000?(v.views/1000000).toFixed(1)+'M':v.views>=1000?(v.views/1000).toFixed(1)+'K':v.views;
-      var likes=v.likes>=1000?(v.likes/1000).toFixed(1)+'K':v.likes;
-      return '<a class="sf-card" href="https://youtube.com/watch?v='+v.id+'" target="_blank">'+
-        '<div class="sf-rank'+(i<3?' top':'')'">#'+(i+1)+'</div>'+
-        (v.thumb?'<img class="sf-thumb" src="'+v.thumb+'" loading="lazy" onerror="this.style.display=\'none\'">':'')+
+    document.getElementById('sfTitle').textContent=(tab?tab.textContent.trim():'')+' 쇼핑 TOP '+sorted.length;
+
+    var html='';
+    sorted.forEach(function(v,i){
+      var rankClass=i<3?'sf-rank top':'sf-rank';
+      var hotPill=v.views>5000000?'<span class="sf-pill sf-pill-hot">🔥 HOT</span>':'';
+      var viralPill=(v.views>1000000&&v.views<=5000000)?'<span class="sf-pill sf-pill-viral">VIRAL</span>':'';
+      var thumbHtml=v.thumb?'<img class="sf-thumb" src="'+escH(v.thumb)+'" loading="lazy" onerror="this.style.display=\'none\'">':'';
+      html+='<a class="sf-card" href="https://youtube.com/watch?v='+escH(v.id)+'" target="_blank">'+
+        '<div class="'+rankClass+'">#'+(i+1)+'</div>'+
+        thumbHtml+
         '<div class="sf-body">'+
           '<div class="sf-title">'+escH(v.title)+'</div>'+
           '<div class="sf-meta">'+
             '<span>📺 <b>'+escH(v.channel)+'</b></span>'+
-            '<span>👍 <b>'+likes+'</b></span>'+
-            '<span>📅 <b>'+dateStr+'</b></span>'+
-            (v.views>5000000?'<span class="sf-pill sf-pill-hot">🔥 HOT</span>':'')+ 
-            (v.views>1000000&&v.views<=5000000?'<span class="sf-pill sf-pill-viral">VIRAL</span>':'')+
+            '<span>👍 <b>'+fmtN(v.likes)+'</b></span>'+
+            '<span>📅 <b>'+fmtDate(v.published)+'</b></span>'+
+            hotPill+viralPill+
           '</div>'+
         '</div>'+
         '<div class="sf-right">'+
-          '<div class="sf-views">'+views+'</div>'+
+          '<div class="sf-views">'+fmtN(v.views)+'</div>'+
           '<div class="sf-views-l">조회수</div>'+
-          '<button class="sf-use-btn" onclick="event.preventDefault();sfUseVideo(\''+v.id+'\',\''+escJ(v.title)+'\')">이 영상 등록</button>'+
+          '<button class="sf-use-btn" onclick="event.preventDefault();sfUseVideo(\''+escH(v.id)+'\',\''+escJ(v.title)+'\')">이 영상 등록</button>'+
         '</div>'+
       '</a>';
-    }).join('');
+    });
+    document.getElementById('sfCards').innerHTML=html;
     document.getElementById('sfCards').style.display='grid';
   }
 
-  // 영상을 Humateck 등록 폼에 자동 입력
   window.sfUseVideo=function(id,title){
     var urlInput=document.getElementById('videoUrl')||document.querySelector('input[name="videoUrl"]');
     if(urlInput){
@@ -2135,8 +2171,8 @@ Without any explanation, output only the translated registration text.`;
       urlInput.scrollIntoView({behavior:'smooth',block:'center'});
       urlInput.style.border='2px solid #f5a623';
       setTimeout(function(){urlInput.style.border='';},2000);
-      sfToast('✓ 영상 URL이 입력되었습니다. 위로 스크롤하여 등록을 진행하세요.');
-    } else {
+      sfToast('✓ 영상 URL 입력 완료! 위로 스크롤하여 등록을 진행하세요.');
+    }else{
       window.open('https://www.youtube.com/watch?v='+id,'_blank');
     }
   };
@@ -2155,10 +2191,9 @@ Without any explanation, output only the translated registration text.`;
   };
   window.sfSetSort=function(s){
     sfSort=s;
-    ['views','date','likes'].forEach(function(x){
-      var el=document.getElementById('sfs'+x[0]);
-      if(el) el.classList.toggle('active',x===s);
-    });
+    document.getElementById('sfsv').classList.toggle('active',s==='views');
+    document.getElementById('sfsd').classList.toggle('active',s==='date');
+    document.getElementById('sfsl').classList.toggle('active',s==='likes');
     sfRender();
   };
 
@@ -2168,14 +2203,12 @@ Without any explanation, output only the translated registration text.`;
   }
   function sfUpdateProgress(done,total){
     document.getElementById('sfProgressFill').style.width=Math.round(done/total*100)+'%';
-    document.getElementById('sfProgressTxt').textContent='🌍 전세계 쇼핑 트렌드 수집 중... '+done+'/'+total+'개국';
+    document.getElementById('sfProgressTxt').textContent='🌍 전세계 수집 중... '+done+'/'+total+'개국';
   }
-  function escH(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-  function escJ(s){return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'");}
   function sfToast(m){
     var t=document.createElement('div');
     t.textContent=m;
-    t.style.cssText='position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:#1e2330;color:#f4f1e8;padding:10px 20px;border-radius:8px;font-size:13px;z-index:9999;border:1px solid rgba(214,176,78,.4);white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,.4)';
+    t.style.cssText='position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:#1e2330;color:#f4f1e8;padding:10px 20px;border-radius:8px;font-size:13px;z-index:9999;border:1px solid rgba(214,176,78,.4);white-space:nowrap';
     document.body.appendChild(t);
     setTimeout(function(){t.remove();},3000);
   }
