@@ -366,7 +366,29 @@ header{
 
 <script>
 // ── STATE ─────────────────────────────────────────
-const PROXY = 'https://api.allorigins.win/get?url=';
+const PROXIES = [
+  url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+  url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
+  url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+];
+
+async function fetchRSS(url){
+  for(const makeProxy of PROXIES){
+    try{
+      const r = await fetchWithTimeout(makeProxy(url), 8000);
+      const text = await r.text();
+      // allorigins는 JSON {contents:...}, 나머지는 raw XML
+      try{
+        const json = JSON.parse(text);
+        if(json.contents) return json.contents;
+      }catch{}
+      return text;
+    }catch(e){
+      continue;
+    }
+  }
+  throw new Error('모든 프록시 실패');
+}
 let country = {geo:'US', hl:'en'};
 let isGlobalMode = true;
 let freeItems = [];
@@ -515,10 +537,9 @@ async function fetchFreeYT(){
     const tasks = GLOBAL_COUNTRIES.map(async c=>{
       try{
         const url=`https://www.youtube.com/feeds/videos.xml?chart=mostpopular&hl=${c.hl}&gl=${c.geo}&videoCategoryId=0`;
-        const r=await fetchWithTimeout(PROXY+encodeURIComponent(url), 8000);
-        const d=await r.json();
-        if(!d.contents) return [];
-        const xml=new DOMParser().parseFromString(d.contents,'application/xml');
+        const contents = await fetchRSS(url);
+        if(!contents) return [];
+        const xml=new DOMParser().parseFromString(contents,'application/xml');
         const items=[];
         xml.querySelectorAll('entry').forEach(e=>{
           const id=e.querySelector('videoId')?.textContent||'';
@@ -541,10 +562,9 @@ async function fetchFreeYT(){
     const seen=new Set();
     try{
       const url=`https://www.youtube.com/feeds/videos.xml?chart=mostpopular&hl=${country.hl}&gl=${country.geo}&videoCategoryId=0`;
-      const r=await fetchWithTimeout(PROXY+encodeURIComponent(url), 8000);
-      const d=await r.json();
-      if(!d.contents) throw new Error('no contents');
-      const xml=new DOMParser().parseFromString(d.contents,'application/xml');
+      const contents = await fetchRSS(url);
+      if(!contents) throw new Error('no contents');
+      const xml=new DOMParser().parseFromString(contents,'application/xml');
       xml.querySelectorAll('entry').forEach(e=>{
         const id=e.querySelector('videoId')?.textContent||'';
         if(!id||seen.has(id))return;
@@ -572,9 +592,8 @@ async function fetchTrends(){
   try{
     const geo = isGlobalMode ? 'US' : country.geo;
     const url=`https://trends.google.com/trends/trendingsearches/daily/rss?geo=${geo}`;
-    const r=await fetch(PROXY+encodeURIComponent(url));
-    const d=await r.json();
-    const xml=new DOMParser().parseFromString(d.contents,'application/xml');
+    const contents = await fetchRSS(url);
+    const xml=new DOMParser().parseFromString(contents,'application/xml');
     const items=xml.querySelectorAll('item');
     const kws=[];
     items.forEach((item,i)=>{
