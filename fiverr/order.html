@@ -1,11 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>YouTube Multilingual Registration</title>
+<title>YouTube Global Video Mass Distribution</title>
 <style>
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;background:#050b14;color:#f4f1e8;font-family:Arial,"Noto Sans KR",sans-serif}
@@ -1051,48 +1050,6 @@ input,textarea{font-size:16px!important;}
 }
 .universalTranslationNotice strong{color:#d8bf83;font-weight:900;}
 </style>
-
-<style>
-/* 플랜 만료 카운트다운 */
-#planExpiryBox{
-  border:1px solid rgba(255,217,90,.55);
-  border-radius:16px;
-  padding:16px 20px;
-  background:rgba(255,217,90,.07);
-  margin-bottom:18px;
-  display:none;
-}
-#planExpiryBox.show{ display:block; }
-#planExpiryBox .expiryLabel{
-  color:#aaa; font-size:13px; margin:0 0 8px;
-}
-#planExpiryBox .expiryPlanName{
-  color:#ffd95a; font-weight:900; font-size:16px; margin:0 0 10px;
-}
-#planExpiryBox .countdownRow{
-  display:flex; gap:10px; flex-wrap:wrap; align-items:center;
-}
-#planExpiryBox .cdUnit{
-  text-align:center;
-  background:rgba(0,0,0,.3);
-  border:1px solid rgba(255,217,90,.3);
-  border-radius:10px;
-  padding:8px 14px;
-  min-width:64px;
-}
-#planExpiryBox .cdNum{
-  font-size:26px; font-weight:900; color:#ffd95a; line-height:1;
-}
-#planExpiryBox .cdLbl{
-  font-size:11px; color:#aaa; margin-top:3px;
-}
-#planExpiryBox .expiryExpired{
-  color:#ff6b5d; font-weight:900; font-size:15px;
-}
-#planExpiryBox .expirySoon{
-  color:#ff9966;
-}
-</style>
 </head>
 <body>
 <!--
@@ -1103,34 +1060,17 @@ Do not add review, blocking, metadata judgment, hidden/admin menu, auto-correcti
 
 
 <div class="wrap" id="top">
-<header class="top"><a href="../index.html"><img class="logo" src="../FINAL_LOGO01.png" alt="Humateck"></a><div class="lang">◎ English⌄</div></header>
-<div class="orderTopButtons"><a href="../index.html">Home</a><a href="plans.html">View All Plans</a></div>
+<header class="top"><a href="index.html"><img class="logo" src="FINAL_LOGO01.png" alt="Humateck"></a><div class="lang">◎ English⌄</div></header>
+<div class="orderTopButtons"><a href="index.html">Home</a><a href="./plans.html">View All Plans</a></div>
 <section class="orderMainGrid">
   <div class="orderLeftColumn">
     <section class="card">
-      
-<h1>Multilingual Subtitle Registration Order Form</h1>
-
-<!-- Plan expiry countdown -->
-<div id="planExpiryBox">
-  <p class="expiryLabel">Current Subscription Plan</p>
-  <p class="expiryPlanName" id="expiryPlanName">—</p>
-  <p class="expiryLabel">Time remaining until plan expires</p>
-  <div class="countdownRow" id="countdownRow">
-    <div class="cdUnit"><div class="cdNum" id="cdDays">—</div><div class="cdLbl">Days</div></div>
-    <div class="cdUnit"><div class="cdNum" id="cdHours">—</div><div class="cdLbl">Hours</div></div>
-    <div class="cdUnit"><div class="cdNum" id="cdMins">—</div><div class="cdLbl">Min</div></div>
-    <div class="cdUnit"><div class="cdNum" id="cdSecs">—</div><div class="cdLbl">Sec</div></div>
-  </div>
-  <p id="expiryDateText" style="color:#888;font-size:13px;margin:10px 0 0;"></p>
-</div>
-<!-- /Plan expiry countdown -->
-
+      <h1>Global Video Mass Distribution Order</h1>
       <div class="order-intro-note">
-        <p>1. This order form uses Google's verified security protocol OAuth2.0, so your personal information is never stored on our servers.</p>
-        <p>2. The Gemini AI chat translation guided in this form is an optimized prompt tested by our team. However, if it fits the YouTube order format, you are free to use translations prepared with any other translation tool or by a professional translator.</p>
+        <p>1. This order form is open to everyone for experiencing Gemini AI chat translation.</p>
+        <p>2. However, the authority to finally register the translation results on YouTube is open only to subscribers of this service. Please do not misunderstand this point.</p>
       </div>
-      <div class="universalTranslationNotice"><strong>Flexible translation source:</strong> Humateck is not limited to Gemini translation. You may use Gemini, ChatGPT, DeepL, another AI translator, or your own prepared translation. As long as the final text follows the required <strong>Country Code / Video URL / Title / Description</strong> format, Humateck can register it to YouTube.</div>
+      <div class="universalTranslationNotice"><strong>Flexible translation source:</strong> Humateck is not limited to Gemini translation. You may use Gemini, ChatGPT, DeepL, another AI translator, or your own prepared translation. As long as the final text follows the required <strong>Country Code / Title / Description</strong> format, Humateck can register it to YouTube.</div>
       <div class="nativeCodeLabelRow">
   <label for="nativeLanguageCode">Native Language Code</label>
   <button id="openNativeCodeListBtn" class="nativeCodeListBtn" type="button">70 Country Names / Language Codes List</button>
@@ -1193,16 +1133,16 @@ Without any explanation, output only the translated registration text.</textarea
 
     <section class="card" id="finalVersionCard">
       <h2>Paste Final Version</h2>
-            <textarea id="finalOutput" id="finalOutput" class="mediumTextarea" placeholder="Paste the final Gemini translation result."></textarea>
+      <textarea id="finalOutput" class="mediumTextarea" placeholder="Paste the final Gemini translation result."></textarea>
     </section>
 
 
 <section class="oauthInfoBox" id="googleOAuthNotice">
       <h2>Google OAuth Setup Guide Notice</h2>
-      <p>From here, this is the Google OAuth authentication sequence required to register your multilingual subtitles to YouTube.</p>
+      <p>From here, this is the Google OAuth authentication sequence that subscribers must complete. Non-subscribers may also complete this authentication, but final register multilingual content is open only to subscribers. Please do not misunderstand this point.</p>
       <p class="yellowStrong">If you have already received a Google OAuth authentication key, please skip the “Important Setup Guide.”</p>
       <center><p class="yellowStrong">Once configured, it can be used for multiple channels.</p></center>
-      <div class="actions"><a class="btn guideOpenButton" href="#oauthGuideModal">Important Setup Guide</a><a class="btn" href="plans.html">Subscribe to a Plan</a></div>
+      <div class="actions"><a class="btn guideOpenButton" href="#oauthGuideModal">Important Setup Guide</a><a class="btn" href="./plans.html">Subscribe to a Plan</a></div>
       <div class="oauthPanelBelow">
         <h2>Google OAuth Setup Guide</h2>
         <p class="oauthLaunchNotice">This authentication allows visitors to experience the reality of AI chat translation and YouTube registration. However, actual registration is available only to subscribers. Please do not misunderstand this point.</p>
@@ -1349,7 +1289,8 @@ A) This is because YouTube content display system fixes the default video settin
   function applyHumateckPlan(plan){
     if(!plan) return;
     if(plan === "monthly70") plan = "monthly70";
-    var allowed = {asia30:true, europe30:true, africa30:true, america30:true, oceania30:true, global50:true, global70:true};
+    if(plan === "yearly70") plan = "yearly70";
+    var allowed = {free7:true, monthly30:true, monthly50:true, monthly70:true, yearly70:true};
     if(!allowed[plan]) return;
     window.humateckPaymentSubscriptionPlan = plan;
     var hidden = document.getElementById("humateckActivePlanValue");
@@ -1359,10 +1300,11 @@ A) This is because YouTube content display system fixes the default video settin
   }
 
   function getHumateckPlanLimit(plan){
-    if(plan === "asia30" || plan === "europe30" || plan === "africa30" || plan === "america30" || plan === "oceania30") return 30;
-    if(plan === "global50") return 50;
-    if(plan === "global70") return 70;
-    return 30;
+    if(plan === "free7") return 15;
+    if(plan === "monthly30") return 30;
+    if(plan === "monthly50") return 50;
+    if(plan === "monthly70" || plan === "yearly70") return 70;
+    return 0;
   }
 
   function loadPlanSelectedFromPlansPage(){
@@ -1382,7 +1324,7 @@ A) This is because YouTube content display system fixes the default video settin
       var res = await fetch(url, { credentials:"include", cache:"no-store" });
       if(!res.ok) return;
       var data = await res.json().catch(function(){ return {}; });
-      if(data && (data.admin === true || data.is_admin === true)){ window.humateckIsAdminMember = true; applyHumateckPlan("global70", 70); return; }
+      if(data && (data.admin === true || data.is_admin === true)){ window.humateckIsAdminMember = true; applyHumateckPlan("yearly70", 70); return; }
       if(data && (data.active === true || data.status === "active")){ applyHumateckPlan(data.plan || data.plan_type || data.subscription_plan, data.country_limit); }
     }catch(e){}
   }
@@ -1421,7 +1363,11 @@ A) This is because YouTube content display system fixes the default video settin
 
     if(window.humateckIsAdminMember === true) return 70;
 
+    if(plan === "free7") return 15;
+    if(plan === "monthly50") return 50;
     if(plan === "monthly70") return 70;
+    if(plan === "yearly70") return 70;
+    if(plan === "monthly30") return 30;
 
     return 30;
   }
@@ -1431,94 +1377,80 @@ A) This is because YouTube content display system fixes the default video settin
     var sourceTitle = getValue("sourceTitle");
     var sourceDescription = getValue("sourceDescription");
 
-    // ── Plan-based country code lists (ordered by YouTube market importance) ──
-    var PLAN_COUNTRY_LISTS = {
-      "global70": [
-        "1. en | English (US/UK/AU)","2. hi | Hindi (India)","3. pt | Portuguese (Brazil)",
-        "4. id | Indonesian","5. es-419 | Spanish (Latin America)","6. ja | Japanese",
-        "7. ru | Russian","8. de | German","9. tr | Turkish","10. ko | Korean",
-        "11. fr | French","12. vi | Vietnamese","13. th | Thai","14. fil | Filipino",
-        "15. ar | Arabic (Middle East/N.Africa)","16. it | Italian","17. ms | Malay",
-        "18. zh-TW | Chinese (Taiwan)","19. uk | Ukrainian","20. pl | Polish",
-        "21. nl | Dutch","22. es | Spanish (Spain)","23. sv | Swedish",
-        "24. ro | Romanian","25. cs | Czech","26. hu | Hungarian","27. el | Greek",
-        "28. zh-HK | Chinese (Hong Kong)","29. ur | Urdu (Pakistan)","30. bn | Bengali (Bangladesh)",
-        "31. pt-PT | Portuguese (Portugal)","32. fa | Persian (Iran)","33. iw | Hebrew (Israel)",
-        "34. sw | Swahili (East Africa)","35. am | Amharic (Ethiopia)","36. af | Afrikaans (S.Africa)",
-        "37. ta | Tamil (India/Sri Lanka)","38. te | Telugu (India)","39. mr | Marathi (India)",
-        "40. my | Burmese (Myanmar)","41. km | Khmer (Cambodia)","42. ne | Nepali",
-        "43. lo | Lao (Laos)","44. gu | Gujarati (India)","45. kn | Kannada (India)",
-        "46. ml | Malayalam (India)","47. pa | Punjabi (India/Pakistan)","48. no | Norwegian",
-        "49. da | Danish","50. fi | Finnish","51. sk | Slovak","52. bg | Bulgarian",
-        "53. hr | Croatian","54. sr | Serbian","55. lt | Lithuanian","56. lv | Latvian",
-        "57. et | Estonian","58. az | Azerbaijani","59. ka | Georgian","60. be | Belarusian",
-        "61. bs | Bosnian","62. mk | Macedonian","63. sq | Albanian","64. fr-CA | French (Canada)",
-        "65. es-US | Spanish (US)","66. sr-Latn | Serbian (Latin)","67. ca | Catalan",
-        "68. eu | Basque","69. gl | Galician","70. zh-CN | Chinese (Mainland)"
-      ],
-      "asia30": [
-        "1. hi | Hindi (India)","2. id | Indonesian","3. ja | Japanese","4. ko | Korean",
-        "5. vi | Vietnamese","6. th | Thai","7. fil | Filipino","8. ms | Malay",
-        "9. zh-TW | Chinese (Taiwan)","10. zh-HK | Chinese (Hong Kong)","11. ur | Urdu (Pakistan)",
-        "12. bn | Bengali (Bangladesh)","13. fa | Persian (Iran)","14. iw | Hebrew (Israel)",
-        "15. ar | Arabic (Middle East)","16. ta | Tamil (India/Sri Lanka)","17. te | Telugu (India)",
-        "18. mr | Marathi (India)","19. my | Burmese (Myanmar)","20. km | Khmer (Cambodia)",
-        "21. ne | Nepali","22. lo | Lao (Laos)","23. gu | Gujarati (India)",
-        "24. kn | Kannada (India)","25. ml | Malayalam (India)","26. pa | Punjabi (India/Pakistan)",
-        "27. az | Azerbaijani","28. ka | Georgian","29. en | English","30. ru | Russian"
-      ],
-      "europe30": [
-        "1. ru | Russian","2. de | German","3. fr | French","4. tr | Turkish",
-        "5. it | Italian","6. es | Spanish (Spain)","7. pl | Polish","8. uk | Ukrainian",
-        "9. nl | Dutch","10. sv | Swedish","11. ro | Romanian","12. cs | Czech",
-        "13. hu | Hungarian","14. el | Greek","15. pt-PT | Portuguese (Portugal)",
-        "16. no | Norwegian","17. da | Danish","18. fi | Finnish","19. sk | Slovak",
-        "20. bg | Bulgarian","21. hr | Croatian","22. sr | Serbian","23. lt | Lithuanian",
-        "24. lv | Latvian","25. et | Estonian","26. be | Belarusian","27. bs | Bosnian",
-        "28. mk | Macedonian","29. sq | Albanian","30. ka | Georgian"
-      ],
-      "africa30": [
-        "1. ar | Arabic (Egypt/N.Africa)","2. en | English (Nigeria/Ghana/Kenya/S.Africa)",
-        "3. fr | French (W/Central Africa)","4. sw | Swahili (Kenya/Tanzania)",
-        "5. am | Amharic (Ethiopia)","6. af | Afrikaans (S.Africa)","7. pt | Portuguese (Angola/Mozambique)",
-        "8. hi | Hindi (India)","9. id | Indonesian","10. ja | Japanese","11. ko | Korean",
-        "12. vi | Vietnamese","13. th | Thai","14. fil | Filipino","15. ms | Malay",
-        "16. zh-TW | Chinese (Taiwan)","17. zh-HK | Chinese (Hong Kong)","18. ur | Urdu (Pakistan)",
-        "19. bn | Bengali (Bangladesh)","20. fa | Persian (Iran)","21. iw | Hebrew (Israel)",
-        "22. ru | Russian","23. de | German","24. tr | Turkish","25. it | Italian",
-        "26. es | Spanish","27. pl | Polish","28. nl | Dutch","29. uk | Ukrainian",
-        "30. sv | Swedish"
-      ],
-      "america30": [
-        "1. en | English (US/Canada)","2. es-419 | Spanish (Latin America)","3. pt | Portuguese (Brazil)",
-        "4. es | Spanish","5. es-US | Spanish (US)","6. fr-CA | French (Canada)",
-        "7. hi | Hindi (India)","8. id | Indonesian","9. ja | Japanese","10. ko | Korean",
-        "11. vi | Vietnamese","12. th | Thai","13. fil | Filipino","14. ms | Malay",
-        "15. zh-TW | Chinese (Taiwan)","16. zh-HK | Chinese (Hong Kong)","17. ur | Urdu (Pakistan)",
-        "18. bn | Bengali (Bangladesh)","19. fa | Persian (Iran)","20. iw | Hebrew (Israel)",
-        "21. ar | Arabic","22. ru | Russian","23. de | German","24. tr | Turkish",
-        "25. fr | French","26. it | Italian","27. nl | Dutch","28. pl | Polish",
-        "29. uk | Ukrainian","30. sv | Swedish"
-      ],
-      "oceania30": [
-        "1. en | English (Australia/NZ/Pacific)","2. fil | Filipino (Pacific)",
-        "3. hi | Hindi (India)","4. id | Indonesian","5. ja | Japanese","6. ko | Korean",
-        "7. vi | Vietnamese","8. th | Thai","9. ms | Malay","10. zh-TW | Chinese (Taiwan)",
-        "11. zh-HK | Chinese (Hong Kong)","12. ur | Urdu (Pakistan)","13. bn | Bengali (Bangladesh)",
-        "14. fa | Persian (Iran)","15. iw | Hebrew (Israel)","16. ar | Arabic",
-        "17. ru | Russian","18. de | German","19. tr | Turkish","20. fr | French",
-        "21. it | Italian","22. es | Spanish","23. nl | Dutch","24. pl | Polish",
-        "25. uk | Ukrainian","26. sv | Swedish","27. ro | Romanian","28. cs | Czech",
-        "29. hu | Hungarian","30. el | Greek"
-      ]
-    };
-    PLAN_COUNTRY_LISTS["global50"] = PLAN_COUNTRY_LISTS["global70"].slice(0, 50);
-
-    var activePlan = window.humateckPaymentSubscriptionPlan ||
-      (function(){ try{ return localStorage.getItem("humateckSelectedPlan") || ""; }catch(e){ return ""; } })();
-    var planList = PLAN_COUNTRY_LISTS[activePlan] || PLAN_COUNTRY_LISTS["global70"];
-    var countryBlock = ["Country Code / Country Name Mapping Table", ""].concat(planList).join("
-");
+    var countryBlock = [
+      "Country Code / Country Name Mapping Table",
+      "",
+      "1. en | English",
+      "2. es | Spanish",
+      "3. es-419 | Spanish (Latin America)",
+      "4. es-US | Spanish (United States)",
+      "5. pt | Portuguese",
+      "6. pt-PT | Portuguese (Portugal)",
+      "7. fr | French",
+      "8. fr-CA | French (Canada)",
+      "9. de | German",
+      "10. ja | Japanese",
+      "11. ko | Korean",
+      "12. zh-CN | Chinese (China)",
+      "13. zh-TW | Chinese (Taiwan)",
+      "14. zh-HK | Chinese (Hong Kong)",
+      "15. hi | Hindi",
+      "16. id | Indonesian",
+      "17. ar | Arabic",
+      "18. ru | Russian",
+      "19. it | Italian",
+      "20. tr | Turkish",
+      "21. vi | Vietnamese",
+      "22. th | Thai",
+      "23. fil | Filipino",
+      "24. ms | Malay",
+      "25. nl | Dutch",
+      "26. pl | Polish",
+      "27. uk | Ukrainian",
+      "28. sv | Swedish",
+      "29. no | Norwegian",
+      "30. da | Danish",
+      "31. fi | Finnish",
+      "32. el | Greek",
+      "33. ro | Romanian",
+      "34. hu | Hungarian",
+      "35. cs | Czech",
+      "36. sk | Slovak",
+      "37. bg | Bulgarian",
+      "38. hr | Croatian",
+      "39. sr | Serbian",
+      "40. sr-Latn | Serbian (Latin)",
+      "41. sq | Albanian",
+      "42. mk | Macedonian",
+      "43. et | Estonian",
+      "44. lv | Latvian",
+      "45. lt | Lithuanian",
+      "46. iw | Hebrew",
+      "47. fa | Persian",
+      "48. ur | Urdu",
+      "49. bn | Bengali",
+      "50. ta | Tamil",
+      "51. te | Telugu",
+      "52. mr | Marathi",
+      "53. gu | Gujarati",
+      "54. kn | Kannada",
+      "55. ml | Malayalam",
+      "56. pa | Punjabi",
+      "57. ne | Nepali",
+      "58. my | Burmese",
+      "59. km | Khmer",
+      "60. lo | Lao",
+      "61. am | Amharic",
+      "62. sw | Swahili",
+      "63. af | Afrikaans",
+      "64. az | Azerbaijani",
+      "65. be | Belarusian",
+      "66. bs | Bosnian",
+      "67. ca | Catalan",
+      "68. eu | Basque",
+      "69. gl | Galician",
+      "70. ka | Georgian"
+    ].slice(0, activeCount + 2).join("\n");
 
     var prompt =
 `Hello Gemini!
@@ -1718,7 +1650,7 @@ Without any explanation, output only the translated registration text.`;
 
 
 
-<script src="../youtube-register.js"></script>
+<script src="youtube-register.js"></script>
 
 
 <div id="nativeCodeModal" class="nativeCodeModal" aria-hidden="true">
@@ -1944,98 +1876,4 @@ Without any explanation, output only the translated registration text.`;
 })();
 </script>
 
-
-
-
-<script>
-/* 플랜 만료일 카운트다운 */
-(function(){
-  var _expiryTime = null;
-  var _cdTimer = null;
-
-  function pad(n){ return String(n).padStart(2,'0'); }
-
-  function startCountdown(expiryDate, planName){
-    _expiryTime = new Date(expiryDate).getTime();
-    if(isNaN(_expiryTime)){ return; }
-
-    var box = document.getElementById('planExpiryBox');
-    var nameEl = document.getElementById('expiryPlanName');
-    var dateEl = document.getElementById('expiryDateText');
-    if(!box) return;
-    box.classList.add('show');
-    if(nameEl && planName) nameEl.textContent = planName;
-    if(dateEl){
-      var d = new Date(_expiryTime);
-      dateEl.textContent = '만료일시: ' + d.getFullYear() + '.' +
-        pad(d.getMonth()+1) + '.' + pad(d.getDate()) + ' ' +
-        pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
-    }
-
-    if(_cdTimer) clearInterval(_cdTimer);
-    function tick(){
-      var now = Date.now();
-      var diff = _expiryTime - now;
-      var dEl = document.getElementById('cdDays');
-      var hEl = document.getElementById('cdHours');
-      var mEl = document.getElementById('cdMins');
-      var sEl = document.getElementById('cdSecs');
-      if(!dEl) return;
-      if(diff <= 0){
-        dEl.textContent = hEl.textContent = mEl.textContent = sEl.textContent = '00';
-        box.classList.add('expirySoon');
-        clearInterval(_cdTimer);
-        return;
-      }
-      var days  = Math.floor(diff / 86400000);
-      var hours = Math.floor((diff % 86400000) / 3600000);
-      var mins  = Math.floor((diff % 3600000) / 60000);
-      var secs  = Math.floor((diff % 60000) / 1000);
-      dEl.textContent = pad(days);
-      hEl.textContent = pad(hours);
-      mEl.textContent = pad(mins);
-      sEl.textContent = pad(secs);
-      if(days < 3) box.classList.add('expirySoon');
-    }
-    tick();
-    _cdTimer = setInterval(tick, 1000);
-  }
-
-  // check-subscription 응답에서 만료일 추출
-  var _origLoad = window._humateckLoadSubscription;
-  var PLAN_NAMES_KO = {
-    asia30:'아시아 플랜', europe30:'유럽 플랜', africa30:'아프리카 플랜',
-    america30:'아메리카 플랜', oceania30:'오세아니아 플랜',
-    global50:'글로벌 50개국', global70:'글로벌 70개국'
-  };
-  var PLAN_NAMES_EN = {
-    asia30:'Asia Plan', europe30:'Europe Plan', africa30:'Africa Plan',
-    america30:'Americas Plan', oceania30:'Oceania Plan',
-    global50:'Global 50 Countries', global70:'Global 70 Countries'
-  };
-  var PNAMES = (document.documentElement.lang === 'ko') ? PLAN_NAMES_KO : PLAN_NAMES_EN;
-
-  // check-subscription fetch 후 만료일 처리
-  var _origFetch = window.fetch;
-  window.fetch = function(url, opts){
-    var p = _origFetch.apply(this, arguments);
-    if(typeof url === 'string' && url.indexOf('check-subscription') !== -1){
-      p.then(function(res){
-        return res.clone().json().catch(function(){ return {}; });
-      }).then(function(data){
-        if(!data) return;
-        // 만료일 필드: expires_at, end_date, valid_until, current_period_end, expiry_date
-        var expiry = data.expires_at || data.end_date || data.valid_until ||
-                     data.current_period_end || data.expiry_date || data.expiry || null;
-        var planKey = data.plan || data.plan_type || data.subscription_plan || '';
-        var planName = PNAMES[planKey] || planKey;
-        if(expiry){ startCountdown(expiry, planName); }
-      }).catch(function(){});
-    }
-    return p;
-  };
-
-  window._humateckStartCountdown = startCountdown;
-})();
-</script>
 </body></html>
