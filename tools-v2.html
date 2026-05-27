@@ -1551,7 +1551,7 @@ Without any explanation, output only the translated registration text.`;
 (function(){
   function $(id){ return document.getElementById(id); }
 
-  var YOUTUBE_SCOPE = "https://www.googleapis.com/auth/youtube.force-ssl";
+var YOUTUBE_SCOPE = "https://www.googleapis.com/auth/youtube.force-ssl https://www.googleapis.com/auth/youtube.readonly";
   var tokenClient = null;
 
   function setAuthStatus(text, type){
