@@ -287,18 +287,58 @@ header{display:flex;align-items:center;justify-content:space-between;padding:.9r
         if(!post || post.stickied) return;
         var title = post.title || '';
         var score = post.score || 0;
-        var thumb = post.thumbnail || '';
-        // thumbnail 유효성 체크
-        if(thumb === 'self' || thumb === 'default' || thumb === 'nsfw' || thumb === 'image' || thumb === '') thumb = '';
-        // 미리보기 이미지 (더 큰 이미지)
-        var previewImg = '';
+
+        // ── 이미지 추출 (우선순위대로) ──────────────
+        var img = '';
+        var allImgs = []; // 모달용 여러 장
+
+        // 1순위: preview 이미지 (해상도별)
         try{
           if(post.preview && post.preview.images && post.preview.images[0]){
-            var src_img = post.preview.images[0].source;
-            if(src_img && src_img.url) previewImg = src_img.url.replace(/&amp;/g,'&');
+            var pimg = post.preview.images[0];
+            // 가장 큰 해상도 선택
+            var src_url = pimg.source && pimg.source.url
+              ? pimg.source.url.replace(/&amp;/g,'&') : '';
+            if(src_url) img = src_url;
+            // 중간 해상도들도 수집 (모달용)
+            if(pimg.resolutions){
+              pimg.resolutions.forEach(function(res){
+                if(res.url) allImgs.push(res.url.replace(/&amp;/g,'&'));
+              });
+            }
+            if(src_url) allImgs.push(src_url);
           }
         }catch(e){}
-        var img = previewImg || (thumb.startsWith('http') ? thumb : '');
+
+        // 2순위: 갤러리 이미지
+        try{
+          if(!img && post.media_metadata){
+            Object.values(post.media_metadata).forEach(function(meta){
+              if(meta.s && meta.s.u){
+                var u = meta.s.u.replace(/&amp;/g,'&');
+                if(!img) img = u;
+                allImgs.push(u);
+              }
+            });
+          }
+        }catch(e){}
+
+        // 3순위: thumbnail (작지만 없는 것보다 나음)
+        try{
+          if(!img){
+            var thumb = post.thumbnail||'';
+            if(thumb.startsWith('http')) img = thumb;
+          }
+        }catch(e){}
+
+        // 4순위: url_overridden_by_dest (직접 이미지 링크)
+        try{
+          if(!img){
+            var direct = post.url_overridden_by_dest||post.url||'';
+            if(direct.match(/\.(jpg|jpeg|png|webp|gif)(\?|$)/i)) img = direct;
+          }
+        }catch(e){}
+
         var postUrl = 'https://reddit.com' + (post.permalink||'');
         var kw = extractKeyword(title);
         items.push({
@@ -307,8 +347,10 @@ header{display:flex;align-items:center;justify-content:space-between;padding:.9r
           sub: score.toLocaleString() + ' upvotes · ' + (post.num_comments||0) + ' comments',
           score: score,
           img: img,
+          allImgs: allImgs.filter(function(u){return u && u.startsWith('http');}),
           url: postUrl,
-          kw: kw
+          kw: kw,
+          postImg: img // 원본 보존
         });
       });
       return items;
@@ -462,20 +504,31 @@ header{display:flex;align-items:center;justify-content:space-between;padding:.9r
     if(!kw && curIdx >= 0 && rows[curIdx]) kw = rows[curIdx].kw;
     if(!kw) return;
     var grid = document.getElementById('igrid');
-    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:1.5rem"><div class="spin"></div></div>';
+    var row = rows[curIdx];
 
+    // Reddit 원본 이미지가 있으면 우선 표시
     var imgs = [];
-    var terms = [kw, kw+' product', kw+' gadget', kw+' buy online', kw+' review', kw+' unboxing'];
-    terms.forEach(function(term, i){
-      imgs.push('https://source.unsplash.com/160x160/?'+encodeURIComponent(term.replace(/\s+/g,','))+'&sig='+(Date.now()+i));
-    });
-    // 추가: Picsum (안정적 이미지)
-    for(var i=imgs.length; i<8; i++){
-      imgs.push('https://picsum.photos/seed/'+encodeURIComponent(kw+i)+'/160/160');
+    if(row && row.allImgs && row.allImgs.length){
+      imgs = row.allImgs.slice(0, 8);
+    }
+    // 원본 이미지도 추가
+    if(row && row.postImg && imgs.indexOf(row.postImg) < 0){
+      imgs.unshift(row.postImg);
+    }
+
+    if(imgs.length === 0){
+      // 이미지 없으면 안내만
+      grid.innerHTML =
+        '<div style="grid-column:1/-1;text-align:center;padding:1.5rem;color:var(--muted);font-size:13px;line-height:1.8">'+
+        '이 게시물에 이미지가 없습니다.<br>'+
+        '<a href="https://images.google.com/search?q='+encodeURIComponent(kw||'')+'&tbm=isch" target="_blank" style="color:var(--blue)">Google 이미지에서 검색</a>하여'+
+        '<br>원하는 이미지 위 우클릭 → 이미지 주소 복사 → 위 입력란 붙여넣기'+
+        '</div>';
+      return;
     }
 
     grid.innerHTML = '';
-    imgs.slice(0,8).forEach(function(url){
+    imgs.forEach(function(url){
       var img = document.createElement('img');
       img.src = url;
       img.loading = 'lazy';
@@ -489,9 +542,10 @@ header{display:flex;align-items:center;justify-content:space-between;padding:.9r
       grid.appendChild(img);
     });
 
+    // Google 이미지 링크 안내
     var note = document.createElement('div');
     note.style.cssText = 'grid-column:1/-1;font-size:11px;color:var(--muted);padding:.3rem 0;line-height:1.7';
-    note.innerHTML = '💡 정확한 제품 이미지: <a href="https://images.google.com/search?q='+encodeURIComponent(kw||'')+'&tbm=isch" target="_blank" style="color:var(--blue)">Google 이미지</a> → 우클릭 → 이미지 주소 복사 → 위 입력란 붙여넣기';
+    note.innerHTML = '💡 더 많은 이미지: <a href="https://images.google.com/search?q='+encodeURIComponent(kw||'')+'&tbm=isch" target="_blank" style="color:var(--blue)">Google 이미지 검색</a> → 우클릭 → 이미지 주소 복사 → 위 입력란 붙여넣기';
     grid.appendChild(note);
   }
 
