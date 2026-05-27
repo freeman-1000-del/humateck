@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Global YouTube Video Mass Distribution Plan</title>
+<title>Global Video Mass Distribution Plan</title>
 
 
 <style>
@@ -55,37 +55,8 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 .codebox{white-space:pre-wrap;background:#080f18;border:1px solid #334353;border-radius:12px;padding:14px;color:#e9e1d0;line-height:1.6;font-size:14px}
 @media(max-width:980px){.grid2,.order,.plans{grid-template-columns:1fr}.title{font-size:32px}.wrap{max-width:calc(100vw - 28px)}}
 </style>
-<style>
-/* =======================================================
-   [자체구현] 표 바깥 상단에 차분하게 안착하는 활성 플랜 바 
-   ======================================================= */
-.current-plan-status-bar {
-  max-width: 900px;
-  margin: 0 auto 30px auto; /* 아래쪽 표와의 간격을 30px 띄워 완전히 분리 */
-  padding: 14px 20px;
-  background-color: #f4f7f6; /* 밝고 평온한 톤 */
-  border-left: 4px solid #0076ff; /* 메인 포인트 컬러 */
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  font-size: 0.95rem;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-}
 
-.current-plan-status-bar .badge-label {
-  font-weight: bold;
-  color: #555;
-  margin-right: 8px;
-}
 
-.current-plan-status-bar .active-plan-name {
-  font-weight: 600;
-  color: #0076ff;
-  background-color: #e6f2ff;
-  padding: 3px 10px;
-  border-radius: 4px;
-}
-</style>   
 <style>
 
 .top-left-tools{
@@ -170,9 +141,8 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
   position:relative;
 }
 .currentPlanBadge{
-  visibility:hidden;       /* display:none 대신 → 공간은 유지 */
+  visibility:hidden;
   display:inline-flex;
-  /* position:absolute 제거 */
   padding:5px 10px;
   border:1px solid rgba(255,217,90,.8);
   border-radius:999px;
@@ -180,12 +150,12 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
   color:#ffd95a;
   font-size:13px;
   font-weight:900;
-  margin-bottom:10px;      /* h2와 간격 */
+  margin-bottom:10px;
 }
 .plan.blinkActive .currentPlanBadge,
 .plan.current .currentPlanBadge{
-  visibility:visible;      /* display:inline-flex 대신 */
-}
+  visibility:visible;
+}.currentPlanBadge{
 </style>
 
 <style>
@@ -439,19 +409,19 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 </head>
 <body>
 
-<div class="wrap"><header class="top"><a href="index.html"><img class="logo" src="FINAL_LOGO01.png" alt="Humateck"></a></header>
-<div class="top-left-tools"><a class="miniNavButton" href="index.html">Back to First Page</a><a class="miniNavButton" href="order.html">View Order Page</a></div>
-<section class="card"><h1>Global YouTube Video Mass Distribution Plan</h1><p style="color:#e6e0d4;font-size:15px;margin:8px 0 0;"></p></section>
+<div class="wrap"><header class="top"><a href="../index.html"><img class="logo" src="../FINAL_LOGO01.png" alt="Humateck"></a></header>
+<div class="top-left-tools"><a class="miniNavButton" href="../index.html">첫페이지 가기</a><a class="miniNavButton" href="order.html">주문페이지 보기</a></div>
+<section class="card"><h1>글로벌 유튜브 영상 대량 배포 플랜</h1><p style="color:#e6e0d4;font-size:15px;margin:8px 0 0;"></p></section>
 <section class="plans">
-<article class="plan" data-subscription-plan="asia30"><div class="currentPlanBadge">Currently Active</div><h2>Asia Plan</h2><div class="price">USD 22<span style="font-size:16px;font-weight:400;color:#aaa;"> / mo</span></div><p>Korea, Japan, China, Vietnam, India, Thailand, Indonesia, Malaysia, Philippines and more — 30 Asian countries, global mass distribution.</p><a class="btn" href="FIVERR_LINK_ASIA30" target="_blank">Subscribe on Fiverr</a></article>
-<article class="plan" data-subscription-plan="europe30"><div class="currentPlanBadge">Currently Active</div><h2>Europe Plan</h2><div class="price">USD 22<span style="font-size:16px;font-weight:400;color:#aaa;"> / mo</span></div><p>UK, France, Germany, Italy, Spain, Netherlands, Poland, Portugal, Sweden and more — 30 European countries, global mass distribution.</p><a class="btn" href="FIVERR_LINK_EUROPE30" target="_blank">Subscribe on Fiverr</a></article>
-<article class="plan" data-subscription-plan="africa30"><div class="currentPlanBadge">Currently Active</div><h2>Africa Plan</h2><div class="price">USD 22<span style="font-size:16px;font-weight:400;color:#aaa;"> / mo</span></div><p>Egypt, South Africa, Kenya, Nigeria, Ethiopia, Ghana, Tanzania, Morocco, Algeria and more — 30 African countries, global mass distribution.</p><a class="btn" href="FIVERR_LINK_AFRICA30" target="_blank">Subscribe on Fiverr</a></article>
-<article class="plan" data-subscription-plan="america30"><div class="currentPlanBadge">Currently Active</div><h2>Americas Plan</h2><div class="price">USD 22<span style="font-size:16px;font-weight:400;color:#aaa;"> / mo</span></div><p>USA, Canada, Mexico, Brazil, Argentina, Colombia, Peru, Chile, Ecuador and more — 30 countries across the Americas, global mass distribution.</p><a class="btn" href="FIVERR_LINK_AMERICA30" target="_blank">Subscribe on Fiverr</a></article>
-<article class="plan" data-subscription-plan="oceania30"><div class="currentPlanBadge">Currently Active</div><h2>Oceania Plan</h2><div class="price">USD 22<span style="font-size:16px;font-weight:400;color:#aaa;"> / mo</span></div><p>Australia, New Zealand, Fiji, Papua New Guinea, Samoa, Tonga, Solomon Islands and more — Full Oceania + supplemental global 30 countries.</p><a class="btn" href="FIVERR_LINK_OCEANIA30" target="_blank">Subscribe on Fiverr</a></article>
-<article class="plan" data-subscription-plan="global50"><div class="currentPlanBadge">Currently Active</div><h2>Global 50 Countries</h2><div class="price">USD 22<span style="font-size:16px;font-weight:400;color:#aaa;"> / mo</span></div><p>Top 50 countries worldwide by importance — covers key markets across all 5 continents in one mass distribution.</p><a class="btn" href="FIVERR_LINK_GLOBAL50" target="_blank">Subscribe on Fiverr</a></article>
-<article class="plan" data-subscription-plan="global70"><div class="currentPlanBadge">Currently Active</div><h2>Global 70 Countries</h2><div class="price">USD 29<span style="font-size:16px;font-weight:400;color:#aaa;"> / mo</span></div><p>Full 70-country global coverage — the most comprehensive plan available.</p><a class="btn" href="FIVERR_LINK_GLOBAL70" target="_blank">Subscribe on Fiverr</a></article>
-<article class="plan" data-subscription-plan="annual70"><div class="currentPlanBadge">Currently Active</div><h2>Global 70 Annual</h2><div class="price">USD 259<span style="font-size:16px;font-weight:400;color:#aaa;"> / yr</span></div><p>Full 70-country coverage — annual plan saves approx. 27% vs monthly.</p><a class="btn" href="FIVERR_LINK_ANNUAL70" target="_blank">Subscribe on Fiverr</a></article>
-</section></div><div class="account"><a href="#" title="Google Official Authorization">G</a><a href="#" title="Apple Official Authorization">●</a><a href="#" title="Email Official Authorization">@</a></div>
+<article class="plan" data-subscription-plan="asia30"><div class="currentPlanBadge">현재 활성</div><h2>아시아 플랜</h2><div class="price">₩29,000<span style="font-size:16px;font-weight:400;color:#aaa;"> / 월</span></div><p>대한민국·일본·중국·베트남·인도·태국·인도네시아·말레이시아·필리핀 등 아시아 30개국 — 글로벌 유튜브 영상 대량 배포</p><a class="btn" href="KMONG_LINK_ASIA30" target="_blank">크몽에서 구독하기</a></article>
+<article class="plan" data-subscription-plan="europe30"><div class="currentPlanBadge">현재 활성</div><h2>유럽 플랜</h2><div class="price">₩29,000<span style="font-size:16px;font-weight:400;color:#aaa;"> / 월</span></div><p>영국·프랑스·독일·이탈리아·스페인·네덜란드·폴란드·포르투갈·스웨덴 등 유럽 30개국 — 글로벌 유튜브 영상 대량 배포</p><a class="btn" href="KMONG_LINK_EUROPE30" target="_blank">크몽에서 구독하기</a></article>
+<article class="plan" data-subscription-plan="africa30"><div class="currentPlanBadge">현재 활성</div><h2>아프리카 플랜</h2><div class="price">₩29,000<span style="font-size:16px;font-weight:400;color:#aaa;"> / 월</span></div><p>이집트·남아공·케냐·나이지리아·에티오피아·가나·탄자니아·모로코·알제리 등 아프리카 30개국 — 글로벌 유튜브 영상 대량 배포</p><a class="btn" href="KMONG_LINK_AFRICA30" target="_blank">크몽에서 구독하기</a></article>
+<article class="plan" data-subscription-plan="america30"><div class="currentPlanBadge">현재 활성</div><h2>아메리카 플랜</h2><div class="price">₩29,000<span style="font-size:16px;font-weight:400;color:#aaa;"> / 월</span></div><p>미국·캐나다·멕시코·브라질·아르헨티나·콜롬비아·페루·칠레·에콰도르 등 아메리카 30개국 — 글로벌 유튜브 영상 대량 배포</p><a class="btn" href="KMONG_LINK_AMERICA30" target="_blank">크몽에서 구독하기</a></article>
+<article class="plan" data-subscription-plan="oceania30"><div class="currentPlanBadge">현재 활성</div><h2>오세아니아 플랜</h2><div class="price">₩29,000<span style="font-size:16px;font-weight:400;color:#aaa;"> / 월</span></div><p>호주·뉴질랜드·피지·파푸아뉴기니·사모아·통가·솔로몬제도 등 오세아니아 전체 + 보완 글로벌 30개국</p><a class="btn" href="KMONG_LINK_OCEANIA30" target="_blank">크몽에서 구독하기</a></article>
+<article class="plan" data-subscription-plan="global50"><div class="currentPlanBadge">현재 활성</div><h2>글로벌 50개국</h2><div class="price">₩29,000<span style="font-size:16px;font-weight:400;color:#aaa;"> / 월</span></div><p>전 세계 중요도 순 50개국 — 5대 대륙 핵심 시장을 한 번에 커버하는 확장 배포 플랜</p><a class="btn" href="KMONG_LINK_GLOBAL50" target="_blank">크몽에서 구독하기</a></article>
+<article class="plan" data-subscription-plan="global70"><div class="currentPlanBadge">현재 활성</div><h2>글로벌 70개국</h2><div class="price">₩39,000<span style="font-size:16px;font-weight:400;color:#aaa;"> / 월</span></div><p>전 세계 중요도 순 70개국 전체 커버</p><a class="btn" href="KMONG_LINK_GLOBAL70" target="_blank">크몽에서 구독하기</a></article>
+<article class="plan" data-subscription-plan="annual70"><div class="currentPlanBadge">현재 활성</div><h2>글로벌 70개국 연간</h2><div class="price">₩340,000<span style="font-size:16px;font-weight:400;color:#aaa;"> / 년</span></div><p>전 세계 중요도 순 70개국 — 연간 구독으로 월 대비 약 27% 절약</p><a class="btn" href="KMONG_LINK_ANNUAL70" target="_blank">크몽에서 구독하기</a></article>
+</section></div><div class="account"><a href="#" title="Google 공식 인증">G</a><a href="#" title="Apple 공식 인증">●</a><a href="#" title="Email 공식 인증">@</a></div>
 
 <script>
 (function(){
