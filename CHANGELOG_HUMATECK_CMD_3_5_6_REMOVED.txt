@@ -1,1 +1,0 @@
-Removed Gemini Command 3, Command 5, and Command 6 from available order pages. No registration logic was changed.
