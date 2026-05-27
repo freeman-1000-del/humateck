@@ -7,12 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Pretendard:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --bg:#07080b;--s1:#0f1116;--s2:#161a22;--s3:#1d2230;
-  --border:#1e2535;--accent:#f5a623;--red:#e8534a;
-  --green:#2dd4a0;--blue:#5b9cf6;--purple:#9b7ff4;
-  --text:#d8dce8;--muted:#4e5668;
-}
+:root{--bg:#07080b;--s1:#0f1116;--s2:#161a22;--s3:#1d2230;--border:#1e2535;--accent:#f5a623;--green:#2dd4a0;--blue:#5b9cf6;--purple:#9b7ff4;--red:#e8534a;--text:#d8dce8;--muted:#4e5668}
 body{font-family:'Pretendard',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 header{display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.8rem;border-bottom:1px solid var(--border);background:rgba(7,8,11,.97);position:sticky;top:0;z-index:100}
 .logo{display:flex;align-items:center;gap:10px}
@@ -22,27 +17,27 @@ header{display:flex;align-items:center;justify-content:space-between;padding:.9r
 .live{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--green);background:rgba(45,212,160,.1);border:1px solid rgba(45,212,160,.25);padding:4px 12px;border-radius:20px}
 .live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 1.4s infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-.region-bar{display:flex;overflow-x:auto;border-bottom:1px solid var(--border);background:var(--s1);padding:0 1.5rem;scrollbar-width:none}
-.region-bar::-webkit-scrollbar{display:none}
-.rtab{padding:10px 16px;font-size:13px;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);transition:all .18s;white-space:nowrap;flex-shrink:0}
+.rbar{display:flex;overflow-x:auto;border-bottom:1px solid var(--border);background:var(--s1);padding:0 1.5rem;scrollbar-width:none}
+.rbar::-webkit-scrollbar{display:none}
+.rtab{padding:10px 16px;font-size:13px;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);transition:all .18s;white-space:nowrap;flex-shrink:0;user-select:none}
 .rtab:hover{color:var(--text)}
-.rtab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.rtab.on{color:var(--accent);border-bottom-color:var(--accent)}
 .wrap{max-width:1200px;margin:0 auto;padding:1.5rem}
-.search-row{display:flex;gap:8px;margin-bottom:1rem}
-.search-input{flex:1;background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:11px 16px;font-size:15px;font-family:inherit;color:var(--text);outline:none}
-.search-input:focus{border-color:var(--accent)}
-.search-input::placeholder{color:var(--muted)}
-.btn-run{background:var(--accent);border:none;color:#000;padding:11px 24px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}
-.btn-run:hover{opacity:.85}
-.notice{background:rgba(91,156,246,.07);border:1px solid rgba(91,156,246,.2);border-radius:10px;padding:11px 14px;font-size:13px;color:var(--blue);margin-bottom:1rem;line-height:1.7}
-.status-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
-.status-txt{font-size:13px;color:var(--muted)}
-.status-count{font-family:'Space Mono',monospace;font-size:13px;color:var(--accent)}
-.progress-wrap{margin-bottom:1rem;display:none}
-.progress-txt{font-size:12px;color:var(--muted);margin-bottom:5px}
-.progress-bar{height:3px;background:var(--s2);border-radius:2px;overflow:hidden}
-.progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .4s;width:0%}
-.table-wrap{background:var(--s1);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.srow{display:flex;gap:8px;margin-bottom:1rem}
+.sinput{flex:1;background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:11px 16px;font-size:15px;font-family:inherit;color:var(--text);outline:none}
+.sinput:focus{border-color:var(--accent)}
+.sinput::placeholder{color:var(--muted)}
+.btnrun{background:var(--accent);border:none;color:#000;padding:11px 24px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}
+.btnrun:hover{opacity:.85}
+.notice{background:rgba(91,156,246,.07);border:1px solid rgba(91,156,246,.2);border-radius:10px;padding:11px 14px;font-size:13px;color:var(--blue);margin-bottom:1rem;line-height:1.7;display:none}
+.pbar-wrap{margin-bottom:1rem;display:none}
+.pbar-txt{font-size:12px;color:var(--muted);margin-bottom:5px}
+.pbar{height:3px;background:var(--s2);border-radius:2px;overflow:hidden}
+.pbar-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .4s;width:0}
+.sbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.stxt{font-size:13px;color:var(--muted)}
+.scnt{font-family:'Space Mono',monospace;font-size:13px;color:var(--accent)}
+.twrap{background:var(--s1);border:1px solid var(--border);border-radius:14px;overflow:hidden}
 .tbl{width:100%;border-collapse:collapse}
 .tbl thead tr{background:var(--s2);border-bottom:1px solid var(--border)}
 .tbl th{padding:12px 16px;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:500;text-align:left;white-space:nowrap}
@@ -50,145 +45,122 @@ header{display:flex;align-items:center;justify-content:space-between;padding:.9r
 .tbl tbody tr:last-child{border-bottom:none}
 .tbl tbody tr:hover{background:var(--s2)}
 .tbl td{padding:12px 16px;font-size:14px;vertical-align:middle}
-.rank{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);text-align:center}
-.rank.top{color:var(--accent);font-weight:700}
-
-/* 이미지 셀 */
-.img-cell{width:80px;height:60px;border-radius:8px;overflow:hidden;background:var(--s3);cursor:pointer;position:relative;flex-shrink:0;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;transition:border-color .18s}
-.img-cell:hover{border-color:var(--accent)}
-.img-cell img{width:100%;height:100%;object-fit:cover}
-.img-cell-ph{font-size:22px;color:var(--muted)}
-.img-cell-hint{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.6);color:#fff;font-size:9px;text-align:center;padding:2px 0;opacity:0;transition:opacity .15s}
-.img-cell:hover .img-cell-hint{opacity:1}
-
-/* 키워드 */
-.kw-main{font-size:15px;font-weight:500;margin-bottom:4px}
-.kw-bar-wrap{width:100px;height:3px;background:var(--s3);border-radius:2px}
-.kw-bar-fill{height:3px;background:var(--accent);border-radius:2px}
-.kw-traffic{font-size:12px;color:var(--muted)}
-
-/* 배지 */
-.badge{font-size:10px;padding:2px 8px;border-radius:8px;font-weight:700}
-.badge-hot{background:rgba(255,71,87,.15);color:#ff4757;border:1px solid rgba(255,71,87,.3)}
-.badge-rising{background:rgba(45,212,160,.12);color:var(--green);border:1px solid rgba(45,212,160,.3)}
-.badge-new{background:rgba(91,156,246,.12);color:var(--blue);border:1px solid rgba(91,156,246,.3)}
-
-/* 링크 */
-.link-group{display:flex;gap:5px;flex-wrap:wrap}
-.lbtn{display:inline-flex;align-items:center;gap:3px;padding:5px 10px;border-radius:7px;font-size:12px;font-weight:500;text-decoration:none;border:1px solid var(--border);color:var(--muted);background:var(--s2);transition:all .15s;white-space:nowrap}
-.lbtn:hover{background:var(--s3)}
-.lbtn.g{border-color:rgba(91,156,246,.3);color:var(--blue)}
-.lbtn.g:hover{background:rgba(91,156,246,.08)}
-.lbtn.gi{border-color:rgba(45,212,160,.3);color:var(--green)}
-.lbtn.gi:hover{background:rgba(45,212,160,.08)}
-.lbtn.am{border-color:rgba(245,166,35,.3);color:var(--accent)}
-.lbtn.am:hover{background:rgba(245,166,35,.08)}
-.lbtn.yt{border-color:rgba(232,83,74,.3);color:#e8534a}
-.lbtn.yt:hover{background:rgba(232,83,74,.08)}
-.lbtn.sh{border-color:rgba(155,127,244,.3);color:var(--purple)}
-.lbtn.sh:hover{background:rgba(155,127,244,.08)}
-
-.skel{background:linear-gradient(90deg,var(--s2) 25%,var(--s3) 50%,var(--s2) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:7px}
-@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.rnk{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);text-align:center;min-width:30px}
+.rnk.top{color:var(--accent);font-weight:700}
+.icell{width:80px;height:60px;border-radius:8px;background:var(--s3);cursor:pointer;position:relative;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden;transition:border-color .18s;flex-shrink:0}
+.icell:hover{border-color:var(--accent)}
+.icell img{width:100%;height:100%;object-fit:cover}
+.icell-ph{font-size:22px;color:var(--muted)}
+.icell-hint{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.65);color:#fff;font-size:9px;text-align:center;padding:2px 0;opacity:0;transition:opacity .15s}
+.icell:hover .icell-hint{opacity:1}
+.kwmain{font-size:15px;font-weight:500;margin-bottom:5px;color:var(--text)}
+.kwbar{width:100px;height:3px;background:var(--s3);border-radius:2px;margin-bottom:4px}
+.kwbar-fill{height:3px;background:var(--accent);border-radius:2px}
+.kwtraffic{font-size:12px;color:var(--muted)}
+.bdg{font-size:10px;padding:2px 8px;border-radius:8px;font-weight:700}
+.bdg-hot{background:rgba(255,71,87,.15);color:#ff4757;border:1px solid rgba(255,71,87,.3)}
+.bdg-up{background:rgba(45,212,160,.12);color:var(--green);border:1px solid rgba(45,212,160,.3)}
+.bdg-new{background:rgba(91,156,246,.12);color:var(--blue);border:1px solid rgba(91,156,246,.3)}
+.lgrp{display:flex;gap:5px;flex-wrap:wrap}
+.lb{display:inline-flex;align-items:center;gap:3px;padding:5px 10px;border-radius:7px;font-size:12px;font-weight:500;text-decoration:none;border:1px solid var(--border);color:var(--muted);background:var(--s2);transition:all .15s;white-space:nowrap}
+.lb:hover{background:var(--s3)}
+.lb-g{border-color:rgba(91,156,246,.3);color:var(--blue)}
+.lb-g:hover{background:rgba(91,156,246,.08)}
+.lb-gi{border-color:rgba(45,212,160,.3);color:var(--green)}
+.lb-gi:hover{background:rgba(45,212,160,.08)}
+.lb-am{border-color:rgba(245,166,35,.3);color:var(--accent)}
+.lb-am:hover{background:rgba(245,166,35,.08)}
+.lb-yt{border-color:rgba(232,83,74,.3);color:var(--red)}
+.lb-yt:hover{background:rgba(232,83,74,.08)}
+.lb-sh{border-color:rgba(155,127,244,.3);color:var(--purple)}
+.lb-sh:hover{background:rgba(155,127,244,.08)}
+.sk{background:linear-gradient(90deg,var(--s2) 25%,var(--s3) 50%,var(--s2) 75%);background-size:200% 100%;animation:sh 1.5s infinite;border-radius:7px}
+@keyframes sh{0%{background-position:200% 0}100%{background-position:-200% 0}}
 .empty{text-align:center;padding:4rem;color:var(--muted)}
 .toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--s3);color:var(--text);padding:10px 20px;border-radius:8px;font-size:13px;z-index:9999;border:1px solid var(--border);white-space:nowrap}
-
-/* 이미지 선택 모달 */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:500;display:none;align-items:center;justify-content:center;padding:1rem}
-.overlay.open{display:flex}
-.modal{background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:1.5rem;max-width:640px;width:100%}
-.modal-title{font-size:15px;font-weight:600;color:var(--accent);margin-bottom:1rem}
-.modal-notice{font-size:12px;color:var(--muted);margin-bottom:1rem;line-height:1.6}
-.modal-input-row{display:flex;gap:8px;margin-bottom:1rem}
-.modal-input{flex:1;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;font-family:inherit;color:var(--text);outline:none}
-.modal-input:focus{border-color:var(--accent)}
-.btn-fetch-img{background:var(--blue);border:none;color:#fff;padding:9px 16px;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit;white-space:nowrap}
-.img-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1rem;min-height:80px}
-.img-grid img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px;cursor:pointer;border:2px solid transparent;transition:border-color .15s}
-.img-grid img:hover{border-color:var(--accent)}
-.img-grid img.sel{border-color:var(--accent);box-shadow:0 0 0 2px rgba(245,166,35,.3)}
-.modal-btns{display:flex;gap:8px}
-.btn-cancel{flex:1;background:none;border:1px solid var(--border);color:var(--muted);padding:9px;border-radius:8px;cursor:pointer;font-family:inherit;font-size:13px}
+.ovl{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:500;display:none;align-items:center;justify-content:center;padding:1rem}
+.ovl.open{display:flex}
+.mdl{background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:1.5rem;max-width:600px;width:100%}
+.mdl-title{font-size:15px;font-weight:600;color:var(--accent);margin-bottom:.8rem}
+.mdl-note{font-size:12px;color:var(--muted);margin-bottom:.8rem;line-height:1.6}
+.mdl-irow{display:flex;gap:8px;margin-bottom:.8rem}
+.mdl-input{flex:1;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;font-family:inherit;color:var(--text);outline:none}
+.mdl-input:focus{border-color:var(--accent)}
+.btn-auto{background:var(--blue);border:none;color:#fff;padding:9px 16px;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit;white-space:nowrap}
+.igrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1rem;min-height:80px}
+.igrid img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px;cursor:pointer;border:2px solid transparent;transition:border-color .15s}
+.igrid img:hover,.igrid img.sel{border-color:var(--accent)}
+.mdl-btns{display:flex;gap:8px}
+.btn-cls{flex:1;background:none;border:1px solid var(--border);color:var(--muted);padding:9px;border-radius:8px;cursor:pointer;font-family:inherit;font-size:13px}
 .btn-ok{flex:2;background:var(--accent);border:none;color:#000;padding:9px;border-radius:8px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700}
-.spinner{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+.spin{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin:1rem auto;display:block}
 @keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
 
-<!-- 이미지 선택 모달 -->
-<div class="overlay" id="imgOverlay">
-  <div class="modal">
-    <div class="modal-title" id="modalTitle">🖼 이미지 검색</div>
-    <div class="modal-notice">
-      아래 URL을 직접 붙여넣거나, Google 이미지에서 원하는 이미지 주소를 복사해서 입력하세요.<br>
-      또는 아래 자동검색 버튼으로 이미지를 불러올 수 있습니다.
+<!-- 이미지 모달 -->
+<div class="ovl" id="ovl">
+  <div class="mdl">
+    <div class="mdl-title" id="mdlTitle">이미지 선택</div>
+    <div class="mdl-note">자동검색 후 이미지를 클릭하거나, Google 이미지에서 URL 복사 후 입력하세요.</div>
+    <div class="mdl-irow">
+      <input class="mdl-input" id="mdlUrl" placeholder="이미지 URL 직접 입력...">
+      <button class="btn-auto" id="btnAuto">🔍 자동검색</button>
     </div>
-    <div class="modal-input-row">
-      <input class="modal-input" id="imgUrlInput" placeholder="이미지 URL 직접 입력...">
-      <button class="btn-fetch-img" onclick="autoFetchImgs()">🔍 자동검색</button>
+    <div class="igrid" id="igrid">
+      <div style="grid-column:1/-1;text-align:center;padding:1rem;color:var(--muted);font-size:13px">자동검색 버튼을 눌러주세요</div>
     </div>
-    <div class="img-grid" id="imgGrid">
-      <div style="grid-column:1/-1;text-align:center;padding:1rem;color:var(--muted);font-size:13px">
-        자동검색 버튼을 눌러 이미지를 불러오세요
-      </div>
-    </div>
-    <div class="modal-btns">
-      <button class="btn-cancel" onclick="closeModal()">취소</button>
-      <button class="btn-ok" onclick="applyImg()">✓ 적용</button>
+    <div class="mdl-btns">
+      <button class="btn-cls" id="btnCls">취소</button>
+      <button class="btn-ok" id="btnOk">✓ 적용</button>
     </div>
   </div>
 </div>
 
-<!-- HEADER -->
+<!-- 헤더 -->
 <header>
   <div class="logo">
     <div class="logo-mark">TPF</div>
     <div>
       <div class="logo-text">TREND PRODUCT FINDER</div>
-      <div class="logo-sub">Google Trends → Image Auto Search → Link Table</div>
+      <div class="logo-sub">Google Trends → Image → Link Table</div>
     </div>
   </div>
   <div class="live"><span class="live-dot"></span>LIVE</div>
 </header>
 
 <!-- 지역 탭 -->
-<div class="region-bar">
-  <div class="rtab active" onclick="setRegion(this,'US')">🇺🇸 미국</div>
-  <div class="rtab" onclick="setRegion(this,'KR')">🇰🇷 한국</div>
-  <div class="rtab" onclick="setRegion(this,'JP')">🇯🇵 일본</div>
-  <div class="rtab" onclick="setRegion(this,'GB')">🇬🇧 영국</div>
-  <div class="rtab" onclick="setRegion(this,'DE')">🇩🇪 독일</div>
-  <div class="rtab" onclick="setRegion(this,'FR')">🇫🇷 프랑스</div>
-  <div class="rtab" onclick="setRegion(this,'IN')">🇮🇳 인도</div>
-  <div class="rtab" onclick="setRegion(this,'BR')">🇧🇷 브라질</div>
-  <div class="rtab" onclick="setRegion(this,'AU')">🇦🇺 호주</div>
-  <div class="rtab" onclick="setRegion(this,'CA')">🇨🇦 캐나다</div>
-  <div class="rtab" onclick="setRegion(this,'MX')">🇲🇽 멕시코</div>
-  <div class="rtab" onclick="setRegion(this,'ID')">🇮🇩 인도네시아</div>
+<div class="rbar" id="rbar">
+  <div class="rtab on" data-geo="US">🇺🇸 미국</div>
+  <div class="rtab" data-geo="KR">🇰🇷 한국</div>
+  <div class="rtab" data-geo="JP">🇯🇵 일본</div>
+  <div class="rtab" data-geo="GB">🇬🇧 영국</div>
+  <div class="rtab" data-geo="DE">🇩🇪 독일</div>
+  <div class="rtab" data-geo="FR">🇫🇷 프랑스</div>
+  <div class="rtab" data-geo="IN">🇮🇳 인도</div>
+  <div class="rtab" data-geo="BR">🇧🇷 브라질</div>
+  <div class="rtab" data-geo="AU">🇦🇺 호주</div>
+  <div class="rtab" data-geo="CA">🇨🇦 캐나다</div>
+  <div class="rtab" data-geo="MX">🇲🇽 멕시코</div>
+  <div class="rtab" data-geo="ID">🇮🇩 인도네시아</div>
 </div>
 
 <div class="wrap">
-  <div class="search-row">
-    <input class="search-input" id="searchInput"
-      placeholder="키워드 직접 입력 (쉼표 구분, 비워두면 Google Trends 자동 수집)..."
-      onkeydown="if(event.key==='Enter')run()">
-    <button class="btn-run" onclick="run()">🔍 파인더 실행</button>
+  <div class="srow">
+    <input class="sinput" id="sinput" placeholder="키워드 직접 입력 (쉼표 구분) — 비워두면 Google Trends 자동 수집">
+    <button class="btnrun" id="btnRun">🔍 파인더 실행</button>
   </div>
-
-  <div class="notice" id="noticeBox" style="display:none"></div>
-
-  <div class="progress-wrap" id="progressWrap">
-    <div class="progress-txt" id="progressTxt">Google Trends 수집 중...</div>
-    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="notice" id="notice"></div>
+  <div class="pbar-wrap" id="pbarWrap">
+    <div class="pbar-txt" id="pbarTxt">수집 중...</div>
+    <div class="pbar"><div class="pbar-fill" id="pbarFill"></div></div>
   </div>
-
-  <div class="status-bar">
-    <div class="status-txt" id="statusTxt">지역을 선택하고 실행하세요</div>
-    <div class="status-count" id="statusCount"></div>
+  <div class="sbar">
+    <div class="stxt" id="stxt">지역을 선택하고 실행하세요</div>
+    <div class="scnt" id="scnt"></div>
   </div>
-
-  <div class="table-wrap">
+  <div class="twrap">
     <table class="tbl">
       <thead>
         <tr>
@@ -205,7 +177,7 @@ header{display:flex;align-items:center;justify-content:space-between;padding:.9r
           <div class="empty">
             <div style="font-size:40px;opacity:.2;margin-bottom:1rem">🌍</div>
             <div style="font-size:15px;color:var(--text);margin-bottom:6px">지역 선택 후 실행하세요</div>
-            <div style="font-size:13px">Google Trends 실시간 키워드 + 이미지 + 링크 테이블 자동 생성</div>
+            <div style="font-size:13px">Google Trends 실시간 키워드 + 이미지 + 링크 테이블</div>
           </div>
         </td></tr>
       </tbody>
@@ -214,260 +186,340 @@ header{display:flex;align-items:center;justify-content:space-between;padding:.9r
 </div>
 
 <script>
-var region='US', data=[], curIdx=-1, selImg=null;
+(function(){
+  var geo = 'US';
+  var rows = [];
+  var curIdx = -1;
+  var selUrl = '';
 
-// ── 지역 ─────────────────────────────────────────
-function setRegion(el,r){
-  region=r;
-  document.querySelectorAll('.rtab').forEach(function(b){b.classList.remove('active');});
-  el.classList.add('active');
-  run();
-}
-
-// ── 메인 실행 ─────────────────────────────────────
-async function run(){
-  var manual=document.getElementById('searchInput').value.trim();
-  data=[];
-  showNotice('');
-  showSkel();
-  setStatus('데이터 수집 중...','');
-  setProgress(true,0);
-
-  var keywords=[];
-  if(manual){
-    keywords=manual.split(',').map(function(k,i){
-      return{title:k.trim(),traffic:'직접입력',pct:100-i*3};
-    }).filter(function(k){return k.title;});
-  } else {
-    setProgress(true,10);
-    keywords=await fetchTrends();
-    if(!keywords.length){
-      showNotice('⚠️ Google Trends 자동 수집 실패. 키워드를 직접 입력하거나 잠시 후 다시 시도해주세요.');
-      showEmpty('Google Trends를 불러올 수 없습니다');
-      setProgress(false);
-      return;
-    }
-  }
-
-  setProgress(true,40);
-  setStatus('키워드 수집 완료, 이미지 검색 중...', keywords.length+'개');
-
-  // 데이터 구성 (이미지는 일단 빈값, 클릭 시 검색)
-  data=keywords.map(function(k,i){
-    return{rank:i+1,keyword:k.title,traffic:k.traffic,pct:k.pct||50,image:''};
+  // ── 이벤트 연결 ─────────────────────────────────
+  // 지역 탭
+  document.getElementById('rbar').addEventListener('click', function(e){
+    var tab = e.target.closest('.rtab');
+    if(!tab) return;
+    document.querySelectorAll('.rtab').forEach(function(t){t.classList.remove('on');});
+    tab.classList.add('on');
+    geo = tab.getAttribute('data-geo');
+    run();
   });
 
-  setProgress(true,100);
-  setTimeout(function(){setProgress(false);},400);
-  render();
-  setStatus('완료 — 이미지 셀 클릭하여 이미지 추가',data.length+'개 키워드');
-}
+  // 실행 버튼
+  document.getElementById('btnRun').addEventListener('click', function(){run();});
 
-// ── Google Trends RSS (rss2json.com 사용) ─────────
-async function fetchTrends(){
-  var rssUrl='https://trends.google.com/trends/trendingsearches/daily/rss?geo='+region;
+  // 엔터키
+  document.getElementById('sinput').addEventListener('keydown', function(e){
+    if(e.key === 'Enter') run();
+  });
 
-  // 방법 1: rss2json.com (전용 RSS→JSON 서비스)
-  try{
-    var r=await fetchTimeout(
-      'https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent(rssUrl),8000);
-    var d=await r.json();
-    if(d.status==='ok'&&d.items&&d.items.length){
-      return d.items.slice(0,20).map(function(item,i){
-        var traffic='';
-        try{
-          var tmp=document.createElement('div');
-          tmp.innerHTML=item.description||'';
-          var txt=tmp.textContent;
-          var m=txt.match(/[\d,]+\+?\s*searches/i);
-          if(m) traffic=m[0];
-        }catch(e){}
-        return{title:item.title,traffic:traffic||'트렌딩',pct:Math.max(20,100-i*5)};
-      });
+  // 모달 닫기
+  document.getElementById('btnCls').addEventListener('click', function(){closeModal();});
+  document.getElementById('ovl').addEventListener('click', function(e){
+    if(e.target.id === 'ovl') closeModal();
+  });
+
+  // 이미지 자동검색
+  document.getElementById('btnAuto').addEventListener('click', function(){
+    autoSearch();
+  });
+
+  // 이미지 적용
+  document.getElementById('btnOk').addEventListener('click', function(){applyImg();});
+
+  // ── 메인 실행 ───────────────────────────────────
+  async function run(){
+    var manual = document.getElementById('sinput').value.trim();
+    rows = [];
+    hideNotice();
+    showSkel();
+    setStat('수집 중...', '');
+    setPbar(true, 0);
+
+    var kws = [];
+    if(manual){
+      kws = manual.split(',').map(function(k, i){
+        return {title: k.trim(), traffic: '직접입력', pct: Math.max(20, 100-i*3)};
+      }).filter(function(k){return k.title.length > 0;});
+    } else {
+      setPbar(true, 10);
+      kws = await getTrends();
+      if(!kws.length){
+        showNotice('⚠️ Google Trends 자동 수집 실패. 키워드를 직접 입력하거나 잠시 후 다시 시도해주세요.');
+        showEmpty('Google Trends를 불러올 수 없습니다');
+        setPbar(false, 0);
+        return;
+      }
     }
-  }catch(e){}
 
-  // 방법 2: corsproxy.io
-  var proxies=[
-    'https://corsproxy.io/?'+encodeURIComponent(rssUrl),
-    'https://api.allorigins.win/get?url='+encodeURIComponent(rssUrl),
-  ];
-  for(var i=0;i<proxies.length;i++){
+    rows = kws.map(function(k, i){
+      return {rank: i+1, kw: k.title, traffic: k.traffic, pct: k.pct||50, img: ''};
+    });
+
+    setPbar(true, 100);
+    setTimeout(function(){setPbar(false, 0);}, 500);
+    renderTable();
+    setStat('완료 — 이미지 셀을 클릭해 이미지 추가', rows.length + '개');
+  }
+
+  // ── Google Trends ────────────────────────────────
+  async function getTrends(){
+    var rss = 'https://trends.google.com/trends/trendingsearches/daily/rss?geo='+geo;
+
+    // 1순위: rss2json.com
     try{
-      var r2=await fetchTimeout(proxies[i],7000);
-      var txt=await r2.text();
-      var xmlStr=txt;
-      try{var j=JSON.parse(txt);if(j.contents)xmlStr=j.contents;}catch(e){}
-      var xml=new DOMParser().parseFromString(xmlStr,'application/xml');
-      var items=xml.querySelectorAll('item');
-      if(!items.length) continue;
-      var kws=[];
-      items.forEach(function(item,idx){
-        if(idx>=20)return;
-        var title=item.querySelector('title')?.textContent||'';
-        var traffic=item.querySelector('approx_traffic')?.textContent||'';
-        if(title) kws.push({title:title,traffic:traffic,pct:Math.max(20,100-idx*5)});
-      });
-      if(kws.length) return kws;
+      var r = await tout(
+        'https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent(rss), 8000);
+      var d = await r.json();
+      if(d.status === 'ok' && d.items && d.items.length){
+        return d.items.slice(0,20).map(function(item, i){
+          return {title: item.title, traffic: '트렌딩', pct: Math.max(20, 100-i*5)};
+        });
+      }
     }catch(e){}
-  }
-  return [];
-}
 
-// ── 테이블 렌더링 ─────────────────────────────────
-function render(){
-  if(!data.length){showEmpty('데이터가 없습니다');return;}
-  var html=data.map(function(item,i){
-    var q=encodeURIComponent(item.keyword);
-    var badge=i===0?'<span class="badge badge-hot">🔥 HOT</span>':
-              i<5?'<span class="badge badge-rising">↑ 급상승</span>':
-              '<span class="badge badge-new">NEW</span>';
-    var imgContent=item.image
-      ?'<img src="'+escH(item.image)+'" onerror="this.style.display=\'none\'">'
-      :'<div class="img-cell-ph">📦</div>';
-    return '<tr>'+
-      '<td><div class="rank'+(i<3?' top':'')'">#'+(i+1)+'</div></td>'+
-      '<td>'+
-        '<div class="img-cell" onclick="openModal('+i+',\''+escJ(item.keyword)+'\')" title="클릭하여 이미지 추가">'+
-          imgContent+
-          '<div class="img-cell-hint">이미지 추가</div>'+
-        '</div>'+
-      '</td>'+
-      '<td>'+
-        '<div class="kw-main">'+escH(item.keyword)+'</div>'+
-        '<div class="kw-bar-wrap" style="margin-top:5px">'+
-          '<div class="kw-bar-fill" style="width:'+item.pct+'%"></div>'+
-        '</div>'+
-      '</td>'+
-      '<td><span class="kw-traffic">'+escH(item.traffic)+'</span></td>'+
-      '<td>'+badge+'</td>'+
-      '<td>'+
-        '<div class="link-group">'+
-          '<a class="lbtn g" href="https://www.google.com/search?q='+q+'+product" target="_blank">🔍 Google</a>'+
-          '<a class="lbtn gi" href="https://images.google.com/search?q='+q+'&tbm=isch" target="_blank">🖼 이미지</a>'+
-          '<a class="lbtn am" href="https://www.amazon.com/s?k='+q+'" target="_blank">📦 Amazon</a>'+
-          '<a class="lbtn yt" href="https://www.youtube.com/results?search_query='+q+'+review" target="_blank">▶ YouTube</a>'+
-          '<a class="lbtn sh" href="https://www.youtube.com/results?search_query='+q+'+shorts" target="_blank">⚡ Shorts</a>'+
-        '</div>'+
-      '</td>'+
-    '</tr>';
-  }).join('');
-  document.getElementById('tbody').innerHTML=html;
-}
+    // 2순위: corsproxy.io
+    try{
+      var r2 = await tout('https://corsproxy.io/?'+encodeURIComponent(rss), 7000);
+      var txt = await r2.text();
+      return parseRSS(txt);
+    }catch(e){}
 
-// ── 이미지 모달 ────────────────────────────────────
-function openModal(idx,keyword){
-  curIdx=idx; selImg=null;
-  document.getElementById('modalTitle').textContent='🖼 "'+keyword+'" 이미지 선택';
-  document.getElementById('imgUrlInput').value=data[idx].image||'';
-  document.getElementById('imgGrid').innerHTML=
-    '<div style="grid-column:1/-1;text-align:center;padding:1rem;color:var(--muted);font-size:13px">자동검색 버튼을 눌러 이미지를 불러오세요</div>';
-  document.getElementById('imgOverlay').classList.add('open');
-  // 자동으로 이미지 검색 실행
-  autoFetchImgs(keyword);
-}
+    // 3순위: allorigins
+    try{
+      var r3 = await tout('https://api.allorigins.win/get?url='+encodeURIComponent(rss), 7000);
+      var d3 = await r3.json();
+      return parseRSS(d3.contents||'');
+    }catch(e){}
 
-async function autoFetchImgs(keyword){
-  var kw=keyword||document.getElementById('modalTitle').textContent.replace(/🖼 "|"/g,'');
-  if(curIdx>=0&&data[curIdx]) kw=data[curIdx].keyword;
-  document.getElementById('imgGrid').innerHTML=
-    '<div style="grid-column:1/-1;text-align:center;padding:1.5rem"><div class="spinner"></div><div style="margin-top:.5rem;font-size:12px;color:var(--muted)">이미지 검색 중...</div></div>';
-
-  // Unsplash Source (무료, CORS 허용, 키워드 기반 랜덤 이미지)
-  var imgs=[];
-  var terms=[kw, kw+' product', kw+' shopping', kw+' gadget', kw+' item', kw+' buy'];
-  terms.forEach(function(term){
-    var enc=encodeURIComponent(term.replace(/\s+/g,','));
-    imgs.push('https://source.unsplash.com/200x200/?'+enc+'&sig='+Math.random());
-  });
-
-  // Picsum (제품 이미지는 아니지만 대체 표시)
-  for(var i=imgs.length;i<8;i++){
-    imgs.push('https://picsum.photos/seed/'+encodeURIComponent(kw+i)+'/200/200');
+    return [];
   }
 
-  var html=imgs.slice(0,8).map(function(url){
-    return '<img src="'+escH(url)+'" loading="lazy" onerror="this.style.display=\'none\'" onclick="pickImg(this)">';
-  }).join('');
-  html+='<div style="grid-column:1/-1;font-size:11px;color:var(--muted);padding:.3rem 0">'+
-    '💡 더 정확한 이미지: '+
-    '<a href="https://images.google.com/search?q='+encodeURIComponent(kw)+'&tbm=isch" target="_blank" style="color:var(--blue)">Google 이미지</a>에서 찾아 URL 복사 후 위 입력란에 붙여넣기'+
-  '</div>';
-  document.getElementById('imgGrid').innerHTML=html;
-}
-
-function pickImg(el){
-  document.querySelectorAll('.img-grid img').forEach(function(i){i.classList.remove('sel');});
-  el.classList.add('sel');
-  selImg=el.src;
-  document.getElementById('imgUrlInput').value=el.src;
-}
-
-function applyImg(){
-  var url=document.getElementById('imgUrlInput').value.trim()||selImg;
-  if(!url){toast('이미지를 선택하거나 URL을 입력해주세요');return;}
-  if(curIdx>=0&&data[curIdx]){
-    data[curIdx].image=url;
-    render();
+  function parseRSS(xml_str){
+    try{
+      var xml = new DOMParser().parseFromString(xml_str, 'application/xml');
+      var items = xml.querySelectorAll('item');
+      if(!items.length) return [];
+      var kws = [];
+      items.forEach(function(item, i){
+        if(i >= 20) return;
+        var title = item.querySelector('title') ? item.querySelector('title').textContent : '';
+        var traffic = item.querySelector('approx_traffic') ? item.querySelector('approx_traffic').textContent : '';
+        if(title) kws.push({title: title, traffic: traffic||'트렌딩', pct: Math.max(20, 100-i*5)});
+      });
+      return kws;
+    }catch(e){return [];}
   }
-  closeModal();
-  toast('✓ 이미지가 적용되었습니다');
-}
 
-function closeModal(){
-  document.getElementById('imgOverlay').classList.remove('open');
-}
-document.getElementById('imgOverlay').addEventListener('click',function(e){
-  if(e.target.id==='imgOverlay')closeModal();
-});
+  // ── 테이블 렌더링 ────────────────────────────────
+  function renderTable(){
+    if(!rows.length){showEmpty('데이터가 없습니다');return;}
+    var tbody = document.getElementById('tbody');
+    tbody.innerHTML = '';
+    rows.forEach(function(row, i){
+      var tr = document.createElement('tr');
 
-// ── 유틸 ──────────────────────────────────────────
-function showSkel(){
-  var h='';
-  for(var i=0;i<15;i++) h+=
-    '<tr><td><div class="skel" style="width:28px;height:16px;margin:auto"></div></td>'+
-    '<td><div class="skel" style="width:80px;height:60px;border-radius:8px"></div></td>'+
-    '<td><div class="skel" style="width:150px;height:16px"></div></td>'+
-    '<td><div class="skel" style="width:60px;height:13px"></div></td>'+
-    '<td><div class="skel" style="width:52px;height:20px;border-radius:8px"></div></td>'+
-    '<td><div class="skel" style="width:300px;height:28px;border-radius:7px"></div></td></tr>';
-  document.getElementById('tbody').innerHTML=h;
-}
-function showEmpty(msg){
-  document.getElementById('tbody').innerHTML=
-    '<tr><td colspan="6"><div class="empty"><div style="font-size:36px;opacity:.2;margin-bottom:.8rem">⚠️</div>'+
-    '<div style="font-size:14px;color:var(--text);margin-bottom:6px">'+escH(msg)+'</div></div></td></tr>';
-}
-function showNotice(msg){
-  var el=document.getElementById('noticeBox');
-  if(msg){el.textContent=msg;el.style.display='block';}
-  else el.style.display='none';
-}
-function setProgress(show,val){
-  document.getElementById('progressWrap').style.display=show?'block':'none';
-  document.getElementById('progressFill').style.width=(val||0)+'%';
-}
-function setStatus(txt,count){
-  document.getElementById('statusTxt').textContent=txt;
-  document.getElementById('statusCount').textContent=count;
-}
-async function fetchTimeout(url,ms){
-  var c=new AbortController();
-  var t=setTimeout(function(){c.abort();},ms);
-  try{var r=await fetch(url,{signal:c.signal});clearTimeout(t);return r;}
-  catch(e){clearTimeout(t);throw e;}
-}
-function escH(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function escJ(s){return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'");}
-var _tt;
-function toast(m){
-  document.querySelectorAll('.toast').forEach(function(t){t.remove();});
-  var t=document.createElement('div');t.className='toast';t.textContent=m;
-  document.body.appendChild(t);clearTimeout(_tt);_tt=setTimeout(function(){t.remove();},2500);
-}
+      // 순위
+      var tdRank = document.createElement('td');
+      var dRank = document.createElement('div');
+      dRank.className = i < 3 ? 'rnk top' : 'rnk';
+      dRank.textContent = '#' + (i+1);
+      tdRank.appendChild(dRank);
+      tr.appendChild(tdRank);
 
-// ── 초기 실행 ─────────────────────────────────────
-run();
+      // 이미지
+      var tdImg = document.createElement('td');
+      var cell = document.createElement('div');
+      cell.className = 'icell';
+      cell.title = '클릭하여 이미지 추가';
+      if(row.img){
+        var img = document.createElement('img');
+        img.src = row.img;
+        img.onerror = function(){cell.innerHTML = '<div class="icell-ph">📦</div><div class="icell-hint">이미지 추가</div>';};
+        cell.appendChild(img);
+      } else {
+        cell.innerHTML = '<div class="icell-ph">📦</div>';
+      }
+      var hint = document.createElement('div');
+      hint.className = 'icell-hint';
+      hint.textContent = '이미지 추가';
+      cell.appendChild(hint);
+      (function(idx, kw){
+        cell.addEventListener('click', function(){openModal(idx, kw);});
+      })(i, row.kw);
+      tdImg.appendChild(cell);
+      tr.appendChild(tdImg);
+
+      // 키워드
+      var tdKw = document.createElement('td');
+      var dMain = document.createElement('div');
+      dMain.className = 'kwmain';
+      dMain.textContent = row.kw;
+      var dBar = document.createElement('div');
+      dBar.className = 'kwbar';
+      var dBarF = document.createElement('div');
+      dBarF.className = 'kwbar-fill';
+      dBarF.style.width = row.pct + '%';
+      dBar.appendChild(dBarF);
+      tdKw.appendChild(dMain);
+      tdKw.appendChild(dBar);
+      tr.appendChild(tdKw);
+
+      // 검색량
+      var tdTr = document.createElement('td');
+      var dTr = document.createElement('span');
+      dTr.className = 'kwtraffic';
+      dTr.textContent = row.traffic;
+      tdTr.appendChild(dTr);
+      tr.appendChild(tdTr);
+
+      // 배지
+      var tdBdg = document.createElement('td');
+      var bdg = document.createElement('span');
+      if(i === 0){ bdg.className = 'bdg bdg-hot'; bdg.textContent = '🔥 HOT'; }
+      else if(i < 5){ bdg.className = 'bdg bdg-up'; bdg.textContent = '↑ 급상승'; }
+      else { bdg.className = 'bdg bdg-new'; bdg.textContent = 'NEW'; }
+      tdBdg.appendChild(bdg);
+      tr.appendChild(tdBdg);
+
+      // 링크
+      var tdLnk = document.createElement('td');
+      var q = encodeURIComponent(row.kw);
+      var links = [
+        {cls:'lb lb-g',  href:'https://www.google.com/search?q='+q+'+product',               label:'🔍 Google'},
+        {cls:'lb lb-gi', href:'https://images.google.com/search?q='+q+'&tbm=isch',           label:'🖼 이미지'},
+        {cls:'lb lb-am', href:'https://www.amazon.com/s?k='+q,                               label:'📦 Amazon'},
+        {cls:'lb lb-yt', href:'https://www.youtube.com/results?search_query='+q+'+review',   label:'▶ YouTube'},
+        {cls:'lb lb-sh', href:'https://www.youtube.com/results?search_query='+q+'+shorts',   label:'⚡ Shorts'}
+      ];
+      var grp = document.createElement('div');
+      grp.className = 'lgrp';
+      links.forEach(function(lnk){
+        var a = document.createElement('a');
+        a.className = lnk.cls;
+        a.href = lnk.href;
+        a.target = '_blank';
+        a.rel = 'noopener';
+        a.textContent = lnk.label;
+        grp.appendChild(a);
+      });
+      tdLnk.appendChild(grp);
+      tr.appendChild(tdLnk);
+
+      tbody.appendChild(tr);
+    });
+  }
+
+  // ── 이미지 모달 ──────────────────────────────────
+  function openModal(idx, kw){
+    curIdx = idx;
+    selUrl = rows[idx].img || '';
+    document.getElementById('mdlTitle').textContent = '🖼 "' + kw + '" 이미지 선택';
+    document.getElementById('mdlUrl').value = selUrl;
+    document.getElementById('igrid').innerHTML =
+      '<div style="grid-column:1/-1;text-align:center;padding:1rem;color:var(--muted);font-size:13px">자동검색 버튼을 눌러주세요</div>';
+    document.getElementById('ovl').classList.add('open');
+    autoSearch();
+  }
+
+  function autoSearch(){
+    if(curIdx < 0 || !rows[curIdx]) return;
+    var kw = rows[curIdx].kw;
+    var grid = document.getElementById('igrid');
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:1.5rem"><div class="spin"></div><div style="margin-top:.5rem;font-size:12px;color:var(--muted)">이미지 검색 중...</div></div>';
+
+    // Unsplash 키워드 기반 이미지 (CORS 허용, 무료)
+    var imgs = [];
+    var terms = [kw, kw+' product', kw+' gadget', kw+' buy', kw+' review', kw+' item', kw+' shop', kw+' tech'];
+    terms.forEach(function(term, i){
+      var enc = encodeURIComponent(term.replace(/\s+/g, ','));
+      imgs.push('https://source.unsplash.com/160x160/?' + enc + '&sig=' + (Date.now()+i));
+    });
+
+    grid.innerHTML = '';
+    imgs.forEach(function(url){
+      var img = document.createElement('img');
+      img.src = url;
+      img.loading = 'lazy';
+      img.addEventListener('click', function(){
+        grid.querySelectorAll('img').forEach(function(i){i.classList.remove('sel');});
+        img.classList.add('sel');
+        selUrl = url;
+        document.getElementById('mdlUrl').value = url;
+      });
+      img.addEventListener('error', function(){img.style.display='none';});
+      grid.appendChild(img);
+    });
+
+    // 힌트 추가
+    var note = document.createElement('div');
+    note.style.cssText = 'grid-column:1/-1;font-size:11px;color:var(--muted);padding:.3rem 0;line-height:1.6';
+    note.innerHTML = '💡 더 정확한 이미지: <a href="https://images.google.com/search?q='+encodeURIComponent(kw)+'&tbm=isch" target="_blank" style="color:var(--blue)">Google 이미지 검색</a>에서 원하는 이미지 위에서 우클릭 → "이미지 주소 복사" → 위 입력란에 붙여넣기';
+    grid.appendChild(note);
+  }
+
+  function applyImg(){
+    var url = document.getElementById('mdlUrl').value.trim() || selUrl;
+    if(!url){toast('이미지를 선택하거나 URL을 입력하세요');return;}
+    if(curIdx >= 0 && rows[curIdx]){
+      rows[curIdx].img = url;
+      renderTable();
+    }
+    closeModal();
+    toast('✓ 이미지가 적용되었습니다');
+  }
+
+  function closeModal(){
+    document.getElementById('ovl').classList.remove('open');
+    selUrl = '';
+  }
+
+  // ── 유틸 ─────────────────────────────────────────
+  function showSkel(){
+    var h = '';
+    for(var i=0;i<15;i++){
+      h += '<tr>' +
+        '<td><div class="sk" style="width:28px;height:16px;margin:auto"></div></td>' +
+        '<td><div class="sk" style="width:80px;height:60px;border-radius:8px"></div></td>' +
+        '<td><div class="sk" style="width:150px;height:16px"></div></td>' +
+        '<td><div class="sk" style="width:60px;height:13px"></div></td>' +
+        '<td><div class="sk" style="width:52px;height:20px;border-radius:8px"></div></td>' +
+        '<td><div class="sk" style="width:280px;height:28px;border-radius:7px"></div></td>' +
+      '</tr>';
+    }
+    document.getElementById('tbody').innerHTML = h;
+  }
+  function showEmpty(msg){
+    document.getElementById('tbody').innerHTML =
+      '<tr><td colspan="6"><div class="empty">' +
+      '<div style="font-size:36px;opacity:.2;margin-bottom:.8rem">⚠️</div>' +
+      '<div style="font-size:14px;color:var(--text);margin-bottom:6px">' + msg + '</div>' +
+      '</div></td></tr>';
+  }
+  function showNotice(msg){var el=document.getElementById('notice');el.textContent=msg;el.style.display='block';}
+  function hideNotice(){document.getElementById('notice').style.display='none';}
+  function setPbar(show,val){
+    document.getElementById('pbarWrap').style.display=show?'block':'none';
+    document.getElementById('pbarFill').style.width=(val||0)+'%';
+  }
+  function setStat(txt,cnt){
+    document.getElementById('stxt').textContent=txt;
+    document.getElementById('scnt').textContent=cnt;
+  }
+  async function tout(url, ms){
+    var c=new AbortController();
+    var t=setTimeout(function(){c.abort();},ms);
+    try{var r=await fetch(url,{signal:c.signal});clearTimeout(t);return r;}
+    catch(e){clearTimeout(t);throw e;}
+  }
+  var _tt;
+  function toast(m){
+    document.querySelectorAll('.toast').forEach(function(t){t.remove();});
+    var t=document.createElement('div');t.className='toast';t.textContent=m;
+    document.body.appendChild(t);clearTimeout(_tt);_tt=setTimeout(function(){t.remove();},2500);
+  }
+
+  // 초기 실행
+  run();
+})();
 </script>
 </body>
 </html>
