@@ -288,54 +288,18 @@ header{display:flex;align-items:center;justify-content:space-between;padding:.9r
         var title = post.title || '';
         var score = post.score || 0;
 
-        // ── 이미지 추출 (우선순위대로) ──────────────
+        // ── 이미지: thumbnail만 사용 (가장 안정적) ──
         var img = '';
-        var allImgs = []; // 모달용 여러 장
-
-        // 1순위: preview 이미지 (해상도별)
+        var thumb = post.thumbnail || '';
+        var badThumbs = ['self','default','nsfw','image','spoiler',''];
+        if(thumb.startsWith('http') && badThumbs.indexOf(thumb) < 0){
+          img = thumb;
+        }
+        // url이 직접 이미지면 사용
         try{
-          if(post.preview && post.preview.images && post.preview.images[0]){
-            var pimg = post.preview.images[0];
-            // 가장 큰 해상도 선택
-            var src_url = pimg.source && pimg.source.url
-              ? pimg.source.url.replace(/&amp;/g,'&') : '';
-            if(src_url) img = src_url;
-            // 중간 해상도들도 수집 (모달용)
-            if(pimg.resolutions){
-              pimg.resolutions.forEach(function(res){
-                if(res.url) allImgs.push(res.url.replace(/&amp;/g,'&'));
-              });
-            }
-            if(src_url) allImgs.push(src_url);
-          }
-        }catch(e){}
-
-        // 2순위: 갤러리 이미지
-        try{
-          if(!img && post.media_metadata){
-            Object.values(post.media_metadata).forEach(function(meta){
-              if(meta.s && meta.s.u){
-                var u = meta.s.u.replace(/&amp;/g,'&');
-                if(!img) img = u;
-                allImgs.push(u);
-              }
-            });
-          }
-        }catch(e){}
-
-        // 3순위: thumbnail (작지만 없는 것보다 나음)
-        try{
-          if(!img){
-            var thumb = post.thumbnail||'';
-            if(thumb.startsWith('http')) img = thumb;
-          }
-        }catch(e){}
-
-        // 4순위: url_overridden_by_dest (직접 이미지 링크)
-        try{
-          if(!img){
-            var direct = post.url_overridden_by_dest||post.url||'';
-            if(direct.match(/\.(jpg|jpeg|png|webp|gif)(\?|$)/i)) img = direct;
+          var direct = post.url_overridden_by_dest || post.url || '';
+          if(!img && direct.match(/\.(jpg|jpeg|png|webp)(\?|$)/i)){
+            img = direct;
           }
         }catch(e){}
 
@@ -347,10 +311,8 @@ header{display:flex;align-items:center;justify-content:space-between;padding:.9r
           sub: score.toLocaleString() + ' upvotes · ' + (post.num_comments||0) + ' comments',
           score: score,
           img: img,
-          allImgs: allImgs.filter(function(u){return u && u.startsWith('http');}),
           url: postUrl,
-          kw: kw,
-          postImg: img // 원본 보존
+          kw: kw
         });
       });
       return items;
@@ -386,36 +348,26 @@ header{display:flex;align-items:center;justify-content:space-between;padding:.9r
       td1.appendChild(dRnk);
       tr.appendChild(td1);
 
-      // 이미지
+      // 이미지 셀
       var td2 = document.createElement('td');
       var cell = document.createElement('div');
       cell.className = 'icell';
-      cell.title = '클릭하여 이미지 변경';
       if(row.img){
         var img = document.createElement('img');
         img.src = row.img;
+        img.title = '클릭하여 이미지 변경';
         img.onerror = function(){
           cell.innerHTML = '';
-          var ph = document.createElement('div');
-          ph.className = 'icell-ph';
-          ph.textContent = '📦';
-          cell.appendChild(ph);
-          var hint = document.createElement('div');
-          hint.className = 'icell-hint';
-          hint.textContent = '이미지 추가';
-          cell.appendChild(hint);
+          makePlaceholder(cell, row.kw);
         };
         cell.appendChild(img);
+        var hint2 = document.createElement('div');
+        hint2.className = 'icell-hint';
+        hint2.textContent = '이미지 변경';
+        cell.appendChild(hint2);
       } else {
-        var ph2 = document.createElement('div');
-        ph2.className = 'icell-ph';
-        ph2.textContent = '📦';
-        cell.appendChild(ph2);
+        makePlaceholder(cell, row.kw);
       }
-      var hint2 = document.createElement('div');
-      hint2.className = 'icell-hint';
-      hint2.textContent = '이미지 변경';
-      cell.appendChild(hint2);
       (function(idx, kw){
         cell.addEventListener('click', function(){openModal(idx, kw);});
       })(i, row.kw);
@@ -500,52 +452,54 @@ header{display:flex;align-items:center;justify-content:space-between;padding:.9r
     setTimeout(function(){autoSearch(kw);}, 100);
   }
 
+  // 이미지 없을 때 플레이스홀더
+  function makePlaceholder(cell, kw){
+    cell.style.flexDirection = 'column';
+    cell.style.gap = '3px';
+    var icon = document.createElement('div');
+    icon.style.cssText = 'font-size:18px;color:var(--muted)';
+    icon.textContent = '🖼';
+    var txt = document.createElement('div');
+    txt.style.cssText = 'font-size:9px;color:var(--muted);text-align:center;line-height:1.3';
+    txt.textContent = '클릭하여\n이미지 추가';
+    cell.appendChild(icon);
+    cell.appendChild(txt);
+  }
+
   function autoSearch(kw){
     if(!kw && curIdx >= 0 && rows[curIdx]) kw = rows[curIdx].kw;
     if(!kw) return;
     var grid = document.getElementById('igrid');
+
+    // 현재 row의 thumbnail이 있으면 표시
     var row = rows[curIdx];
-
-    // Reddit 원본 이미지가 있으면 우선 표시
-    var imgs = [];
-    if(row && row.allImgs && row.allImgs.length){
-      imgs = row.allImgs.slice(0, 8);
-    }
-    // 원본 이미지도 추가
-    if(row && row.postImg && imgs.indexOf(row.postImg) < 0){
-      imgs.unshift(row.postImg);
-    }
-
-    if(imgs.length === 0){
-      // 이미지 없으면 안내만
-      grid.innerHTML =
-        '<div style="grid-column:1/-1;text-align:center;padding:1.5rem;color:var(--muted);font-size:13px;line-height:1.8">'+
-        '이 게시물에 이미지가 없습니다.<br>'+
-        '<a href="https://images.google.com/search?q='+encodeURIComponent(kw||'')+'&tbm=isch" target="_blank" style="color:var(--blue)">Google 이미지에서 검색</a>하여'+
-        '<br>원하는 이미지 위 우클릭 → 이미지 주소 복사 → 위 입력란 붙여넣기'+
-        '</div>';
-      return;
-    }
+    var hasImg = row && row.img;
 
     grid.innerHTML = '';
-    imgs.forEach(function(url){
+
+    if(hasImg){
       var img = document.createElement('img');
-      img.src = url;
-      img.loading = 'lazy';
+      img.src = row.img;
+      img.style.cssText = 'grid-column:1/3';
       img.addEventListener('click', function(){
         grid.querySelectorAll('img').forEach(function(i){i.classList.remove('sel');});
         img.classList.add('sel');
-        selUrl = url;
-        document.getElementById('mdlUrl').value = url;
+        selUrl = row.img;
+        document.getElementById('mdlUrl').value = row.img;
       });
       img.addEventListener('error', function(){img.style.display='none';});
       grid.appendChild(img);
-    });
+    }
 
-    // Google 이미지 링크 안내
+    // Google 이미지 안내
     var note = document.createElement('div');
-    note.style.cssText = 'grid-column:1/-1;font-size:11px;color:var(--muted);padding:.3rem 0;line-height:1.7';
-    note.innerHTML = '💡 더 많은 이미지: <a href="https://images.google.com/search?q='+encodeURIComponent(kw||'')+'&tbm=isch" target="_blank" style="color:var(--blue)">Google 이미지 검색</a> → 우클릭 → 이미지 주소 복사 → 위 입력란 붙여넣기';
+    note.style.cssText = 'grid-column:1/-1;background:rgba(91,156,246,.07);border:1px solid rgba(91,156,246,.2);border-radius:8px;padding:12px;font-size:12px;color:var(--blue);line-height:1.8;text-align:left';
+    note.innerHTML =
+      '<b>정확한 제품 이미지 추가 방법:</b><br>'+
+      '① <a href="https://images.google.com/search?q='+encodeURIComponent(kw||'')+'&tbm=isch" target="_blank" style="color:var(--accent);font-weight:600">Google 이미지 검색 열기 →</a><br>'+
+      '② 원하는 이미지 위에서 <b>우클릭</b><br>'+
+      '③ <b>"이미지 주소 복사"</b> 클릭<br>'+
+      '④ 위 입력란에 <b>붙여넣기</b> → 적용';
     grid.appendChild(note);
   }
 
