@@ -1928,6 +1928,9 @@ Without any explanation, output only the translated registration text.`;
 .sf-sort{display:flex;gap:5px}
 .sf-sort-btn{padding:5px 12px;border-radius:14px;border:1px solid rgba(255,255,255,.1);font-size:12px;cursor:pointer;color:#4e5668;background:none;transition:all .15s;font-family:inherit}
 .sf-sort-btn.active{border-color:#f5a623;color:#f5a623;background:rgba(245,166,35,.07)}
+.sf-type-btn{padding:6px 16px;border-radius:20px;border:1px solid rgba(255,255,255,.15);font-size:13px;cursor:pointer;color:#6b7280;background:rgba(255,255,255,.04);transition:all .18s;white-space:nowrap;user-select:none}
+.sf-type-btn:hover{border-color:#9ba8b4;color:#d8dce8}
+.sf-type-btn.active{border-color:#2dd4a0;color:#2dd4a0;background:rgba(45,212,160,.08);font-weight:600}
 </style>
 
 <div class="wrap">
@@ -1957,6 +1960,23 @@ Without any explanation, output only the translated registration text.`;
       <div class="sf-period" onclick="sfSetPeriod(this,'week')">📅 최근 1주일</div>
       <div class="sf-period" onclick="sfSetPeriod(this,'month')">📆 최근 1개월</div>
       <div class="sf-period" onclick="sfSetPeriod(this,'all')">🗂️ 전체</div>
+    </div>
+
+    <!-- 영상 형식 토글 -->
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+      <span style="font-size:13px;color:#4e5668;white-space:nowrap">영상 형식:</span>
+      <div style="display:flex;gap:6px">
+        <div id="sfTypeLong" class="sf-type-btn active" onclick="sfSetType('long')">
+          📹 롱폼
+        </div>
+        <div id="sfTypeShort" class="sf-type-btn" onclick="sfSetType('short')">
+          ⚡ 숏폼 (Shorts)
+        </div>
+        <div id="sfTypeBoth" class="sf-type-btn" onclick="sfSetType('both')">
+          🔀 전체
+        </div>
+      </div>
+      <span id="sfTypeDesc" style="font-size:12px;color:#2dd4a0;margin-left:4px">일반 영상</span>
     </div>
 
     <!-- 국가 탭 -->
@@ -2015,7 +2035,7 @@ Without any explanation, output only the translated registration text.`;
 
 <script>
 (function(){
-  var sfRegion='global', sfCat='all', sfSort='views', sfPeriod='realtime', sfItems=[];
+  var sfRegion='global', sfCat='all', sfSort='views', sfPeriod='realtime', sfVideoType='long', sfItems=[];
   var SF_REGIONS=['US','KR','JP','GB','DE','FR','IN','BR','AU','CA'];
 
   // 기간별 YouTube 검색 파라미터
@@ -2063,8 +2083,17 @@ Without any explanation, output only the translated registration text.`;
     var token=sfGetToken();
     if(!token) throw new Error('인증 토큰이 없습니다');
     var periodParam=SF_PERIOD_PARAMS[sfPeriod]||'';
+    // 영상 형식 파라미터
+    var durationParam='';
+    var shortsQuery='';
+    if(sfVideoType==='short'){
+      durationParam='&videoDuration=short';
+      shortsQuery=' #Shorts';
+    } else if(sfVideoType==='long'){
+      durationParam='&videoDuration=medium';
+    }
     var r1=await fetch(
-      'https://www.googleapis.com/youtube/v3/search?part=snippet&q='+encodeURIComponent(query)+'&type=video&order=viewCount&maxResults=15&regionCode='+region+'&relevanceLanguage=en'+periodParam,
+      'https://www.googleapis.com/youtube/v3/search?part=snippet&q='+encodeURIComponent(query+shortsQuery)+'&type=video&order=viewCount&maxResults=15&regionCode='+region+'&relevanceLanguage=en'+periodParam+durationParam,
       {headers:{Authorization:'Bearer '+token}}
     );
     if(r1.status===401) throw new Error('인증이 만료되었습니다. 다시 OAuth 인증해주세요.');
@@ -2162,6 +2191,7 @@ Without any explanation, output only the translated registration text.`;
       var hotPill=v.views>5000000?'<span class="sf-pill sf-pill-hot">🔥 HOT</span>':'';
       var viralPill=(v.views>1000000&&v.views<=5000000)?'<span class="sf-pill sf-pill-viral">VIRAL</span>':'';
       var newPill=(sfPeriod==='realtime'||sfPeriod==='week')?'<span class="sf-pill sf-pill-new">NEW</span>':'';
+      var shortsPill=sfVideoType==='short'?'<span class="sf-pill" style="background:rgba(91,156,246,.15);color:#5b9cf6;border:1px solid rgba(91,156,246,.3)">⚡ Shorts</span>':'';
       var thumbHtml=v.thumb?'<img class="sf-thumb" src="'+escH(v.thumb)+'" loading="lazy" onerror="this.style.display=\'none\'">':'';
       html+='<a class="sf-card" href="https://youtube.com/watch?v='+escH(v.id)+'" target="_blank">'+
         '<div class="'+rankClass+'">#'+(i+1)+'</div>'+
@@ -2172,7 +2202,7 @@ Without any explanation, output only the translated registration text.`;
             '<span>📺 <b>'+escH(v.channel)+'</b></span>'+
             '<span>👍 <b>'+fmtN(v.likes)+'</b></span>'+
             '<span>📅 <b>'+fmtDate(v.published)+'</b></span>'+
-            hotPill+viralPill+newPill+
+            hotPill+viralPill+newPill+shortsPill+
           '</div>'+
         '</div>'+
         '<div class="sf-right">'+
@@ -2231,6 +2261,20 @@ Without any explanation, output only the translated registration text.`;
     }
   };
 
+  window.sfSetType=function(t){
+    sfVideoType=t;
+    ['long','short','both'].forEach(function(x){
+      var el=document.getElementById('sfType'+x.charAt(0).toUpperCase()+x.slice(1));
+      if(el) el.classList.toggle('active',x===t);
+    });
+    var desc=document.getElementById('sfTypeDesc');
+    if(desc){
+      if(t==='short') desc.textContent='Shorts 전용 (60초 이하)';
+      else if(t==='long') desc.textContent='일반 영상';
+      else desc.textContent='롱폼 + 숏폼 전체';
+    }
+    sfLoad();
+  };
   window.sfSetPeriod=function(el,p){
     sfPeriod=p;
     // 기간 파라미터 실시간 업데이트
