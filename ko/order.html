@@ -1178,21 +1178,19 @@ Description:
 <div id="oauthGuideModal" class="guideModal">
   <div class="guideModalBox">
     <h2>중요설정 길잡이</h2>
-        <p class="oauthLaunchNotice">본 인증은 방문객들에게 AI 챗번역과 유튜브 등록의 실제를 체험하도록 허용합니다. 그러나 실제 등록은 구독자에게만 허용되오니 착오 없으시기 바랍니다.</p>
-    <p class="guideSubTitle">처음 사용자를 위한 Google OAuth 승인방법입니다.</p>
-
-    <div class="guideIntroBox">
-      <p>처음에는 조금 낯설 수 있습니다. 하지만 이 설정은 고객님의 유튜브 채널에 다국어 번역콘텐츠를 등록하기 위해 필요한 Google 공식 승인 절차입니다.</p>
-      <p><span class="guidePoint">Google OAuth Client ID는 설정 후 상당기간 재사용되는 것이 일반적이지만, 사용량 과다로 인한 토큰 만료, 기타 이유로 재설정이 필요할 수도 있습니다.</span></p>
-    </div>
-
     <div class="guideSection">
-      <h3>1단계. Google 클라우드로 이동하세요.(</h3>
+      <h3>접속단계. Google 클라우드로 이동하세요.(</h3>
       <p>아래 버튼을 눌러 Google 클라우드 설정 화면으로 이동해 주세요(마우스 우측키를 눌러 '한국어로 번역'을 선택).</p>
       <a class="guideCloudBtn" href="https://console.cloud.google.com/auth/audience?hl=ko&project=fourth-cedar-489307-b1" target="_blank" rel="noopener noreferrer">Google 클라우드 바로가기</a>
       <p>Google 클라우드에 접속한 뒤, 유튜브 등록에 사용할 고객님의 Google 계정으로 로그인해 주세요.</p>
     </div>
 
+     <div class="guideSection">
+      <h3>1단계. 새 프로젝트를 'YouTube Data API v3'로 등록하세요.(</h3>
+      <p>구글 클라이언트 ID를 생성하기 위해서는 먼저 새로운 프로젝트를 등록해야 합니다. '사용 설정된 API 및 서비스'에서 '프로젝트 만들기' 버튼을 눌러 주세요. 새 프로젝트 등록 화면이 나오면, '프로젝트 이름'을 'YouTube Data API v3'로 입력하고 '만들기' 버튼을 눌러 주세요.</p>
+        <p>Google 클라우드에 접속한 뒤, 유튜브 등록에 사용할 고객님의 Google 계정으로 로그인해 주세요.</p>
+    </div>
+    
     <div class="guideSection">
       <h3>2단계. YouTube Data API v3 사용 설정</h3>
       <p>Google 클라우드에서 <span class="guideCode">YouTube Data API v3</span>를 입력하여 사용 설정을 해 주세요.</p>
@@ -1200,8 +1198,8 @@ Description:
     </div>
 
     <div class="guideSection">
-      <h3>3단계. '브랜딩' 정보를 입력해 주세요.</h3>
-      <p>왼쪽 메뉴에서 <span class="guideCode">'브랜딩'</span>을 눌러 주세요.</p>
+      <h3>3단계. 브랜딩 정보를 입력해 주세요.</h3>
+      <p>왼쪽 메뉴에서 <span class="guideCode">브랜딩</span>을 눌러 주세요.</p>
       <ul class="guideList">
         <li><span class="guidePoint">앱 이름</span>에는 고객님이 알아보기 쉬운 이름을 적어 주세요.</li>
         <li><span class="guidePoint">사용자 지원 이메일</span>에는 고객님의 Google 이메일을 선택해 주세요.</li>
@@ -1210,9 +1208,9 @@ Description:
     </div>
 
     <div class="guideSection">
-      <h3>4단계. 대상(Target) / 테스트 사용자(Test users)를 확인해 주세요.</h3>
+      <h3>4단계. 대상 / 테스트 사용자를 확인해 주세요.</h3>
       <p>왼쪽 메뉴에서 <span class="guideCode">대상</span>을 눌러 주세요.</p>
-      <p>사용자 유형을 '외부(External)'로 선택하신 후<span class="guidePoint">테스트 사용자</span>의 '사용자 정보'에 실제 인증을 진행할 Google 이메일을 넣어 주세요.</p>
+      <p>사용자 유형을 외부로 선택하신 후<span class="guidePoint">테스트 사용자</span>의 사용자 정보에 실제 인증을 진행할 Google 이메일을 넣어 주세요.</p>
     </div>
 
     <div class="guideSection">
@@ -1222,7 +1220,7 @@ Description:
     </div>
 
     <div class="guideSection">
-      <h3>6단계. 승인된 JavaScript 원본(Authorized JavaScript origins)을 등록해 주세요.</h3>
+      <h3>6단계. 승인된 JavaScript 원본을 등록해 주세요.</h3>
       <p>홈페이지에서 직접 Google 인증을 진행하려면 현재 사용하는 홈페이지 주소를 등록해야 합니다.</p>
       <ul class="guideList">
         <li>정식 사이트 예: <span class="guideCode">https://humateck.com</span></li>
