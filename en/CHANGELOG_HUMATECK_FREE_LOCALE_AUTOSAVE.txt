@@ -1,1 +1,0 @@
-Added automatic locale saving for free trial signup. /free/ saves locale=en and /ko/free/ saves locale=ko. Existing email rows are updated with the current locale without creating duplicate rows.
