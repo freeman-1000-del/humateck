@@ -23,18 +23,20 @@ a{color:#6ca6ff;text-decoration:none}
 .priceBox{flex:1;min-width:220px;border:1px solid rgba(255,217,90,.55);border-radius:16px;padding:20px;background:rgba(255,217,90,.08)}
 .priceBox strong{display:block;color:#ffd95a;font-size:32px;margin-bottom:6px}
 .priceBox span{color:#e6e0d4;font-size:15px}
-.notice{border:1px solid rgba(255,217,90,.48);border-radius:14px;padding:16px;background:rgba(255,217,90,.08);color:#f4e4b6;margin:16px 0}
-.scopes h2{color:#ffd95a;font-size:24px;margin:0 0 14px}
+.scopeTitle{color:#ffd95a;font-size:20px;font-weight:800;margin:0 0 12px}
+.scopeBody{color:#e6e0d4;font-size:16px;line-height:1.72;margin:0 0 18px}
+.scopeBody a{color:#6ca6ff;text-decoration:underline}
 .plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
-.plan{border:1px solid rgba(214,176,78,.72);border-radius:20px;background:rgba(16,23,31,.94);padding:22px;display:flex;flex-direction:column;min-height:220px}
+.plan{border:1px solid rgba(214,176,78,.72);border-radius:20px;background:rgba(16,23,31,.94);padding:22px;display:flex;flex-direction:column;min-height:160px}
 .plan h3{margin:0 0 8px;color:#ffd95a;font-size:20px}
-.plan p{color:#e6e0d4;font-size:15px;line-height:1.6;flex:1;margin:0 0 14px}
-.btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 16px;border:2px solid #d9b256;border-radius:12px;color:#fff;font-size:15px;font-weight:900;background:linear-gradient(180deg,#5c4315,#15110a);text-decoration:none;text-align:center}
-.btn.secondary{opacity:.92}
+.plan p{color:#e6e0d4;font-size:15px;line-height:1.6;flex:1;margin:0}
 .plan.featured{border-color:#ffd95a}
-.actions{display:flex;gap:10px;flex-wrap:wrap}
-.footer,.siteFooter{display:flex;justify-content:center;gap:20px;margin-top:28px;color:#cfc8b9;font-size:15px;flex-wrap:wrap}
-.footer a,.siteFooter a{color:#cfc8b9;text-decoration:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 16px;border:2px solid #d9b256;border-radius:12px;color:#fff;font-size:15px;font-weight:900;background:linear-gradient(180deg,#5c4315,#15110a);text-decoration:none;text-align:center;cursor:pointer;font-family:inherit}
+#plansCheckoutStatus{margin-top:10px;font-size:14px;color:#c8d4e0;min-height:1.2em}
+.plan{cursor:pointer}
+.siteFooter{display:flex;justify-content:center;gap:20px;margin-top:28px;color:#cfc8b9;font-size:15px;flex-wrap:wrap}
+.siteFooter a{color:#6ca6ff;text-decoration:none}
+.siteFooter a:hover{color:#ffd95a}
 @media(max-width:760px){.wrap{max-width:calc(100vw - 28px)}}
 </style>
 </head>
@@ -43,40 +45,38 @@ a{color:#6ca6ff;text-decoration:none}
   <header class="top">
     <a href="/"><img class="logo" src="/FINAL_LOGO01.png" alt="Humateck"></a>
     <nav class="nav">
-      <a class="miniNavButton" href="/">Deployer</a>
-      <a class="miniNavButton" href="plans.html">Plans</a>
+      <a class="miniNavButton" href="/">Go to Deployer</a>
     </nav>
   </header>
 
   <section class="card">
-    <h1>Deployer — one price</h1>
-    <p>Pick your <strong>country scope</strong> below. Registration speed is the same — you only choose where to distribute.</p>
+    <p style="color:#f4d16d;font-weight:800;margin:0 0 8px">Deployer Pricing Plans</p>
     <div class="priceRow">
       <div class="priceBox">
         <strong>$39</strong>
         <span>per month · PayPal</span>
-        <p style="margin-top:12px"><a class="btn" href="/?billing=monthly#deployerCheckoutSection">Subscribe monthly</a></p>
+        <p style="margin-top:12px"><button type="button" class="btn" id="paypalMonthlyBtn">Subscribe monthly</button></p>
       </div>
       <div class="priceBox">
         <strong>$365</strong>
         <span>per year · PayPal (save vs monthly)</span>
-        <p style="margin-top:12px"><a class="btn" href="/?billing=annual#deployerCheckoutSection">Subscribe annually</a></p>
+        <p style="margin-top:12px"><button type="button" class="btn" id="paypalAnnualBtn">Subscribe annually</button></p>
       </div>
     </div>
-    <div class="notice">Keyword Pro (<a href="https://keywords.humateck.com">keywords.humateck.com</a>) is sold separately.</div>
+    <p id="plansCheckoutStatus" aria-live="polite"></p>
   </section>
 
-  <section class="scopes">
-    <h2>Choose distribution scope</h2>
-    <p style="color:#cfc8b9;font-size:15px;margin:-6px 0 16px">Same price for every scope — pick where you want to distribute.</p>
+  <section class="card">
+    <h2 class="scopeTitle">Pricing by Deployment Country</h2>
+    <p class="scopeBody">To select your deployment country, use the dropdown menu at the top of the <a href="/">order page</a>. Pricing is the same for every plan. You can change your plan anytime, as needed.</p>
     <div class="plans" id="planGrid"></div>
   </section>
 
   <footer class="siteFooter">
-    <a href="plans.html">Plans</a><span>|</span>
-    <a href="terms.html">Terms</a><span>|</span>
-    <a href="privacy.html">Privacy</a><span>|</span>
-    <a href="refund.html">Refund</a>
+    <a href="https://humateck.com/plans.html">Plans</a><span>|</span>
+    <a href="https://humateck.com/terms.html">Terms</a><span>|</span>
+    <a href="https://humateck.com/privacy.html">Privacy</a><span>|</span>
+    <a href="https://humateck.com/refund.html">Refund</a>
   </footer>
 </div>
 
@@ -89,7 +89,8 @@ a{color:#6ca6ff;text-decoration:none}
     { id:"america30", name:"Americas Plan", desc:"30 countries across the Americas — US, Canada, Mexico, Brazil, Argentina, and more." },
     { id:"oceania30", name:"Oceania Plan", desc:"Oceania and supplemental reach — Australia, New Zealand, Fiji, Papua New Guinea, and more." },
     { id:"global50", name:"Global 50", desc:"Top 50 countries worldwide." },
-    { id:"global70", name:"Global 70", desc:"Full 70-country coverage.", featured:true }
+    { id:"global70", name:"Global 70", desc:"Full 70-country coverage.", featured:true },
+    { id:"custom50", name:"Custom Selection (max 50 countries)", desc:"Choose up to 50 countries yourself from the 70-country list for distribution." }
   ];
 
   var grid = document.getElementById("planGrid");
@@ -97,24 +98,8 @@ a{color:#6ca6ff;text-decoration:none}
     var art = document.createElement("article");
     art.className = "plan" + (s.featured ? " featured" : "");
     art.setAttribute("data-subscription-plan", s.id);
-    art.innerHTML =
-      "<h3>" + s.name + "</h3>" +
-      "<p>" + s.desc + "</p>" +
-      '<div class="actions">' +
-      '<a class="btn secondary" href="/?plan=' + encodeURIComponent(s.id) + '&billing=monthly#deployerCheckoutSection">Monthly $39</a>' +
-      '<a class="btn" href="/?plan=' + encodeURIComponent(s.id) + '&billing=annual#deployerCheckoutSection">Annual $365</a>' +
-      "</div>";
+    art.innerHTML = "<h3>" + s.name + "</h3><p>" + s.desc + "</p>";
     grid.appendChild(art);
-  });
-
-  document.querySelectorAll(".plan a").forEach(function(link){
-    link.addEventListener("click", function(){
-      var card = link.closest(".plan");
-      var plan = card ? card.getAttribute("data-subscription-plan") : "";
-      if(plan){
-        try{ localStorage.setItem("humateckSelectedPlan", plan); }catch(e){}
-      }
-    });
   });
 
   try{
@@ -130,5 +115,6 @@ a{color:#6ca6ff;text-decoration:none}
   }catch(e){}
 })();
 </script>
+<script src="plans-paypal.js"></script>
 </body>
 </html>
