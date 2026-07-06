@@ -13,7 +13,7 @@ html,body{margin:0;padding:0;background:#050b14;color:#f4f1e8;font-family:Arial,
 a{color:#6ca6ff;text-decoration:none}
 .wrap{width:1180px;max-width:calc(100vw - 48px);margin:0 auto;padding:24px 0 60px}
 .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px}
-.logo{font-size:28px;font-weight:900;color:#ffd95a;text-decoration:none}
+.logo{width:210px;height:auto;display:block}
 .nav{display:flex;gap:10px;flex-wrap:wrap}
 .miniNavButton{display:inline-flex;align-items:center;padding:10px 16px;border:1px solid rgba(214,176,78,.68);border-radius:999px;color:#f4d16d;background:rgba(214,176,78,.12);font-weight:800}
 .card{border:1px solid rgba(214,176,78,.72);border-radius:24px;background:linear-gradient(180deg,rgba(20,28,37,.96),rgba(13,19,26,.98));padding:28px 32px;margin-bottom:24px}
@@ -25,7 +25,7 @@ a{color:#6ca6ff;text-decoration:none}
 .priceBox span{color:#e6e0d4;font-size:15px}
 .notice{border:1px solid rgba(255,217,90,.48);border-radius:14px;padding:16px;background:rgba(255,217,90,.08);color:#f4e4b6;margin:16px 0}
 .scopes h2{color:#ffd95a;font-size:24px;margin:0 0 14px}
-.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
 .plan{border:1px solid rgba(214,176,78,.72);border-radius:20px;background:rgba(16,23,31,.94);padding:22px;display:flex;flex-direction:column;min-height:220px}
 .plan h3{margin:0 0 8px;color:#ffd95a;font-size:20px}
 .plan p{color:#e6e0d4;font-size:15px;line-height:1.6;flex:1;margin:0 0 14px}
@@ -41,7 +41,7 @@ a{color:#6ca6ff;text-decoration:none}
 <body>
 <div class="wrap">
   <header class="top">
-    <a class="logo" href="/">Humateck</a>
+    <a href="/"><img class="logo" src="/FINAL_LOGO01.png" alt="Humateck"></a>
     <nav class="nav">
       <a class="miniNavButton" href="/">Deployer</a>
       <a class="miniNavButton" href="plans.html">Plans</a>
@@ -68,6 +68,7 @@ a{color:#6ca6ff;text-decoration:none}
 
   <section class="scopes">
     <h2>Choose distribution scope</h2>
+    <p style="color:#cfc8b9;font-size:15px;margin:-6px 0 16px">Same price for every scope — pick where you want to distribute.</p>
     <div class="plans" id="planGrid"></div>
   </section>
 
@@ -87,7 +88,6 @@ a{color:#6ca6ff;text-decoration:none}
     { id:"africa30", name:"Africa Plan", desc:"30 African countries — Egypt, South Africa, Kenya, Nigeria, Ghana, Morocco, and more." },
     { id:"america30", name:"Americas Plan", desc:"30 countries across the Americas — US, Canada, Mexico, Brazil, Argentina, and more." },
     { id:"oceania30", name:"Oceania Plan", desc:"Oceania and supplemental reach — Australia, New Zealand, Fiji, Papua New Guinea, and more." },
-    { id:"global16", name:"Global 16", desc:"16 core markets for focused distribution." },
     { id:"global50", name:"Global 50", desc:"Top 50 countries worldwide." },
     { id:"global70", name:"Global 70", desc:"Full 70-country coverage.", featured:true }
   ];
@@ -119,6 +119,10 @@ a{color:#6ca6ff;text-decoration:none}
 
   try{
     var saved = localStorage.getItem("humateckSelectedPlan") || "";
+    if(saved === "global16"){
+      localStorage.removeItem("humateckSelectedPlan");
+      saved = "";
+    }
     if(saved){
       var el = document.querySelector('[data-subscription-plan="'+saved+'"]');
       if(el) el.style.outline = "2px solid #ffd95a";
