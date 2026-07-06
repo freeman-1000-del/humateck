@@ -33,7 +33,6 @@ a{color:#6ca6ff;text-decoration:none}
 .plan.featured{border-color:#ffd95a}
 .btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 16px;border:2px solid #d9b256;border-radius:12px;color:#fff;font-size:15px;font-weight:900;background:linear-gradient(180deg,#5c4315,#15110a);text-decoration:none;text-align:center;cursor:pointer;font-family:inherit}
 #plansCheckoutStatus{margin-top:10px;font-size:14px;color:#c8d4e0;min-height:1.2em}
-.plan{cursor:pointer}
 .siteFooter{display:flex;justify-content:center;gap:20px;margin-top:28px;color:#cfc8b9;font-size:15px;flex-wrap:wrap}
 .siteFooter a{color:#6ca6ff;text-decoration:none}
 .siteFooter a:hover{color:#ffd95a}
@@ -97,22 +96,9 @@ a{color:#6ca6ff;text-decoration:none}
   SCOPES.forEach(function(s){
     var art = document.createElement("article");
     art.className = "plan" + (s.featured ? " featured" : "");
-    art.setAttribute("data-subscription-plan", s.id);
     art.innerHTML = "<h3>" + s.name + "</h3><p>" + s.desc + "</p>";
     grid.appendChild(art);
   });
-
-  try{
-    var saved = localStorage.getItem("humateckSelectedPlan") || "";
-    if(saved === "global16"){
-      localStorage.removeItem("humateckSelectedPlan");
-      saved = "";
-    }
-    if(saved){
-      var el = document.querySelector('[data-subscription-plan="'+saved+'"]');
-      if(el) el.style.outline = "2px solid #ffd95a";
-    }
-  }catch(e){}
 })();
 </script>
 <script src="plans-paypal.js"></script>
