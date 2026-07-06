@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Humateck Deployer — Plans &amp; Pricing</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#050b14;color:#f4f1e8;font-family:Arial,"Noto Sans KR",sans-serif}
+a{color:#6ca6ff}
+.wrap{width:1180px;max-width:calc(100vw - 48px);margin:0 auto;padding:24px 0 60px}
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px}
+.logo{font-size:28px;font-weight:900;color:#ffd95a;text-decoration:none}
+.nav{display:flex;gap:10px;flex-wrap:wrap}
+.miniNavButton{display:inline-flex;align-items:center;padding:10px 16px;border:1px solid rgba(214,176,78,.68);border-radius:999px;color:#f4d16d;background:rgba(214,176,78,.12);font-weight:800;text-decoration:none}
+.card{border:1px solid rgba(214,176,78,.72);border-radius:24px;background:linear-gradient(180deg,rgba(20,28,37,.96),rgba(13,19,26,.98));padding:28px 32px;margin-bottom:24px}
+.card h1{color:#ffd95a;font-size:34px;margin:0 0 12px}
+.card p{color:#e6e0d4;line-height:1.72;font-size:17px;margin:8px 0}
+.notice{border:1px solid rgba(255,217,90,.48);border-radius:14px;padding:16px;background:rgba(255,217,90,.08);color:#f4e4b6;margin:16px 0}
+.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.plan{border:1px solid rgba(214,176,78,.72);border-radius:20px;background:rgba(16,23,31,.94);padding:22px;display:flex;flex-direction:column;min-height:260px}
+.plan h2{margin:0 0 8px;color:#ffd95a;font-size:22px}
+.price{color:#fff;font-size:28px;font-weight:900;margin:8px 0}
+.price span{font-size:15px;font-weight:400;color:#aaa}
+.plan p{color:#e6e0d4;font-size:15px;line-height:1.6;flex:1}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 18px;border:2px solid #d9b256;border-radius:12px;color:#fff;font-size:16px;font-weight:900;background:linear-gradient(180deg,#5c4315,#15110a);text-decoration:none;margin-top:12px}
+.plan.featured{border-color:#ffd95a;box-shadow:0 0 24px rgba(255,217,90,.2)}
+.footer{display:flex;justify-content:center;gap:20px;margin-top:28px;color:#cfc8b9;font-size:15px;flex-wrap:wrap}
+.footer a{color:#cfc8b9;text-decoration:none}
+@media(max-width:760px){.wrap{max-width:calc(100vw - 28px)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="logo" href="/">Humateck</a>
+    <nav class="nav">
+      <a class="miniNavButton" href="/">Deployer (free preview)</a>
+      <a class="miniNavButton" href="terms.html">Terms</a>
+    </nav>
+  </header>
+
+  <section class="card">
+    <h1>Deployer subscription plans</h1>
+    <p>Try translation generation and final review <strong>for free</strong> on the deployer page. Subscribe only when you are ready to <strong>register on YouTube</strong>.</p>
+    <div class="notice">Keyword Pro (<a href="https://keywords.humateck.com">keywords.humateck.com</a>) is a separate product and is not included below.</div>
+  </section>
+
+  <section class="plans" id="planGrid"></section>
+
+  <footer class="footer">
+    <a href="terms.html">Terms</a><span>|</span>
+    <a href="privacy.html">Privacy</a><span>|</span>
+    <a href="mailto:support@humateck.com">support@humateck.com</a>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var PLANS = [
+    { id:"asia30", name:"Asia Plan", price:49, desc:"30 Asian countries — Korea, Japan, China, India, Vietnam, Thailand, Indonesia, and more." },
+    { id:"europe30", name:"Europe Plan", price:49, desc:"30 European countries — UK, France, Germany, Italy, Spain, Netherlands, Poland, and more." },
+    { id:"africa30", name:"Africa Plan", price:49, desc:"30 African countries — Egypt, South Africa, Kenya, Nigeria, Ghana, Morocco, and more." },
+    { id:"america30", name:"Americas Plan", price:49, desc:"30 countries across the Americas — US, Canada, Mexico, Brazil, Argentina, Colombia, and more." },
+    { id:"oceania30", name:"Oceania Plan", price:49, desc:"Oceania plus supplemental global reach — Australia, New Zealand, Fiji, Papua New Guinea, and more." },
+    { id:"global16", name:"Global 16", price:39, desc:"16 core markets linked with Content Scouter distribution." },
+    { id:"global50", name:"Global 50", price:79, desc:"Top 50 countries by global importance — five-continent coverage." },
+    { id:"global70", name:"Global 70", price:99, desc:"Full 70-country coverage — our most comprehensive plan.", featured:true }
+  ];
+
+  var grid = document.getElementById("planGrid");
+  PLANS.forEach(function(p){
+    var art = document.createElement("article");
+    art.className = "plan" + (p.featured ? " featured" : "");
+    art.setAttribute("data-subscription-plan", p.id);
+    art.innerHTML =
+      "<h2>" + p.name + "</h2>" +
+      "<div class=\"price\">$" + p.price + "<span> / month</span></div>" +
+      "<p>" + p.desc + "</p>" +
+      "<a class=\"btn\" href=\"/?plan=" + encodeURIComponent(p.id) + "#deployerCheckoutSection\">Subscribe with PayPal</a>";
+    grid.appendChild(art);
+  });
+
+  try{
+    var saved = localStorage.getItem("humateckSelectedPlan") || "";
+    if(saved){
+      var el = document.querySelector('[data-subscription-plan="'+saved+'"]');
+      if(el) el.style.outline = "2px solid #ffd95a";
+    }
+  }catch(e){}
+})();
+</script>
+</body>
+</html>
