@@ -3,28 +3,8 @@
 
   var CHECKOUT_URL =
     "https://ajvtyotblrtexcxuazqm.supabase.co/functions/v1/deployer-checkout";
-  var VALID_PLANS = {
-    asia30: true,
-    europe30: true,
-    africa30: true,
-    america30: true,
-    oceania30: true,
-    global50: true,
-    global70: true,
-  };
-
-  function selectedPlan() {
-    try {
-      var plan = localStorage.getItem("humateckSelectedPlan") || "";
-      if (plan === "global16") {
-        localStorage.removeItem("humateckSelectedPlan");
-        return "";
-      }
-      return VALID_PLANS[plan] ? plan : "";
-    } catch (e) {
-      return "";
-    }
-  }
+  /** Same price for every scope — deployment country is chosen on the order page. */
+  var DEFAULT_PLAN = "global70";
 
   function getEmail() {
     try {
@@ -51,14 +31,6 @@
   }
 
   async function startPayPal(billing) {
-    var plan = selectedPlan();
-    if (!plan) {
-      setStatus("Select a deployment country plan below first.");
-      var grid = document.getElementById("planGrid");
-      if (grid) grid.scrollIntoView({ behavior: "smooth", block: "nearest" });
-      return;
-    }
-
     var email = getEmail().trim().toLowerCase();
     if (!email || email.indexOf("@") < 1) {
       email = (window.prompt("Enter your email for PayPal subscription:") || "")
@@ -85,7 +57,11 @@
       var res = await fetch(CHECKOUT_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan: plan, email: email, billing: billing }),
+        body: JSON.stringify({
+          plan: DEFAULT_PLAN,
+          email: email,
+          billing: billing,
+        }),
       });
       var data = await res.json().catch(function () {
         return {};
@@ -112,27 +88,6 @@
     if (annualBtn) {
       annualBtn.addEventListener("click", function () {
         void startPayPal("annual");
-      });
-    }
-
-    var grid = document.getElementById("planGrid");
-    if (grid) {
-      grid.addEventListener("click", function (e) {
-        var art = e.target.closest("[data-subscription-plan]");
-        if (!art) return;
-        var id = art.getAttribute("data-subscription-plan");
-        if (!id || id === "custom50") {
-          setStatus("Custom Selection is not available for PayPal checkout yet.");
-          return;
-        }
-        try {
-          localStorage.setItem("humateckSelectedPlan", id);
-        } catch (err) {}
-        grid.querySelectorAll("[data-subscription-plan]").forEach(function (el) {
-          el.style.outline = "";
-        });
-        art.style.outline = "2px solid #ffd95a";
-        setStatus("Selected: " + id);
       });
     }
   });
