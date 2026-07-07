@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Humateck — loading deployer…</title>
+  <style>
+    body{margin:0;background:#050b14;color:#8b93a7;font-family:Arial,"Noto Sans KR",sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh}
+    .msg{text-align:center;padding:24px}
+    a{color:#6ca6ff}
+  </style>
+</head>
+<body>
+  <div class="msg" id="status">Loading Humateck deployer…</div>
+  <script>
+(function () {
+  var STORAGE_BASE = "https://ajvtyotblrtexcxuazqm.supabase.co/storage/v1/object/public/humateck-site";
+  var DEPLOYER_HTML = STORAGE_BASE + "/deployer/index.html";
+
+  fetch(DEPLOYER_HTML + "?v=" + Date.now(), { cache: "no-store" })
+    .then(function (res) {
+      if (!res.ok) throw new Error("source " + res.status);
+      return res.text();
+    })
+    .then(function (html) {
+      document.open();
+      document.write(html);
+      document.close();
+    })
+    .catch(function () {
+      document.getElementById("status").innerHTML =
+        "Deployer source unavailable. Try again later or email " +
+        '<a href="mailto:support@humateck.com">support@humateck.com</a>.';
+    });
+})();
+  </script>
+</body>
+</html>
