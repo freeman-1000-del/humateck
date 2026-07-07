@@ -3,276 +3,188 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Humateck Tools Plaza</title>
-  <script>
-    window.HUMATECK_CONFIG = {
-      SUPABASE_URL: 'https://ajvtyotblrtexcxuazqm.supabase.co',
-      SUPABASE_ANON_KEY: 'sb_publishable_cmn9eVnnvaAjXVJWa6bRQA_qrb1xglQ'
-    };
-  </script>
+  <title>Content Scouter · Rising Keyword Tool</title>
   <style>
     *{box-sizing:border-box}
-    html,body{margin:0;padding:0;background:#050b14;color:#f4f1e8;font-family:Arial,"Noto Sans KR",sans-serif}
-    .wrap{width:1040px;max-width:calc(100vw - 32px);margin:0 auto;padding:32px 0 56px}
-    .card{border:1px solid rgba(214,176,78,.72);border-radius:24px;background:linear-gradient(180deg,rgba(20,28,37,.96),rgba(13,19,26,.98));padding:24px 26px;margin-bottom:18px}
-    h1{margin:0 0 8px;color:#ffd95a;font-size:32px}
-    .kicker{color:#6ca6ff;font-weight:800;margin:0 0 8px;font-size:13px}
-    .lead{margin:0;color:#c8c0b4;line-height:1.65;font-size:15px}
-    .sectitle{margin:0 0 14px;color:#ffd95a;font-size:22px}
-    .freeGrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-    .toolBlock{border:1px solid rgba(214,176,78,.45);border-radius:18px;background:rgba(255,217,90,.04);padding:16px;display:flex;flex-direction:column;min-height:100%}
-    .toolBlock h3{margin:0 0 12px;color:#ffd95a;font-size:18px}
-    .sampleLabel{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#8b93a7;margin:0 0 8px}
-    .sampleLabel.rising{color:#c77dff}
-    .videoPair{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
-    .vCard{background:#161922;border:1px solid #2a2f3c;border-radius:12px;overflow:hidden;text-decoration:none;color:inherit;display:flex;flex-direction:column;min-height:168px}
-    .vCard:hover{border-color:#4f76a8;transform:translateY(-2px);transition:.15s}
-    .vThumb{position:relative;aspect-ratio:16/9;background:#0a0c10}
-    .vThumb img{width:100%;height:100%;object-fit:cover;display:block}
-    .vRank{position:absolute;top:6px;left:6px;background:rgba(13,15,20,.88);color:#fff;font-size:11px;font-weight:800;width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center}
-    .vTag{position:absolute;top:6px;right:6px;background:rgba(13,15,20,.88);color:#ffb454;font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px}
-    .vTag.rise{color:#c77dff}
-    .vBody{padding:8px 10px 10px;flex:1;display:flex;flex-direction:column}
-    .vTitle{font-size:12px;font-weight:600;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:32px}
-    .vMeta{margin-top:6px;font-size:11px;color:#8b93a7}
-    .vMeta b{color:#ffb454;font-weight:700}
-    .vMeta.rise b{color:#c77dff}
-    .vState{padding:28px 10px;text-align:center;color:#8b93a7;font-size:12px;line-height:1.6;border:1px dashed #2a2f3c;border-radius:12px;margin-bottom:14px}
-    .spin{display:inline-block;width:18px;height:18px;border:2px solid #2a2f3c;border-top-color:#ff5436;border-radius:50%;animation:sp .8s linear infinite;margin-bottom:8px}
-    @keyframes sp{to{transform:rotate(360deg)}}
-    .tablewrap{background:#161922;border:1px solid #2a2f3c;border-radius:12px;overflow:hidden;margin-bottom:14px}
-    table{width:100%;border-collapse:collapse;font-size:12px}
-    thead th{background:#1e222d;color:#aeb6c4;text-align:left;padding:10px 12px;font-weight:600;border-bottom:1px solid #2a2f3c;white-space:nowrap}
-    tbody td{padding:10px 12px;border-bottom:1px solid #2a2f3c}
-    tbody tr:last-child td{border-bottom:none}
-    .kw{font-weight:700;color:#eef1f6}
-    .num{text-align:right;font-variant-numeric:tabular-nums}
-    .rank{color:#6b7385;width:28px;text-align:center}
-    .badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700}
-    .b-low{background:rgba(70,211,154,.15);color:#46d39a}
-    .b-med{background:rgba(255,180,84,.15);color:#ffb454}
-    .gold{display:flex;align-items:center;gap:6px;justify-content:flex-end}
-    .goldbar{height:5px;border-radius:3px;background:linear-gradient(90deg,#ffb454,#ffd24a)}
-    .goldnum{color:#ffd24a;font-weight:700;font-size:11px}
-    .up{color:#46d39a;font-weight:700}
-    .tileActions{margin-top:auto;padding-top:4px}
-    .miniBtn{display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:8px 14px;border:1px solid #4f76a8;border-radius:10px;color:#dbe9ff;font-size:13px;font-weight:700;background:linear-gradient(180deg,#1c3657,#0f1c2e);text-decoration:none}
-    .adZone{border-color:rgba(108,166,255,.55);background:linear-gradient(180deg,rgba(16,28,45,.96),rgba(8,14,24,.98))}
-    .adTag{display:inline-block;margin:0 0 12px;padding:4px 10px;border-radius:999px;border:1px solid rgba(108,166,255,.45);color:#9ec5ff;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
-    .adInner{display:grid;grid-template-columns:280px 1fr;gap:22px;align-items:center}
-    .deployerVisual{position:relative;height:190px;border:1px solid rgba(108,166,255,.35);border-radius:18px;background:radial-gradient(circle at 68% 22%,rgba(75,151,255,.28),transparent 38%),radial-gradient(circle at 28% 48%,rgba(214,176,78,.16),transparent 36%),linear-gradient(180deg,#0b1423,#070b11);overflow:hidden}
-    .globe{position:absolute;left:50%;top:34px;width:92px;height:92px;transform:translateX(-50%);border-radius:50%;border:2px solid rgba(93,160,255,.72);background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.33),transparent 12%),radial-gradient(circle at 50% 50%,rgba(58,126,255,.42),rgba(4,18,45,.9) 67%),repeating-linear-gradient(90deg,transparent 0 8px,rgba(116,178,255,.19) 9px 10px),repeating-linear-gradient(0deg,transparent 0 8px,rgba(116,178,255,.15) 9px 10px);box-shadow:0 0 28px rgba(70,144,255,.38)}
-    .play{position:absolute;left:50%;top:58px;width:46px;height:34px;transform:translateX(-50%);border-radius:10px;background:linear-gradient(145deg,#ffe070,#b98217);box-shadow:0 0 18px rgba(235,180,62,.55)}
-    .play:after{content:"";position:absolute;left:18px;top:8px;border-left:14px solid #1a1307;border-top:9px solid transparent;border-bottom:9px solid transparent}
-    .orbit{position:absolute;inset:0;pointer-events:none}
-    .orbit span{position:absolute;width:14px;height:14px;border-radius:50%;background:linear-gradient(135deg,#f0cf6a,#594118);box-shadow:0 0 10px rgba(235,190,80,.45)}
-    .orbit span:nth-child(1){left:34px;top:28px}.orbit span:nth-child(2){right:34px;top:28px}.orbit span:nth-child(3){left:48px;bottom:24px}.orbit span:nth-child(4){right:48px;bottom:24px}
-    .adCopy h3{margin:0 0 8px;color:#dbe9ff;font-size:24px}
-    .adCopy p{margin:0 0 14px;color:#b7bdc8;line-height:1.7;font-size:14px}
-    .adBtn{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:10px 16px;border:2px solid #6ca6ff;border-radius:12px;color:#fff;font-size:14px;font-weight:800;background:linear-gradient(180deg,#1c3657,#0f1c2e);text-decoration:none}
-    @media(max-width:860px){.freeGrid,.adInner{grid-template-columns:1fr}.videoPair{grid-template-columns:1fr}}
+    html,body{margin:0;padding:0;background:#3a3a3a;color:#eef1f6;font-family:Arial,"Segoe UI",sans-serif}
+    a{color:inherit;text-decoration:none}
+
+    /* ── full width row with breathing room ── */
+    .pageRow{
+      display:flex;width:100%;align-items:flex-start;justify-content:center;
+      gap:24px;padding:28px 20px 36px;
+    }
+    .adCol{
+      width:160px;flex:0 0 160px;
+      padding-top:48px; /* ads float below top edge */
+    }
+    .centerPanel{
+      flex:1 1 auto;min-width:0;max-width:none;
+      background:#0d0f14;border-radius:10px;
+      box-shadow:0 6px 40px rgba(0,0,0,.45);
+      overflow:hidden;
+    }
+
+    /* floating ad card — not flush to center */
+    .deployerAd{
+      display:block;width:160px;min-height:600px;
+      padding:16px 12px 18px;text-align:center;
+      background:linear-gradient(180deg,#0e1a2e 0%,#080f1a 100%);
+      border:1px solid rgba(108,166,255,.45);border-radius:10px;color:#dbe9ff;
+      box-shadow:0 10px 36px rgba(0,0,0,.5),0 2px 8px rgba(0,0,0,.35);
+      transition:transform .18s, box-shadow .18s;
+    }
+    .deployerAd:hover{
+      transform:translateY(-4px);
+      box-shadow:0 16px 48px rgba(0,0,0,.55),0 0 24px rgba(70,144,255,.18);
+      border-color:rgba(108,166,255,.75);
+    }
+    .deployerAd .tag{
+      font-size:10px;font-weight:800;letter-spacing:.1em;color:#9ec5ff;
+      text-transform:uppercase;margin-bottom:12px;display:block;
+    }
+    .deployerAd .globe{
+      width:60px;height:60px;border-radius:50%;margin:0 auto 10px;
+      border:2px solid rgba(93,160,255,.65);
+      background:radial-gradient(circle at 50% 50%,rgba(58,126,255,.4),rgba(4,18,45,.92) 68%);
+      box-shadow:0 0 18px rgba(70,144,255,.3);
+    }
+    .deployerAd .play{
+      width:40px;height:28px;border-radius:8px;margin:-22px auto 14px;
+      background:linear-gradient(145deg,#ffe070,#b98217);
+      box-shadow:0 0 12px rgba(235,180,62,.45);position:relative;
+    }
+    .deployerAd .play:after{
+      content:"";position:absolute;left:15px;top:6px;
+      border-left:13px solid #1a1307;border-top:8px solid transparent;border-bottom:8px solid transparent;
+    }
+    .deployerAd .title{display:block;font-size:12px;line-height:1.5;color:#fff;font-weight:800;margin-bottom:8px}
+    .deployerAd .line{font-size:11px;line-height:1.55;color:#9eb8d8;margin-bottom:4px}
+    .deployerAd .cta{
+      display:block;margin-top:14px;padding-top:12px;
+      font-size:11px;font-weight:800;color:#ffd95a;
+      border-top:1px solid rgba(108,166,255,.25);
+    }
+
+    .toolFrame{width:100%;min-height:820px;height:calc(100vh - 100px);border:0;display:block;background:#0d0f14}
+
+    .jumpBar{
+      display:flex;justify-content:center;gap:0;
+      background:#1a1a1a;border-bottom:2px solid #444;
+      position:sticky;top:0;z-index:10;
+    }
+    .jumpBar a{
+      padding:12px 28px;font-size:14px;font-weight:800;color:#888;border-bottom:3px solid transparent;
+    }
+    .jumpBar a.on{color:#ff5436;border-bottom-color:#ff5436}
+    .jumpBar a.kw.on{color:#ffd24a;border-bottom-color:#c77dff}
+    .jumpBar a:hover{color:#fff}
+
+    .foot{padding:10px;text-align:center;color:#666;font-size:10px;background:#2a2a2a}
+    .foot a{color:#888}
+
+    @media(max-width:960px){
+      .pageRow{flex-direction:column;align-items:center;padding:16px 12px;gap:16px}
+      .adCol{width:100%;flex:0 0 auto;padding-top:0;max-width:480px}
+      .deployerAd{width:100%;min-height:auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;padding:14px}
+      .deployerAd .globe,.deployerAd .play{margin:0}
+      .deployerAd .cta{margin-top:0;border-top:0;padding-top:0}
+      .centerPanel{width:100%}
+      .toolFrame{height:80vh;min-height:520px}
+    }
+    @media(min-width:961px){
+      .deployerAd{position:sticky;top:72px}
+    }
   </style>
 </head>
 <body>
-  <main class="wrap">
-    <section class="card">
-      <p class="kicker">Humateck</p>
-      <h1>Tools Plaza</h1>
-      <p class="lead">See live samples first. If it looks useful, open the full tool with one click.</p>
-    </section>
 
-    <section class="card">
-      <h2 class="sectitle">Free Tools</h2>
-      <div class="freeGrid">
-        <article class="toolBlock">
-          <h3>Content Scouter</h3>
-          <p class="sampleLabel">Popular now</p>
-          <div class="videoPair" id="popularSamples">
-            <div class="vState"><div class="spin"></div><div>Loading popular video…</div></div>
-          </div>
-          <p class="sampleLabel rising">Rising today</p>
-          <div class="videoPair" id="risingSamples">
-            <div class="vState"><div class="spin"></div><div>Loading rising video…</div></div>
-          </div>
-          <div class="tileActions"><a class="miniBtn" href="/scouter.html">바로보기</a></div>
-        </article>
+  <nav class="jumpBar">
+    <a class="on" href="#scouter">Content Scouter</a>
+    <a class="kw" href="#keyword">Rising Keyword Tool</a>
+  </nav>
 
-        <article class="toolBlock">
-          <h3>Rising Keyword Tool</h3>
-          <div class="tablewrap">
-            <table>
-              <thead>
-                <tr>
-                  <th class="rank">#</th>
-                  <th>Keyword</th>
-                  <th class="num">Volume</th>
-                  <th>Competition</th>
-                  <th class="num">Gold</th>
-                </tr>
-              </thead>
-              <tbody id="keywordSamples"></tbody>
-            </table>
-          </div>
-          <div class="tileActions"><a class="miniBtn" href="/rising-keyword.html">바로보기</a></div>
-        </article>
-      </div>
-    </section>
+  <!-- ① Content Scouter — English tool, floating Deployer ads -->
+  <section id="scouter" class="pageRow">
+    <aside class="adCol">
+      <a class="deployerAd" href="/deployer.html">
+        <span class="tag">Sponsored</span>
+        <div class="globe"></div>
+        <div class="play"></div>
+        <span class="title">70-Country Video Deployer</span>
+        <span class="line">Multilingual metadata</span>
+        <span class="line">Your OAuth · your quota</span>
+        <span class="cta">Explore Deployer →</span>
+      </a>
+    </aside>
 
-    <section class="card adZone">
-      <p class="adTag">Paid service</p>
-      <div class="adInner">
-        <div class="deployerVisual" aria-hidden="true">
-          <div class="globe"></div>
-          <div class="play"></div>
-          <div class="orbit"><span></span><span></span><span></span><span></span></div>
-        </div>
-        <div class="adCopy">
-          <h3>70-Country Video Deployer</h3>
-          <p>After your Gemini translation is ready, register multilingual metadata in one workflow with your own Google OAuth and API quota.</p>
-          <a class="adBtn" href="/deployer.html">Explore Deployer</a>
-        </div>
-      </div>
-    </section>
-  </main>
+    <div class="centerPanel">
+      <iframe class="toolFrame" src="/scouter.html" title="Content Scouter" loading="lazy"></iframe>
+    </div>
 
-  <script type="module">
-  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+    <aside class="adCol">
+      <a class="deployerAd" href="/deployer.html">
+        <span class="tag">Sponsored</span>
+        <div class="globe"></div>
+        <div class="play"></div>
+        <span class="title">70-Country Video Deployer</span>
+        <span class="line">Gemini prompt workflow</span>
+        <span class="line">One-click registration</span>
+        <span class="cta">Explore Deployer →</span>
+      </a>
+    </aside>
+  </section>
 
-  const sb = createClient(window.HUMATECK_CONFIG.SUPABASE_URL, window.HUMATECK_CONFIG.SUPABASE_ANON_KEY);
+  <!-- ② Rising Keyword Tool -->
+  <section id="keyword" class="pageRow">
+    <aside class="adCol">
+      <a class="deployerAd" href="/deployer.html">
+        <span class="tag">Sponsored</span>
+        <div class="globe"></div>
+        <div class="play"></div>
+        <span class="title">70-Country Video Deployer</span>
+        <span class="line">After keywords, deploy</span>
+        <span class="line">70 countries supported</span>
+        <span class="cta">Explore Deployer →</span>
+      </a>
+    </aside>
 
-  const KEYWORDS = [
-    {keyword:"asmr sleep", search_volume:135000, competition_level:"LOW", gold_score:4.8, trend_yearly:45},
-    {keyword:"lofi music", search_volume:201000, competition_level:"LOW", gold_score:4.6, trend_yearly:28},
-    {keyword:"how to edit videos", search_volume:90500, competition_level:"LOW", gold_score:4.3, trend_yearly:33},
-    {keyword:"gaming setup", search_volume:74000, competition_level:"MEDIUM", gold_score:3.9, trend_yearly:19},
-    {keyword:"youtube shorts ideas", search_volume:40500, competition_level:"LOW", gold_score:3.5, trend_yearly:88}
-  ].sort((a,b)=>b.gold_score-a.gold_score).slice(0,2);
+    <div class="centerPanel">
+      <iframe class="toolFrame" src="/rising-keyword.html" title="Rising Keyword Tool" loading="lazy"></iframe>
+    </div>
 
-  const fmtViews = (n)=>{
-    n = Number(n)||0;
-    if(n>=1e9) return (n/1e9).toFixed(1)+"B";
-    if(n>=1e6) return (n/1e6).toFixed(1)+"M";
-    if(n>=1e3) return Math.round(n/1e3)+"K";
-    return String(n);
-  };
-  const fmtVol = n => n>=1000 ? (n/1000).toFixed(n>=10000?0:1)+"K" : String(n);
-  const escapeHtml = s => (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-  const compBadge = lv => {
-    const m = {LOW:['b-low','Low'], MEDIUM:['b-med','Med'], HIGH:['b-high','High']};
-    const [cls,label] = m[lv] || ['b-med','Med'];
-    return `<span class="badge ${cls}">${label}</span>`;
-  };
+    <aside class="adCol">
+      <a class="deployerAd" href="/deployer.html">
+        <span class="tag">Sponsored</span>
+        <div class="globe"></div>
+        <div class="play"></div>
+        <span class="title">70-Country Video Deployer</span>
+        <span class="line">Paid deployment tool</span>
+        <span class="line">Plans inside Deployer</span>
+        <span class="cta">Explore Deployer →</span>
+      </a>
+    </aside>
+  </section>
 
-  function videoCard(v, i, mode){
-    const rise = mode === 'rising';
-    const meta = rise
-      ? `<span class="vMeta rise"><b>+${fmtViews(v.delta)}</b> · ${fmtViews(v.view_count)} total</span>`
-      : `<span class="vMeta"><b>${fmtViews(v.view_count)}</b> views</span>`;
-    return `<a class="vCard" href="${escapeHtml(v.youtube_url||'#')}" target="_blank" rel="noopener">
-      <div class="vThumb">
-        <div class="vRank">${i+1}</div>
-        <div class="vTag ${rise?'rise':''}">${rise?'Rising':'Popular'}</div>
-        <img src="${escapeHtml(v.thumbnail_url||'')}" loading="lazy" alt="">
-      </div>
-      <div class="vBody">
-        <div class="vTitle">${escapeHtml(v.title)}</div>
-        ${meta}
-      </div>
-    </a>`;
-  }
+  <footer class="foot">
+    <a href="#scouter">Content Scouter</a> ·
+    <a href="#keyword">Rising Keyword Tool</a> ·
+    <a href="/deployer.html">Deployer</a> ·
+    <a href="mailto:support@humateck.com">support@humateck.com</a>
+  </footer>
 
-  function emptyState(msg){
-    return `<div class="vState">${msg}</div>`;
-  }
-
-  function renderKeywords(){
-    const maxGold = Math.max(...KEYWORDS.map(k=>k.gold_score), 1);
-    document.getElementById('keywordSamples').innerHTML = KEYWORDS.map((k,i)=>{
-      const barW = Math.round((k.gold_score/maxGold)*48);
-      return `<tr>
-        <td class="rank">${i+1}</td>
-        <td class="kw">${escapeHtml(k.keyword)}</td>
-        <td class="num">${fmtVol(k.search_volume)}</td>
-        <td>${compBadge(k.competition_level)}</td>
-        <td class="num"><div class="gold"><span class="goldbar" style="width:${barW}px"></span><span class="goldnum">${k.gold_score.toFixed(1)}</span></div></td>
-      </tr>`;
-    }).join('');
-  }
-
-  async function loadPopularSample(){
-    const box = document.getElementById('popularSamples');
-    try {
-      const { data: snaps } = await sb.from('scout_snapshots')
-        .select('id,collected_at').eq('kind','popular').order('collected_at',{ascending:false}).limit(1);
-      if(!snaps || !snaps.length){
-        box.innerHTML = emptyState('Popular sample unavailable right now.');
-        return;
-      }
-      const { data: videos } = await sb.from('scout_videos')
-        .select('title,thumbnail_url,view_count,youtube_url,channel')
-        .eq('snapshot_id', snaps[0].id)
-        .order('view_count',{ascending:false})
-        .limit(2);
-      if(!videos || !videos.length){
-        box.innerHTML = emptyState('No popular videos yet.');
-        return;
-      }
-      box.innerHTML = videos.map((v,i)=>videoCard(v,i,'popular')).join('');
-    } catch {
-      box.innerHTML = emptyState('Could not load popular sample.');
+  <script>
+  (function(){
+    var links = document.querySelectorAll('.jumpBar a');
+    var sections = [document.getElementById('scouter'), document.getElementById('keyword')];
+    function onScroll(){
+      var y = window.scrollY + 80;
+      var idx = y >= sections[1].offsetTop ? 1 : 0;
+      links.forEach(function(a,i){ a.classList.toggle('on', i === idx); });
     }
-  }
-
-  async function loadRisingSample(){
-    const box = document.getElementById('risingSamples');
-    try {
-      const { data: snaps } = await sb.from('scout_snapshots')
-        .select('*').eq('kind','popular').order('collected_at',{ascending:false}).limit(40);
-      if(!snaps || snaps.length < 2){
-        box.innerHTML = emptyState('Rising sample starts after the next daily collection.');
-        return;
-      }
-      const cur = snaps[0];
-      const curTime = new Date(cur.collected_at).getTime();
-      const targetTime = curTime - 86400000;
-      let prev = null, bestGap = Infinity;
-      for(let i=1;i<snaps.length;i++){
-        const t = new Date(snaps[i].collected_at).getTime();
-        if(t > curTime) continue;
-        const gap = Math.abs(t - targetTime);
-        if(gap < bestGap){ bestGap = gap; prev = snaps[i]; }
-      }
-      if(!prev){
-        box.innerHTML = emptyState('Rising sample is not ready yet.');
-        return;
-      }
-      const { data: curV } = await sb.from('scout_videos').select('*')
-        .eq('snapshot_id', cur.id).order('view_count',{ascending:false}).limit(400);
-      const { data: prevV } = await sb.from('scout_videos').select('video_id,view_count')
-        .eq('snapshot_id', prev.id).limit(400);
-      const prevMap = {};
-      (prevV||[]).forEach(v=>{ if(prevMap[v.video_id]==null || v.view_count>prevMap[v.video_id]) prevMap[v.video_id]=v.view_count; });
-      const rows = [];
-      (curV||[]).forEach(v=>{
-        const before = prevMap[v.video_id];
-        if(before==null) return;
-        const delta = (v.view_count||0) - before;
-        if(delta>0) rows.push({...v, delta});
-      });
-      rows.sort((a,b)=>b.delta-a.delta);
-      if(!rows.length){
-        box.innerHTML = emptyState('No rising videos found for today.');
-        return;
-      }
-      box.innerHTML = rows.slice(0,2).map((v,i)=>videoCard(v,i,'rising')).join('');
-    } catch {
-      box.innerHTML = emptyState('Could not load rising sample.');
-    }
-  }
-
-  renderKeywords();
-  loadPopularSample();
-  loadRisingSample();
+    window.addEventListener('scroll', onScroll, {passive:true});
+    onScroll();
+  })();
   </script>
 </body>
 </html>

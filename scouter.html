@@ -1,22 +1,930 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Content Scouter | Humateck</title>
-  <style>
-    body{margin:0;background:#050b14;color:#8b93a7;font-family:Arial,"Noto Sans KR",sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh}
-    .msg{text-align:center;padding:24px;line-height:1.7}
-    a{color:#6ca6ff}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Content Scouter — Humateck</title>
+
+<!-- ============================================================= -->
+<!-- ★★★ Fill in your keys here (check these two lines each time you swap files) ★★★ -->
+<!-- ============================================================= -->
+<script>
+  window.HUMATECK_CONFIG = {
+    SUPABASE_URL: 'https://ajvtyotblrtexcxuazqm.supabase.co',
+    SUPABASE_ANON_KEY: 'sb_publishable_cmn9eVnnvaAjXVJWa6bRQA_qrb1xglQ'   // ← Put your public (anon/publishable) key here
+  };
+</script>
+<!-- ============================================================= -->
+
+<style>
+  :root{
+    --bg:#0d0f14; --panel:#161922; --panel2:#1e222d; --line:#2a2f3c;
+    --txt:#eef1f6; --sub:#aeb6c4; --hint:#6b7385;
+    --accent:#ff5436; --accent2:#ffb454; --accent3:#4ea1ff;
+    --good:#46d39a;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--bg); color:var(--txt);
+    font-family:"Pretendard","Noto Sans KR",-apple-system,BlinkMacSystemFont,sans-serif;
+    line-height:1.5; padding:24px 28px 60px; max-width:none; width:100%; margin:0;
+  }
+  .eyebrow{font-size:12px; letter-spacing:.18em; color:var(--hint); font-weight:700; text-transform:uppercase;}
+  .eyebrow b{color:var(--accent);}
+  h1{font-size:38px; font-weight:800; letter-spacing:-.02em; margin:8px 0 6px; line-height:1.15;}
+  .lead{color:var(--sub); font-size:14px;}
+  .lead .upd{color:var(--hint); font-size:12px; margin-left:6px;}
+
+  /* View buttons */
+  .tabs{display:grid; grid-template-columns:repeat(8,1fr); gap:9px; margin:24px 0 8px;}
+  .tab{
+    background:var(--panel); border:1.5px solid var(--line); border-radius:14px;
+    padding:13px 12px; cursor:pointer; transition:.15s; text-align:left;
+  }
+  .tab:hover{border-color:#3a4150; transform:translateY(-1px);}
+  .tab.on{border-color:var(--accent); background:var(--panel2);}
+  .tab .dot{width:9px; height:9px; border-radius:50%; display:inline-block; margin-right:7px;}
+  /* Reuse Allowed (CC) — highlight the killer feature */
+  .tab.kill{border-color:#7ee787; background:linear-gradient(145deg,#16302a,var(--panel)); box-shadow:0 0 0 1px rgba(126,231,135,.25), 0 4px 16px rgba(126,231,135,.12);}
+  .tab.kill .t{color:#7ee787;}
+  .tab.kill:hover{border-color:#7ee787; box-shadow:0 0 0 1px rgba(126,231,135,.4), 0 6px 20px rgba(126,231,135,.2);}
+  .tab.kill.on{border-color:#7ee787; background:linear-gradient(145deg,#1c3d34,var(--panel2));}
+  .tab .t{font-size:15px; font-weight:700; color:var(--accent2);}
+  .tab .d{font-size:12px; color:var(--hint); margin-top:4px;}
+
+  /* Sub-selection (country/category/continent chips) */
+  .chips{display:flex; flex-wrap:wrap; gap:8px; margin:16px 0 4px; min-height:0;}
+  .chip{
+    background:var(--panel); border:1px solid var(--line); border-radius:20px;
+    padding:7px 14px; font-size:13px; color:var(--sub); cursor:pointer; transition:.12s;
+  }
+  .chip:hover{border-color:#3a4150; color:var(--txt);}
+  .chip.on{background:var(--accent); border-color:var(--accent); color:#fff; font-weight:700;}
+
+  .sectitle{font-size:19px; font-weight:800; color:var(--accent2); margin:24px 0 14px; display:flex; align-items:center; gap:10px;}
+  .sectitle::before{content:""; width:4px; height:18px; background:var(--accent2); border-radius:3px; display:inline-block;}
+  .sectitle .count{font-size:12px; color:var(--hint); font-weight:600;}
+
+  /* Video grid */
+  .grid{display:grid; grid-template-columns:repeat(5,1fr); gap:18px;}
+  @media(max-width:1100px){.grid{grid-template-columns:repeat(3,1fr);} .tabs{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:640px){.grid{grid-template-columns:repeat(2,1fr);} h1{font-size:28px;}}
+  .card{background:var(--panel); border:1px solid var(--line); border-radius:14px; overflow:hidden; transition:.15s; text-decoration:none; color:inherit; display:flex; flex-direction:column;}
+  .card:hover{transform:translateY(-3px); border-color:#3a4150;}
+  .thumb{position:relative; aspect-ratio:16/9; background:#0a0c10; overflow:hidden;}
+  .thumb img{width:100%; height:100%; object-fit:cover;}
+  .rankbadge{position:absolute; top:8px; left:8px; background:rgba(13,15,20,.85); color:#fff; font-size:12px; font-weight:800; width:26px; height:26px; border-radius:7px; display:flex; align-items:center; justify-content:center;}
+  .ccountry{position:absolute; top:8px; right:8px; background:rgba(13,15,20,.8); color:var(--accent2); font-size:11px; font-weight:700; padding:3px 8px; border-radius:6px;}
+  .cbody{padding:11px 12px 13px;}
+  .ctitle{font-size:13px; font-weight:600; line-height:1.35; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; min-height:35px;}
+  .cmeta{margin-top:8px; font-size:11px; color:var(--hint); display:flex; flex-wrap:wrap; gap:5px; align-items:center;}
+  .views{color:var(--accent2); font-weight:700;}
+  .cchan{color:var(--sub); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%;}
+
+  .state{padding:60px 20px; text-align:center; color:var(--hint); font-size:14px;}
+  .kwgrid{display:flex; flex-wrap:wrap; gap:10px;}
+  .kw{
+    background:var(--panel); border:1px solid var(--line); border-radius:12px;
+    padding:12px 16px; display:flex; align-items:center; gap:10px; transition:.12s;
+    cursor:pointer; user-select:none;
+  }
+  .kw:hover{border-color:#5ad1c8; background:var(--panel2);}
+  .kw:active{transform:scale(0.97);}
+  .kw.copied{border-color:#5ad1c8; background:#16302d;}
+  .kw .word{font-size:15px; font-weight:700; color:var(--txt);}
+  .kw .cnt{font-size:12px; color:var(--hint);}
+  .kw .up{font-size:12px; color:#5ad1c8; font-weight:700;}
+  .kw .rk{font-size:12px; color:var(--accent2); font-weight:800; min-width:20px;}
+  .kw .copyhint{font-size:11px; color:#5ad1c8; margin-left:2px; opacity:0; transition:.12s;}
+  .kw:hover .copyhint{opacity:.7;}
+  .kw.copied .copyhint{opacity:1; color:#5ad1c8;}
+  .kwbar{display:flex; align-items:center; gap:12px; margin-bottom:14px; flex-wrap:wrap;}
+  .copyall{
+    background:var(--accent); color:#fff; border:none; border-radius:10px;
+    padding:9px 18px; font-size:13px; font-weight:700; cursor:pointer; transition:.12s;
+  }
+  .copyall:hover{filter:brightness(1.1);}
+  .copyall:active{transform:scale(0.97);}
+  .copyall.done{background:#5ad1c8; color:#0d0f14;}
+  .kwtip{font-size:12px; color:var(--hint);}
+  .catnote{width:100%; margin-top:10px; padding:11px 15px; font-size:12.5px; color:var(--hint); background:var(--panel); border:1px solid var(--line); border-radius:10px; line-height:1.5;}
+  .ccnotice{
+    background:#2a2410; border:1px solid #5c4a1a; border-radius:12px;
+    padding:13px 18px; margin-bottom:16px; font-size:13px; line-height:1.6; color:#d4c89a;
+  }
+  .ccnotice b{color:#f0d97a;}
+  .cctally{background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:18px 20px; margin-bottom:20px;}
+  .cctally-title{font-size:13px; font-weight:700; color:var(--accent2); margin-bottom:14px;}
+  .cctally-grid{display:flex; flex-wrap:wrap; gap:8px;}
+  .cccount{display:flex; align-items:center; gap:8px; background:var(--panel2); border:1px solid var(--line); border-radius:10px; padding:8px 14px;}
+  .cccount-name{font-size:13px; color:var(--txt);}
+  .cccount-num{font-size:14px; font-weight:800; color:#7ee787;}
+  .cccount.zero{opacity:.45;}
+  .cccount.zero .cccount-num{color:var(--hint);}
+  .spin{display:inline-block; width:22px; height:22px; border:3px solid var(--line); border-top-color:var(--accent); border-radius:50%; animation:sp .8s linear infinite; margin-bottom:12px;}
+  @keyframes sp{to{transform:rotate(360deg);}}
+</style>
 </head>
 <body>
-  <div class="msg" id="status">Loading Content Scouter…</div>
-  <script>
-  (function () {
-    var target = "https://humateck.com/rising-keyword.html";
-    window.location.replace(target);
-  })();
-  </script>
+
+  <div class="eyebrow">H U M A T E C K &nbsp;·&nbsp; <b>Content Scouter</b></div>
+  <h1>Discover Trending YouTube Videos Worldwide</h1>
+  <div class="lead">Surfacing trending videos across 16 countries.<span class="upd" id="updated"></span></div>
+
+  <div class="tabs">
+    <button class="tab on" data-view="global">
+      <div class="t"><span class="dot" style="background:var(--accent)"></span>Global Trending</div>
+      <div class="d">Combined across 16 countries, by view count</div>
+    </button>
+    <button class="tab kill" data-view="cc">
+      <div class="t"><span class="dot" style="background:#7ee787"></span>Reuse Allowed <span style="font-size:10px;color:#0d0f14;background:#7ee787;border-radius:8px;padding:1px 7px;margin-left:4px;font-weight:800;">CC</span></div>
+      <div class="d">Videos legally available for reuse · updated weekly</div>
+    </button>
+    <button class="tab" data-view="continent">
+      <div class="t"><span class="dot" style="background:var(--good)"></span>By Continent</div>
+      <div class="d">North America · Europe · Asia · South America · Oceania</div>
+    </button>
+    <button class="tab" data-view="country">
+      <div class="t"><span class="dot" style="background:var(--accent3)"></span>By Country</div>
+      <div class="d">Pick a country to see its trending videos</div>
+    </button>
+    <button class="tab" data-view="category">
+      <div class="t"><span class="dot" style="background:var(--accent2)"></span>By Category</div>
+      <div class="d">Music, gaming, sports, news, and more</div>
+    </button>
+    <button class="tab" data-view="rising">
+      <div class="t"><span class="dot" style="background:#c77dff"></span>Rising <span style="font-size:10px;color:var(--accent);border:1px solid var(--accent);border-radius:8px;padding:1px 6px;margin-left:4px;">BETA</span></div>
+      <div class="d">Videos whose views spiked in a day</div>
+    </button>
+    <button class="tab" data-view="engagement">
+      <div class="t"><span class="dot" style="background:#ff7eb6"></span>Top Engagement</div>
+      <div class="d">Videos with the hottest engagement relative to views</div>
+    </button>
+    <button class="tab" data-view="keyword">
+      <div class="t"><span class="dot" style="background:#5ad1c8"></span>Keyword Trends</div>
+      <div class="d">Popular keywords frequently found in titles</div>
+    </button>
+  </div>
+
+  <div class="chips" id="chips"></div>
+
+  <div class="sectitle" id="sectitle">Global Trending <span class="count" id="count"></span></div>
+  <div id="content">
+    <div class="state"><div class="spin"></div><div>Loading data...</div></div>
+  </div>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+// ===== Config: fill in the two lines below with your own values =====
+// ===== The key settings are in HUMATECK_CONFIG at the top of this file's <head> =====
+const SUPABASE_URL = window.HUMATECK_CONFIG.SUPABASE_URL;
+const SUPABASE_ANON_KEY = window.HUMATECK_CONFIG.SUPABASE_ANON_KEY;
+// ====================================================
+
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const COUNTRY_NAMES = {
+  US:"United States", CA:"Canada", MX:"Mexico", GB:"United Kingdom", DE:"Germany", FR:"France",
+  ES:"Spain", IT:"Italy", RU:"Russia", JP:"Japan", KR:"South Korea", IN:"India",
+  ID:"Indonesia", VN:"Vietnam", BR:"Brazil", AU:"Australia"
+};
+const CONTINENTS = {
+  namerica:"North America", europe:"Europe", asia:"Asia", samerica:"South America", oceania:"Oceania"
+};
+const CATEGORIES = {
+  music:"Music", comedy:"Comedy", animals:"Animals", howto:"How-to & Style",
+  people:"People & Blogs", education:"Education", ent:"Entertainment", film:"Film & Animation",
+  sports:"Sports", news:"News & Politics", science:"Science & Technology", gaming:"Gaming",
+  travel:"Travel & Events", autos:"Autos & Vehicles"
+};
+
+let latestSnapshot = null;
+let state = { view:'global', country:'US', category:'music', continent:'asia', risingPeriod:1, keywordMode:'popular', ccCategory:'comedy', ccMode:'popular' };
+let latestCCSnapshot = null;
+
+const $ = (s)=>document.querySelector(s);
+const fmtViews = (n)=>{ n=Number(n)||0;
+  if(n>=1e9) return (n/1e9).toFixed(1)+"B"; if(n>=1e6) return (n/1e6).toFixed(1)+"M"; if(n>=1e3) return (n/1e3).toFixed(1)+"K"; return ""+n; };
+const agoText = (iso)=>{ if(!iso) return ""; const d=new Date(iso); if(isNaN(d)) return "";
+  const days=Math.floor((Date.now()-d.getTime())/86400000);
+  if(days<=0) return "Today"; if(days<7) return days+"d ago";
+  if(days<30) return Math.floor(days/7)+"w ago"; if(days<365) return Math.floor(days/30)+"mo ago";
+  return Math.floor(days/365)+"y ago"; };
+
+// Find the latest collection snapshot
+async function loadLatestSnapshot(){
+  const { data, error } = await sb.from('scout_snapshots')
+    .select('*').eq('kind','popular').order('collected_at',{ascending:false}).limit(1);
+  if(error || !data || !data.length) return null;
+  return data[0];
+}
+
+// Fetch videos (based on the latest snapshot)
+async function loadVideos(filter){
+  if(!latestSnapshot) return [];
+
+  // Category view: if the same video spans multiple categories, show it only in the one it's ranked highest in
+  if(filter.category_key){
+    return await loadCategoryVideos(filter.category_key, filter.limit||50);
+  }
+
+  let q = sb.from('scout_videos').select('*').eq('snapshot_id', latestSnapshot.id);
+  if(filter.country_code) q = q.eq('country_code', filter.country_code).eq('category_key','all');
+  if(filter.continent)    q = q.eq('continent', filter.continent).eq('category_key','all');
+  // For views that need deduplication, fetch a generous pool of candidates first, then trim
+  const fetchLimit = filter.dedupe ? 800 : (filter.limit||100);
+  q = q.order('view_count',{ascending:false}).limit(fetchLimit);
+  const { data, error } = await q;
+  if(error){ console.error(error); return []; }
+  if(filter.dedupe){
+    const seen=new Set(); return (data||[]).filter(v=>{ if(seen.has(v.video_id)) return false; seen.add(v.video_id); return true; });
+  }
+  return data||[];
+}
+
+// Category view: if the same video spans multiple categories, use the category where it has the highest rank as its representative
+let categoryOwnerCache = { snapshotId:null, owner:null };
+
+async function buildCategoryOwners(){
+  if(categoryOwnerCache.snapshotId === latestSnapshot.id) return categoryOwnerCache.owner;
+  // Exclude 'all'; fetch (video, category, rank) for every category row
+  const { data } = await sb.from('scout_videos')
+    .select('video_id,category_key,rank')
+    .eq('snapshot_id', latestSnapshot.id)
+    .neq('category_key','all');
+  // For each video, use the category with the "highest rank (lower number = higher rank)" as its representative
+  const best = {}; // video_id -> {cat, rank}
+  (data||[]).forEach(r=>{
+    const cur = best[r.video_id];
+    if(!cur || r.rank < cur.rank){ best[r.video_id] = { cat:r.category_key, rank:r.rank }; }
+  });
+  const owner = {};
+  Object.entries(best).forEach(([vid,info])=>{ owner[vid] = info.cat; });
+  categoryOwnerCache = { snapshotId:latestSnapshot.id, owner };
+  return owner;
+}
+
+async function loadCategoryVideos(categoryKey, limit){
+  const owner = await buildCategoryOwners();
+  const { data, error } = await sb.from('scout_videos').select('*')
+    .eq('snapshot_id', latestSnapshot.id).eq('category_key', categoryKey)
+    .order('view_count',{ascending:false}).limit(800);
+  if(error){ console.error(error); return []; }
+  const seen=new Set(); const out=[];
+  for(const v of (data||[])){
+    if(seen.has(v.video_id)) continue;                          // Remove duplicate videos
+    if(owner[v.video_id] && owner[v.video_id]!==categoryKey) continue; // Skip if not the representative category
+    seen.add(v.video_id); out.push(v);
+    if(out.length>=limit) break;
+  }
+  return out;
+}
+
+function cardHTML(v, i){
+  const country = v.country_code && v.country_code!=='GLOBAL' ? (COUNTRY_NAMES[v.country_code]||v.country_code) : '';
+  const ago = agoText(v.published_at);
+  return `<a class="card" href="${v.youtube_url}" target="_blank" rel="noopener">
+    <div class="thumb">
+      <div class="rankbadge">${i+1}</div>
+      ${v.country_code && v.country_code!=='GLOBAL' ? `<div class="ccountry">${v.country_code}</div>`:''}
+      <img src="${v.thumbnail_url}" loading="lazy" alt="">
+    </div>
+    <div class="cbody">
+      <div class="ctitle">${escapeHtml(v.title)}</div>
+      <div class="cmeta">
+        <span class="views">${fmtViews(v.view_count)} views</span>
+        ${v.like_count?`<span>· 👍${fmtViews(v.like_count)}</span>`:''}
+        ${country?`<span>· ${country}</span>`:''}
+        ${ago?`<span>· ${ago}</span>`:''}
+      </div>
+      <div class="cmeta"><span class="cchan">${escapeHtml(v.channel||'')}</span></div>
+    </div>
+  </a>`;
+}
+function escapeHtml(s){ return (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+// Render sub-selection chips
+function renderChips(){
+  const box = $('#chips');
+  if(state.view==='country'){
+    box.innerHTML = Object.entries(COUNTRY_NAMES).map(([code,name])=>
+      `<button class="chip ${state.country===code?'on':''}" data-type="country" data-val="${code}">${name}</button>`).join('');
+  } else if(state.view==='category'){
+    // Exclude categories YouTube's mostPopular doesn't support per-country category charts for (collection itself yields 0).
+    // This applies to education and travel/events. → Hide them from chips to avoid a confusing "no videos" state.
+    // (travel does return results in CC search, so it's still used as-is in the CC tab)
+    const CATEGORY_UNSUPPORTED = ['education','travel'];
+    box.innerHTML = Object.entries(CATEGORIES)
+      .filter(([key])=> !CATEGORY_UNSUPPORTED.includes(key))
+      .map(([key,name])=>
+      `<button class="chip ${state.category===key?'on':''}" data-type="category" data-val="${key}">${name}</button>`).join('')
+      + `<div class="catnote">※ 'Education' and 'Travel & Events' aren't shown because YouTube doesn't provide a per-country trending chart for these categories.</div>`;
+  } else if(state.view==='continent'){
+    box.innerHTML = Object.entries(CONTINENTS).map(([key,name])=>
+      `<button class="chip ${state.continent===key?'on':''}" data-type="continent" data-val="${key}">${name}</button>`).join('');
+  } else if(state.view==='rising'){
+    // For monthly, once 30 days of data have accumulated, re-enable the [30,'Monthly'] line (currently hidden)
+    const periods = [[1,'Daily'],[7,'Weekly']];
+    box.innerHTML = periods.map(([d,name])=>
+      `<button class="chip ${state.risingPeriod===d?'on':''}" data-type="rising" data-val="${d}">${name}</button>`).join('');
+  } else if(state.view==='keyword'){
+    const modes = [['popular','Popular Keywords'],['surge','Rising Keywords']];
+    box.innerHTML = modes.map(([m,name])=>
+      `<button class="chip ${state.keywordMode===m?'on':''}" data-type="keyword" data-val="${m}">${name}</button>`).join('');
+  } else if(state.view==='cc'){
+    const modes = [['popular','Popular'],['reaction','Top Engagement'],['surge','Rising']];
+    box.innerHTML = modes.map(([m,name])=>
+      `<button class="chip ${state.ccMode===m?'on':''}" data-type="cc" data-val="${m}">${name}</button>`).join('');
+  } else {
+    box.innerHTML = '';
+  }
+  box.querySelectorAll('.chip').forEach(c=>c.addEventListener('click',()=>{
+    const t=c.dataset.type, val=c.dataset.val;
+    if(t==='country') state.country=val;
+    if(t==='category') state.category=val;
+    if(t==='continent') state.continent=val;
+    if(t==='rising') state.risingPeriod=parseInt(val,10);
+    if(t==='keyword') state.keywordMode=val;
+    if(t==='cc') state.ccMode=val;
+    renderChips(); render();
+  }));
+}
+
+// Rising: compares the latest snapshot with the snapshot closest to N days ago, ranked by view-count increase
+async function loadRising(periodDays){
+  // Fetch enough snapshots, newest first
+  const { data: snaps } = await sb.from('scout_snapshots')
+    .select('*').eq('kind','popular').order('collected_at',{ascending:false}).limit(40);
+  if(!snaps || snaps.length < 2){
+    return { notReady:true, reason:'firstrun' };
+  }
+  const cur = snaps[0];
+  const curTime = new Date(cur.collected_at).getTime();
+  const targetTime = curTime - periodDays*86400000;
+
+  // Find the 'previous' snapshot closest to the target time (N days ago)
+  let prev = null, bestGap = Infinity;
+  for(let i=1;i<snaps.length;i++){
+    const t = new Date(snaps[i].collected_at).getTime();
+    if(t > curTime) continue;
+    const gap = Math.abs(t - targetTime);
+    if(gap < bestGap){ bestGap = gap; prev = snaps[i]; }
+  }
+  // If the comparison snapshot hasn't even reached half the target period, treat it as "not enough data yet"
+  const spanDays = prev ? (curTime - new Date(prev.collected_at).getTime())/86400000 : 0;
+  if(!prev || spanDays < periodDays*0.5){
+    return { notReady:true, reason:'notenough', haveDays: Math.round(spanDays), needDays: periodDays };
+  }
+
+  const { data: curV } = await sb.from('scout_videos').select('video_id,title,channel,thumbnail_url,view_count,like_count,published_at,country_code,youtube_url')
+    .eq('snapshot_id', cur.id).eq('category_key','all').neq('country_code','GLOBAL');
+  const { data: prevV } = await sb.from('scout_videos').select('video_id,view_count')
+    .eq('snapshot_id', prev.id).eq('category_key','all').neq('country_code','GLOBAL');
+
+  const prevMap = {};
+  (prevV||[]).forEach(v=>{ if(prevMap[v.video_id]==null || v.view_count>prevMap[v.video_id]) prevMap[v.video_id]=v.view_count; });
+
+  const best = {};
+  (curV||[]).forEach(v=>{
+    const before = prevMap[v.video_id];
+    if(before==null) return;
+    const delta = (v.view_count||0) - before;
+    if(!best[v.video_id] || v.view_count>best[v.video_id].view_count){
+      best[v.video_id] = {...v, delta};
+    }
+  });
+  const rows = Object.values(best).filter(v=>v.delta>0).sort((a,b)=>b.delta-a.delta).slice(0,60);
+  return { notReady:false, rows, spanDays:Math.round(spanDays) };
+}
+
+function risingCardHTML(v, i){
+  const country = COUNTRY_NAMES[v.country_code]||v.country_code||'';
+  return `<a class="card" href="${v.youtube_url}" target="_blank" rel="noopener">
+    <div class="thumb">
+      <div class="rankbadge">${i+1}</div>
+      <div class="ccountry" style="color:#c77dff;">▲ ${fmtViews(v.delta)}</div>
+      <img src="${v.thumbnail_url}" loading="lazy" alt="">
+    </div>
+    <div class="cbody">
+      <div class="ctitle">${escapeHtml(v.title)}</div>
+      <div class="cmeta">
+        <span class="views">+${fmtViews(v.delta)} increase</span>
+        <span>· Total ${fmtViews(v.view_count)}</span>
+        ${country?`<span>· ${country}</span>`:''}
+      </div>
+      <div class="cmeta"><span class="cchan">${escapeHtml(v.channel||'')}</span></div>
+    </div>
+  </a>`;
+}
+
+// Engagement: (likes + comments) / views, only for videos with 10,000+ views (to avoid skewed ratios)
+async function loadEngagement(){
+  if(!latestSnapshot) return [];
+  // Fetch from the per-country 'all' set, deduplicate, then compute engagement
+  const { data, error } = await sb.from('scout_videos').select('*')
+    .eq('snapshot_id', latestSnapshot.id).eq('category_key','all').neq('country_code','GLOBAL')
+    .gte('view_count', 10000)
+    .limit(800);
+  if(error){ console.error(error); return []; }
+  const seen=new Set(); const rows=[];
+  for(const v of (data||[])){
+    if(seen.has(v.video_id)) continue;
+    seen.add(v.video_id);
+    const eng = ((v.like_count||0) + (v.comment_count||0)) / Math.max(1, v.view_count||1);
+    rows.push({...v, engagement: eng});
+  }
+  rows.sort((a,b)=> b.engagement - a.engagement);
+  return rows.slice(0,60);
+}
+
+function engagementCardHTML(v, i){
+  const country = COUNTRY_NAMES[v.country_code]||v.country_code||'';
+  const pct = (v.engagement*100).toFixed(1);
+  return `<a class="card" href="${v.youtube_url}" target="_blank" rel="noopener">
+    <div class="thumb">
+      <div class="rankbadge">${i+1}</div>
+      <div class="ccountry" style="color:#ff7eb6;">${pct}%</div>
+      <img src="${v.thumbnail_url}" loading="lazy" alt="">
+    </div>
+    <div class="cbody">
+      <div class="ctitle">${escapeHtml(v.title)}</div>
+      <div class="cmeta">
+        <span class="views" style="color:#ff7eb6;">Engagement ${pct}%</span>
+        <span>· ${fmtViews(v.view_count)} views</span>
+        ${country?`<span>· ${country}</span>`:''}
+      </div>
+      <div class="cmeta"><span class="cchan">👍${fmtViews(v.like_count)} · 💬${fmtViews(v.comment_count)}</span></div>
+    </div>
+  </a>`;
+}
+
+// ===== Keyword Trends =====
+// Words to filter out (stopwords): meaningless common/boilerplate words (multilingual)
+const STOPWORDS = new Set([
+  // Common English
+  "the","a","an","of","to","in","on","for","and","or","with","by","at","from","is","are","be","my","your","you","i","it","we","this","that","new","official","video","mv","feat","ft","full","hd","4k","vs","x","ep","part","season","live","audio","lyrics","lyric","music","song","remix","cover","trailer","teaser","show","tv","ver","version","prod",
+  // Common Korean
+  "그리고","그런데","하지만","그래서","오늘","영상","공식","뮤직","노래","최신","현재","우리","너무","정말","진짜","이것","그것","feat",
+  // Symbols/numeric
+  "|","-","–","—","ft.","feat.","x","&","·",
+  // Common Japanese/other boilerplate words
+  "公式","ミュージック","ビデオ","최初","オフィシャル"
+]);
+
+// Split a title into words (Korean/English/Japanese/numeric, 2+ characters)
+function tokenize(title){
+  if(!title) return [];
+  // Include content inside parentheses/brackets; treat special characters as spaces
+  const cleaned = title.toLowerCase()
+    .replace(/[\[\]\(\)\{\}|.,!?:;"'`~@#$%^&*+=<>/\\]/g," ")
+    .replace(/[-–—_]/g," ");
+  const raw = cleaned.split(/\s+/).filter(Boolean);
+  const out = [];
+  for(let w of raw){
+    w = w.trim();
+    if(w.length < 2) continue;            // Exclude single characters
+    if(/^\d+$/.test(w)) continue;          // Exclude pure numbers
+    if(STOPWORDS.has(w)) continue;         // Exclude stopwords
+    out.push(w);
+  }
+  return out;
+}
+
+// Popular keywords: tally word frequency across titles in the latest snapshot's 'all' (per-country) set
+async function loadKeywordsPopular(){
+  if(!latestSnapshot) return [];
+  const { data } = await sb.from('scout_videos').select('video_id,title')
+    .eq('snapshot_id', latestSnapshot.id).eq('category_key','all').neq('country_code','GLOBAL')
+    .limit(800);
+  const seen=new Set(); const titles=[];
+  (data||[]).forEach(r=>{ if(!seen.has(r.video_id)){ seen.add(r.video_id); titles.push(r.title); } });
+  const freq = {};
+  titles.forEach(t=> tokenize(t).forEach(w=>{ freq[w]=(freq[w]||0)+1; }));
+  return Object.entries(freq)
+    .filter(([w,n])=> n>=2)              // 2+ occurrences only
+    .sort((a,b)=> b[1]-a[1])
+    .slice(0,40)
+    .map(([word,count])=>({word,count}));
+}
+
+// Rising keywords: word frequency increase between the latest snapshot and the previous one
+async function loadKeywordsSurge(){
+  const { data: snaps } = await sb.from('scout_snapshots')
+    .select('*').eq('kind','popular').order('collected_at',{ascending:false}).limit(2);
+  if(!snaps || snaps.length < 2) return { notReady:true };
+  const freqOf = async (snapId)=>{
+    const { data } = await sb.from('scout_videos').select('video_id,title')
+      .eq('snapshot_id', snapId).eq('category_key','all').neq('country_code','GLOBAL').limit(800);
+    const seen=new Set(); const f={};
+    (data||[]).forEach(r=>{ if(!seen.has(r.video_id)){ seen.add(r.video_id); tokenize(r.title).forEach(w=>{ f[w]=(f[w]||0)+1; }); } });
+    return f;
+  };
+  const cur = await freqOf(snaps[0].id);
+  const prev = await freqOf(snaps[1].id);
+  const rows = [];
+  Object.entries(cur).forEach(([w,n])=>{
+    const before = prev[w]||0;
+    const delta = n - before;
+    if(delta>0 && n>=2) rows.push({word:w, count:n, delta});
+  });
+  rows.sort((a,b)=> b.delta-a.delta);
+  return { notReady:false, rows: rows.slice(0,40) };
+}
+
+// Keyword list HTML (copy-all button + click-to-copy for each keyword)
+function keywordListHTML(items, isSurge){
+  const bar = `<div class="kwbar">
+    <button class="copyall" id="copyAllBtn">Copy All Keywords</button>
+    <span class="kwtip">Click a keyword to copy just that one</span>
+  </div>`;
+  const grid = `<div class="kwgrid">${items.map((k,i)=>
+    `<div class="kw" data-word="${escapeHtml(k.word)}">
+      <span class="rk">${i+1}</span>
+      <span class="word">${escapeHtml(k.word)}</span>
+      ${isSurge?`<span class="up">▲ ${k.delta}</span>`:''}
+      <span class="cnt">${k.count}${isSurge?' occurrences':' videos'}</span>
+      <span class="copyhint">Copy</span>
+    </div>`
+  ).join('')}</div>`;
+  return bar + grid;
+}
+
+async function copyText(text){
+  try { await navigator.clipboard.writeText(text); return true; }
+  catch(e){
+    // Fallback
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); document.body.removeChild(ta); return true; }
+    catch(e2){ document.body.removeChild(ta); return false; }
+  }
+}
+
+function bindKeywordCopy(words){
+  // Click-to-copy for each keyword
+  document.querySelectorAll('.kw').forEach(el=>{
+    el.addEventListener('click', async ()=>{
+      const w = el.dataset.word;
+      const ok = await copyText(w);
+      if(ok){
+        el.classList.add('copied');
+        const hint = el.querySelector('.copyhint');
+        if(hint) hint.textContent = 'Copied!';
+        setTimeout(()=>{ el.classList.remove('copied'); if(hint) hint.textContent='Copy'; }, 1200);
+      }
+    });
+  });
+  // Copy all
+  const btn = document.getElementById('copyAllBtn');
+  if(btn){
+    btn.addEventListener('click', async ()=>{
+      const ok = await copyText(words.join(', '));
+      if(ok){
+        btn.classList.add('done');
+        const orig = btn.textContent;
+        btn.textContent = `${words.length} keywords copied!`;
+        setTimeout(()=>{ btn.classList.remove('done'); btn.textContent = orig; }, 1500);
+      }
+    });
+  }
+}
+
+// ===== Reuse Allowed (CC) =====
+// Find the latest CC snapshot (kind='cc')
+async function loadLatestCCSnapshot(){
+  if(latestCCSnapshot) return latestCCSnapshot;
+  const { data } = await sb.from('scout_snapshots')
+    .select('*').eq('kind','cc').order('collected_at',{ascending:false}).limit(1);
+  latestCCSnapshot = (data && data[0]) || null;
+  return latestCCSnapshot;
+}
+
+// Which categories have data in the CC snapshot (empty categories are hidden from chips)
+async function loadCCCategories(){
+  const snap = await loadLatestCCSnapshot();
+  if(!snap) return [];
+  const { data } = await sb.from('scout_videos').select('category_key')
+    .eq('snapshot_id', snap.id).eq('license','creativeCommon');
+  const set = new Set((data||[]).map(r=>r.category_key));
+  // Keep the CATEGORIES order, only include ones that exist
+  return Object.keys(CATEGORIES).filter(k=>set.has(k));
+}
+
+// CC overall: tally (count per category) + all videos (deduplicated, by view count)
+async function loadCCAll(){
+  const snap = await loadLatestCCSnapshot();
+  if(!snap) return { tally:[], videos:[] };
+  const { data } = await sb.from('scout_videos').select('*')
+    .eq('snapshot_id', snap.id).eq('license','creativeCommon')
+    .order('view_count',{ascending:false}).limit(800);
+  // Tally per category (show all 14 tracked categories, 0 if none)
+  // ※ Unlike the regular category tab, CC still displays categories with a count of 0.
+  //   Reason: ① CC isn't a place to pick via chips but a place to 'view' the tally, so 0 is meaningful information too
+  //         (it shows which fields do or don't have reuse-allowed videos. E.g., CC is rare for music/gaming)
+  //        ② Since CC is search-based, results fluctuate week to week — even if it's 0 this week, it may appear next week
+  //           so no specific category is permanently excluded. (education is effectively always 0, but the same rule applies)
+  const counts = {};
+  (data||[]).forEach(r=>{ counts[r.category_key]=(counts[r.category_key]||0)+1; });
+  const tally = Object.keys(CATEGORIES)
+    .map(k=>({ key:k, name:CATEGORIES[k], count:counts[k]||0 }))
+    .sort((a,b)=> b.count-a.count);
+  // Deduplicate all videos (the same video can appear in multiple categories)
+  const seen=new Set(); const videos=[];
+  (data||[]).forEach(v=>{ if(!seen.has(v.video_id)){ seen.add(v.video_id); videos.push(v); } });
+  return { tally, videos };
+}
+
+// CC top engagement: (likes + comments) / views, 1000+ views (relaxed threshold since CC views tend to be low)
+async function loadCCReaction(){
+  const snap = await loadLatestCCSnapshot();
+  if(!snap) return [];
+  const { data } = await sb.from('scout_videos').select('*')
+    .eq('snapshot_id', snap.id).eq('license','creativeCommon')
+    .gte('view_count', 1000).limit(800);
+  const seen=new Set(); const rows=[];
+  (data||[]).forEach(v=>{
+    if(seen.has(v.video_id)) return; seen.add(v.video_id);
+    const eng = ((v.like_count||0)+(v.comment_count||0)) / Math.max(1, v.view_count||1);
+    rows.push({...v, engagement:eng});
+  });
+  rows.sort((a,b)=> b.engagement-a.engagement);
+  return rows.slice(0,40);
+}
+
+// CC rising: view-count increase between the latest CC snapshot and the previous one (needs 2 snapshots)
+async function loadCCSurge(){
+  const { data: snaps } = await sb.from('scout_snapshots')
+    .select('*').eq('kind','cc').order('collected_at',{ascending:false}).limit(2);
+  if(!snaps || snaps.length < 2) return { notReady:true };
+  const [cur, prev] = snaps;
+  const { data: curV } = await sb.from('scout_videos').select('*')
+    .eq('snapshot_id', cur.id).eq('license','creativeCommon').limit(800);
+  const { data: prevV } = await sb.from('scout_videos').select('video_id,view_count')
+    .eq('snapshot_id', prev.id).eq('license','creativeCommon').limit(800);
+  const prevMap = {};
+  (prevV||[]).forEach(v=>{ if(prevMap[v.video_id]==null || v.view_count>prevMap[v.video_id]) prevMap[v.video_id]=v.view_count; });
+  const best = {};
+  (curV||[]).forEach(v=>{
+    const before = prevMap[v.video_id];
+    if(before==null) return;
+    const delta = (v.view_count||0) - before;
+    if(!best[v.video_id] || v.view_count>best[v.video_id].view_count) best[v.video_id] = {...v, delta};
+  });
+  const rows = Object.values(best).filter(v=>v.delta>0).sort((a,b)=>b.delta-a.delta).slice(0,40);
+  return { notReady:false, rows };
+}
+
+// CC video card (shows category)
+function ccCardHTML(v, i){
+  const catName = CATEGORIES[v.category_key] || '';
+  return `<a class="card" href="${v.youtube_url}" target="_blank" rel="noopener">
+    <div class="thumb">
+      <div class="rankbadge">${i+1}</div>
+      <div class="ccountry" style="color:#7ee787;">${catName}</div>
+      <img src="${v.thumbnail_url}" loading="lazy" alt="">
+    </div>
+    <div class="cbody">
+      <div class="ctitle">${escapeHtml(v.title)}</div>
+      <div class="cmeta">
+        <span class="views">${fmtViews(v.view_count)} views</span>
+        <span>· 👍${fmtViews(v.like_count)}</span>
+      </div>
+      <div class="cmeta"><span class="cchan">${escapeHtml(v.channel||'')}</span></div>
+    </div>
+  </a>`;
+}
+
+// CC engagement card (engagement % + category)
+function ccReactionCardHTML(v, i){
+  const catName = CATEGORIES[v.category_key] || '';
+  const pct = (v.engagement*100).toFixed(1);
+  return `<a class="card" href="${v.youtube_url}" target="_blank" rel="noopener">
+    <div class="thumb">
+      <div class="rankbadge">${i+1}</div>
+      <div class="ccountry" style="color:#ff7eb6;">Engagement ${pct}%</div>
+      <img src="${v.thumbnail_url}" loading="lazy" alt="">
+    </div>
+    <div class="cbody">
+      <div class="ctitle">${escapeHtml(v.title)}</div>
+      <div class="cmeta">
+        <span class="views" style="color:#ff7eb6;">Engagement ${pct}%</span>
+        <span>· ${fmtViews(v.view_count)} views</span>
+        ${catName?`<span>· ${catName}</span>`:''}
+      </div>
+      <div class="cmeta"><span class="cchan">${escapeHtml(v.channel||'')}</span></div>
+    </div>
+  </a>`;
+}
+
+// CC rising card (increase amount + category)
+function ccSurgeCardHTML(v, i){
+  const catName = CATEGORIES[v.category_key] || '';
+  return `<a class="card" href="${v.youtube_url}" target="_blank" rel="noopener">
+    <div class="thumb">
+      <div class="rankbadge">${i+1}</div>
+      <div class="ccountry" style="color:#c77dff;">▲ ${fmtViews(v.delta)}</div>
+      <img src="${v.thumbnail_url}" loading="lazy" alt="">
+    </div>
+    <div class="cbody">
+      <div class="ctitle">${escapeHtml(v.title)}</div>
+      <div class="cmeta">
+        <span class="views" style="color:#c77dff;">+${fmtViews(v.delta)} increase</span>
+        <span>· Total ${fmtViews(v.view_count)}</span>
+        ${catName?`<span>· ${catName}</span>`:''}
+      </div>
+      <div class="cmeta"><span class="cchan">${escapeHtml(v.channel||'')}</span></div>
+    </div>
+  </a>`;
+}
+
+async function render(){
+  const content = $('#content');
+  content.innerHTML = `<div class="state"><div class="spin"></div><div>Loading...</div></div>`;
+
+  // The rising view is handled separately
+  if(state.view==='rising'){
+    const periodName = {1:'Daily',7:'Weekly',30:'Monthly'}[state.risingPeriod] || '';
+    const r = await loadRising(state.risingPeriod);
+    $('#sectitle').firstChild.textContent = `Rising · ${periodName} `;
+    if(r.notReady){
+      $('#count').textContent = '';
+      let msg;
+      if(r.reason==='firstrun'){
+        msg = `Rising is calculated by <b style="color:var(--txt)">comparing changes over a time period</b>.<br><br>
+          There's only 1 collection snapshot so far, so there's no earlier data to compare against.<br>
+          <b style="color:var(--accent)">Once tomorrow's automatic collection runs</b>, daily rising will start showing.`;
+      } else {
+        const need = r.needDays, have = r.haveDays||0;
+        const left = Math.max(1, need - have);
+        msg = `${periodName} rising needs <b style="color:var(--txt)">about ${need} days of data</b>.<br><br>
+          About ${have} days have accumulated so far.<br>
+          <b style="color:var(--accent)">In about ${left} more day(s)</b>, ${periodName.toLowerCase()} rising will start showing.`;
+      }
+      content.innerHTML = `<div class="state">${msg}</div>`;
+      return;
+    }
+    $('#count').textContent = r.rows.length ? `${r.rows.length} · change over the last ${r.spanDays} days` : '';
+    if(!r.rows.length){
+      content.innerHTML = `<div class="state">No videos with rising view counts were found for this period.</div>`;
+      return;
+    }
+    content.innerHTML = `<div class="grid">${r.rows.map((v,i)=>risingCardHTML(v,i)).join('')}</div>`;
+    return;
+  }
+
+  // Reuse Allowed (CC) view
+  if(state.view==='cc'){
+    const snap = await loadLatestCCSnapshot();
+    if(!snap){
+      $('#sectitle').firstChild.textContent = 'Reuse Allowed ';
+      $('#count').textContent = '';
+      content.innerHTML = `<div class="state">
+        No Reuse Allowed (CC) data yet.<br>
+        Please run the CC collector first.
+      </div>`;
+      return;
+    }
+    const ccDate = snap.collected_at ? new Date(snap.collected_at).toLocaleDateString('en-US') : '';
+    const noticeHTML = `<div class="ccnotice">
+      <div style="margin-bottom:6px;"><b style="color:#7ee787;">📅 Updated once a week</b> <span style="color:#9aa;">· Last updated: ${ccDate}</span> <span style="color:#9aa;">(this is search-based, so it's collected on a weekly basis rather than in real time)</span></div>
+      ⚠️ These are videos YouTube has marked as <b>'Reuse Allowed (CC BY)'</b>.
+      Using them requires <b>crediting the original creator</b>, and some elements within a video — such as music or clips — may carry separate copyright, so
+      <b>please check the video's description directly</b>.
+    </div>`;
+
+    // --- Engagement mode ---
+    if(state.ccMode==='reaction'){
+      const rows = await loadCCReaction();
+      $('#sectitle').firstChild.textContent = 'Reuse Allowed · Top Engagement ';
+      $('#count').textContent = rows.length ? `${rows.length}` : '';
+      if(!rows.length){ content.innerHTML = noticeHTML + `<div class="state">No videos to display.</div>`; return; }
+      content.innerHTML = noticeHTML + `<div class="grid">${rows.map((v,i)=>ccReactionCardHTML(v,i)).join('')}</div>`;
+      return;
+    }
+
+    // --- Rising mode ---
+    if(state.ccMode==='surge'){
+      const r = await loadCCSurge();
+      $('#sectitle').firstChild.textContent = 'Reuse Allowed · Rising ';
+      if(r.notReady){
+        $('#count').textContent = '';
+        content.innerHTML = noticeHTML + `<div class="state">
+          Rising is calculated by <b style="color:var(--txt)">comparing last week to this week</b>.<br><br>
+          CC data is collected once a week, so there's no prior week's data to compare against yet.<br>
+          <b style="color:#7ee787;">After next week's collection</b>, rising will start showing.
+        </div>`;
+        return;
+      }
+      $('#count').textContent = r.rows.length ? `${r.rows.length} · vs. last week` : '';
+      if(!r.rows.length){ content.innerHTML = noticeHTML + `<div class="state">No videos rose this week.</div>`; return; }
+      content.innerHTML = noticeHTML + `<div class="grid">${r.rows.map((v,i)=>ccSurgeCardHTML(v,i)).join('')}</div>`;
+      return;
+    }
+
+    // --- Popular mode (default): tally + all videos ---
+    const { tally, videos } = await loadCCAll();
+    $('#sectitle').firstChild.textContent = 'Reuse Allowed ';
+    $('#count').textContent = videos.length ? `${videos.length} · updated weekly` : '';
+    if(!videos.length){
+      content.innerHTML = noticeHTML + `<div class="state">No Reuse Allowed videos found.</div>`;
+      return;
+    }
+    const tallyHTML = `<div class="cctally">
+      <div class="cctally-title">Reuse Allowed Video Count by Category</div>
+      <div class="cctally-grid">
+        ${tally.map(t=>`
+          <div class="cccount ${t.count===0?'zero':''}">
+            <span class="cccount-name">${t.name}</span>
+            <span class="cccount-num">${t.count}</span>
+          </div>`).join('')}
+      </div>
+    </div>`;
+    content.innerHTML = noticeHTML + tallyHTML + `<div class="grid">${videos.map((v,i)=>ccCardHTML(v,i)).join('')}</div>`;
+    return;
+  }
+
+  // Keyword trends view
+  if(state.view==='keyword'){
+    if(state.keywordMode==='popular'){
+      const kws = await loadKeywordsPopular();
+      $('#sectitle').firstChild.textContent = 'Popular Keywords ';
+      $('#count').textContent = kws.length ? `Top ${kws.length}` : '';
+      if(!kws.length){ content.innerHTML = `<div class="state">No data available to extract keywords from.</div>`; return; }
+      content.innerHTML = keywordListHTML(kws.map(k=>({word:k.word, count:k.count})), false);
+      bindKeywordCopy(kws.map(k=>k.word));
+      return;
+    } else {
+      const r = await loadKeywordsSurge();
+      $('#sectitle').firstChild.textContent = 'Rising Keywords ';
+      if(r.notReady){
+        $('#count').textContent = '';
+        content.innerHTML = `<div class="state">
+          Rising keywords are calculated by <b style="color:var(--txt)">comparing yesterday's and today's keywords</b>.<br><br>
+          There's only 1 collection snapshot so far, so there's no earlier data to compare against.<br>
+          <b style="color:var(--accent)">Once tomorrow's automatic collection runs</b>, rising keywords will start showing.
+        </div>`;
+        return;
+      }
+      $('#count').textContent = r.rows.length ? `Top ${r.rows.length}` : '';
+      if(!r.rows.length){ content.innerHTML = `<div class="state">No keywords rose during this period.</div>`; return; }
+      content.innerHTML = keywordListHTML(r.rows, true);
+      bindKeywordCopy(r.rows.map(k=>k.word));
+      return;
+    }
+  }
+
+  // Top engagement view
+  if(state.view==='engagement'){
+    const rows = await loadEngagement();
+    $('#sectitle').firstChild.textContent = 'Top Engagement ';
+    $('#count').textContent = rows.length ? `${rows.length} · videos with 10K+ views` : '';
+    if(!rows.length){
+      content.innerHTML = `<div class="state">No videos to display.</div>`;
+      return;
+    }
+    content.innerHTML = `<div class="grid">${rows.map((v,i)=>engagementCardHTML(v,i)).join('')}</div>`;
+    return;
+  }
+
+  let filter={}, title='';
+  if(state.view==='global'){ filter={country_code:'GLOBAL', limit:100}; title='Global Trending'; }
+  else if(state.view==='continent'){ filter={continent:state.continent, dedupe:true, limit:200}; title=`${CONTINENTS[state.continent]} Trending`; }
+  else if(state.view==='country'){ filter={country_code:state.country, limit:50}; title=`${COUNTRY_NAMES[state.country]} Trending`; }
+  else if(state.view==='category'){ filter={category_key:state.category, limit:50}; title=`${CATEGORIES[state.category]} Trending`; }
+
+  const vids = await loadVideos(filter);
+  $('#sectitle').firstChild.textContent = title + ' ';
+  $('#count').textContent = vids.length ? `${vids.length}` : '';
+  if(!vids.length){
+    content.innerHTML = `<div class="state">No videos to display. Data for this filter may not have been collected yet.</div>`;
+    return;
+  }
+  content.innerHTML = `<div class="grid">${vids.slice(0,filter.limit).map((v,i)=>cardHTML(v,i)).join('')}</div>`;
+}
+
+// Tab switching
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
+  t.classList.add('on');
+  state.view = t.dataset.view;
+  renderChips(); render();
+}));
+
+// Init
+(async ()=>{
+  latestSnapshot = await loadLatestSnapshot();
+  if(latestSnapshot){
+    const d = new Date(latestSnapshot.collected_at);
+    $('#updated').textContent = `Updated ${d.toLocaleString('en-US')}`;
+  } else {
+    $('#content').innerHTML = `<div class="state">No data has been collected yet. Please run the collector first.</div>`;
+    return;
+  }
+  renderChips();
+  render();
+})();
+</script>
 </body>
 </html>
