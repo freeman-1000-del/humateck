@@ -71,7 +71,7 @@
   .lead .upd{color:var(--hint); font-size:12px; margin-left:6px;}
 
   /* View buttons */
-  .tabs{display:grid; grid-template-columns:repeat(8,1fr); gap:9px; margin:24px 0 8px;}
+  .tabs{display:grid; grid-template-columns:repeat(9,1fr); gap:9px; margin:24px 0 8px;}
   .tab{
     background:var(--panel); border:1.5px solid var(--line); border-radius:14px;
     padding:13px 12px; cursor:pointer; transition:.15s; text-align:left;
@@ -104,7 +104,7 @@
   .grid{display:grid; grid-template-columns:repeat(5,1fr); gap:18px; min-width:0}
   .cardArticle{min-width:0}
   .card{min-width:0}
-  @media(max-width:1100px){.grid{grid-template-columns:repeat(3,1fr);} .tabs{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:1100px){.grid{grid-template-columns:repeat(3,1fr);} .tabs{grid-template-columns:repeat(3,1fr);}}
   @media(max-width:640px){.grid{grid-template-columns:repeat(2,1fr);} h1{font-size:28px;}}
   .card{background:var(--panel); border:1px solid var(--line); border-radius:14px; overflow:hidden; transition:.15s; text-decoration:none; color:inherit; display:flex; flex-direction:column;}
   .card:hover{transform:translateY(-3px); border-color:#3a4150;}
@@ -199,7 +199,7 @@
 
   <div class="eyebrow"><b>Content Scouter</b></div>
   <h1>Discover Trending YouTube Videos Worldwide</h1>
-  <div class="lead">Surfacing trending videos across 16 countries.<span class="upd" id="updated"></span> <span class="upd" id="buildTag">· build 2026-07-08</span></div>
+  <div class="lead">Surfacing trending videos across 16 countries.<span class="upd" id="updated"></span></div>
 
   <div class="tabs">
     <button class="tab on" data-view="global">
@@ -208,7 +208,11 @@
     </button>
     <button class="tab kill" data-view="cc">
       <div class="t"><span class="dot" style="background:#7ee787"></span>Reuse Allowed <span style="font-size:10px;color:#0d0f14;background:#7ee787;border-radius:8px;padding:1px 7px;margin-left:4px;font-weight:800;">CC</span></div>
-      <div class="d">Videos legally available for reuse · catalog grows weekly</div>
+      <div class="d">Videos legally available for reuse · updated weekly</div>
+    </button>
+    <button class="tab kill" data-view="pastcc">
+      <div class="t"><span class="dot" style="background:#7ee787"></span>Past CC Search</div>
+      <div class="d">Growing catalog of reuse-allowed videos</div>
     </button>
     <button class="tab" data-view="continent">
       <div class="t"><span class="dot" style="background:var(--good)"></span>By Continent</div>
@@ -478,7 +482,7 @@ function renderChips(){
     box.innerHTML = modes.map(([m,name])=>
       `<button class="chip ${state.keywordMode===m?'on':''}" data-type="keyword" data-val="${m}">${name}</button>`).join('');
   } else if(state.view==='cc'){
-    const modes = [['popular','This Week'],['archive','Past CC Search'],['reaction','Top Engagement'],['surge','Rising']];
+    const modes = [['popular','Popular'],['reaction','Top Engagement'],['surge','Rising']];
     box.innerHTML = modes.map(([m,name])=>
       `<button class="chip ${state.ccMode===m?'on':''}" data-type="cc" data-val="${m}">${name}</button>`).join('');
   } else {
@@ -981,7 +985,6 @@ async function render(){
       return;
     }
     const ccDate = snap.collected_at ? new Date(snap.collected_at).toLocaleDateString('en-US') : '';
-    const ccWeeks = (await loadCCSnapshots()).length;
     const noticeHTML = `<div class="ccnotice">
       ⚠️ These are videos YouTube has marked as <b>'Reuse Allowed (CC BY)'</b>.
       Using them requires <b>crediting the original creator</b>, and some elements within a video — such as music or clips — may carry separate copyright, so
@@ -1004,16 +1007,10 @@ async function render(){
     // --- Engagement mode ---
     if(state.ccMode==='reaction'){
       const rows = await loadCCReaction();
-      await renderRichVideoPage({
-        rows, cardFn: ccReactionCardHTML, context: 'cc',
-        introTitle: 'Reuse Allowed · top engagement',
-        introParas: [
-          'Creative Commons videos ranked by engagement (likes plus comments relative to views). Each entry includes a text summary of channel and stats.',
-          `Catalog spans ${ccWeeks} weekly collection${ccWeeks===1?'':'s'}; stats refresh when a video is seen again.`
-        ],
-        themeId: TREND_THEME_BY_VIEW.cc, sectitle: 'Reuse Allowed · Top Engagement',
-        countText: rows.length ? `${rows.length}` : '', prefixHTML: noticeHTML
-      });
+      $('#sectitle').firstChild.textContent = 'Reuse Allowed · Top Engagement ';
+      $('#count').textContent = rows.length ? `${rows.length}` : '';
+      if(!rows.length){ content.innerHTML = noticeHTML + `<div class="state">No videos to display.</div>`; return; }
+      content.innerHTML = noticeHTML + `<div class="grid">${rows.map((v,i)=>ccReactionCardHTML(v,i)).join('')}</div>`;
       return;
     }
 
@@ -1030,61 +1027,58 @@ async function render(){
         </div>`;
         return;
       }
-      await renderRichVideoPage({
-        rows: r.rows, cardFn: ccSurgeCardHTML, context: 'rising',
-        introTitle: 'Reuse Allowed · weekly rising CC videos',
-        introParas: [
-          'CC videos whose view counts increased the most versus last week\'s collection.',
-          'Each listing includes growth stats and a readable summary for content research.'
-        ],
-        themeId: TREND_THEME_BY_VIEW.cc, sectitle: 'Reuse Allowed · Rising',
-        countText: r.rows.length ? `${r.rows.length} · vs. last week` : '', prefixHTML: noticeHTML
-      });
+      $('#count').textContent = r.rows.length ? `${r.rows.length} · vs. last week` : '';
+      if(!r.rows.length){ content.innerHTML = noticeHTML + `<div class="state">No videos rose this week.</div>`; return; }
+      content.innerHTML = noticeHTML + `<div class="grid">${r.rows.map((v,i)=>ccSurgeCardHTML(v,i)).join('')}</div>`;
       return;
     }
 
-    // --- Past CC Search: accumulated catalog ---
-    if(state.ccMode==='archive'){
-      const { tally, videos, weeks } = await loadCCArchive();
-      const archiveNotice = noticeHTML + `<div class="ccnotice" style="margin-bottom:16px;">
-        <div style="margin-bottom:6px;"><b style="color:#7ee787;">📚 Past CC Search</b> <span style="color:#9aa;">· ${weeks} week${weeks===1?'':'s'} in catalog · Last added: ${ccDate}</span></div>
-        <span style="color:#9aa;">All reuse-allowed videos discovered across weekly collections — the catalog grows over time instead of replacing each week.</span>
-      </div>`;
-      $('#sectitle').firstChild.textContent = 'Past CC Search ';
-      $('#count').textContent = videos.length ? `${videos.length} · accumulated` : '';
-      if(!videos.length){
-        content.innerHTML = archiveNotice + `<div class="state">No past CC videos found yet.</div>`;
-        return;
-      }
-      const trends = await loadTrendsPanel(TREND_THEME_BY_VIEW.cc);
-      const intro = viewIntroHTML('Past CC Search — growing reuse catalog', [
-        `Browse ${videos.length} unique Creative Commons videos collected over ${weeks} week${weeks===1?'':'s'}. New entries are added each collection run; duplicates are merged and view counts updated.`,
-        'Use the category tally and text summaries below to research niches before remixing or citing source creators on YouTube.'
-      ]);
-      content.innerHTML = archiveNotice + intro + trends + tallyHTML(tally)
-        + renderRichGrid(videos, ccCardHTML, 'cc') + buildTextCatalog(videos, 'cc', 'Past CC Search');
-      return;
-    }
-
-    // --- This Week (default): latest snapshot ---
+    // --- Popular (default): this week's CC ---
     const { tally, videos } = await loadCCCurrentWeek();
-    const weekNotice = noticeHTML + `<div class="ccnotice" style="margin-bottom:16px;">
-      <b style="color:#7ee787;">📅 This week</b> <span style="color:#9aa;">· Collected ${ccDate}</span>
-      <span style="color:#9aa;"> · For the full growing library, open <b>Past CC Search</b>.</span>
-    </div>`;
-    $('#sectitle').firstChild.textContent = 'Reuse Allowed · This Week ';
-    $('#count').textContent = videos.length ? `${videos.length} · this week` : '';
+    $('#sectitle').firstChild.textContent = 'Reuse Allowed ';
+    $('#count').textContent = videos.length ? `${videos.length}` : '';
     if(!videos.length){
-      content.innerHTML = weekNotice + `<div class="state">No Reuse Allowed videos found this week.</div>`;
+      content.innerHTML = noticeHTML + `<div class="state">No Reuse Allowed videos found.</div>`;
       return;
     }
-    const trends = await loadTrendsPanel(TREND_THEME_BY_VIEW.cc);
-    const intro = viewIntroHTML('Reuse Allowed — this week\'s CC picks', [
-      'Fresh Creative Commons videos from the latest weekly collection, sorted by view count.',
-      'Each card links to YouTube and includes a text summary of title, channel, and engagement stats.'
-    ]);
-    content.innerHTML = weekNotice + intro + trends + tallyHTML(tally)
-      + renderRichGrid(videos, ccCardHTML, 'cc') + buildTextCatalog(videos, 'cc', 'Reuse Allowed this week');
+    content.innerHTML = noticeHTML + tallyHTML(tally) + `<div class="grid">${videos.map((v,i)=>ccCardHTML(v,i)).join('')}</div>`;
+    return;
+  }
+
+  // Past CC Search — accumulated catalog (own tab, same card layout as live site)
+  if(state.view==='pastcc'){
+    const snap = await loadLatestCCSnapshot();
+    if(!snap){
+      $('#sectitle').firstChild.textContent = 'Past CC Search ';
+      $('#count').textContent = '';
+      content.innerHTML = `<div class="state">No CC data yet. Please run the CC collector first.</div>`;
+      return;
+    }
+    const ccDate = snap.collected_at ? new Date(snap.collected_at).toLocaleDateString('en-US') : '';
+    const { tally, videos, weeks } = await loadCCArchive();
+    const noticeHTML = `<div class="ccnotice">
+      <div style="margin-bottom:6px;"><b style="color:#7ee787;">📚 Growing catalog</b> <span style="color:#9aa;">· ${weeks} week${weeks===1?'':'s'} collected · Last added: ${ccDate}</span></div>
+      ⚠️ Reuse-allowed (CC BY) videos — credit the original creator and check each video's YouTube description.
+    </div>`;
+    function tallyHTML(tally){
+      return `<div class="cctally">
+        <div class="cctally-title">Reuse Allowed Video Count by Category</div>
+        <div class="cctally-grid">
+          ${tally.map(t=>`
+            <div class="cccount ${t.count===0?'zero':''}">
+              <span class="cccount-name">${t.name}</span>
+              <span class="cccount-num">${t.count}</span>
+            </div>`).join('')}
+        </div>
+      </div>`;
+    }
+    $('#sectitle').firstChild.textContent = 'Past CC Search ';
+    $('#count').textContent = videos.length ? `${videos.length} · accumulated` : '';
+    if(!videos.length){
+      content.innerHTML = noticeHTML + `<div class="state">No past CC videos found yet.</div>`;
+      return;
+    }
+    content.innerHTML = noticeHTML + tallyHTML(tally) + `<div class="grid">${videos.map((v,i)=>ccCardHTML(v,i)).join('')}</div>`;
     return;
   }
 
