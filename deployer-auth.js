@@ -215,16 +215,28 @@
 
   async function registerFreeMember(options) {
     var body = options || {};
-    var res = await fetch(resolveRegisterUrl(), {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
+    var res;
+    try {
+      res = await fetch(resolveRegisterUrl(), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+    } catch (err) {
+      throw new Error(
+        "Sign-up server unreachable. The register-member function may not be deployed yet."
+      );
+    }
     var data = await res.json().catch(function () {
       return {};
     });
+    if (res.status === 404 || data.code === "NOT_FOUND") {
+      throw new Error(
+        "Sign-up server not found. Deploy register-member on Supabase, then try again."
+      );
+    }
     if (!res.ok || !data.ok) {
-      throw new Error((data && data.error) || "Sign-up failed");
+      throw new Error((data && (data.error || data.message)) || "Sign-up failed");
     }
     window.humateckFreeMemberRegistered = true;
     if (data.oauth_sub) saveOAuthSub(data.oauth_sub);
@@ -479,6 +491,7 @@
         try {
           if (window.google && google.accounts && google.accounts.id) {
             google.accounts.id.disableAutoSelect();
+            google.accounts.id.cancel();
           }
           localStorage.removeItem("humateckUserEmail");
           localStorage.removeItem("humateckEmail");
