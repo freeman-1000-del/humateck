@@ -19,6 +19,27 @@
     return "https://ajvtyotblrtexcxuazqm.supabase.co/functions/v1/register-member";
   }
 
+  function authFetchHeaders() {
+    return { "Content-Type": "application/json" };
+  }
+
+  function isFreeMemberRegistered() {
+    if (window.humateckFreeMemberRegistered === true) return true;
+    try {
+      return localStorage.getItem("humateckFreeMemberRegistered") === "1";
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function setFreeMemberRegistered(value) {
+    window.humateckFreeMemberRegistered = value === true;
+    try {
+      if (value) localStorage.setItem("humateckFreeMemberRegistered", "1");
+      else localStorage.removeItem("humateckFreeMemberRegistered");
+    } catch (e) {}
+  }
+
   function isInternalEmail(email) {
     return String(email || "").indexOf("@member.humateck") > 0;
   }
@@ -112,6 +133,16 @@
     if (modal) modal.hidden = false;
     setRegisterStatus("");
     updateAuthModalExtras();
+    refreshGoogleSignInButton();
+  }
+
+  function refreshGoogleSignInButton() {
+    if (isPlaceholder(GOOGLE_CLIENT_ID)) return;
+    waitForGoogle(function () {
+      var wrap = $("humateckGoogleSignIn");
+      if (wrap) wrap.innerHTML = "";
+      initGoogleSignIn();
+    });
   }
 
   function closeSignInModal() {
@@ -170,11 +201,9 @@
   }
 
   function updateAccountUI() {
-    var contact = getSavedEmail();
+    window.humateckFreeMemberRegistered = isFreeMemberRegistered();
     var signedIn =
-      window.humateckFreeMemberRegistered === true ||
-      !!getOAuthSub() ||
-      (!!contact && !isInternalEmail(contact));
+      isFreeMemberRegistered() || !!getOAuthSub();
     var out = $("humateckAccountSignedOut");
     var inn = $("humateckAccountSignedIn");
     var label = $("humateckAccountEmail");
@@ -197,7 +226,7 @@
       } else if (window.humateckSubscriptionActive) {
         badge.textContent = " · Paid";
         badge.style.color = "#7dffb0";
-      } else if (window.humateckFreeMemberRegistered) {
+      } else if (isFreeMemberRegistered()) {
         badge.textContent = " · Free";
         badge.style.color = "#9fd4ff";
       } else {
@@ -207,49 +236,61 @@
 
     document.body.classList.toggle(
       "humateck-is-signed-in",
-      signedIn && (window.humateckFreeMemberRegistered === true || !!getOAuthSub())
+      signedIn && (isFreeMemberRegistered() || !!getOAuthSub())
     );
   }
 
   window.humateckUpdateAccountUI = updateAccountUI;
 
+  async function postRegisterMember(body) {
+    var url = resolveRegisterUrl();
+    var options = {
+      method: "POST",
+      headers: authFetchHeaders(),
+      body: JSON.stringify(body),
+      cache: "no-store",
+      mode: "cors",
+    };
+    try {
+      return await fetch(url, options);
+    } catch (err) {
+      await new Promise(function (resolve) {
+        setTimeout(resolve, 400);
+      });
+      return await fetch(url, options);
+    }
+  }
+
   async function registerFreeMember(options) {
     var body = options || {};
     var res;
     try {
-      res = await fetch(resolveRegisterUrl(), {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
+      res = await postRegisterMember(body);
     } catch (err) {
       throw new Error(
-        "Sign-up server unreachable. The register-member function may not be deployed yet."
+        err instanceof Error && err.message
+          ? err.message
+          : "Connection problem. Please try again."
       );
     }
     var data = await res.json().catch(function () {
       return {};
     });
     if (res.status === 404 || data.code === "NOT_FOUND") {
-      throw new Error(
-        "Sign-up server not found. Deploy register-member on Supabase, then try again."
-      );
+      throw new Error("Sign-up server not found. Contact support@humateck.com.");
     }
     if (!res.ok || !data.ok) {
       throw new Error((data && (data.error || data.message)) || "Sign-up failed");
     }
-    window.humateckFreeMemberRegistered = true;
+    setFreeMemberRegistered(true);
     if (data.oauth_sub) saveOAuthSub(data.oauth_sub);
     if (data.contact_email) saveEmail(data.contact_email);
     else if (data.email && !isInternalEmail(data.email)) saveEmail(data.email);
     if (data.display_name) saveMemberLabel(data.display_name);
     else if (data.provider) saveMemberLabel(providerLabel(data.provider) + " account");
     if (data.provider) saveProvider(data.provider);
-    if (typeof window.applyHumateckPlanFromUI === "function") {
-      window.applyHumateckPlanFromUI("free");
-    }
     try {
-      localStorage.setItem("humateckSelectedPlan", "free");
+      localStorage.removeItem("humateckSelectedPlan");
     } catch (e) {}
     setRegisterStatus("");
     closeSignInModal();
@@ -272,7 +313,6 @@
       setRegisterStatus("Could not read your Google email.", true);
       return;
     }
-    saveEmail(email);
     try {
       await registerFreeMember({ provider: "google", credential: credential });
       await afterRegister(true);
@@ -433,6 +473,7 @@
   }
 
   document.addEventListener("DOMContentLoaded", function () {
+    window.humateckFreeMemberRegistered = isFreeMemberRegistered();
     if (handleMicrosoftReturn()) {
       updateAccountUI();
     }
@@ -451,7 +492,7 @@
 
     try {
       var params = new URLSearchParams(window.location.search);
-      if (params.get("signin") === "1" && !window.humateckFreeMemberRegistered) {
+      if (params.get("signin") === "1" && !isFreeMemberRegistered()) {
         openSignInModal("signup");
       }
     } catch (e) {}
@@ -498,9 +539,10 @@
           localStorage.removeItem("humateckAuthProvider");
           localStorage.removeItem("humateckOAuthSub");
           localStorage.removeItem("humateckMemberLabel");
+          localStorage.removeItem("humateckFreeMemberRegistered");
         } catch (e) {}
         window.humateckSubscriptionActive = false;
-        window.humateckFreeMemberRegistered = false;
+        setFreeMemberRegistered(false);
         window.humateckIsAdminMember = false;
         closeSignInModal();
         setRegisterStatus("");
