@@ -56,13 +56,14 @@
       color:#ff5436;text-transform:uppercase;
     }
 
-    .pageRow{position:relative;width:100%;padding:0;flex:1 1 auto;min-height:0}
+    .pageRow{position:relative;width:100%;padding:0;flex:1 1 auto;min-height:0;box-sizing:border-box}
     .pageRowInner{display:block;width:100%;height:100%;margin:0}
     .adCol{width:200px;flex:0 0 200px;padding-top:8px}
     .centerPanel{
       width:100%;height:100%;
       background:var(--page-gray);
       overflow:hidden;
+      box-sizing:border-box;
     }
 
     .deployerAd{
@@ -141,6 +142,11 @@
       .toolFrame{height:80vh;min-height:520px}
     }
     @media(min-width:961px){
+      .pageRow{
+        padding-left:calc(var(--ad-w) + var(--ad-gap) + var(--edge-pad-left));
+        padding-right:calc(var(--ad-w) + var(--ad-gap) + 12px);
+      }
+      .centerPanel{max-width:var(--main-max);margin:0 auto}
       .pageRow .adCol{
         position:fixed;top:49px;width:200px;z-index:40;padding-top:12px;
         pointer-events:none;
@@ -182,7 +188,7 @@
       </aside>
 
       <div class="centerPanel">
-        <iframe class="toolFrame" src="scouter.html" title="Content Scouter" loading="lazy"></iframe>
+        <iframe class="toolFrame" src="scouter.html?v=20260708" title="Content Scouter" loading="lazy"></iframe>
       </div>
 
       <aside class="adCol">
