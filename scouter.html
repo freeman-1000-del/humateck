@@ -3,7 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Content Scouter — Humateck</title>
+<title>Content Scouter — Global YouTube Trends &amp; CC Video Finder</title>
+<meta name="description" content="Discover trending YouTube videos across 16 countries, reuse-allowed Creative Commons catalog, rising view spikes, and engagement leaders. Updated daily with searchable video insights.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://contentscouter.com/scouter.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Content Scouter — YouTube Trends &amp; CC Finder">
+<meta property="og:description" content="Global trending videos, past CC search catalog, rising spikes, and engagement analytics for creators.">
+<meta property="og:url" content="https://contentscouter.com/scouter.html">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Content Scouter">
+<meta name="twitter:description" content="YouTube trending discovery, Creative Commons reuse catalog, and keyword trends.">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Content Scouter","url":"https://contentscouter.com/scouter.html","description":"Trending YouTube videos, Past CC Search catalog, rising analytics, and keyword trends.","applicationCategory":"MultimediaApplication","operatingSystem":"Web"}
+</script>
 
 <!-- ============================================================= -->
 <!-- ★★★ Fill in your keys here (check these two lines each time you swap files) ★★★ -->
@@ -11,7 +24,8 @@
 <script>
   window.HUMATECK_CONFIG = {
     SUPABASE_URL: 'https://ajvtyotblrtexcxuazqm.supabase.co',
-    SUPABASE_ANON_KEY: 'sb_publishable_cmn9eVnnvaAjXVJWa6bRQA_qrb1xglQ'   // ← Put your public (anon/publishable) key here
+    SUPABASE_ANON_KEY: 'sb_publishable_cmn9eVnnvaAjXVJWa6bRQA_qrb1xglQ',   // ← Put your public (anon/publishable) key here
+    KEYWORDS_URL: 'https://ajvtyotblrtexcxuazqm.supabase.co/functions/v1/keywords'
   };
 </script>
 <!-- ============================================================= -->
@@ -22,15 +36,33 @@
     --txt:#eef1f6; --sub:#aeb6c4; --hint:#6b7385;
     --accent:#ff5436; --accent2:#ffb454; --accent3:#4ea1ff;
     --good:#46d39a;
+    --page-gray:#505050;
+    --side-rail:240px;
+    --main-max:1160px;
+    --main-extra-pad:32px;
+    --layout-offset-x:4px;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
+  html{background:var(--page-gray);}
   body{
-    background:var(--bg); color:var(--txt);
+    background:var(--page-gray); color:var(--txt);
     font-family:"Pretendard","Noto Sans KR",-apple-system,BlinkMacSystemFont,sans-serif;
-    line-height:1.5; padding:24px 28px 60px; max-width:none; width:100%; margin:0;
+    line-height:1.5; padding:16px 0 48px; width:100%; margin:0;
   }
-  .eyebrow{font-size:12px; letter-spacing:.18em; color:var(--hint); font-weight:700; text-transform:uppercase;}
-  .eyebrow b{color:var(--accent);}
+  .scouterShell{
+    width:min(calc(100vw - var(--side-rail) * 2 - var(--main-extra-pad)), var(--main-max));
+    margin-left:calc(50% - min(calc((100vw - var(--side-rail) * 2 - var(--main-extra-pad)) / 2), calc(var(--main-max) / 2)) + var(--layout-offset-x));
+    margin-right:auto;
+    background:var(--bg);
+    border:2px solid #1e2433;
+    border-radius:12px;
+    padding:24px 28px 60px;
+    box-shadow:0 8px 40px rgba(0,0,0,.45);
+  }
+  @media(max-width:960px){
+    .scouterShell{margin:0 12px;width:auto;padding:20px 16px 48px}
+  }
+  .eyebrow{display:none}
   h1{font-size:38px; font-weight:800; letter-spacing:-.02em; margin:8px 0 6px; line-height:1.15;}
   .lead{color:var(--sub); font-size:14px;}
   .lead .upd{color:var(--hint); font-size:12px; margin-left:6px;}
@@ -123,11 +155,43 @@
   .cccount.zero .cccount-num{color:var(--hint);}
   .spin{display:inline-block; width:22px; height:22px; border:3px solid var(--line); border-top-color:var(--accent); border-radius:50%; animation:sp .8s linear infinite; margin-bottom:12px;}
   @keyframes sp{to{transform:rotate(360deg);}}
+  .cardArticle{display:flex;flex-direction:column}
+  .cardArticle .card{border-radius:14px 14px 0 0}
+  .videoInsight{
+    font-size:12px;line-height:1.55;color:var(--hint);
+    padding:10px 12px 13px;margin:0;
+    background:var(--panel);border:1px solid var(--line);border-top:0;
+    border-radius:0 0 14px 14px;
+  }
+  .viewIntro{
+    background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    padding:18px 20px;margin-bottom:18px;font-size:14px;line-height:1.65;color:var(--sub);
+  }
+  .viewIntroTitle{font-size:17px;font-weight:800;color:var(--accent2);margin:0 0 10px}
+  .viewIntro p{margin:0 0 10px}
+  .viewIntro p:last-child{margin-bottom:0}
+  .trendsPanel{
+    background:var(--panel2);border:1px solid var(--line);border-radius:14px;
+    padding:16px 18px;margin-bottom:18px;font-size:13px;line-height:1.6;color:var(--sub);
+  }
+  .trendsPanel h3{margin:0 0 8px;font-size:15px;color:#5ad1c8}
+  .trendsPanel ul{margin:8px 0;padding-left:20px}
+  .trendsPanel li{margin:5px 0}
+  .trendsNote{font-size:11px;color:var(--hint);margin:10px 0 0}
+  .textCatalog{
+    margin-top:28px;padding:20px;border:1px solid var(--line);border-radius:14px;
+    background:var(--panel);font-size:13px;line-height:1.6;color:var(--sub);
+  }
+  .textCatalog h3{font-size:16px;color:var(--accent2);margin:0 0 10px}
+  .textCatalog ol{margin:12px 0 0;padding-left:22px}
+  .textCatalog li{margin:0 0 12px}
 </style>
 </head>
 <body>
 
-  <div class="eyebrow">H U M A T E C K &nbsp;·&nbsp; <b>Content Scouter</b></div>
+<div class="scouterShell">
+
+  <div class="eyebrow"><b>Content Scouter</b></div>
   <h1>Discover Trending YouTube Videos Worldwide</h1>
   <div class="lead">Surfacing trending videos across 16 countries.<span class="upd" id="updated"></span></div>
 
@@ -138,7 +202,7 @@
     </button>
     <button class="tab kill" data-view="cc">
       <div class="t"><span class="dot" style="background:#7ee787"></span>Reuse Allowed <span style="font-size:10px;color:#0d0f14;background:#7ee787;border-radius:8px;padding:1px 7px;margin-left:4px;font-weight:800;">CC</span></div>
-      <div class="d">Videos legally available for reuse · updated weekly</div>
+      <div class="d">Videos legally available for reuse · catalog grows weekly</div>
     </button>
     <button class="tab" data-view="continent">
       <div class="t"><span class="dot" style="background:var(--good)"></span>By Continent</div>
@@ -173,6 +237,8 @@
     <div class="state"><div class="spin"></div><div>Loading data...</div></div>
   </div>
 
+</div>
+
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
@@ -201,7 +267,7 @@ const CATEGORIES = {
 
 let latestSnapshot = null;
 let state = { view:'global', country:'US', category:'music', continent:'asia', risingPeriod:1, keywordMode:'popular', ccCategory:'comedy', ccMode:'popular' };
-let latestCCSnapshot = null;
+let ccSnapshotsCache = null;
 
 const $ = (s)=>document.querySelector(s);
 const fmtViews = (n)=>{ n=Number(n)||0;
@@ -288,7 +354,7 @@ function cardHTML(v, i){
     <div class="thumb">
       <div class="rankbadge">${i+1}</div>
       ${v.country_code && v.country_code!=='GLOBAL' ? `<div class="ccountry">${v.country_code}</div>`:''}
-      <img src="${v.thumbnail_url}" loading="lazy" alt="">
+      <img src="${v.thumbnail_url}" loading="lazy" alt="${escapeHtml(v.title||'YouTube video')}">
     </div>
     <div class="cbody">
       <div class="ctitle">${escapeHtml(v.title)}</div>
@@ -303,6 +369,79 @@ function cardHTML(v, i){
   </a>`;
 }
 function escapeHtml(s){ return (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+const fmtNum = (n)=> Number(n||0).toLocaleString('en-US');
+
+function videoInsightText(v, context){
+  const title = v.title || 'Untitled video';
+  const channel = v.channel || 'Unknown channel';
+  const views = fmtNum(v.view_count);
+  const likes = fmtNum(v.like_count||0);
+  const comments = fmtNum(v.comment_count||0);
+  const cat = CATEGORIES[v.category_key] || v.category_key || '';
+  const country = v.country_code && v.country_code!=='GLOBAL' ? (COUNTRY_NAMES[v.country_code]||v.country_code) : '';
+  const ago = agoText(v.published_at);
+  const pub = v.published_at ? new Date(v.published_at).toLocaleDateString('en-US') : '';
+  if(context==='cc' || v.license==='creativeCommon'){
+    return `"${title}" is a Creative Commons (reuse-allowed) ${cat?cat+' ':''}video by ${channel}, with ${views} views, ${likes} likes, and ${comments} comments${ago?` (uploaded ${ago})` : ''}. You may reuse it under CC BY if you credit the creator; verify music and clips in the YouTube description.`;
+  }
+  if(context==='rising' && v.delta!=null){
+    return `"${title}" by ${channel} gained ${fmtViews(v.delta)} views recently, reaching ${views} total${country?` among ${country} trending` : ''}. Engagement: ${likes} likes and ${comments} comments${pub?`; published ${pub}` : ''}.`;
+  }
+  if(context==='engagement'){
+    const pct = ((v.engagement||0)*100).toFixed(1);
+    return `"${title}" from ${channel} shows ${pct}% engagement (${likes} likes, ${comments} comments vs ${views} views)${country?` in ${country}` : ''}. High interaction often signals strong community discussion — read comments on YouTube for audience sentiment.`;
+  }
+  return `"${title}" by ${channel}${country?` (${country})` : ''} has ${views} views, ${likes} likes, and ${comments} comments${cat?`; category ${cat}` : ''}${ago?`; published ${ago}` : ''}. Open on YouTube for the full description and comment thread.`;
+}
+function videoInsightHTML(v, context){
+  return `<p class="videoInsight">${escapeHtml(videoInsightText(v, context))}</p>`;
+}
+function viewIntroHTML(title, paragraphs){
+  return `<section class="viewIntro"><h2 class="viewIntroTitle">${escapeHtml(title)}</h2>${(paragraphs||[]).map(p=>`<p>${p}</p>`).join('')}</section>`;
+}
+function renderRichGrid(rows, cardFn, context){
+  return `<div class="grid">${rows.map((v,i)=>`<article class="cardArticle">${cardFn(v,i)}${videoInsightHTML(v, context)}</article>`).join('')}</div>`;
+}
+function buildTextCatalog(rows, context, heading){
+  const items = rows.slice(0,40).map((v,i)=>
+    `<li><strong>#${i+1} ${escapeHtml(v.title||'')}</strong> — ${escapeHtml(videoInsightText(v, context))}</li>`
+  ).join('');
+  return `<section class="textCatalog"><h3>${escapeHtml(heading)} — searchable summaries</h3><p>Text index of listed videos for discovery and research. Full descriptions and comments are on YouTube.</p><ol>${items}</ol></section>`;
+}
+const TREND_THEME_BY_VIEW = { global:'shock', cc:'tips', rising:'controversy', engagement:'emotion', keyword:'tips' };
+async function loadTrendsPanel(themeId){
+  const url = window.HUMATECK_CONFIG.KEYWORDS_URL
+    || `${window.HUMATECK_CONFIG.SUPABASE_URL}/functions/v1/keywords`;
+  try{
+    const res = await fetch(url,{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ themeId: themeId||'tips' }), cache:'no-store'
+    });
+    if(!res.ok) return '';
+    const data = await res.json();
+    if(!data.ok || !Array.isArray(data.results) || !data.results.length) return '';
+    const items = data.results.slice(0,6).map(r=>{
+      const kw = escapeHtml(r.keyword||'');
+      const sug = r.suggestedTitle ? ` — ${escapeHtml(r.suggestedTitle)}` : '';
+      const score = r.score!=null ? ` (score ${r.score})` : '';
+      return `<li><strong>${kw}</strong>${sug}${score}</li>`;
+    }).join('');
+    const when = data.fetchedAt ? new Date(data.fetchedAt).toLocaleDateString('en-US') : 'today';
+    return `<aside class="trendsPanel"><h3>Google Trends · related US searches</h3><p>Pair these rising queries with the videos below to find timely short-form and long-form angles.</p><ul>${items}</ul><p class="trendsNote">Seed: ${escapeHtml(data.seedKeyword||themeId)} · Google Trends via DataForSEO · ${when}</p></aside>`;
+  }catch(e){ console.warn('Trends panel', e); return ''; }
+}
+async function renderRichVideoPage({ rows, cardFn, context, introTitle, introParas, themeId, sectitle, countText, prefixHTML }){
+  $('#sectitle').firstChild.textContent = sectitle + ' ';
+  $('#count').textContent = countText || '';
+  const content = $('#content');
+  if(!rows.length){
+    content.innerHTML = (prefixHTML||'') + viewIntroHTML(introTitle, introParas) + `<div class="state">No videos to display.</div>`;
+    return;
+  }
+  const trends = themeId ? await loadTrendsPanel(themeId) : '';
+  content.innerHTML = (prefixHTML||'') + viewIntroHTML(introTitle, introParas) + trends
+    + renderRichGrid(rows, cardFn, context) + buildTextCatalog(rows, context, introTitle);
+}
 
 // Render sub-selection chips
 function renderChips(){
@@ -333,7 +472,7 @@ function renderChips(){
     box.innerHTML = modes.map(([m,name])=>
       `<button class="chip ${state.keywordMode===m?'on':''}" data-type="keyword" data-val="${m}">${name}</button>`).join('');
   } else if(state.view==='cc'){
-    const modes = [['popular','Popular'],['reaction','Top Engagement'],['surge','Rising']];
+    const modes = [['popular','This Week'],['archive','Past CC Search'],['reaction','Top Engagement'],['surge','Rising']];
     box.innerHTML = modes.map(([m,name])=>
       `<button class="chip ${state.ccMode===m?'on':''}" data-type="cc" data-val="${m}">${name}</button>`).join('');
   } else {
@@ -377,7 +516,7 @@ async function loadRising(periodDays){
     return { notReady:true, reason:'notenough', haveDays: Math.round(spanDays), needDays: periodDays };
   }
 
-  const { data: curV } = await sb.from('scout_videos').select('video_id,title,channel,thumbnail_url,view_count,like_count,published_at,country_code,youtube_url')
+  const { data: curV } = await sb.from('scout_videos').select('video_id,title,channel,thumbnail_url,view_count,like_count,comment_count,published_at,country_code,youtube_url')
     .eq('snapshot_id', cur.id).eq('category_key','all').neq('country_code','GLOBAL');
   const { data: prevV } = await sb.from('scout_videos').select('video_id,view_count')
     .eq('snapshot_id', prev.id).eq('category_key','all').neq('country_code','GLOBAL');
@@ -404,7 +543,7 @@ function risingCardHTML(v, i){
     <div class="thumb">
       <div class="rankbadge">${i+1}</div>
       <div class="ccountry" style="color:#c77dff;">▲ ${fmtViews(v.delta)}</div>
-      <img src="${v.thumbnail_url}" loading="lazy" alt="">
+      <img src="${v.thumbnail_url}" loading="lazy" alt="${escapeHtml(v.title||'YouTube video')}">
     </div>
     <div class="cbody">
       <div class="ctitle">${escapeHtml(v.title)}</div>
@@ -445,7 +584,7 @@ function engagementCardHTML(v, i){
     <div class="thumb">
       <div class="rankbadge">${i+1}</div>
       <div class="ccountry" style="color:#ff7eb6;">${pct}%</div>
-      <img src="${v.thumbnail_url}" loading="lazy" alt="">
+      <img src="${v.thumbnail_url}" loading="lazy" alt="${escapeHtml(v.title||'YouTube video')}">
     </div>
     <div class="cbody">
       <div class="ctitle">${escapeHtml(v.title)}</div>
@@ -592,63 +731,104 @@ function bindKeywordCopy(words){
 }
 
 // ===== Reuse Allowed (CC) =====
-// Find the latest CC snapshot (kind='cc')
-async function loadLatestCCSnapshot(){
-  if(latestCCSnapshot) return latestCCSnapshot;
+// All CC snapshots (kind='cc') — catalog accumulates across weekly collections
+async function loadCCSnapshots(){
+  if(ccSnapshotsCache) return ccSnapshotsCache;
   const { data } = await sb.from('scout_snapshots')
-    .select('*').eq('kind','cc').order('collected_at',{ascending:false}).limit(1);
-  latestCCSnapshot = (data && data[0]) || null;
-  return latestCCSnapshot;
+    .select('id, collected_at')
+    .eq('kind','cc')
+    .order('collected_at',{ascending:false});
+  ccSnapshotsCache = data || [];
+  return ccSnapshotsCache;
 }
 
-// Which categories have data in the CC snapshot (empty categories are hidden from chips)
+async function loadLatestCCSnapshot(){
+  const snaps = await loadCCSnapshots();
+  return snaps[0] || null;
+}
+
+function dedupeCCVideos(rows){
+  const byVideo = new Map();
+  (rows||[]).forEach(v=>{
+    const cur = byVideo.get(v.video_id);
+    if(!cur || (v.view_count||0) > (cur.view_count||0)) byVideo.set(v.video_id, v);
+  });
+  return [...byVideo.values()];
+}
+
+async function loadAccumulatedCCVideos(){
+  const snaps = await loadCCSnapshots();
+  if(!snaps.length) return [];
+  const snapIds = snaps.map(s=>s.id);
+  const all = [];
+  const idBatch = 40;
+  const pageSize = 1000;
+  for(let i = 0; i < snapIds.length; i += idBatch){
+    const batch = snapIds.slice(i, i + idBatch);
+    let from = 0;
+    while(true){
+      const { data } = await sb.from('scout_videos').select('*')
+        .in('snapshot_id', batch)
+        .eq('license','creativeCommon')
+        .order('view_count',{ascending:false})
+        .range(from, from + pageSize - 1);
+      if(!data || !data.length) break;
+      all.push(...data);
+      if(data.length < pageSize) break;
+      from += pageSize;
+    }
+  }
+  return dedupeCCVideos(all);
+}
+
+function buildCCTally(videos){
+  const counts = {};
+  (videos||[]).forEach(v=>{ counts[v.category_key]=(counts[v.category_key]||0)+1; });
+  return Object.keys(CATEGORIES)
+    .map(k=>({ key:k, name:CATEGORIES[k], count:counts[k]||0 }))
+    .sort((a,b)=> b.count-a.count);
+}
+
+// Which categories have data in the accumulated CC catalog
 async function loadCCCategories(){
-  const snap = await loadLatestCCSnapshot();
-  if(!snap) return [];
-  const { data } = await sb.from('scout_videos').select('category_key')
-    .eq('snapshot_id', snap.id).eq('license','creativeCommon');
-  const set = new Set((data||[]).map(r=>r.category_key));
-  // Keep the CATEGORIES order, only include ones that exist
+  const videos = await loadAccumulatedCCVideos();
+  const set = new Set(videos.map(v=>v.category_key));
   return Object.keys(CATEGORIES).filter(k=>set.has(k));
 }
 
-// CC overall: tally (count per category) + all videos (deduplicated, by view count)
-async function loadCCAll(){
+// CC this week: latest snapshot only
+async function loadCCCurrentWeek(){
   const snap = await loadLatestCCSnapshot();
   if(!snap) return { tally:[], videos:[] };
   const { data } = await sb.from('scout_videos').select('*')
     .eq('snapshot_id', snap.id).eq('license','creativeCommon')
     .order('view_count',{ascending:false}).limit(800);
-  // Tally per category (show all 14 tracked categories, 0 if none)
-  // ※ Unlike the regular category tab, CC still displays categories with a count of 0.
-  //   Reason: ① CC isn't a place to pick via chips but a place to 'view' the tally, so 0 is meaningful information too
-  //         (it shows which fields do or don't have reuse-allowed videos. E.g., CC is rare for music/gaming)
-  //        ② Since CC is search-based, results fluctuate week to week — even if it's 0 this week, it may appear next week
-  //           so no specific category is permanently excluded. (education is effectively always 0, but the same rule applies)
-  const counts = {};
-  (data||[]).forEach(r=>{ counts[r.category_key]=(counts[r.category_key]||0)+1; });
-  const tally = Object.keys(CATEGORIES)
-    .map(k=>({ key:k, name:CATEGORIES[k], count:counts[k]||0 }))
-    .sort((a,b)=> b.count-a.count);
-  // Deduplicate all videos (the same video can appear in multiple categories)
-  const seen=new Set(); const videos=[];
-  (data||[]).forEach(v=>{ if(!seen.has(v.video_id)){ seen.add(v.video_id); videos.push(v); } });
-  return { tally, videos };
+  const videos = dedupeCCVideos(data||[]).sort((a,b)=>(b.view_count||0)-(a.view_count||0));
+  return { tally: buildCCTally(videos), videos };
+}
+
+// Past CC Search: accumulated catalog across all weekly collections
+async function loadCCArchive(){
+  const videos = (await loadAccumulatedCCVideos())
+    .sort((a,b)=>(b.view_count||0)-(a.view_count||0));
+  const weeks = (await loadCCSnapshots()).length;
+  return { tally: buildCCTally(videos), videos, weeks };
+}
+
+// CC overall (alias for archive)
+async function loadCCAll(){
+  return loadCCArchive();
 }
 
 // CC top engagement: (likes + comments) / views, 1000+ views (relaxed threshold since CC views tend to be low)
 async function loadCCReaction(){
-  const snap = await loadLatestCCSnapshot();
-  if(!snap) return [];
-  const { data } = await sb.from('scout_videos').select('*')
-    .eq('snapshot_id', snap.id).eq('license','creativeCommon')
-    .gte('view_count', 1000).limit(800);
-  const seen=new Set(); const rows=[];
-  (data||[]).forEach(v=>{
-    if(seen.has(v.video_id)) return; seen.add(v.video_id);
-    const eng = ((v.like_count||0)+(v.comment_count||0)) / Math.max(1, v.view_count||1);
-    rows.push({...v, engagement:eng});
-  });
+  const videos = await loadAccumulatedCCVideos();
+  const rows = videos
+    .filter(v=>(v.view_count||0) >= 1000)
+    .map(v=>{
+      const eng = ((v.like_count||0)+(v.comment_count||0)) / Math.max(1, v.view_count||1);
+      return {...v, engagement:eng};
+    });
   rows.sort((a,b)=> b.engagement-a.engagement);
   return rows.slice(0,40);
 }
@@ -683,7 +863,7 @@ function ccCardHTML(v, i){
     <div class="thumb">
       <div class="rankbadge">${i+1}</div>
       <div class="ccountry" style="color:#7ee787;">${catName}</div>
-      <img src="${v.thumbnail_url}" loading="lazy" alt="">
+      <img src="${v.thumbnail_url}" loading="lazy" alt="${escapeHtml(v.title||'YouTube video')}">
     </div>
     <div class="cbody">
       <div class="ctitle">${escapeHtml(v.title)}</div>
@@ -704,7 +884,7 @@ function ccReactionCardHTML(v, i){
     <div class="thumb">
       <div class="rankbadge">${i+1}</div>
       <div class="ccountry" style="color:#ff7eb6;">Engagement ${pct}%</div>
-      <img src="${v.thumbnail_url}" loading="lazy" alt="">
+      <img src="${v.thumbnail_url}" loading="lazy" alt="${escapeHtml(v.title||'YouTube video')}">
     </div>
     <div class="cbody">
       <div class="ctitle">${escapeHtml(v.title)}</div>
@@ -725,7 +905,7 @@ function ccSurgeCardHTML(v, i){
     <div class="thumb">
       <div class="rankbadge">${i+1}</div>
       <div class="ccountry" style="color:#c77dff;">▲ ${fmtViews(v.delta)}</div>
-      <img src="${v.thumbnail_url}" loading="lazy" alt="">
+      <img src="${v.thumbnail_url}" loading="lazy" alt="${escapeHtml(v.title||'YouTube video')}">
     </div>
     <div class="cbody">
       <div class="ctitle">${escapeHtml(v.title)}</div>
@@ -770,7 +950,15 @@ async function render(){
       content.innerHTML = `<div class="state">No videos with rising view counts were found for this period.</div>`;
       return;
     }
-    content.innerHTML = `<div class="grid">${r.rows.map((v,i)=>risingCardHTML(v,i)).join('')}</div>`;
+    await renderRichVideoPage({
+      rows: r.rows, cardFn: risingCardHTML, context: 'rising',
+      introTitle: 'Rising videos — view spike analysis',
+      introParas: [
+        'These videos gained the most views compared to the previous collection period. Each card includes channel stats and a text summary for research.',
+        'Cross-check spikes with Google Trends to see whether search interest is moving in the same direction.'
+      ],
+      themeId: TREND_THEME_BY_VIEW.rising, sectitle: `Rising · ${periodName}`, countText: $('#count').textContent
+    });
     return;
   }
 
@@ -787,20 +975,39 @@ async function render(){
       return;
     }
     const ccDate = snap.collected_at ? new Date(snap.collected_at).toLocaleDateString('en-US') : '';
+    const ccWeeks = (await loadCCSnapshots()).length;
     const noticeHTML = `<div class="ccnotice">
-      <div style="margin-bottom:6px;"><b style="color:#7ee787;">📅 Updated once a week</b> <span style="color:#9aa;">· Last updated: ${ccDate}</span> <span style="color:#9aa;">(this is search-based, so it's collected on a weekly basis rather than in real time)</span></div>
       ⚠️ These are videos YouTube has marked as <b>'Reuse Allowed (CC BY)'</b>.
       Using them requires <b>crediting the original creator</b>, and some elements within a video — such as music or clips — may carry separate copyright, so
       <b>please check the video's description directly</b>.
     </div>`;
 
+    function tallyHTML(tally){
+      return `<div class="cctally">
+        <div class="cctally-title">Reuse Allowed Video Count by Category</div>
+        <div class="cctally-grid">
+          ${tally.map(t=>`
+            <div class="cccount ${t.count===0?'zero':''}">
+              <span class="cccount-name">${t.name}</span>
+              <span class="cccount-num">${t.count}</span>
+            </div>`).join('')}
+        </div>
+      </div>`;
+    }
+
     // --- Engagement mode ---
     if(state.ccMode==='reaction'){
       const rows = await loadCCReaction();
-      $('#sectitle').firstChild.textContent = 'Reuse Allowed · Top Engagement ';
-      $('#count').textContent = rows.length ? `${rows.length}` : '';
-      if(!rows.length){ content.innerHTML = noticeHTML + `<div class="state">No videos to display.</div>`; return; }
-      content.innerHTML = noticeHTML + `<div class="grid">${rows.map((v,i)=>ccReactionCardHTML(v,i)).join('')}</div>`;
+      await renderRichVideoPage({
+        rows, cardFn: ccReactionCardHTML, context: 'cc',
+        introTitle: 'Reuse Allowed · top engagement',
+        introParas: [
+          'Creative Commons videos ranked by engagement (likes plus comments relative to views). Each entry includes a text summary of channel and stats.',
+          `Catalog spans ${ccWeeks} weekly collection${ccWeeks===1?'':'s'}; stats refresh when a video is seen again.`
+        ],
+        themeId: TREND_THEME_BY_VIEW.cc, sectitle: 'Reuse Allowed · Top Engagement',
+        countText: rows.length ? `${rows.length}` : '', prefixHTML: noticeHTML
+      });
       return;
     }
 
@@ -817,31 +1024,61 @@ async function render(){
         </div>`;
         return;
       }
-      $('#count').textContent = r.rows.length ? `${r.rows.length} · vs. last week` : '';
-      if(!r.rows.length){ content.innerHTML = noticeHTML + `<div class="state">No videos rose this week.</div>`; return; }
-      content.innerHTML = noticeHTML + `<div class="grid">${r.rows.map((v,i)=>ccSurgeCardHTML(v,i)).join('')}</div>`;
+      await renderRichVideoPage({
+        rows: r.rows, cardFn: ccSurgeCardHTML, context: 'rising',
+        introTitle: 'Reuse Allowed · weekly rising CC videos',
+        introParas: [
+          'CC videos whose view counts increased the most versus last week\'s collection.',
+          'Each listing includes growth stats and a readable summary for content research.'
+        ],
+        themeId: TREND_THEME_BY_VIEW.cc, sectitle: 'Reuse Allowed · Rising',
+        countText: r.rows.length ? `${r.rows.length} · vs. last week` : '', prefixHTML: noticeHTML
+      });
       return;
     }
 
-    // --- Popular mode (default): tally + all videos ---
-    const { tally, videos } = await loadCCAll();
-    $('#sectitle').firstChild.textContent = 'Reuse Allowed ';
-    $('#count').textContent = videos.length ? `${videos.length} · updated weekly` : '';
-    if(!videos.length){
-      content.innerHTML = noticeHTML + `<div class="state">No Reuse Allowed videos found.</div>`;
+    // --- Past CC Search: accumulated catalog ---
+    if(state.ccMode==='archive'){
+      const { tally, videos, weeks } = await loadCCArchive();
+      const archiveNotice = noticeHTML + `<div class="ccnotice" style="margin-bottom:16px;">
+        <div style="margin-bottom:6px;"><b style="color:#7ee787;">📚 Past CC Search</b> <span style="color:#9aa;">· ${weeks} week${weeks===1?'':'s'} in catalog · Last added: ${ccDate}</span></div>
+        <span style="color:#9aa;">All reuse-allowed videos discovered across weekly collections — the catalog grows over time instead of replacing each week.</span>
+      </div>`;
+      $('#sectitle').firstChild.textContent = 'Past CC Search ';
+      $('#count').textContent = videos.length ? `${videos.length} · accumulated` : '';
+      if(!videos.length){
+        content.innerHTML = archiveNotice + `<div class="state">No past CC videos found yet.</div>`;
+        return;
+      }
+      const trends = await loadTrendsPanel(TREND_THEME_BY_VIEW.cc);
+      const intro = viewIntroHTML('Past CC Search — growing reuse catalog', [
+        `Browse ${videos.length} unique Creative Commons videos collected over ${weeks} week${weeks===1?'':'s'}. New entries are added each collection run; duplicates are merged and view counts updated.`,
+        'Use the category tally and text summaries below to research niches before remixing or citing source creators on YouTube.'
+      ]);
+      content.innerHTML = archiveNotice + intro + trends + tallyHTML(tally)
+        + renderRichGrid(videos, ccCardHTML, 'cc') + buildTextCatalog(videos, 'cc', 'Past CC Search');
       return;
     }
-    const tallyHTML = `<div class="cctally">
-      <div class="cctally-title">Reuse Allowed Video Count by Category</div>
-      <div class="cctally-grid">
-        ${tally.map(t=>`
-          <div class="cccount ${t.count===0?'zero':''}">
-            <span class="cccount-name">${t.name}</span>
-            <span class="cccount-num">${t.count}</span>
-          </div>`).join('')}
-      </div>
+
+    // --- This Week (default): latest snapshot ---
+    const { tally, videos } = await loadCCCurrentWeek();
+    const weekNotice = noticeHTML + `<div class="ccnotice" style="margin-bottom:16px;">
+      <b style="color:#7ee787;">📅 This week</b> <span style="color:#9aa;">· Collected ${ccDate}</span>
+      <span style="color:#9aa;"> · For the full growing library, open <b>Past CC Search</b>.</span>
     </div>`;
-    content.innerHTML = noticeHTML + tallyHTML + `<div class="grid">${videos.map((v,i)=>ccCardHTML(v,i)).join('')}</div>`;
+    $('#sectitle').firstChild.textContent = 'Reuse Allowed · This Week ';
+    $('#count').textContent = videos.length ? `${videos.length} · this week` : '';
+    if(!videos.length){
+      content.innerHTML = weekNotice + `<div class="state">No Reuse Allowed videos found this week.</div>`;
+      return;
+    }
+    const trends = await loadTrendsPanel(TREND_THEME_BY_VIEW.cc);
+    const intro = viewIntroHTML('Reuse Allowed — this week\'s CC picks', [
+      'Fresh Creative Commons videos from the latest weekly collection, sorted by view count.',
+      'Each card links to YouTube and includes a text summary of title, channel, and engagement stats.'
+    ]);
+    content.innerHTML = weekNotice + intro + trends + tallyHTML(tally)
+      + renderRichGrid(videos, ccCardHTML, 'cc') + buildTextCatalog(videos, 'cc', 'Reuse Allowed this week');
     return;
   }
 
@@ -852,7 +1089,14 @@ async function render(){
       $('#sectitle').firstChild.textContent = 'Popular Keywords ';
       $('#count').textContent = kws.length ? `Top ${kws.length}` : '';
       if(!kws.length){ content.innerHTML = `<div class="state">No data available to extract keywords from.</div>`; return; }
-      content.innerHTML = keywordListHTML(kws.map(k=>({word:k.word, count:k.count})), false);
+      const trends = await loadTrendsPanel(TREND_THEME_BY_VIEW.keyword);
+      const intro = viewIntroHTML('Popular keywords from trending titles', [
+        'Frequently occurring words extracted from today\'s trending video titles across collected countries.',
+        'Use these alongside Google Trends below to validate search demand before scripting shorts or long-form videos.'
+      ]);
+      const kwHtml = keywordListHTML(kws.map(k=>({word:k.word, count:k.count})), false);
+      const kwText = `<section class="textCatalog"><h3>Keyword text index</h3><ol>${kws.slice(0,40).map((k,i)=>`<li><strong>#${i+1} ${escapeHtml(k.word)}</strong> — appears in ${k.count} trending title${k.count===1?'':'s'} today.</li>`).join('')}</ol></section>`;
+      content.innerHTML = intro + trends + kwHtml + kwText;
       bindKeywordCopy(kws.map(k=>k.word));
       return;
     } else {
@@ -878,30 +1122,35 @@ async function render(){
   // Top engagement view
   if(state.view==='engagement'){
     const rows = await loadEngagement();
-    $('#sectitle').firstChild.textContent = 'Top Engagement ';
-    $('#count').textContent = rows.length ? `${rows.length} · videos with 10K+ views` : '';
-    if(!rows.length){
-      content.innerHTML = `<div class="state">No videos to display.</div>`;
-      return;
-    }
-    content.innerHTML = `<div class="grid">${rows.map((v,i)=>engagementCardHTML(v,i)).join('')}</div>`;
+    await renderRichVideoPage({
+      rows, cardFn: engagementCardHTML, context: 'engagement',
+      introTitle: 'Top engagement trending videos',
+      introParas: [
+        'Videos with the highest ratio of likes and comments to views (10K+ views minimum).',
+        'Text summaries highlight channel, region, and discussion volume — open YouTube for full descriptions and comment threads.'
+      ],
+      themeId: TREND_THEME_BY_VIEW.engagement, sectitle: 'Top Engagement',
+      countText: rows.length ? `${rows.length} · videos with 10K+ views` : ''
+    });
     return;
   }
 
-  let filter={}, title='';
+  let filter={}, title='', context='trending', themeId=TREND_THEME_BY_VIEW.global;
   if(state.view==='global'){ filter={country_code:'GLOBAL', limit:100}; title='Global Trending'; }
   else if(state.view==='continent'){ filter={continent:state.continent, dedupe:true, limit:200}; title=`${CONTINENTS[state.continent]} Trending`; }
   else if(state.view==='country'){ filter={country_code:state.country, limit:50}; title=`${COUNTRY_NAMES[state.country]} Trending`; }
-  else if(state.view==='category'){ filter={category_key:state.category, limit:50}; title=`${CATEGORIES[state.category]} Trending`; }
+  else if(state.view==='category'){ filter={category_key:state.category, limit:50}; title=`${CATEGORIES[state.category]} Trending`; themeId='tips'; }
 
   const vids = await loadVideos(filter);
-  $('#sectitle').firstChild.textContent = title + ' ';
-  $('#count').textContent = vids.length ? `${vids.length}` : '';
-  if(!vids.length){
-    content.innerHTML = `<div class="state">No videos to display. Data for this filter may not have been collected yet.</div>`;
-    return;
-  }
-  content.innerHTML = `<div class="grid">${vids.slice(0,filter.limit).map((v,i)=>cardHTML(v,i)).join('')}</div>`;
+  await renderRichVideoPage({
+    rows: vids.slice(0, filter.limit), cardFn: cardHTML, context,
+    introTitle: title,
+    introParas: [
+      'Popular videos from the latest daily collection, ranked by view count. Each listing includes a readable summary of title, channel, views, likes, and comments.',
+      'Pair these picks with Google Trends below to align uploads with what audiences are searching for right now.'
+    ],
+    themeId, sectitle: title, countText: vids.length ? `${Math.min(vids.length, filter.limit)}` : ''
+  });
 }
 
 // Tab switching
