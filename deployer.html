@@ -1,38 +1,68 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Humateck — loading deployer…</title>
+  <title>유튜브 다국어채널 고속 등록기 — 구글 인증 연습기 | Humateck</title>
+  <meta name="description" content="제미나이 AI 챗번역 체험과 Google OAuth 인증 연습. 실제 유튜브 등록은 PC 영구판 프로그램에서 수행합니다.">
   <style>
-    body{margin:0;background:#050b14;color:#8b93a7;font-family:Arial,"Noto Sans KR",sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh}
-    .msg{text-align:center;padding:24px}
-    a{color:#6ca6ff}
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:#050b14;color:#f4f1e8;font-family:Arial,"Noto Sans KR",sans-serif}
+    a{color:#6ca6ff;text-decoration:none}
+    .wrap{width:1180px;max-width:calc(100vw - 32px);margin:0 auto;padding:20px 0 0}
+    .topBar{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+    .logo{width:190px;height:auto;display:block}
+    .lang{display:flex;gap:8px}
+    .lang a,.lang span{display:inline-flex;align-items:center;padding:8px 14px;border-radius:999px;font-size:14px;font-weight:700;border:1px solid rgba(214,176,78,.55)}
+    .lang a{color:#f4d16d;background:rgba(214,176,78,.1)}
+    .lang span{color:#0b1119;background:#ffd95a;border-color:#ffd95a}
+    .purchase{border:1px solid rgba(214,176,78,.72);border-radius:24px;background:linear-gradient(180deg,rgba(20,28,37,.96),rgba(13,19,26,.98));padding:24px 28px 22px;margin-bottom:16px}
+    .purchase h1{margin:0 0 10px;color:#ffd95a;font-size:26px;line-height:1.35}
+    .purchase .sub{margin:0 0 14px;color:#9fd4ff;font-size:17px;font-weight:700}
+    .purchase p{margin:0 0 10px;color:#e6e0d4;line-height:1.72;font-size:16px}
+    .purchase .note{border:1px solid rgba(159,212,255,.45);border-radius:14px;padding:14px 16px;margin:14px 0 0;background:rgba(159,212,255,.08);color:#cfe8ff;font-size:15px;line-height:1.7}
+    .purchase .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 18px;border:2px solid #d9b256;border-radius:12px;color:#fff;font-size:15px;font-weight:900;background:linear-gradient(180deg,#5c4315,#15110a)}
+    .btnOutline{background:transparent;color:#f4d16d}
+    .practiceLabel{margin:0 0 8px 4px;color:#c8c4b8;font-size:14px;font-weight:700}
+    .practiceFrame{width:100%;border:0;display:block;min-height:calc(100vh - 320px);background:#050b14}
+    .foot{text-align:center;padding:20px 0 28px;color:#9aa0a6;font-size:14px}
+    @media(max-width:720px){.purchase h1{font-size:22px}.practiceFrame{min-height:calc(100vh - 380px)}}
   </style>
 </head>
 <body>
-  <div class="msg" id="status">Loading Humateck deployer…</div>
-  <script>
-(function () {
-  var STORAGE_BASE = "https://ajvtyotblrtexcxuazqm.supabase.co/storage/v1/object/public/humateck-site";
-  var DEPLOYER_HTML = STORAGE_BASE + "/deployer/index.html";
+  <div class="wrap">
+    <div class="topBar">
+      <a href="/"><img class="logo" src="/FINAL_LOGO01.png" alt="Humateck"></a>
+      <div class="lang" aria-label="언어 선택">
+        <span>한국어</span>
+        <a href="/deployer-en.html">English</a>
+      </div>
+    </div>
 
-  fetch(DEPLOYER_HTML + "?v=" + Date.now(), { cache: "no-store" })
-    .then(function (res) {
-      if (!res.ok) throw new Error("source " + res.status);
-      return res.text();
-    })
-    .then(function (html) {
-      document.open();
-      document.write(html);
-      document.close();
-    })
-    .catch(function () {
-      document.getElementById("status").innerHTML =
-        "Deployer source unavailable. Try again later or email " +
-        '<a href="mailto:support@humateck.com">support@humateck.com</a>.';
-    });
-})();
-  </script>
+    <section class="purchase" id="purchase">
+      <h1>유튜브 다국어채널 고속 등록기</h1>
+      <p class="sub">PC 영구판 프로그램 · 웹 무료 연습공간</p>
+      <p>아래 연습공간에서 <strong>제미나이 AI 챗번역 체험</strong>과 <strong>Google OAuth 인증 연습</strong>을 무료로 해보실 수 있습니다. 실제 유튜브 채널 등록은 <strong>PC 영구판 프로그램</strong>(별도 구매)에서만 수행됩니다.</p>
+      <div class="note">
+        · 웹 = 등록 직전 체험 · 번역 안내 · OAuth 연습 (유료 구독·결제 없음)<br>
+        · PC 프로그램 = 70개국 메타데이터 실제 등록 · 1PC 영구 라이선스<br>
+        · 구매·견적 문의: <a href="mailto:support@humateck.com">support@humateck.com</a>
+      </div>
+      <div class="actions">
+        <a class="btn" href="mailto:support@humateck.com?subject=유튜브%20다국어채널%20고속%20등록기%20PC%20구매%20문의">PC 프로그램 구매 문의</a>
+        <a class="btn btnOutline" href="/plans.html">국가 범위 안내</a>
+        <a class="btn btnOutline" href="#practice">연습공간으로 이동</a>
+      </div>
+    </section>
+
+    <p class="practiceLabel" id="practice">▼ 무료 연습공간 (로그인 불필요)</p>
+    <iframe class="practiceFrame" src="/practice-embed.html" title="구글 인증 연습기" loading="eager"></iframe>
+
+    <p class="foot">
+      <a href="/terms.html">이용약관</a> · <a href="/privacy.html">개인정보</a> ·
+      <a href="mailto:support@humateck.com">support@humateck.com</a>
+    </p>
+  </div>
 </body>
 </html>
