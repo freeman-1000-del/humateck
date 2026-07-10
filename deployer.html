@@ -1,39 +1,56 @@
 <!DOCTYPE html>
+
 <html lang="ko">
+
 <head>
+
   <meta charset="UTF-8">
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>유튜브 다국어채널 고속 등록기 — 구글 인증 연습기 | Humateck</title>
+
   <meta name="description" content="제미나이 AI 챗번역 체험과 Google OAuth 인증 연습. 실제 유튜브 등록은 PC 영구판 프로그램에서 수행합니다.">
+
   <style>
+
     *{box-sizing:border-box}
+
     html,body{margin:0;padding:0;height:100%;overflow:hidden;background:#050b14;color:#f4f1e8;font-family:Arial,"Noto Sans KR",sans-serif}
+
     a{color:#6ca6ff;text-decoration:none}
-    .wrap{width:1180px;max-width:calc(100vw - 32px);height:100vh;margin:0 auto;padding:12px 0 0;display:flex;flex-direction:column}
-    .topBar{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:10px;flex-shrink:0}
-    .logo{width:170px;height:auto;display:block}
-    .lang{display:flex;gap:8px}
-    .lang a,.lang span{display:inline-flex;align-items:center;padding:8px 14px;border-radius:999px;font-size:14px;font-weight:700;border:1px solid rgba(214,176,78,.55)}
-    .lang a{color:#f4d16d;background:rgba(214,176,78,.1)}
-    .lang span{color:#0b1119;background:#ffd95a;border-color:#ffd95a}
+
+    .wrap{width:1180px;max-width:calc(100vw - 32px);height:100vh;margin:0 auto;padding:0;display:flex;flex-direction:column}
+
     .practiceFrame{width:100%;flex:1;min-height:0;border:0;display:block;background:#050b14}
-    .foot{text-align:center;padding:14px 0 20px;color:#9aa0a6;font-size:13px;flex-shrink:0}
+
+    .foot{text-align:center;padding:10px 0 14px;color:#9aa0a6;font-size:13px;flex-shrink:0}
+
   </style>
+
+  <script defer src="/analytics-humateck.js"></script>
+
 </head>
+
 <body>
+
   <div class="wrap">
-    <div class="topBar">
-      <a href="/"><img class="logo" src="/FINAL_LOGO01.png" alt="Humateck"></a>
-      <div class="lang" aria-label="언어 선택">
-        <span>한국어</span>
-      </div>
-    </div>
 
     <iframe class="practiceFrame" src="/practice-embed.html" title="구글 인증 연습기" loading="eager"></iframe>
 
+
+
     <p class="foot">
+
+      <a href="/deployer-en.html">English</a> ·
+
       <a href="/terms.html" target="_top">이용약관</a> · <a href="/privacy.html" target="_top">개인정보처리방침</a>
+
     </p>
+
   </div>
+
 </body>
+
 </html>
+

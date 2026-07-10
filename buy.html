@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PC 프로그램 구매 | 유튜브 다국어채널 고속 등록기</title>
-  <meta name="description" content="유튜브 다국어채널 고속 등록기 PC 영구판 가격 및 구매 안내.">
+  <meta name="description" content="유튜브 다국어채널 고속 등록기 PC 라이선스 가격 및 구매 안내.">
   <style>
     *{box-sizing:border-box}
     html,body{margin:0;padding:0;background:#050b14;color:#f4f1e8;font-family:Arial,"Noto Sans KR",sans-serif}
@@ -16,17 +16,22 @@
     .hero{position:relative;overflow:hidden;border:1px solid rgba(214,176,78,.72);border-radius:30px;background:radial-gradient(circle at 68% 20%,rgba(75,151,255,.24),transparent 35%),radial-gradient(circle at 30% 42%,rgba(214,176,78,.18),transparent 35%),linear-gradient(180deg,#0b1423,#070b11);padding:32px 28px 28px;margin-bottom:22px;box-shadow:0 22px 70px rgba(0,0,0,.46);text-align:center}
     .hero .title{margin:0;color:#4b97ff;font-size:36px;line-height:1.25;font-weight:900}
     .hero .subtitle{margin:12px 0 0;color:#fff;font-size:18px;font-weight:700}
-    .plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:20px}
+    .launchBadge{display:inline-block;margin:0 0 18px;padding:8px 16px;border-radius:999px;background:linear-gradient(90deg,#ff4d4d,#ff8a3d);color:#fff;font-size:14px;font-weight:900;letter-spacing:.02em}
+    .plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;margin-bottom:20px}
     .plan{border:1px solid rgba(214,176,78,.72);border-radius:20px;background:rgba(16,23,31,.94);padding:22px 24px}
     .plan.featured{border-color:#ffd95a;box-shadow:0 0 24px rgba(255,217,90,.12)}
-    .plan h2{margin:0 0 6px;color:#ffd95a;font-size:22px}
-    .plan .price{margin:0 0 12px;color:#9fd4ff;font-size:26px;font-weight:900}
-    .plan p{margin:0 0 16px;color:#e6e0d4;font-size:15px;line-height:1.65}
+    .plan .planName{margin:0 0 4px;color:#9fd4ff;font-size:14px;font-weight:800;letter-spacing:.08em}
+    .plan h2{margin:0 0 10px;color:#ffd95a;font-size:22px}
+    .planTagline{margin:0 0 14px;padding:12px 14px;border-radius:12px;background:rgba(255,217,90,.08);border:1px solid rgba(255,217,90,.35);color:#ffd95a;font-size:15px;line-height:1.65;font-weight:700}
+    .planDesc{margin:0 0 16px;color:#e6e0d4;font-size:15px;line-height:1.65}
     .btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 20px;border:2px solid #d9b256;border-radius:12px;color:#fff;font-size:15px;font-weight:900;background:linear-gradient(180deg,#5c4315,#15110a)}
     .foot{margin-top:24px;text-align:center;color:#9aa0a6;font-size:14px}
     .foot a{margin:0 8px}
     @media(max-width:720px){.hero .title{font-size:28px}}
   </style>
+  <script defer src="/analytics-humateck.js"></script>
+  <script defer src="/pricing-config.js"></script>
+  <script defer src="/pricing-apply.js"></script>
 </head>
 <body>
   <div class="wrap">
@@ -36,22 +41,27 @@
     </div>
 
     <section class="hero">
+      <p class="launchBadge" id="pricingLaunchBadge">출시기념 특가</p>
       <h1 class="title">유튜브 다국어채널 고속 등록기</h1>
-      <p class="subtitle">PC 영구판 · 실제 유튜브 다국어 등록</p>
+      <p class="subtitle">영구 · 12개월 · 6개월 · 실제 유튜브 다국어 등록</p>
     </section>
 
     <div class="plans">
-      <article class="plan">
-        <h2>일반용</h2>
-        <p class="price">57만원</p>
-        <p>PC 1대 영구 라이선스 · 원격 설치·인증 1회 포함</p>
-        <a class="btn" href="mailto:support@humateck.com?subject=%EC%9D%BC%EB%B0%98%EC%9A%A9%20PC%20%EA%B5%AC%EB%A7%A4%20%EB%AC%B8%EC%9D%98">일반용 구매 문의</a>
+      <article class="plan" data-humateck-plan="deluxe">
+        <p class="planName">DELUXE</p>
+        <h2 class="planTier">일반</h2>
+        <p class="planTagline">매번 번역문 복붙에 날아가던 소중한 내 시간, 단 한번의 결제로 자동화.</p>
+        <div data-humateck-price-table></div>
+        <p class="planDesc">PC 1대 · 설치·인증 티칭 영상 포함</p>
+        <a class="btn planBuyBtn" href="mailto:support@humateck.com?subject=DELUXE%20%EC%9D%BC%EB%B0%98%20%EA%B5%AC%EB%A7%A4%20%EB%AC%B8%EC%9D%98">구매 문의</a>
       </article>
-      <article class="plan featured">
-        <h2>기업용 (5인팩)</h2>
-        <p class="price">150만원</p>
-        <p>PC 5대 영구 라이선스 (5인용) · 원격 설치·인증 1회 포함</p>
-        <a class="btn" href="mailto:support@humateck.com?subject=%EA%B8%B0%EC%97%85%EC%9A%A9%205%EC%9D%B8%ED%8C%A9%20%EA%B5%AC%EB%A7%A4%20%EB%AC%B8%EC%9D%98">기업용 구매 문의</a>
+      <article class="plan featured" data-humateck-plan="premium">
+        <p class="planName">PREMIUM</p>
+        <h2 class="planTier">기업 5인 패키지</h2>
+        <p class="planTagline">MCN, 글로벌 에이전시 필수툴, 직원 5명의 업무효율을 70배 끌어올려줍니다.</p>
+        <div data-humateck-price-table></div>
+        <p class="planDesc">PC 5대 (5인용) · 설치·인증 티칭 영상 포함</p>
+        <a class="btn planBuyBtn" href="mailto:support@humateck.com?subject=PREMIUM%20%EA%B8%B0%EC%97%85%205%EC%9D%B8%20%EA%B5%AC%EB%A7%A4%20%EB%AC%B8%EC%9D%98">구매 문의</a>
       </article>
     </div>
 

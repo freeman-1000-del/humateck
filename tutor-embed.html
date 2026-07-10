@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>구매자용 튜터</title>
+  <style>body{margin:0;background:#050b14}</style>
+</head>
+<body>
+  <script>
+(function () {
+  window.__HUMATECK_BUYER_TUTOR__ = true;
+  var STORAGE_BASE = "https://ajvtyotblrtexcxuazqm.supabase.co/storage/v1/object/public/humateck-site";
+  var src = STORAGE_BASE + "/deployer-tutor/index.html?v=" + Date.now();
+  fetch(src, { cache: "no-store" })
+    .then(function (res) {
+      if (!res.ok) throw new Error(String(res.status));
+      return res.text();
+    })
+    .then(function (html) {
+      document.open();
+      document.write(html);
+      document.close();
+      document.body.classList.add("humateck-buyer-tutor");
+    })
+    .catch(function () {
+      document.body.innerHTML =
+        '<p style="color:#e6e0d4;font-family:Arial,sans-serif;padding:24px;text-align:center">구매자용 튜터를 불러오지 못했습니다. ' +
+        '<a href="mailto:support@humateck.com" style="color:#6ca6ff">support@humateck.com</a></p>';
+    });
+})();
+  </script>
+</body>
+</html>
