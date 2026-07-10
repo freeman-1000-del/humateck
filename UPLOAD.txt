@@ -1,0 +1,14 @@
+GitHub ② 휴메텍 메인 사이트
+============================
+
+올릴 곳: github.com/freeman-1000-del/humateck (humateck.com)
+역할: 대문·약관·스카우터 안내 등 (연습기 본문 없음)
+
+  index.html, plans.html, terms.html, privacy.html …
+  CNAME, FINAL_LOGO01.png
+
+연습·구매 페이지 → GitHub-연습광고-업로드 폴더 사용
+
+Content Scouter 본站 → contentscouter.com (별도 repo)
+
+다시 만들기: GitHub-폴더-만들기.bat
