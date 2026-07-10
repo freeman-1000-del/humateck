@@ -26,9 +26,9 @@
       mailSubjectKo: "DELUXE 일반",
       mailSubjectEn: "DELUXE Standard",
       options: {
-        permanent: { listKrw: 720000, saleKrw: 576000 },
-        months12: { listKrw: 370000, saleKrw: 296000 },
-        months6: { listKrw: 268000, saleKrw: 214400 },
+        permanent: { listKrw: 720000, saleKrw: 576000, listUsd: 499, saleUsd: 399 },
+        months12: { listKrw: 370000, saleKrw: 296000, listUsd: 249, saleUsd: 199 },
+        months6: { listKrw: 268000, saleKrw: 214400, listUsd: 179, saleUsd: 149 },
       },
     },
     premium: {
@@ -46,9 +46,9 @@
       mailSubjectEn: "PREMIUM Enterprise 5-seat",
       featured: true,
       options: {
-        permanent: { listKrw: 1860000, saleKrw: 1488000 },
-        months12: { listKrw: 952000, saleKrw: 809200 },
-        months6: { listKrw: 689000, saleKrw: 586000 },
+        permanent: { listKrw: 1860000, saleKrw: 1488000, listUsd: 1249, saleUsd: 999 },
+        months12: { listKrw: 952000, saleKrw: 809200, listUsd: 649, saleUsd: 519 },
+        months6: { listKrw: 689000, saleKrw: 586000, listUsd: 469, saleUsd: 379 },
       },
     },
   };
@@ -64,6 +64,8 @@
     return {
       listKrw: opt.listKrw,
       saleKrw: launch ? opt.saleKrw : opt.listKrw,
+      listUsd: opt.listUsd,
+      saleUsd: launch ? opt.saleUsd : opt.listUsd,
     };
   }
 

@@ -14,17 +14,25 @@
     return typeof cfg.isLaunchActive === "function" ? cfg.isLaunchActive() : false;
   }
 
-  function formatKrw(amount) {
-    if (lang === "en") return "₩" + amount.toLocaleString("en-US");
+  function listAmount(p) {
+    return lang === "en" ? p.listUsd : p.listKrw;
+  }
+
+  function saleAmount(p) {
+    return lang === "en" ? p.saleUsd : p.saleKrw;
+  }
+
+  function formatPrice(amount) {
+    if (lang === "en") return "$" + amount.toLocaleString("en-US");
     if (amount >= 10000 && amount % 10000 === 0) return amount / 10000 + "만원";
     if (amount >= 10000 && amount % 1000 === 0)
       return (amount / 10000).toFixed(1).replace(/\.0$/, "") + "만원";
     return amount.toLocaleString("ko-KR") + "원";
   }
 
-  function offPct(listKrw, saleKrw) {
-    if (!listKrw || saleKrw >= listKrw) return 0;
-    return Math.round((1 - saleKrw / listKrw) * 100);
+  function offPct(listAmt, saleAmt) {
+    if (!listAmt || saleAmt >= listAmt) return 0;
+    return Math.round((1 - saleAmt / listAmt) * 100);
   }
 
   function t(plan, key) {
@@ -59,7 +67,8 @@
       ".priceSale{margin:0;color:#9fd4ff;font-size:24px;font-weight:900;line-height:1.1}" +
       ".webBuyHero .heroHook{font-size:16px}" +
       ".webBuyHero .priceSale{font-size:20px}" +
-      ".webBuyHero .tierRow{padding:10px 12px}";
+      ".webBuyHero .tierRow{padding:10px 12px}" +
+      ".pricingCurrencyNote{margin:0 0 18px;color:#9aa0a6;font-size:13px;font-weight:600;text-align:center}";
     document.head.appendChild(style);
   }
 
@@ -86,18 +95,22 @@
     var p = cfg.priceForOption(premium, "permanent", launch);
     if (!d || !p) return "";
     var prefix = heroBasisHtml();
-    if (launch && d.saleKrw < d.listKrw) {
+    var dList = listAmount(d);
+    var dSale = saleAmount(d);
+    var pList = listAmount(p);
+    var pSale = saleAmount(p);
+    if (launch && dSale < dList) {
       return (
         '<p class="heroHook" id="heroPricingHook">' +
         prefix +
         '<span class="hookPlan">DELUXE</span> <s>' +
-        formatKrw(d.listKrw) +
+        formatPrice(dList) +
         '</s> <span class="price">' +
-        formatKrw(d.saleKrw) +
+        formatPrice(dSale) +
         '</span> · <span class="hookPlan">PREMIUM</span> <s>' +
-        formatKrw(p.listKrw) +
+        formatPrice(pList) +
         '</s> <span class="price">' +
-        formatKrw(p.saleKrw) +
+        formatPrice(pSale) +
         '</span> <span class="entNote">' +
         (lang === "en" ? "(5 seats)" : "(5인용)") +
         "</span></p>"
@@ -107,9 +120,9 @@
       '<p class="heroHook" id="heroPricingHook">' +
       prefix +
       '<span class="hookPlan">DELUXE</span> <span class="price">' +
-      formatKrw(d.listKrw) +
+      formatPrice(dList) +
       '</span> · <span class="hookPlan">PREMIUM</span> <span class="price">' +
-      formatKrw(p.listKrw) +
+      formatPrice(pList) +
       '</span> <span class="entNote">' +
       (lang === "en" ? "(5 seats)" : "(5인용)") +
       "</span></p>"
@@ -120,10 +133,12 @@
     return (
       '<div class="tierPrices">' +
       cfg.durations
-        .map(function (d, i) {
+        .map(function (d) {
           var p = cfg.priceForOption(plan, d.id, launch);
           if (!p) return "";
-          var pct = launch ? offPct(p.listKrw, p.saleKrw) : 0;
+          var listAmt = listAmount(p);
+          var saleAmt = saleAmount(p);
+          var pct = launch ? offPct(listAmt, saleAmt) : 0;
           var rowCls = "tierRow" + (d.id === "permanent" ? " tierRow--hero" : "");
           var off =
             pct > 0
@@ -131,9 +146,9 @@
               : "";
           var list =
             pct > 0
-              ? '<p class="priceList">' + formatKrw(p.listKrw) + "</p>"
+              ? '<p class="priceList">' + formatPrice(listAmt) + "</p>"
               : "";
-          var sale = formatKrw(pct > 0 ? p.saleKrw : p.listKrw);
+          var sale = formatPrice(pct > 0 ? saleAmt : listAmt);
           return (
             '<div class="' +
             rowCls +
@@ -156,6 +171,12 @@
     var launch = launchActive();
     setBadge(document.getElementById("pricingLaunchBadge"));
 
+    var currencyNote = document.getElementById("pricingCurrencyNote");
+    if (currencyNote) {
+      currencyNote.textContent = lang === "en" ? "All prices in USD." : "";
+      currencyNote.hidden = lang !== "en";
+    }
+
     document.querySelectorAll("[data-humateck-plan]").forEach(function (card) {
       var id = card.getAttribute("data-humateck-plan");
       var plan = cfg.plans[id];
@@ -163,13 +184,10 @@
       var tableHost = card.querySelector("[data-humateck-price-table]");
       var tierEl = card.querySelector(".planTier");
       var nameEl = card.querySelector(".planName");
-      var tagEl = card.querySelector(".planTagline");
-      var descEl = card.querySelector(".planDesc");
       var btnEl = card.querySelector(".planBuyBtn");
 
       if (nameEl) nameEl.textContent = t(plan, "name");
       if (tierEl) tierEl.textContent = t(plan, "tier");
-      /* planTagline · planDesc: buy.html 원문 유지 */
       if (tableHost) tableHost.innerHTML = buildPlanTiers(plan, launch);
       if (btnEl) {
         var subj = t(plan, "mailSubject") + (lang === "en" ? " inquiry" : " 구매 문의");
