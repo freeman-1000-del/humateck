@@ -74,13 +74,11 @@
     isLaunchActive: isLaunchActive,
     priceForOption: priceForOption,
     badge: {
-      launchKo: "출시 기념 특가 20% OFF",
-      launchEn: "Launch special · 20% off",
+      launchKo: "출시 기념 특가 20% 할인 3종 플랜!",
+      launchEn: "Launch special — 20% off · 3 plan tiers",
     },
-    heroPromoKo:
-      '출시 기념 특가 <span class="heroPct">20%</span> 할인 3종 플랜!',
-    heroPromoEn:
-      'Launch special — <span class="heroPct">20% off</span> · 3 plan tiers!',
+    heroBasisKo: "평생판 기준",
+    heroBasisEn: "Lifetime",
     heroMoreKo: "가격 상세 보기",
     heroMoreEn: "More pricing info",
     buyPath: { ko: "/buy.html", en: "/buy-en.html" },

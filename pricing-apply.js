@@ -42,13 +42,14 @@
     style.textContent =
       ".heroHook{margin:8px 0 4px;color:#fff;font-size:17px;font-weight:700;line-height:1.55}" +
       ".heroHook .hookPlan{color:#9fd4ff;font-weight:800}" +
+      ".heroHook .hookBasis{color:#9fd4ff;font-size:15px;font-weight:800}" +
       ".heroHook s{color:#8a9199;font-weight:600}" +
       ".heroHook .price{color:#ffd95a;font-weight:900}" +
       ".heroHook .entNote{color:#cfe8ff;font-size:14px;font-weight:600}" +
       ".heroPromoRow{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px 14px;margin:0 0 12px}" +
       ".heroPromoHeadline{margin:0;color:#ffd95a;font-size:18px;font-weight:900;line-height:1.35}" +
       ".heroPromoHeadline .heroPct{display:inline-block;padding:2px 8px;border-radius:999px;background:rgba(255,77,77,.22);border:1px solid rgba(255,120,120,.45);color:#fff}" +
-      ".webBuyHero .launchRibbon{margin:0}" +
+      ".heroLifetimeNote{margin:6px 0 14px;color:#9aa0a6;font-size:13px;font-weight:600}" +
       ".tierPrices{display:flex;flex-direction:column;gap:10px;margin:0 0 16px}" +
       ".tierRow{display:flex;align-items:baseline;flex-wrap:wrap;gap:8px 10px;padding:12px 14px;border-radius:14px;background:rgba(0,0,0,.28);border:1px solid rgba(214,176,78,.4)}" +
       ".tierRow--hero{border-color:rgba(255,217,90,.65);box-shadow:0 0 18px rgba(255,217,90,.1)}" +
@@ -74,27 +75,21 @@
     el.textContent = lang === "en" ? cfg.badge.launchEn : cfg.badge.launchKo;
   }
 
-  function setHeroPromo(launch) {
-    var row = document.getElementById("heroPromoRow");
-    var promo = document.getElementById("heroPromoHeadline");
-    if (!promo) return;
-    if (!launch) {
-      if (row) row.hidden = true;
-      promo.hidden = true;
-      return;
-    }
-    if (row) row.hidden = false;
-    promo.hidden = false;
-    promo.innerHTML = lang === "en" ? cfg.heroPromoEn : cfg.heroPromoKo;
+  function heroBasisHtml() {
+    var basis = lang === "en" ? cfg.heroBasisEn : cfg.heroBasisKo;
+    if (!basis) return "";
+    return '<span class="hookBasis">' + basis + "</span> ";
   }
 
   function buildHeroHook(deluxe, premium, launch) {
     var d = cfg.priceForOption(deluxe, "permanent", launch);
     var p = cfg.priceForOption(premium, "permanent", launch);
     if (!d || !p) return "";
+    var prefix = heroBasisHtml();
     if (launch && d.saleKrw < d.listKrw) {
       return (
         '<p class="heroHook" id="heroPricingHook">' +
+        prefix +
         '<span class="hookPlan">DELUXE</span> <s>' +
         formatKrw(d.listKrw) +
         '</s> <span class="price">' +
@@ -110,6 +105,7 @@
     }
     return (
       '<p class="heroHook" id="heroPricingHook">' +
+      prefix +
       '<span class="hookPlan">DELUXE</span> <span class="price">' +
       formatKrw(d.listKrw) +
       '</span> · <span class="hookPlan">PREMIUM</span> <span class="price">' +
@@ -187,7 +183,8 @@
     var deluxe = cfg.plans.deluxe;
     var premium = cfg.plans.premium;
     setBadge(document.getElementById("heroPricingBadge"));
-    setHeroPromo(launch);
+    var promoExtra = document.getElementById("heroPromoHeadline");
+    if (promoExtra) promoExtra.hidden = true;
 
     var hookHost = document.getElementById("heroPricingHookHost");
     if (hookHost && deluxe && premium) {
