@@ -196,8 +196,8 @@
         var contactBase =
           lang === "en" ? cfg.contactPath.en : cfg.contactPath.ko;
         btnEl.href =
-          contactBase + "?plan=" + encodeURIComponent(id) + "&topic=purchase";
-        btnEl.textContent = lang === "en" ? "Contact to purchase" : "구매 문의";
+          contactBase + "?plan=" + encodeURIComponent(id) + "&topic=product";
+        btnEl.textContent = lang === "en" ? "Contact us" : "문의하기";
       }
     });
   }
