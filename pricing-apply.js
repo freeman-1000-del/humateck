@@ -5,8 +5,10 @@
   if (!cfg) return;
 
   var lang =
-    document.documentElement.lang === "en" ||
-    /-en\.html$|buy-en|deployer-en/.test(location.pathname || "")
+    document.documentElement.getAttribute("lang") === "en" ||
+    /(?:^|\/)buy-en(?:\.html)?(?:$|[?#])|(?:^|\/)deployer-en(?:\.html)?(?:$|[?#])|deployer-en\//.test(
+      location.pathname || ""
+    )
       ? "en"
       : "ko";
 
@@ -175,6 +177,7 @@
     if (currencyNote) {
       currencyNote.textContent = lang === "en" ? "All prices in USD." : "";
       currencyNote.hidden = lang !== "en";
+      currencyNote.style.display = lang === "en" ? "" : "none";
     }
 
     document.querySelectorAll("[data-humateck-plan]").forEach(function (card) {
