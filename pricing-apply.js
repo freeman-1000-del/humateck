@@ -173,8 +173,7 @@
 
       if (nameEl) nameEl.textContent = t(plan, "name");
       if (tierEl) tierEl.textContent = t(plan, "tier");
-      /* planTagline: HTML 원문 유지 — 마케팅 카피는 buy.html에 직접 작성 */
-      if (descEl) descEl.textContent = t(plan, "desc");
+      /* planTagline · planDesc: buy.html 원문 유지 */
       if (tableHost) tableHost.innerHTML = buildPlanTiers(plan, launch);
       if (btnEl) {
         var subj = t(plan, "mailSubject") + (lang === "en" ? " inquiry" : " 구매 문의");
