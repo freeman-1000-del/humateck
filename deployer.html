@@ -36,7 +36,7 @@
 
   <div class="wrap">
 
-    <iframe class="practiceFrame" src="/practice-embed.html" title="구글 인증 연습기" loading="eager"></iframe>
+    <iframe class="practiceFrame" id="humateckPracticeFrame" src="/practice-embed.html" title="구글 인증 연습기" loading="eager"></iframe>
 
 
 
@@ -47,6 +47,23 @@
     </p>
 
   </div>
+
+  <script>
+  (function () {
+    var frame = document.getElementById("humateckPracticeFrame");
+    if (!frame) return;
+    frame.addEventListener("load", function () {
+      function ping() {
+        if (typeof window.humateckTrackEvent === "function") {
+          window.humateckTrackEvent("humateck_shell_iframe_load", { iframe_src: frame.src || "" });
+        } else {
+          setTimeout(ping, 300);
+        }
+      }
+      ping();
+    });
+  })();
+  </script>
 
 </body>
 

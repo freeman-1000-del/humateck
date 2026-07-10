@@ -11,6 +11,14 @@
 (function () {
   window.__HUMATECK_OPEN_PRACTICE__ = true;
   var STORAGE_BASE = "https://ajvtyotblrtexcxuazqm.supabase.co/storage/v1/object/public/humateck-site";
+
+  function bootHumateckAnalytics() {
+    if (window.__HUMATECK_GA_READY__) return;
+    var s = document.createElement("script");
+    s.src = "https://humateck.com/analytics-humateck.js?v=" + Date.now();
+    (document.head || document.documentElement).appendChild(s);
+  }
+
   var src = STORAGE_BASE + "/deployer/index.html?v=" + Date.now();
   fetch(src, { cache: "no-store" })
     .then(function (res) {
@@ -22,6 +30,9 @@
       document.write(html);
       document.close();
       document.body.classList.add("humateck-open-practice");
+      setTimeout(function () {
+        if (!window.__HUMATECK_GA_READY__) bootHumateckAnalytics();
+      }, 500);
     })
     .catch(function () {
       document.body.innerHTML =
