@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>문의 관리 | Humateck</title>
+  <meta name="robots" content="noindex,nofollow">
+  <style>
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:#050b14;color:#f4f1e8;font-family:Arial,"Noto Sans KR",sans-serif}
+    a{color:#6ca6ff}
+    .wrap{max-width:1200px;margin:0 auto;padding:24px 16px 48px}
+    h1{margin:0 0 8px;color:#ffd95a;font-size:26px}
+    .sub{margin:0 0 20px;color:#9aa0a6;font-size:14px}
+    .panel{border:1px solid rgba(214,176,78,.45);border-radius:16px;background:#101722;padding:20px;margin-bottom:18px}
+    .row{display:flex;flex-wrap:wrap;gap:10px;align-items:end}
+    .field{flex:1;min-width:180px}
+    .field label{display:block;margin-bottom:6px;color:#9fd4ff;font-size:12px;font-weight:800}
+    .field input,.field select{width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(214,176,78,.35);background:#0b1423;color:#fff;font-size:14px}
+    .btn{padding:10px 18px;border-radius:10px;border:2px solid #d9b256;background:linear-gradient(180deg,#5c4315,#15110a);color:#fff;font-weight:900;cursor:pointer}
+    .btn.secondary{border-color:rgba(107,166,255,.45);background:#152238}
+    .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
+    .count{color:#9aa0a6;font-size:13px}
+    table{width:100%;border-collapse:collapse;font-size:13px}
+    th,td{border-bottom:1px solid rgba(255,255,255,.08);padding:10px 8px;text-align:left;vertical-align:top}
+    th{color:#9fd4ff;font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+    tr[data-id]{cursor:pointer}
+    tr[data-id]:hover,tr[data-id].sel{background:rgba(75,151,255,.08)}
+    .badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:800}
+    .badge.new{background:rgba(255,217,90,.15);color:#ffd95a}
+    .badge.read{background:rgba(107,166,255,.15);color:#9fd4ff}
+    .badge.replied{background:rgba(33,230,166,.12);color:#7dffc8}
+    .badge.closed{background:rgba(154,160,166,.15);color:#9aa0a6}
+    .detail{margin-top:16px}
+    .detail h2{margin:0 0 10px;color:#ffd95a;font-size:18px}
+    .meta{color:#c8d4e0;font-size:13px;line-height:1.7;margin-bottom:12px}
+    .msgBox{padding:14px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid rgba(214,176,78,.25);white-space:pre-wrap;line-height:1.65}
+    textarea.notes{width:100%;min-height:90px;margin-top:10px;padding:10px 12px;border-radius:10px;border:1px solid rgba(214,176,78,.35);background:#0b1423;color:#fff;font-family:inherit}
+    .err{color:#ff9b9b;font-size:13px;margin-top:10px}
+    .hidden{display:none!important}
+    @media(max-width:860px){table{font-size:12px} th:nth-child(4),td:nth-child(4),th:nth-child(5),td:nth-child(5){display:none}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>구매 문의 관리</h1>
+    <p class="sub">유튜브 다국어채널 고속 등록기 · contact / contact-en 접수 내역</p>
+
+    <section class="panel" id="loginPanel">
+      <div class="row">
+        <div class="field">
+          <label for="adminEmail">관리자 이메일</label>
+          <input type="email" id="adminEmail" placeholder="support@humateck.com">
+        </div>
+        <div class="field">
+          <label for="adminKey">관리 키</label>
+          <input type="password" id="adminKey" placeholder="Supabase 시크릿 HUMATECK_INQUIRY_ADMIN_KEY">
+        </div>
+        <button type="button" class="btn" id="loginBtn">로그인</button>
+      </div>
+      <p class="err" id="loginErr"></p>
+    </section>
+
+    <section class="panel hidden" id="adminPanel">
+      <div class="toolbar">
+        <select id="statusFilter">
+          <option value="all">전체</option>
+          <option value="new">신규</option>
+          <option value="read">확인</option>
+          <option value="replied">답변완료</option>
+          <option value="closed">종료</option>
+        </select>
+        <button type="button" class="btn secondary" id="refreshBtn">새로고침</button>
+        <button type="button" class="btn secondary" id="logoutBtn">로그아웃</button>
+        <span class="count" id="listCount"></span>
+      </div>
+
+      <div style="overflow:auto">
+        <table>
+          <thead>
+            <tr>
+              <th>일시</th>
+              <th>상태</th>
+              <th>이름</th>
+              <th>플랜</th>
+              <th>언어</th>
+              <th>제목</th>
+            </tr>
+          </thead>
+          <tbody id="listBody"></tbody>
+        </table>
+      </div>
+
+      <div class="detail hidden" id="detailPanel">
+        <h2 id="detailTitle">문의 상세</h2>
+        <div class="meta" id="detailMeta"></div>
+        <div class="msgBox" id="detailMessage"></div>
+        <div class="row" style="margin-top:12px">
+          <div class="field">
+            <label for="detailStatus">상태 변경</label>
+            <select id="detailStatus">
+              <option value="new">신규</option>
+              <option value="read">확인</option>
+              <option value="replied">답변완료</option>
+              <option value="closed">종료</option>
+            </select>
+          </div>
+          <button type="button" class="btn" id="saveBtn">저장</button>
+          <a class="btn secondary" id="replyMail" href="#">이메일 답장</a>
+        </div>
+        <label for="detailNotes" style="display:block;margin-top:12px;color:#9fd4ff;font-size:12px;font-weight:800">내부 메모</label>
+        <textarea class="notes" id="detailNotes" placeholder="상담 메모 (고객에게 보이지 않음)"></textarea>
+      </div>
+      <p class="err" id="adminErr"></p>
+    </section>
+  </div>
+
+  <script src="/humateck-inquiry.js"></script>
+  <script>
+  (function(){
+    var SESSION = "humateckInquiryAdmin";
+    var loginPanel = document.getElementById("loginPanel");
+    var adminPanel = document.getElementById("adminPanel");
+    var loginErr = document.getElementById("loginErr");
+    var adminErr = document.getElementById("adminErr");
+    var listBody = document.getElementById("listBody");
+    var detailPanel = document.getElementById("detailPanel");
+    var selectedId = null;
+    var items = [];
+
+    function sessionGet(){
+      try{ return JSON.parse(sessionStorage.getItem(SESSION) || "null"); }catch(e){ return null; }
+    }
+    function sessionSet(v){ sessionStorage.setItem(SESSION, JSON.stringify(v)); }
+    function sessionClear(){ sessionStorage.removeItem(SESSION); }
+
+    function fmtDate(s){
+      try{ return new Date(s).toLocaleString("ko-KR"); }catch(e){ return s; }
+    }
+
+    function badge(status){
+      var map = { new:"신규", read:"확인", replied:"답변완료", closed:"종료" };
+      return '<span class="badge '+status+'">'+(map[status]||status)+'</span>';
+    }
+
+    function showAdmin(on){
+      loginPanel.classList.toggle("hidden", on);
+      adminPanel.classList.toggle("hidden", !on);
+    }
+
+    async function loadList(){
+      var s = sessionGet();
+      if(!s) return;
+      adminErr.textContent = "";
+      var data = await window.HUMATECK_INQUIRY.adminList(s.email, s.key, document.getElementById("statusFilter").value);
+      items = data.items || [];
+      document.getElementById("listCount").textContent = items.length + "건";
+      listBody.innerHTML = items.map(function(it){
+        return '<tr data-id="'+it.id+'"><td>'+fmtDate(it.created_at)+'</td><td>'+badge(it.status)+'</td><td>'+escapeHtml(it.name)+'<br><span style="color:#9aa0a6">'+escapeHtml(it.email)+'</span></td><td>'+escapeHtml(it.plan||"-")+'</td><td>'+escapeHtml(it.lang)+'</td><td>'+escapeHtml(it.subject)+'</td></tr>';
+      }).join("") || '<tr><td colspan="6">문의 없음</td></tr>';
+
+      listBody.querySelectorAll("tr[data-id]").forEach(function(row){
+        row.addEventListener("click", function(){ openDetail(row.getAttribute("data-id")); });
+      });
+    }
+
+    function escapeHtml(t){
+      return String(t||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    }
+
+    function openDetail(id){
+      selectedId = id;
+      var it = items.find(function(x){ return x.id === id; });
+      if(!it) return;
+      listBody.querySelectorAll("tr[data-id]").forEach(function(r){ r.classList.toggle("sel", r.getAttribute("data-id")===id); });
+      detailPanel.classList.remove("hidden");
+      document.getElementById("detailTitle").textContent = it.subject;
+      document.getElementById("detailMeta").innerHTML =
+        "접수: "+fmtDate(it.created_at)+"<br>"+
+        "이름: "+escapeHtml(it.name)+" · "+escapeHtml(it.email)+"<br>"+
+        (it.company ? "회사/채널: "+escapeHtml(it.company)+"<br>" : "")+
+        "플랜: "+escapeHtml(it.plan||"-")+" · 기간: "+escapeHtml(it.duration||"-")+" · 유형: "+escapeHtml(it.topic);
+      document.getElementById("detailMessage").textContent = it.message || "";
+      document.getElementById("detailStatus").value = it.status || "new";
+      document.getElementById("detailNotes").value = it.admin_notes || "";
+      document.getElementById("replyMail").href = "mailto:"+encodeURIComponent(it.email)+"?subject="+encodeURIComponent("Re: "+it.subject);
+    }
+
+    document.getElementById("loginBtn").addEventListener("click", async function(){
+      loginErr.textContent = "";
+      var email = document.getElementById("adminEmail").value.trim();
+      var key = document.getElementById("adminKey").value.trim();
+      try {
+        await window.HUMATECK_INQUIRY.adminAuth(email, key);
+        sessionSet({ email: email, key: key });
+        showAdmin(true);
+        await loadList();
+      } catch (e) {
+        loginErr.textContent = "로그인 실패 — 이메일·관리 키를 확인하세요.";
+      }
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", function(){
+      sessionClear();
+      selectedId = null;
+      detailPanel.classList.add("hidden");
+      showAdmin(false);
+    });
+
+    document.getElementById("refreshBtn").addEventListener("click", loadList);
+    document.getElementById("statusFilter").addEventListener("change", loadList);
+
+    document.getElementById("saveBtn").addEventListener("click", async function(){
+      var s = sessionGet();
+      if(!s || !selectedId) return;
+      adminErr.textContent = "";
+      try {
+        await window.HUMATECK_INQUIRY.adminUpdate(s.email, s.key, selectedId, {
+          status: document.getElementById("detailStatus").value,
+          admin_notes: document.getElementById("detailNotes").value
+        });
+        await loadList();
+        openDetail(selectedId);
+      } catch (e) {
+        adminErr.textContent = "저장 실패";
+      }
+    });
+
+    var saved = sessionGet();
+    if(saved){
+      document.getElementById("adminEmail").value = saved.email || "";
+      document.getElementById("adminKey").value = saved.key || "";
+      showAdmin(true);
+      loadList().catch(function(){ sessionClear(); showAdmin(false); });
+    }
+  })();
+  </script>
+</body>
+</html>

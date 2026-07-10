@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>구매 문의 | 유튜브 다국어채널 고속 등록기</title>
+  <meta name="description" content="유튜브 다국어채널 고속 등록기 PC 라이선스 구매 문의 양식.">
+  <script defer src="/analytics-humateck.js"></script>
+  <style>
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;min-height:100vh;background:#050b14;color:#f4f1e8;font-family:Arial,"Noto Sans KR",sans-serif}
+    a{color:#6ca6ff;text-decoration:none}
+    .wrap{width:100%;max-width:1180px;margin:0 auto;display:grid;grid-template-columns:.85fr 1.15fr;min-height:100vh}
+    @media(max-width:860px){.wrap{grid-template-columns:1fr}}
+    .side{border-right:1px solid rgba(214,176,78,.35);padding:48px 40px;display:flex;flex-direction:column;justify-content:space-between;background:radial-gradient(circle at 30% 20%,rgba(75,151,255,.12),transparent 55%),#0b1423}
+    @media(max-width:860px){.side{border-right:none;border-bottom:1px solid rgba(214,176,78,.35);padding:36px 24px}}
+    .eyebrow{color:#ffd95a;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+    .sideTitle{margin:18px 0 12px;color:#fff;font-size:clamp(28px,3.4vw,38px);line-height:1.25;font-weight:900}
+    .sideTitle em{font-style:normal;color:#4b97ff}
+    .sideDesc{color:#c8d4e0;font-size:15px;line-height:1.75;max-width:42ch}
+    .globeArt{width:260px;height:260px;margin:36px auto 12px;border-radius:50%;border:1px solid rgba(214,176,78,.45);background:repeating-radial-gradient(circle,transparent 0 38px,rgba(214,176,78,.18) 39px 40px);position:relative}
+    .globeArt:before{content:"";position:absolute;inset:18%;border-radius:50%;border:1px solid rgba(107,166,255,.35)}
+    .globeArt:after{content:"";position:absolute;left:50%;top:8%;bottom:8%;width:1px;background:rgba(107,166,255,.25)}
+    .chipRow{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+    .chip{padding:4px 10px;border-radius:999px;border:1px solid rgba(214,176,78,.35);color:#9fd4ff;font-size:12px;font-weight:700}
+    .sideFoot{color:#9aa0a6;font-size:13px;line-height:1.7}
+    .main{padding:48px 40px}
+    @media(max-width:860px){.main{padding:32px 24px 48px}}
+    .topMini{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:28px}
+    .logo{width:160px;height:auto}
+    .backLink{padding:8px 14px;border:1px solid rgba(214,176,78,.55);border-radius:999px;color:#f4d16d;font-size:13px;font-weight:700}
+    .formHead h1{margin:0 0 8px;color:#ffd95a;font-size:28px;font-weight:900}
+    .formHead p{margin:0 0 24px;color:#c8d4e0;font-size:15px;line-height:1.65}
+    .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    @media(max-width:640px){.row2{grid-template-columns:1fr}}
+    .field{margin-bottom:14px}
+    .field label{display:block;margin-bottom:6px;color:#9fd4ff;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+    .req{color:#ff9b9b}
+    .field input,.field select,.field textarea{width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(214,176,78,.35);background:#101722;color:#fff;font-size:15px;font-family:inherit}
+    .field textarea{min-height:140px;resize:vertical}
+    .hp{position:absolute;left:-9999px;opacity:0;height:0;width:0;overflow:hidden}
+    .submitRow{display:flex;align-items:center;flex-wrap:wrap;gap:12px 16px;margin-top:8px}
+    .submitBtn{min-height:48px;padding:12px 28px;border:none;border-radius:12px;background:linear-gradient(180deg,#5c4315,#15110a);border:2px solid #d9b256;color:#fff;font-size:16px;font-weight:900;cursor:pointer}
+    .submitBtn:disabled{opacity:.6;cursor:not-allowed}
+    .submitNote{color:#9aa0a6;font-size:13px}
+    .statusMsg{display:none;margin-top:16px;padding:12px 14px;border-radius:10px;font-size:14px;line-height:1.6}
+    .statusMsg.show{display:block}
+    .statusMsg.ok{color:#9fd4ff;border:1px solid rgba(107,166,255,.45);background:rgba(75,151,255,.08)}
+    .statusMsg.err{color:#ff9b9b;border:1px solid rgba(255,120,120,.35);background:rgba(255,77,77,.08)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <aside class="side">
+      <div>
+        <div class="eyebrow">Humateck · Purchase inquiry</div>
+        <h1 class="sideTitle">70개국 동시 등록,<br><em>한 번의 결제</em>로 자동화</h1>
+        <p class="sideDesc">구매 상담, 견적, 기업 5인 패키지 문의 — 모든 메시지를 확인하고 빠르게 답변드립니다.</p>
+        <div class="globeArt" aria-hidden="true"></div>
+        <div class="chipRow" aria-hidden="true">
+          <span class="chip">DELUXE</span><span class="chip">PREMIUM</span><span class="chip">영구</span><span class="chip">12개월</span><span class="chip">6개월</span>
+        </div>
+      </div>
+      <p class="sideFoot">운영 시간: 평일 10:00–19:00 (KST)<br><a href="/buy.html">가격 페이지</a> · <a href="/deployer.html">무료 연습</a></p>
+    </aside>
+
+    <main class="main">
+      <div class="topMini">
+        <a href="/"><img class="logo" src="/FINAL_LOGO01.png" alt="Humateck"></a>
+        <a class="backLink" href="/buy.html">← 가격 보기</a>
+      </div>
+
+      <div class="formHead">
+        <h1>구매 문의</h1>
+        <p>아래 양식을 작성해 주시면 등록하신 이메일로 답변드립니다.</p>
+      </div>
+
+      <form id="inquiryForm">
+        <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+        <div class="row2">
+          <div class="field">
+            <label for="name">이름<span class="req">*</span></label>
+            <input type="text" id="name" name="name" placeholder="홍길동" required>
+          </div>
+          <div class="field">
+            <label for="email">이메일<span class="req">*</span></label>
+            <input type="email" id="email" name="email" placeholder="you@example.com" required>
+          </div>
+        </div>
+
+        <div class="row2">
+          <div class="field">
+            <label for="company">회사 / 채널명</label>
+            <input type="text" id="company" name="company" placeholder="선택 입력">
+          </div>
+          <div class="field">
+            <label for="plan">관심 플랜</label>
+            <select id="plan" name="plan">
+              <option value="">선택</option>
+              <option value="deluxe">DELUXE 일반</option>
+              <option value="premium">PREMIUM 기업 5인</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row2">
+          <div class="field">
+            <label for="duration">기간</label>
+            <select id="duration" name="duration">
+              <option value="">선택</option>
+              <option value="permanent">영구</option>
+              <option value="months12">12개월</option>
+              <option value="months6">6개월</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="topic">문의 유형</label>
+            <select id="topic" name="topic">
+              <option value="purchase">구매 문의</option>
+              <option value="quote">견적 요청</option>
+              <option value="enterprise">기업 / MCN</option>
+              <option value="support">기술 지원</option>
+              <option value="other">기타</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="subject">제목<span class="req">*</span></label>
+          <input type="text" id="subject" name="subject" value="유튜브 다국어채널 고속 등록기 구매 문의" required>
+        </div>
+
+        <div class="field">
+          <label for="message">문의 내용<span class="req">*</span></label>
+          <textarea id="message" name="message" placeholder="원하시는 플랜, PC 대수, 결제 방식 등을 적어 주세요." required></textarea>
+        </div>
+
+        <div class="submitRow">
+          <button type="submit" class="submitBtn">문의 보내기</button>
+          <span class="submitNote">답변은 입력하신 이메일로 발송됩니다</span>
+        </div>
+        <div id="statusMsg" class="statusMsg" role="status" aria-live="polite"></div>
+      </form>
+    </main>
+  </div>
+
+  <script src="/humateck-inquiry.js"></script>
+  <script>
+  (function(){
+    var form = document.getElementById("inquiryForm");
+    var statusMsg = document.getElementById("statusMsg");
+    var params = new URLSearchParams(location.search);
+
+    if(params.get("plan")){
+      var planEl = document.getElementById("plan");
+      if(planEl) planEl.value = params.get("plan");
+    }
+    if(params.get("duration")){
+      var durEl = document.getElementById("duration");
+      if(durEl) durEl.value = params.get("duration");
+    }
+    if(params.get("topic")){
+      var topicEl = document.getElementById("topic");
+      if(topicEl) topicEl.value = params.get("topic");
+    }
+
+    form.addEventListener("submit", async function(e){
+      e.preventDefault();
+      var btn = form.querySelector(".submitBtn");
+      btn.disabled = true;
+      btn.textContent = "전송 중…";
+      statusMsg.className = "statusMsg";
+      statusMsg.textContent = "";
+
+      try {
+        await window.HUMATECK_INQUIRY.submit({
+          lang: "ko",
+          name: form.name.value,
+          email: form.email.value,
+          company: form.company.value,
+          plan: form.plan.value,
+          duration: form.duration.value,
+          topic: form.topic.value,
+          subject: form.subject.value,
+          message: form.message.value,
+          _honey: form._honey.value
+        });
+        statusMsg.textContent = "✓ 문의가 접수되었습니다. 빠른 시일 내에 이메일로 답변드리겠습니다.";
+        statusMsg.className = "statusMsg show ok";
+        form.reset();
+        form.subject.value = "유튜브 다국어채널 고속 등록기 구매 문의";
+        if(typeof window.humateckTrackEvent === "function"){
+          window.humateckTrackEvent("humateck_inquiry_submit", { lang: "ko", plan: form.plan.value || "" });
+        }
+      } catch (err) {
+        statusMsg.textContent = "✕ 전송에 실패했습니다. 잠시 후 다시 시도해 주세요.";
+        statusMsg.className = "statusMsg show err";
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "문의 보내기";
+      }
+    });
+  })();
+  </script>
+</body>
+</html>

@@ -84,5 +84,6 @@
     heroMoreKo: "가격 상세 보기",
     heroMoreEn: "More pricing info",
     buyPath: { ko: "/buy.html", en: "/buy-en.html" },
+    contactPath: { ko: "/contact.html", en: "/contact-en.html" },
   };
 })(typeof window !== "undefined" ? window : globalThis);

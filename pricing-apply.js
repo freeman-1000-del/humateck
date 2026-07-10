@@ -193,8 +193,11 @@
       if (tierEl) tierEl.textContent = t(plan, "tier");
       if (tableHost) tableHost.innerHTML = buildPlanTiers(plan, launch);
       if (btnEl) {
-        var subj = t(plan, "mailSubject") + (lang === "en" ? " inquiry" : " 구매 문의");
-        btnEl.href = "mailto:support@humateck.com?subject=" + encodeURIComponent(subj);
+        var contactBase =
+          lang === "en" ? cfg.contactPath.en : cfg.contactPath.ko;
+        btnEl.href =
+          contactBase + "?plan=" + encodeURIComponent(id) + "&topic=purchase";
+        btnEl.textContent = lang === "en" ? "Contact to purchase" : "구매 문의";
       }
     });
   }
