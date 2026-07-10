@@ -45,7 +45,10 @@
       ".heroHook s{color:#8a9199;font-weight:600}" +
       ".heroHook .price{color:#ffd95a;font-weight:900}" +
       ".heroHook .entNote{color:#cfe8ff;font-size:14px;font-weight:600}" +
-      ".heroHookNote{margin:0 0 14px;color:#9aa0a6;font-size:13px;font-weight:600}" +
+      ".heroPromoRow{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px 14px;margin:0 0 12px}" +
+      ".heroPromoHeadline{margin:0;color:#ffd95a;font-size:18px;font-weight:900;line-height:1.35}" +
+      ".heroPromoHeadline .heroPct{display:inline-block;padding:2px 8px;border-radius:999px;background:rgba(255,77,77,.22);border:1px solid rgba(255,120,120,.45);color:#fff}" +
+      ".webBuyHero .launchRibbon{margin:0}" +
       ".tierPrices{display:flex;flex-direction:column;gap:10px;margin:0 0 16px}" +
       ".tierRow{display:flex;align-items:baseline;flex-wrap:wrap;gap:8px 10px;padding:12px 14px;border-radius:14px;background:rgba(0,0,0,.28);border:1px solid rgba(214,176,78,.4)}" +
       ".tierRow--hero{border-color:rgba(255,217,90,.65);box-shadow:0 0 18px rgba(255,217,90,.1)}" +
@@ -71,15 +74,25 @@
     el.textContent = lang === "en" ? cfg.badge.launchEn : cfg.badge.launchKo;
   }
 
+  function setHeroPromo(launch) {
+    var row = document.getElementById("heroPromoRow");
+    var promo = document.getElementById("heroPromoHeadline");
+    if (!promo) return;
+    if (!launch) {
+      if (row) row.hidden = true;
+      promo.hidden = true;
+      return;
+    }
+    if (row) row.hidden = false;
+    promo.hidden = false;
+    promo.innerHTML = lang === "en" ? cfg.heroPromoEn : cfg.heroPromoKo;
+  }
+
   function buildHeroHook(deluxe, premium, launch) {
     var d = cfg.priceForOption(deluxe, "permanent", launch);
     var p = cfg.priceForOption(premium, "permanent", launch);
     if (!d || !p) return "";
-    var note =
-      lang === "en"
-        ? "Lifetime license · launch special"
-        : "영구판 기준 · 출시기념 특가";
-  if (launch && d.saleKrw < d.listKrw) {
+    if (launch && d.saleKrw < d.listKrw) {
       return (
         '<p class="heroHook" id="heroPricingHook">' +
         '<span class="hookPlan">DELUXE</span> <s>' +
@@ -92,9 +105,7 @@
         formatKrw(p.saleKrw) +
         '</span> <span class="entNote">' +
         (lang === "en" ? "(5 seats)" : "(5인용)") +
-        "</span></p><p class=\"heroHookNote\">" +
-        note +
-        "</p>"
+        "</span></p>"
       );
     }
     return (
@@ -162,7 +173,7 @@
 
       if (nameEl) nameEl.textContent = t(plan, "name");
       if (tierEl) tierEl.textContent = t(plan, "tier");
-      if (tagEl) tagEl.textContent = t(plan, "tagline");
+      /* planTagline: HTML 원문 유지 — 마케팅 카피는 buy.html에 직접 작성 */
       if (descEl) descEl.textContent = t(plan, "desc");
       if (tableHost) tableHost.innerHTML = buildPlanTiers(plan, launch);
       if (btnEl) {
@@ -177,6 +188,7 @@
     var deluxe = cfg.plans.deluxe;
     var premium = cfg.plans.premium;
     setBadge(document.getElementById("heroPricingBadge"));
+    setHeroPromo(launch);
 
     var hookHost = document.getElementById("heroPricingHookHost");
     if (hookHost && deluxe && premium) {
