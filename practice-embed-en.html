@@ -30,7 +30,9 @@
       document.write(html);
       document.close();
       document.body.classList.add("humateck-open-practice");
-      bootHumateckAnalytics();
+      setTimeout(function () {
+        if (!window.__HUMATECK_GA_READY__) bootHumateckAnalytics();
+      }, 500);
     })
     .catch(function () {
       document.body.innerHTML =
