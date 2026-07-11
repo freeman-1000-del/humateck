@@ -9,13 +9,20 @@
     *{box-sizing:border-box}
     html,body{margin:0;padding:0;background:#050b14;color:#f4f1e8;font-family:Arial,"Noto Sans KR",sans-serif}
     a{color:#6ca6ff}
-    .wrap{max-width:760px;margin:0 auto;padding:24px 16px 80px}
+    .wrap{max-width:760px;margin:0 auto;padding:24px 16px 140px}
     .hero{border:1px solid rgba(214,176,78,.55);border-radius:20px;background:linear-gradient(180deg,#0b1423,#070b11);padding:28px 24px;margin-bottom:20px}
     .hero h1{margin:0 0 8px;color:#4b97ff;font-size:26px}
     .hero p{margin:0;color:#c8d4e0;font-size:15px;line-height:1.65}
     .badge{display:inline-block;margin-bottom:12px;padding:4px 12px;border-radius:999px;background:rgba(255,217,90,.12);color:#ffd95a;font-size:12px;font-weight:800}
     .careBox{border:2px solid rgba(125,255,176,.45);border-radius:14px;background:rgba(125,255,176,.08);padding:14px 16px;margin-bottom:18px;color:#d8ffe8;font-size:14px;line-height:1.65}
     .careBox.hidden{display:none!important}
+    .timeBox{border:1px solid rgba(255,217,90,.45);border-radius:14px;background:rgba(255,217,90,.08);padding:14px 16px;margin-bottom:14px;color:#ffe9a8;font-size:14px;line-height:1.55}
+    .timeBox strong{color:#ffd95a}
+    .noticeBox{border:1px solid rgba(255,180,100,.45);border-radius:14px;background:rgba(255,140,60,.1);padding:14px 16px;margin-bottom:14px;color:#ffd4b0;font-size:14px;line-height:1.6}
+    .noticeBox.hidden{display:none!important}
+    .closedBox{border:1px solid rgba(154,160,166,.45);border-radius:16px;background:rgba(154,160,166,.08);padding:24px 20px;margin-bottom:18px;text-align:center}
+    .closedBox h2{margin:0 0 10px;color:#c8d4e0;font-size:20px}
+    .closedBox p{margin:0;color:#9aa0a6;font-size:14px;line-height:1.65}
     .steps{display:flex;flex-direction:column;gap:12px}
     .step{border:1px solid rgba(214,176,78,.35);border-radius:16px;background:#101722;padding:18px}
     .step.is-current{border-color:rgba(75,151,255,.65);box-shadow:0 0 0 1px rgba(75,151,255,.2)}
@@ -31,7 +38,11 @@
     .btn{padding:10px 16px;border-radius:10px;border:2px solid #d9b256;background:linear-gradient(180deg,#5c4315,#15110a);color:#fff;font-weight:900;cursor:pointer;font-size:14px}
     .btn.secondary{border-color:rgba(107,166,255,.45);background:#152238}
     .btn:disabled{opacity:.45;cursor:not-allowed}
-    .helpBar{position:fixed;left:0;right:0;bottom:0;padding:12px 16px;background:rgba(5,11,20,.96);border-top:1px solid rgba(214,176,78,.35)}
+    .helpBar{position:fixed;left:0;right:0;bottom:0;padding:10px 16px 12px;background:rgba(5,11,20,.96);border-top:1px solid rgba(214,176,78,.35)}
+    .geminiBar{position:fixed;left:0;right:0;bottom:58px;padding:10px 16px;background:rgba(11,20,35,.98);border-top:1px solid rgba(75,151,255,.35)}
+    .geminiInner{max-width:760px;margin:0 auto;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+    .geminiLabel{color:#9fd4ff;font-size:12px;font-weight:800;flex:1;min-width:120px}
+    .geminiBtn{border-color:rgba(66,133,244,.55)!important;background:linear-gradient(180deg,#1a3a6b,#0b1423)!important}
     .helpInner{max-width:760px;margin:0 auto;display:flex;gap:10px;align-items:center}
     .helpInner input{flex:1;padding:10px 12px;border-radius:10px;border:1px solid rgba(214,176,78,.35);background:#0b1423;color:#fff;font-size:14px}
     .err{padding:16px;border-radius:14px;background:rgba(255,120,120,.1);border:1px solid rgba(255,120,120,.35);color:#ffb0b0}
@@ -50,7 +61,22 @@
         <span class="badge" id="sessionBadge">Your private setup</span>
         <h1 id="heroTitle">YouTube Multilingual Setup Care</h1>
         <p id="heroDesc">Follow each step below. We prepared everything — you only need to complete Google sign-in yourself. If you get stuck, tap Help at the bottom.</p>
+        <p id="heroLimit" class="subLimit" style="margin:10px 0 0;color:#ffd95a;font-size:13px;font-weight:700"></p>
       </section>
+
+      <div class="timeBox" id="timeBox">
+        <strong id="timeLabel">Care remaining:</strong>
+        <span id="timeRemaining">—</span>
+      </div>
+
+      <div class="noticeBox hidden" id="noticeBox">
+        <span id="noticeText"></span>
+      </div>
+
+      <div class="closedBox hidden" id="closedView">
+        <h2 id="closedTitle">Setup care has ended</h2>
+        <p id="closedDesc"></p>
+      </div>
 
       <div class="careBox hidden" id="careMessageBox">
         <strong id="careLabel">Message from your setup assistant:</strong>
@@ -63,6 +89,14 @@
         <h2>All steps complete</h2>
         <p style="color:#c8d4e0">Your first registration setup is done. Thank you!</p>
       </section>
+    </div>
+  </div>
+
+  <div class="geminiBar hidden" id="geminiBar">
+    <div class="geminiInner">
+      <span class="geminiLabel" id="geminiLabel">Translation helper</span>
+      <a class="btn geminiBtn" id="geminiOpenBtn" href="https://gemini.google.com/app" target="_blank" rel="noopener">Open Gemini</a>
+      <a class="linkBtn" id="geminiPracticeBtn" href="/deployer-en/index.html" target="_blank" rel="noopener">Practice tool</a>
     </div>
   </div>
 
@@ -79,18 +113,18 @@
     var STEPS_EN = [
       { title: "Open your setup page", desc: "You are here. This page is private to your order." },
       { title: "Choose countries & plan", desc: "Open the practice tool and select your country plan (same as the real program)." },
-      { title: "Prepare translations", desc: "Use the guided prompt in the practice tool. Paste your title and description, then copy the translated result." },
+      { title: "Prepare translations", desc: "Tap Open Gemini below, or use the practice tool for the guided prompt. Paste title and description, then copy results." },
       { title: "Preview your result", desc: "Check country count and format in the preview before registration." },
       { title: "Google sign-in (OAuth)", desc: "Complete Google authentication yourself using our step-by-step guide." },
-      { title: "First registration", desc: "Run your first successful registration. Tell us via Help if anything blocks you — we will care until it succeeds." }
+      { title: "First registration", desc: "Complete your first successful registration. Help is available via your order page while this link is valid — not unlimited lifetime support." }
     ];
     var STEPS_KO = [
       { title: "설정 페이지 열기", desc: "지금 이 페이지입니다. 주문 전용 비공개 페이지예요." },
       { title: "국가·플랜 선택", desc: "연습 도구를 열고 국가 플랜을 선택하세요 (실제 프로그램과 동일)." },
-      { title: "번역 준비", desc: "연습 도구의 안내 프롬프트를 사용하세요. 제목·설명을 붙여넣고 번역 결과를 복사하세요." },
+      { title: "번역 준비", desc: "아래 Gemini 열기, 또는 연습 도구의 프롬프트를 사용하세요. 제목·설명 붙여넣고 결과를 복사하세요." },
       { title: "결과 미리보기", desc: "등록 전에 국가 수와 형식을 미리보기에서 확인하세요." },
       { title: "구글 인증 (OAuth)", desc: "단계별 가이드를 보며 구글 인증을 직접 완료하세요." },
-      { title: "최초 등록", desc: "첫 등록이 성공할 때까지 진행하세요. 막히면 아래 도움 요청 — 케어해 드립니다." }
+      { title: "최초 등록", desc: "첫 등록 1회 성공까지 진행하세요. 링크 유효 기간 내 주문 페이지로 케어합니다 (평생·무제한 아님)." }
     ];
     var LINKS = {
       practice: "/deployer/index.html",
@@ -102,12 +136,105 @@
     var token = "";
     var session = null;
     var lang = "en";
+    var expiresAtMs = 0;
+    var countdownTimer = null;
 
     function qs(name){
       return new URLSearchParams(location.search).get(name) || "";
     }
 
     function t(en, ko){ return lang === "ko" ? ko : en; }
+
+    function formatRemaining(ms){
+      if(ms <= 0) return t("Ended", "종료됨");
+      var totalMin = Math.floor(ms / 60000);
+      var days = Math.floor(totalMin / (60 * 24));
+      var hours = Math.floor((totalMin % (60 * 24)) / 60);
+      var mins = totalMin % 60;
+      if(days > 0){
+        return t(
+          days + "d " + hours + "h " + mins + "m",
+          days + "일 " + hours + "시간 " + mins + "분"
+        );
+      }
+      if(hours > 0){
+        return t(hours + "h " + mins + "m", hours + "시간 " + mins + "분");
+      }
+      return t(mins + "m", mins + "분");
+    }
+
+    function currentNoticeMessage(timeline){
+      if(!timeline) return "";
+      var level = timeline.notice_level || 0;
+      if(level === 1) return t(
+        "Care ends within 2 days. Your install package remains yours.",
+        "케어가 2일 이내 종료됩니다. 설치본은 계속 사용하실 수 있어요."
+      );
+      if(level === 2) return t(
+        "Care closes tomorrow. Please send help requests today if needed.",
+        "내일 케어가 마감됩니다. 궁금한 점은 오늘까지 도움 요청해 주세요."
+      );
+      if(level === 3) return t(
+        "12 hours left in setup care.",
+        "케어 마감까지 12시간 남았습니다."
+      );
+      if(level === 4) return t(
+        "Care ends later today. Request help now if you still need it.",
+        "오늘 중 케어가 종료됩니다. 마무리가 필요하면 지금 도움 요청해 주세요."
+      );
+      return "";
+    }
+
+    function updateCountdown(){
+      if(!expiresAtMs) return;
+      var ms = Math.max(0, expiresAtMs - Date.now());
+      document.getElementById("timeRemaining").textContent = formatRemaining(ms);
+      if(ms <= 0 && session){
+        applySession(session);
+      }
+    }
+
+    function showNotice(msg){
+      var box = document.getElementById("noticeBox");
+      if(!msg){
+        box.classList.add("hidden");
+        return;
+      }
+      document.getElementById("noticeText").textContent = msg;
+      box.classList.remove("hidden");
+    }
+
+    function showClosedView(closed){
+      var closedView = document.getElementById("closedView");
+      var stepsRoot = document.getElementById("stepsRoot");
+      var helpBar = document.getElementById("helpBar");
+      var geminiBar = document.getElementById("geminiBar");
+      var timeBox = document.getElementById("timeBox");
+      if(closed){
+        document.getElementById("closedTitle").textContent = t(
+          "Setup care has ended",
+          "케어 기간이 종료되었습니다"
+        );
+        document.getElementById("closedDesc").textContent = session && session.closure_message
+          ? session.closure_message
+          : t(
+            "You can keep using your install package and guides. For new questions, contact us via your order page.",
+            "설치본과 가이드로 계속 사용하실 수 있습니다. 새 문의는 주문 페이지로 연락해 주세요."
+          );
+        closedView.classList.remove("hidden");
+        stepsRoot.classList.add("hidden");
+        helpBar.classList.add("hidden");
+        geminiBar.classList.add("hidden");
+        timeBox.classList.add("hidden");
+        showNotice("");
+      } else {
+        closedView.classList.add("hidden");
+        stepsRoot.classList.remove("hidden");
+        helpBar.classList.remove("hidden");
+        geminiBar.classList.remove("hidden");
+        timeBox.classList.remove("hidden");
+      }
+    }
 
     function showCareMessage(msg){
       var box = document.getElementById("careMessageBox");
@@ -194,14 +321,47 @@
       session = s;
       lang = s.lang === "ko" ? "ko" : "en";
       document.documentElement.lang = lang;
+      var timeline = s.care_timeline || {};
+      var closed = !!(s.care_closed || timeline.care_expired || s.status === "expired");
+
       document.getElementById("heroTitle").textContent = t(
         "YouTube Multilingual Setup Care",
         "유튜브 다국어 설정 케어"
       );
       document.getElementById("heroDesc").textContent = t(
-        "Follow each step below. We prepared everything — you only need to complete Google sign-in yourself. If you get stuck, tap Help at the bottom.",
-        "아래 단계를 따라가세요. 준비는 다 해두었습니다. 구글 인증만 직접 하시면 됩니다. 막히면 아래 도움 요청을 누르세요."
+        "Follow each step below. We prepared everything — you only need to complete Google sign-in yourself. Use Gemini at the bottom for translation.",
+        "아래 단계를 따라가세요. 구글 인증만 직접 하시면 됩니다. 번역은 하단 Gemini를 사용하세요."
       );
+      var limitEl = document.getElementById("heroLimit");
+      var periodDays = timeline.care_period_days || 3;
+      limitEl.textContent = t(
+        periodDays + "-day first-registration setup care · install package is yours to keep.",
+        periodDays + "일간 최초 1회 등록 케어 · 설치본은 계속 사용하실 수 있습니다."
+      );
+
+      document.getElementById("timeLabel").textContent = t("Care remaining:", "케어 잔여:");
+      if(s.expires_at){
+        expiresAtMs = new Date(s.expires_at).getTime();
+        updateCountdown();
+        if(!countdownTimer){
+          countdownTimer = setInterval(updateCountdown, 60000);
+        }
+      }
+
+      if(closed){
+        showClosedView(true);
+      } else {
+        showClosedView(false);
+        var notice = s.new_notice && s.new_notice.message
+          ? s.new_notice.message
+          : currentNoticeMessage(timeline);
+        showNotice(notice);
+      }
+
+      document.getElementById("geminiLabel").textContent = t("Translation (Gemini)", "번역 (Gemini)");
+      document.getElementById("geminiOpenBtn").textContent = t("Open Gemini", "Gemini 열기");
+      document.getElementById("geminiPracticeBtn").textContent = t("Practice tool", "연습 도구");
+      document.getElementById("geminiPracticeBtn").href = lang === "ko" ? LINKS.practice : LINKS.practiceEn;
       document.getElementById("helpInput").placeholder = t(
         "Optional: where are you stuck?",
         "선택: 어디서 막히셨나요?"
@@ -216,7 +376,12 @@
         var res = await HUMATECK_CARE.stepComplete(token, step);
         applySession(res.session);
       } catch(e){
-        alert(e.message || "failed");
+        if(e.code === "care_closed" && e.session){
+          applySession(e.session);
+        }
+        alert(e.code === "care_closed"
+          ? t("Setup care has ended. Your install package still works.", "케어 기간이 종료되었습니다. 설치본은 계속 사용하실 수 있어요.")
+          : (e.message || "failed"));
       }
     }
 
@@ -239,13 +404,16 @@
       try {
         var res = await HUMATECK_CARE.sessionOpen(token);
         document.getElementById("mainView").classList.remove("hidden");
-        document.getElementById("helpBar").classList.remove("hidden");
         applySession(res.session);
+        if(!(res.session.care_closed || (res.session.care_timeline && res.session.care_timeline.care_expired))){
+          document.getElementById("helpBar").classList.remove("hidden");
+          document.getElementById("geminiBar").classList.remove("hidden");
+        }
         setInterval(ping, 15000);
       } catch(e){
-        gate.textContent = e.message === "expired"
-          ? "This link has expired. Please contact support via your order page."
-          : (e.message || "Link not found.");
+        gate.textContent = e.message === "not found"
+          ? t("Link not found. Please use the private link from your order.", "링크를 찾을 수 없습니다. 주문에서 받은 링크를 사용해 주세요.")
+          : (e.message || "Error");
         gate.classList.remove("hidden");
       }
     }
@@ -258,7 +426,10 @@
         document.getElementById("helpInput").value = "";
         alert(t("Help request sent. We will reply via your order page.", "도움 요청을 보냈습니다. 주문 페이지로 답변드립니다."));
       } catch(e){
-        alert(e.message || "failed");
+        if(e.session) applySession(e.session);
+        alert(e.code === "care_closed"
+          ? t("Setup care has ended. Contact us via your order page.", "케어 기간이 종료되었습니다. 주문 페이지로 연락해 주세요.")
+          : (e.message || "failed"));
       }
     });
 

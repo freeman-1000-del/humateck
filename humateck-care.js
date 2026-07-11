@@ -7,6 +7,7 @@
     "sb_publishable_cmn9eVnnvaAjXVJWa6bRQA_qrb1xglQ";
   var GOOGLE_CLIENT_ID =
     "26300662380-gnpatoc7ightbshusgebts20femcbgvi.apps.googleusercontent.com";
+  var GEMINI_URL = "https://gemini.google.com/app";
 
   function headers() {
     return {
@@ -27,17 +28,17 @@
       data = await res.json();
     } catch (e) {}
     if (!res.ok) {
-      throw new Error(data.error || "request failed");
+      var err = new Error(data.message || data.error || "request failed");
+      err.code = data.error || "";
+      if (data.session) err.session = data.session;
+      throw err;
     }
     return data;
   }
 
-  function withAdmin(credential, pin, payload) {
+  function withAdmin(credential, payload) {
     return Object.assign(
-      {
-        google_credential: String(credential || ""),
-        admin_pin: String(pin || "").trim(),
-      },
+      { google_credential: String(credential || "") },
       payload || {}
     );
   }
@@ -45,6 +46,7 @@
   global.HUMATECK_CARE = {
     api: API,
     GOOGLE_CLIENT_ID: GOOGLE_CLIENT_ID,
+    GEMINI_URL: GEMINI_URL,
     sessionOpen: function (token) {
       return post({ action: "session_open", token: token });
     },
@@ -66,57 +68,48 @@
         message: message || "",
       });
     },
-    adminAuth: function (credential, pin) {
-      return post(withAdmin(credential, pin, { action: "admin_auth" }));
+    adminAuth: function (credential) {
+      return post(withAdmin(credential, { action: "admin_auth" }));
     },
-    adminChangePin: function (credential, currentPin, newPin) {
+    adminCreate: function (credential, fields) {
       return post(
-        withAdmin(credential, currentPin, {
-          action: "admin_change_pin",
-          current_pin: String(currentPin || "").trim(),
-          new_pin: String(newPin || "").trim(),
-        })
+        withAdmin(credential, Object.assign({ action: "admin_create" }, fields || {}))
       );
     },
-    adminCreate: function (credential, pin, fields) {
+    adminList: function (credential, status) {
       return post(
-        withAdmin(credential, pin, Object.assign({ action: "admin_create" }, fields || {}))
-      );
-    },
-    adminList: function (credential, pin, status) {
-      return post(
-        withAdmin(credential, pin, {
+        withAdmin(credential, {
           action: "admin_list",
           status: status || "all",
         })
       );
     },
-    adminGet: function (credential, pin, id) {
-      return post(withAdmin(credential, pin, { action: "admin_get", id: id }));
+    adminGet: function (credential, id) {
+      return post(withAdmin(credential, { action: "admin_get", id: id }));
     },
-    adminUpdate: function (credential, pin, id, patch) {
+    adminUpdate: function (credential, id, patch) {
       return post(
-        withAdmin(credential, pin, Object.assign({ action: "admin_update", id: id }, patch || {}))
+        withAdmin(credential, Object.assign({ action: "admin_update", id: id }, patch || {}))
       );
     },
-    adminEvents: function (credential, pin) {
-      return post(withAdmin(credential, pin, { action: "admin_events" }));
+    adminEvents: function (credential) {
+      return post(withAdmin(credential, { action: "admin_events" }));
     },
-    adminListMembers: function (credential, pin) {
-      return post(withAdmin(credential, pin, { action: "admin_list_members" }));
+    adminListMembers: function (credential) {
+      return post(withAdmin(credential, { action: "admin_list_members" }));
     },
-    adminAddMember: function (credential, pin, newEmail, label) {
+    adminAddMember: function (credential, newEmail, label) {
       return post(
-        withAdmin(credential, pin, {
+        withAdmin(credential, {
           action: "admin_add_member",
           new_email: String(newEmail || "").trim().toLowerCase(),
           label: label || "",
         })
       );
     },
-    adminRemoveMember: function (credential, pin, memberId) {
+    adminRemoveMember: function (credential, memberId) {
       return post(
-        withAdmin(credential, pin, {
+        withAdmin(credential, {
           action: "admin_remove_member",
           member_id: memberId,
         })
