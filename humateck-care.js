@@ -102,5 +102,25 @@
     adminEvents: function (credential, pin) {
       return post(withAdmin(credential, pin, { action: "admin_events" }));
     },
+    adminListMembers: function (credential, pin) {
+      return post(withAdmin(credential, pin, { action: "admin_list_members" }));
+    },
+    adminAddMember: function (credential, pin, newEmail, label) {
+      return post(
+        withAdmin(credential, pin, {
+          action: "admin_add_member",
+          new_email: String(newEmail || "").trim().toLowerCase(),
+          label: label || "",
+        })
+      );
+    },
+    adminRemoveMember: function (credential, pin, memberId) {
+      return post(
+        withAdmin(credential, pin, {
+          action: "admin_remove_member",
+          member_id: memberId,
+        })
+      );
+    },
   };
 })(typeof window !== "undefined" ? window : globalThis);
