@@ -30,6 +30,10 @@
     return data;
   }
 
+  function withPin(pin, payload) {
+    return Object.assign({ admin_pin: String(pin || "").trim() }, payload || {});
+  }
+
   global.HUMATECK_CARE = {
     api: API,
     sessionOpen: function (token) {
@@ -53,47 +57,23 @@
         message: message || "",
       });
     },
-    adminAuth: function (email, adminKey) {
-      return post({ action: "admin_auth", email: email, admin_key: adminKey });
+    adminAuth: function (pin) {
+      return post(withPin(pin, { action: "admin_auth" }));
     },
-    adminCreate: function (email, adminKey, fields) {
-      return post(
-        Object.assign(
-          { action: "admin_create", email: email, admin_key: adminKey },
-          fields || {}
-        )
-      );
+    adminCreate: function (pin, fields) {
+      return post(withPin(pin, Object.assign({ action: "admin_create" }, fields || {})));
     },
-    adminList: function (email, adminKey, status) {
-      return post({
-        action: "admin_list",
-        email: email,
-        admin_key: adminKey,
-        status: status || "all",
-      });
+    adminList: function (pin, status) {
+      return post(withPin(pin, { action: "admin_list", status: status || "all" }));
     },
-    adminGet: function (email, adminKey, id) {
-      return post({
-        action: "admin_get",
-        email: email,
-        admin_key: adminKey,
-        id: id,
-      });
+    adminGet: function (pin, id) {
+      return post(withPin(pin, { action: "admin_get", id: id }));
     },
-    adminUpdate: function (email, adminKey, id, patch) {
-      return post(
-        Object.assign(
-          { action: "admin_update", email: email, admin_key: adminKey, id: id },
-          patch || {}
-        )
-      );
+    adminUpdate: function (pin, id, patch) {
+      return post(withPin(pin, Object.assign({ action: "admin_update", id: id }, patch || {})));
     },
-    adminEvents: function (email, adminKey) {
-      return post({
-        action: "admin_events",
-        email: email,
-        admin_key: adminKey,
-      });
+    adminEvents: function (pin) {
+      return post(withPin(pin, { action: "admin_events" }));
     },
   };
 })(typeof window !== "undefined" ? window : globalThis);

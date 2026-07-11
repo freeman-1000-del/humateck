@@ -56,13 +56,9 @@
 
     <section class="panel" id="loginPanel">
       <div class="row">
-        <div class="field">
-          <label for="adminEmail">관리자 이메일</label>
-          <input type="email" id="adminEmail" placeholder="support@humateck.com">
-        </div>
-        <div class="field">
-          <label for="adminKey">관리 키</label>
-          <input type="password" id="adminKey" placeholder="HUMATECK_CARE_ADMIN_KEY (또는 INQUIRY 키)">
+        <div class="field" style="max-width:200px">
+          <label for="adminPin">관리 PIN (4자리)</label>
+          <input type="password" id="adminPin" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="0000" autocomplete="off">
         </div>
         <button type="button" class="btn" id="loginBtn">로그인</button>
       </div>
@@ -165,8 +161,7 @@
   <script src="/humateck-care.js"></script>
   <script>
   (function(){
-    var email = "";
-    var adminKey = "";
+    var adminPin = "";
     var items = [];
     var selectedId = null;
 
@@ -185,20 +180,16 @@
 
     function loadCreds(){
       try {
-        email = sessionStorage.getItem("care_admin_email") || "";
-        adminKey = sessionStorage.getItem("care_admin_key") || "";
-        if(email) document.getElementById("adminEmail").value = email;
+        adminPin = sessionStorage.getItem("care_admin_pin") || "";
       } catch(e){}
     }
 
     function saveCreds(){
-      sessionStorage.setItem("care_admin_email", email);
-      sessionStorage.setItem("care_admin_key", adminKey);
+      sessionStorage.setItem("care_admin_pin", adminPin);
     }
 
     function clearCreds(){
-      sessionStorage.removeItem("care_admin_email");
-      sessionStorage.removeItem("care_admin_key");
+      sessionStorage.removeItem("care_admin_pin");
     }
 
     function showLogin(){
@@ -212,11 +203,14 @@
     }
 
     async function login(){
-      email = document.getElementById("adminEmail").value.trim();
-      adminKey = document.getElementById("adminKey").value;
+      adminPin = document.getElementById("adminPin").value.trim();
       document.getElementById("loginErr").textContent = "";
+      if(!/^\d{4}$/.test(adminPin)){
+        document.getElementById("loginErr").textContent = "숫자 4자리를 입력하세요.";
+        return;
+      }
       try {
-        await HUMATECK_CARE.adminAuth(email, adminKey);
+        await HUMATECK_CARE.adminAuth(adminPin);
         saveCreds();
         showAdmin();
         await refreshList();
@@ -227,7 +221,7 @@
 
     async function refreshList(){
       var status = document.getElementById("statusFilter").value;
-      var res = await HUMATECK_CARE.adminList(email, adminKey, status);
+      var res = await HUMATECK_CARE.adminList(adminPin, status);
       items = res.items || [];
       document.getElementById("listCount").textContent = items.length + "건";
       var body = document.getElementById("listBody");
@@ -253,7 +247,7 @@
       document.querySelectorAll("tr[data-id]").forEach(function(tr){
         tr.classList.toggle("sel", tr.dataset.id === id);
       });
-      var res = await HUMATECK_CARE.adminGet(email, adminKey, id);
+      var res = await HUMATECK_CARE.adminGet(adminPin, id);
       var it = res.item;
       document.getElementById("detailPanel").classList.remove("hidden");
       document.getElementById("detailTitle").textContent = (it.customer_label || it.token) + " — 케어";
@@ -279,7 +273,8 @@
 
     document.getElementById("loginBtn").addEventListener("click", login);
     document.getElementById("logoutBtn").addEventListener("click", function(){
-      email = ""; adminKey = ""; selectedId = null;
+      adminPin = ""; selectedId = null;
+      document.getElementById("adminPin").value = "";
       clearCreds();
       showLogin();
     });
@@ -297,7 +292,7 @@
     document.getElementById("createBtn").addEventListener("click", async function(){
       document.getElementById("adminErr").textContent = "";
       try {
-        var res = await HUMATECK_CARE.adminCreate(email, adminKey, {
+        var res = await HUMATECK_CARE.adminCreate(adminPin, {
           customer_label: document.getElementById("newLabel").value.trim(),
           fiverr_order_ref: document.getElementById("newOrderRef").value.trim(),
           lang: document.getElementById("newLang").value,
@@ -325,7 +320,7 @@
       if(!selectedId) return;
       document.getElementById("adminErr").textContent = "";
       try {
-        await HUMATECK_CARE.adminUpdate(email, adminKey, selectedId, {
+        await HUMATECK_CARE.adminUpdate(adminPin, selectedId, {
           status: document.getElementById("detailStatus").value,
           current_step: Number(document.getElementById("detailStep").value),
           care_message: document.getElementById("detailCareMsg").value,
@@ -340,8 +335,8 @@
     });
 
     loadCreds();
-    if(email && adminKey){
-      HUMATECK_CARE.adminAuth(email, adminKey).then(function(){
+    if(adminPin && /^\d{4}$/.test(adminPin)){
+      HUMATECK_CARE.adminAuth(adminPin).then(function(){
         showAdmin();
         return refreshList();
       }).catch(showLogin);
