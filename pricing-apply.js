@@ -26,9 +26,11 @@
 
   function formatPrice(amount) {
     if (lang === "en") return "$" + amount.toLocaleString("en-US");
-    if (amount >= 10000 && amount % 10000 === 0) return amount / 10000 + "만원";
-    if (amount >= 10000 && amount % 1000 === 0)
-      return (amount / 10000).toFixed(1).replace(/\.0$/, "") + "만원";
+    if (amount >= 10000) {
+      var man = Math.round((amount / 10000) * 10) / 10;
+      if (man === Math.floor(man)) return Math.floor(man) + "만원";
+      return man.toFixed(1) + "만원";
+    }
     return amount.toLocaleString("ko-KR") + "원";
   }
 
@@ -71,7 +73,8 @@
       ".webBuyHero .priceSale{font-size:20px}" +
       ".webBuyHero .tierRow{padding:10px 12px}" +
       ".pricingCurrencyNote{margin:0 0 18px;color:#9aa0a6;font-size:13px;font-weight:600;text-align:center}" +
-      ".planMarketBtn.is-pending{cursor:default;opacity:.92}";
+      ".planMarketBtn.is-pending{cursor:default;opacity:.92}" +
+      ".launchBadge,.launchRibbon{font-size:18px!important;padding:10px 20px!important;letter-spacing:.02em}";
     document.head.appendChild(style);
   }
 

@@ -76,7 +76,7 @@
     isLaunchActive: isLaunchActive,
     priceForOption: priceForOption,
     badge: {
-      launchKo: "출시 기념 특가 20% 할인 3종 플랜!",
+      launchKo: "출시 기념 특가 20% 할인 중!",
       launchEn: "Launch special — 20% off · 3 plan tiers",
     },
     heroBasisKo: "평생판 기준",
