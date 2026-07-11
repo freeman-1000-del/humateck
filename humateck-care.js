@@ -31,6 +31,7 @@
       var err = new Error(data.message || data.error || "request failed");
       err.code = data.error || "";
       if (data.session) err.session = data.session;
+      if (data.install) err.install = data.install;
       throw err;
     }
     return data;
@@ -67,6 +68,12 @@
         token: token,
         message: message || "",
       });
+    },
+    installOpen: function (token) {
+      return post({ action: "install_open", token: token });
+    },
+    installDownload: function (token) {
+      return post({ action: "install_download", token: token });
     },
     adminAuth: function (credential) {
       return post(withAdmin(credential, { action: "admin_auth" }));

@@ -107,8 +107,12 @@
       <p class="sub" id="createHint" style="margin:8px 0 0;font-size:12px">크몽: 대행 AS 기간 동안 케어 · 30/14/7/3일 마감 알림 · 기간 종료 시 자동 마감</p>
       <div class="newLink hidden" id="newLinkBox">
         <div style="color:#7dffb0;font-weight:800;margin-bottom:8px" id="newLinkTitle">발급 완료 — 주문 페이지에 바로 전달</div>
+        <div style="color:#9fd4ff;font-size:12px;font-weight:800;margin-bottom:4px">설치 (손님에게 먼저 전달)</div>
+        <div class="urlBox" id="newInstallUrl"></div>
+        <button type="button" class="btn secondary" id="copyInstallBtn" style="margin-top:8px">설치 링크 복사</button>
+        <div style="color:#9fd4ff;font-size:12px;font-weight:800;margin:14px 0 4px">케어 (설치 후 진행 도움)</div>
         <div class="urlBox" id="newLinkUrl"></div>
-        <button type="button" class="btn secondary" id="copyLinkBtn" style="margin-top:10px">링크 복사</button>
+        <button type="button" class="btn secondary" id="copyLinkBtn" style="margin-top:8px">케어 링크 복사</button>
       </div>
 
       <div class="panel" style="margin-top:18px;padding:16px;background:rgba(0,0,0,.2)">
@@ -181,7 +185,13 @@
       <div class="detail hidden" id="detailPanel">
         <h2 id="detailTitle">세션 상세</h2>
         <div class="meta" id="detailMeta"></div>
+        <div style="color:#9fd4ff;font-size:12px;font-weight:800;margin-bottom:4px">설치 링크</div>
+        <div class="urlBox" id="detailInstallUrl"></div>
+        <div style="color:#9fd4ff;font-size:12px;font-weight:800;margin:12px 0 4px">케어 링크</div>
         <div class="urlBox" id="detailUrl"></div>
+
+        <label style="display:block;margin-top:14px;color:#9fd4ff;font-size:12px;font-weight:800">설치본 storage 경로 (선택 · humateck-installs 버킷)</label>
+        <input type="text" id="detailInstallPkg" placeholder="예: packages/ko/humateck-setup.zip" style="width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(214,176,78,.35);background:#0b1423;color:#fff;font-size:13px;margin-top:6px">
 
         <div class="row" style="margin-top:14px">
           <div class="field">
@@ -289,6 +299,18 @@
 
     function careUrl(token){
       return "https://humateck.com/care/?t=" + token;
+    }
+
+    function installUrl(token){
+      return "https://humateck.com/install/?t=" + token;
+    }
+
+    function copyText(url){
+      navigator.clipboard.writeText(url).then(function(){
+        alert("복사됨");
+      }).catch(function(){
+        prompt("복사:", url);
+      });
     }
 
     function badge(status){
@@ -462,7 +484,9 @@
         "최근 접속: " + fmtDate(it.last_seen_at) + "<br>" +
         "도움요청: " + fmtDate(it.help_requested_at) + (it.help_message ? (" — " + it.help_message) : "") + "<br>" +
         "완료: " + fmtDate(it.completed_at);
+      document.getElementById("detailInstallUrl").textContent = installUrl(it.token);
       document.getElementById("detailUrl").textContent = careUrl(it.token);
+      document.getElementById("detailInstallPkg").value = it.install_package || "";
       document.getElementById("detailStatus").value = it.status;
       document.getElementById("detailStep").value = String(it.current_step || 1);
       document.getElementById("detailCareMsg").value = it.care_message || "";
@@ -518,6 +542,7 @@
       }
       try {
         var res = await HUMATECK_CARE.adminCreate(googleCredential, payload);
+        document.getElementById("newInstallUrl").textContent = res.install_url || installUrl(res.item && res.item.token);
         document.getElementById("newLinkUrl").textContent = res.care_url;
         document.getElementById("newLinkBox").classList.remove("hidden");
         await refreshList();
@@ -527,13 +552,11 @@
       }
     });
 
+    document.getElementById("copyInstallBtn").addEventListener("click", function(){
+      copyText(document.getElementById("newInstallUrl").textContent);
+    });
     document.getElementById("copyLinkBtn").addEventListener("click", function(){
-      var url = document.getElementById("newLinkUrl").textContent;
-      navigator.clipboard.writeText(url).then(function(){
-        alert("복사됨");
-      }).catch(function(){
-        prompt("복사:", url);
-      });
+      copyText(document.getElementById("newLinkUrl").textContent);
     });
 
     document.getElementById("saveBtn").addEventListener("click", async function(){
@@ -545,6 +568,7 @@
           current_step: Number(document.getElementById("detailStep").value),
           care_message: document.getElementById("detailCareMsg").value,
           admin_notes: document.getElementById("detailNotes").value,
+          install_package: document.getElementById("detailInstallPkg").value.trim(),
         });
         await refreshList();
         await openDetail(selectedId);
