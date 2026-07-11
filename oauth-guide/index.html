@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>구글 OAuth 설정 가이드 | Humateck</title>
+<style>
+  :root{
+    --navy:#1a1f36;
+    --navy2:#202a4e;
+    --blue:#4285F4;
+    --blue-light:#e8f0fe;
+    --blue-text:#1967d2;
+    --green:#34A853;
+    --green-bg:#e6f4ea;
+    --amber:#f9ab00;
+    --amber-bg:#fef7e0;
+    --ink:#202124;
+    --sub:#5f6368;
+    --line:#dadce0;
+    --page-bg:#f4f6fb;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Malgun Gothic","Apple SD Gothic Neo",Roboto,sans-serif;
+    background:var(--page-bg);
+    color:var(--ink);
+    line-height:1.7;
+  }
+  .guide-wrap{
+    max-width:860px;
+    margin:0 auto;
+    padding:0 0 60px 0;
+  }
+  /* ---- Hero ---- */
+  .g-hero{
+    position:relative;
+    overflow:hidden;
+    background:linear-gradient(155deg,#1a1f36 0%,#202a4e 55%,#274690 100%);
+    border-radius:0 0 22px 22px;
+    padding:48px 32px 40px 32px;
+    color:#fff;
+  }
+  .g-hero::before{
+    content:"";
+    position:absolute;
+    top:-100px; right:-100px;
+    width:320px; height:320px;
+    border-radius:50%;
+    background:radial-gradient(circle, rgba(66,133,244,0.35) 0%, rgba(66,133,244,0) 70%);
+    pointer-events:none;
+  }
+  .g-eyebrow{
+    display:inline-block;
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:#8ab4f8;
+    border:1px solid rgba(138,180,248,.5);
+    border-radius:20px;
+    padding:4px 14px;
+    margin-bottom:18px;
+    position:relative;
+  }
+  .g-hero h1{
+    font-size:clamp(24px,4vw,34px);
+    line-height:1.35;
+    margin:0 0 14px 0;
+    font-weight:800;
+    position:relative;
+  }
+  .g-hero p{
+    font-size:15px;
+    color:#c7d2f0;
+    max-width:560px;
+    margin:0;
+    position:relative;
+  }
+  .g-dots{margin-top:22px;display:flex;gap:6px;position:relative;}
+  .g-dots span{width:30px;height:4px;border-radius:2px;background:var(--blue);display:inline-block;}
+  .g-dots span.g{background:var(--green);}
+  .g-dots span.y{background:var(--amber);}
+  .g-dots span.r{background:#EA4335;}
+
+  .g-toc{
+    margin-top:28px;
+    background:rgba(255,255,255,.07);
+    border:1px solid rgba(255,255,255,.16);
+    border-radius:12px;
+    padding:6px 20px;
+    position:relative;
+  }
+  .g-toc a{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px 0;
+    border-bottom:1px solid rgba(255,255,255,.09);
+    color:#eef1fb;
+    text-decoration:none;
+    font-size:14px;
+    transition:opacity .15s ease;
+  }
+  .g-toc a:hover{opacity:.75;}
+  .g-toc a:last-child{border-bottom:none;}
+  .g-toc-num{font-size:11px;color:#8ab4f8;min-width:20px;font-variant-numeric:tabular-nums;}
+
+  /* ---- Section ---- */
+  .g-section{
+    padding:0 28px;
+  }
+  .g-section-header{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin:44px 0 18px 0;
+    padding-bottom:12px;
+    border-bottom:2.5px solid var(--navy);
+  }
+  .g-badge{
+    width:32px;height:32px;
+    border-radius:8px;
+    background:var(--navy);
+    color:#fff;
+    display:flex;align-items:center;justify-content:center;
+    font-size:14px;font-weight:700;
+    flex-shrink:0;
+  }
+  .g-section-header h2{
+    font-size:19px;
+    font-weight:700;
+    color:var(--navy);
+    margin:0;
+  }
+  .g-section-desc{
+    color:var(--sub);
+    font-size:14.5px;
+    margin:0 0 26px 0;
+  }
+
+  /* ---- Step ---- */
+  .g-step{margin-bottom:28px;}
+  .g-step-head{display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;}
+  .g-step-num{
+    flex-shrink:0;width:26px;height:26px;border-radius:50%;
+    background:var(--blue);color:#fff;font-size:12px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;margin-top:1px;
+  }
+  .g-step-text{font-size:15px;color:var(--ink);}
+  .g-step-text b{color:var(--navy);}
+  .g-step-link{
+    display:inline-block;
+    margin-top:8px;
+    font-size:13px;
+    color:var(--blue-text);
+    background:var(--blue-light);
+    border-radius:6px;
+    padding:6px 12px;
+    word-break:break-all;
+    text-decoration:none;
+  }
+  .g-step-link:hover{text-decoration:underline;}
+
+  .g-shot{
+    margin:12px 0 0 38px;
+    border-radius:12px;
+    border:1px solid var(--line);
+    box-shadow:0 2px 14px rgba(32,33,36,.10);
+    overflow:hidden;
+    background:#000;
+  }
+  .g-shot-bar{
+    height:20px;background:#edeef2;border-bottom:1px solid var(--line);
+    display:flex;align-items:center;gap:5px;padding:0 10px;
+  }
+  .g-shot-bar span{width:7px;height:7px;border-radius:50%;background:#d0d3d9;}
+  .g-shot img{display:block;width:100%;height:auto;}
+
+  .g-callout{
+    margin:12px 0 0 38px;
+    background:var(--amber-bg);
+    border-left:3px solid var(--amber);
+    border-radius:4px;
+    padding:9px 14px;
+    font-size:13.5px;
+    color:#5f4a00;
+  }
+
+  .g-tip{
+    margin:30px 0 0 0;
+    background:var(--green-bg);
+    border-left:3px solid var(--green);
+    border-radius:4px;
+    padding:12px 16px;
+    font-size:14px;
+    color:#1e4620;
+  }
+  .g-tip b{color:#0f3d15;}
+
+  .g-footer{
+    text-align:center;
+    color:#9aa0a6;
+    font-size:12.5px;
+    padding:40px 28px 0 28px;
+  }
+
+  @media (max-width:600px){
+    .g-hero{padding:36px 20px 30px 20px; border-radius:0 0 16px 16px;}
+    .g-section{padding:0 18px;}
+    .g-shot, .g-callout{margin-left:0;}
+    .g-step-text{font-size:14.5px;}
+  }
+
+  .g-back-btn{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:10px 18px;border-radius:999px;
+    background:#fff;border:1px solid var(--line);
+    color:var(--navy);font-size:14px;font-weight:600;
+    text-decoration:none;box-shadow:0 2px 12px rgba(32,33,36,.12);
+    transition:background .15s ease, box-shadow .15s ease;
+  }
+  .g-back-btn:hover{background:var(--blue-light);box-shadow:0 4px 16px rgba(32,33,36,.16);}
+  .g-back-top{position:fixed;top:16px;right:16px;z-index:200;}
+  .g-back-bottom-wrap{text-align:center;padding:8px 28px 48px;}
+  @media (max-width:600px){
+    .g-back-top{top:12px;right:12px;padding:8px 14px;font-size:13px;}
+  }
+</style>
+</head>
+<body>
+<a class="g-back-btn g-back-top g-back-link" href="/deployer.html">← 등록 화면으로 돌아가기</a>
+<div class="guide-wrap">
+
+  <div class="g-hero">
+    <span class="g-eyebrow">HUMATECK · ONBOARDING GUIDE</span>
+    <h1>구글 OAuth 설정 가이드<br>프로젝트 생성부터 클라이언트 ID 발급까지</h1>
+    <p>YouTube Data API v3 연동을 위해 꼭 필요한 구글 클라우드 콘솔 설정 절차를 따라하기 쉽게 정리했습니다.</p>
+    <div class="g-dots"><span></span><span class="g"></span><span class="y"></span><span class="r"></span></div>
+    <div class="g-toc">
+      <a href="#section-1"><span class="g-toc-num">01</span><span>구글 프로젝트 만들기</span></a>
+      <a href="#section-2"><span class="g-toc-num">02</span><span>구글 클라이언트 ID 만들기</span></a>
+    </div>
+  </div>
+
+  <!-- ============ SECTION 1 ============ -->
+  <div class="g-section" id="section-1">
+    <div class="g-section-header">
+      <div class="g-badge">1</div>
+      <h2>구글 프로젝트 만들기</h2>
+    </div>
+    <p class="g-section-desc">구글 OAuth 인증(클라이언트 ID)을 받으려면 먼저 구글 프로젝트가 있어야 합니다. 아래 순서대로 진행해 주세요.</p>
+
+    <div class="g-step">
+      <div class="g-step-head">
+        <div class="g-step-num">1</div>
+        <div class="g-step-text"><b>구글 프로젝트가 있으신가요?</b> — 없습니다.</div>
+      </div>
+    </div>
+
+    <div class="g-step">
+      <div class="g-step-head">
+        <div class="g-step-num">2</div>
+        <div class="g-step-text">
+          먼저 구글 프로젝트부터 만드셔야 구글 OA 인증(클라이언트 ID)을 받을 수 있습니다.<br>
+          아래 링크로 이동해 새 프로젝트를 생성해 주세요.
+          <br>
+          <a class="g-step-link" href="https://console.cloud.google.com/projectcreate" target="_blank" rel="noopener">구글프로젝트 만들기 → https://console.cloud.google.com/projectcreate</a>
+        </div>
+      </div>
+      <div class="g-shot">
+        <div class="g-shot-bar"><span></span><span></span><span></span></div>
+        <img src="images/p1.png" alt="구글 클라우드 새 프로젝트 생성 화면" loading="lazy">
+      </div>
+    </div>
+
+    <div class="g-step">
+      <div class="g-step-head">
+        <div class="g-step-num">3</div>
+        <div class="g-step-text">구글 프로젝트가 만들어졌습니다.</div>
+      </div>
+      <div class="g-shot">
+        <div class="g-shot-bar"><span></span><span></span><span></span></div>
+        <img src="images/p2.png" alt="구글 프로젝트 생성 완료 대시보드" loading="lazy">
+      </div>
+    </div>
+
+    <div class="g-tip"><b>TIP.</b> 프로젝트 이름과 프로젝트 ID는 나중에 콘솔 대시보드 상단에서 언제든 확인할 수 있습니다.</div>
+  </div>
+
+  <!-- ============ SECTION 2 ============ -->
+  <div class="g-section" id="section-2">
+    <div class="g-section-header">
+      <div class="g-badge">2</div>
+      <h2>구글 클라이언트 ID 만들기</h2>
+    </div>
+    <p class="g-section-desc">구글 프로젝트가 준비되었다면, 이제 OAuth 클라이언트 ID를 발급받을 차례입니다.</p>
+
+    <div class="g-step">
+      <div class="g-step-head">
+        <div class="g-step-num">1</div>
+        <div class="g-step-text"><b>구글 프로젝트가 있으신가요?</b> — 네.</div>
+      </div>
+    </div>
+
+    <div class="g-step">
+      <div class="g-step-head">
+        <div class="g-step-num">2</div>
+        <div class="g-step-text">
+          구글 클라이언트 만들기 페이지로 이동하세요.
+          <br>
+          <a class="g-step-link" href="https://console.cloud.google.com/auth/clients/create" target="_blank" rel="noopener">구글 클라이언트 만들기 → https://console.cloud.google.com/auth/clients/create?project=fourth-cedar-489307-b1</a>
+        </div>
+      </div>
+      <div class="g-shot">
+        <div class="g-shot-bar"><span></span><span></span><span></span></div>
+        <img src="images/c1.png" alt="Create OAuth Client ID 화면" loading="lazy">
+      </div>
+    </div>
+
+    <div class="g-step">
+      <div class="g-step-head">
+        <div class="g-step-num">3</div>
+        <div class="g-step-text">'Application Types'에서 드롭다운 메뉴를 눌러 <b>'Desktop App'</b>을 선택합니다.</div>
+      </div>
+      <div class="g-shot">
+        <div class="g-shot-bar"><span></span><span></span><span></span></div>
+        <img src="images/c2.png" alt="Application Types 드롭다운에서 Desktop App 선택" loading="lazy">
+      </div>
+    </div>
+
+    <div class="g-step">
+      <div class="g-step-head">
+        <div class="g-step-num">4</div>
+        <div class="g-step-text">'Name' 칸에 임의의 이름을 입력하고 하단의 <b>'CREATE'</b> 버튼을 누릅니다.</div>
+      </div>
+      <div class="g-shot">
+        <div class="g-shot-bar"><span></span><span></span><span></span></div>
+        <img src="images/c4.png" alt="클라이언트 이름 입력 및 CREATE 버튼" loading="lazy">
+      </div>
+    </div>
+
+    <div class="g-step">
+      <div class="g-step-head">
+        <div class="g-step-num">5</div>
+        <div class="g-step-text">클라이언트 ID와 클라이언트 보안 비밀번호가 생성됩니다. 두 값을 반드시 복사하여 안전한 곳에 저장한 뒤, 우측 하단의 <b>'OK'</b>를 누르세요.</div>
+      </div>
+      <div class="g-shot">
+        <div class="g-shot-bar"><span></span><span></span><span></span></div>
+        <img src="images/c5.png" alt="OAuth 클라이언트 생성 완료 팝업" loading="lazy">
+      </div>
+      <div class="g-callout">⚠ 이 창을 닫으면 클라이언트 보안 비밀번호는 다시 확인할 수 없습니다. 저장 여부를 꼭 확인해 주세요.</div>
+    </div>
+
+    <div class="g-step">
+      <div class="g-step-head">
+        <div class="g-step-num">6</div>
+        <div class="g-step-text">클라이언트 ID가 목록에 등록된 모습입니다. 이제 발급받은 구글 클라이언트 ID를 사용하시면 됩니다.</div>
+      </div>
+      <div class="g-shot">
+        <div class="g-shot-bar"><span></span><span></span><span></span></div>
+        <img src="images/c3.png" alt="OAuth 2.0 클라이언트 ID 목록" loading="lazy">
+      </div>
+    </div>
+
+    <div class="g-tip"><b>TIP.</b> Client ID와 Client Secret은 YouTube Data API v3 OAuth 로그인 설정 시 그대로 사용됩니다. 외부에 노출되지 않도록 주의해 주세요.</div>
+  </div>
+
+  <div class="g-back-bottom-wrap"><a class="g-back-btn g-back-link" href="/deployer.html">← 등록 화면으로 돌아가기</a></div>
+
+  <div class="g-footer">Humateck · humateck.com</div>
+
+</div>
+<script>
+(function(){
+  var map={deployer:"/deployer.html",tutor:"/tutor.html","deployer-en":"/deployer-en.html","tutor-en":"/tutor-en.html"};
+  var key=new URLSearchParams(location.search).get("return")||"deployer";
+  var url=map[key]||map.deployer;
+  document.querySelectorAll(".g-back-link").forEach(function(a){a.href=url;});
+})();
+</script>
+</body>
+</html>
