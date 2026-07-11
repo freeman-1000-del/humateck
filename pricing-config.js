@@ -88,8 +88,8 @@
     buySubtitleKo: "영구 · 12개월 · 6개월 · 3종 플랜",
     buySubtitleEn: "Lifetime / 12-Month / 6-Month — 3 Pricing Plans",
     marketplace: {
-      ko: { label: "입점 진행 중", url: "" },
-      en: { label: "Listing in progress", url: "" },
+      ko: { label: "크몽 입점 진행 중", url: "" },
+      en: { label: "파이버 입점 진행 중", url: "" },
     },
   };
 })(typeof window !== "undefined" ? window : globalThis);
