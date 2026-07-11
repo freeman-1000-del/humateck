@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>케어 관리 | Humateck</title>
+  <meta name="robots" content="noindex,nofollow">
+  <style>
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:#050b14;color:#f4f1e8;font-family:Arial,"Noto Sans KR",sans-serif}
+    a{color:#6ca6ff}
+    .wrap{max-width:1280px;margin:0 auto;padding:24px 16px 48px}
+    h1{margin:0 0 8px;color:#ffd95a;font-size:26px}
+    .sub{margin:0 0 20px;color:#9aa0a6;font-size:14px;line-height:1.6}
+    .panel{border:1px solid rgba(214,176,78,.45);border-radius:16px;background:#101722;padding:20px;margin-bottom:18px}
+    .row{display:flex;flex-wrap:wrap;gap:10px;align-items:end}
+    .field{flex:1;min-width:160px}
+    .field label{display:block;margin-bottom:6px;color:#9fd4ff;font-size:12px;font-weight:800}
+    .field input,.field select,.field textarea{width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(214,176,78,.35);background:#0b1423;color:#fff;font-size:14px;font-family:inherit}
+    .btn{padding:10px 18px;border-radius:10px;border:2px solid #d9b256;background:linear-gradient(180deg,#5c4315,#15110a);color:#fff;font-weight:900;cursor:pointer}
+    .btn.secondary{border-color:rgba(107,166,255,.45);background:#152238}
+    .btn.success{border-color:rgba(125,255,176,.45);background:#123524}
+    .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
+    .count{color:#9aa0a6;font-size:13px}
+    table{width:100%;border-collapse:collapse;font-size:13px}
+    th,td{border-bottom:1px solid rgba(255,255,255,.08);padding:10px 8px;text-align:left;vertical-align:top}
+    th{color:#9fd4ff;font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+    tr[data-id]{cursor:pointer}
+    tr[data-id]:hover,tr[data-id].sel{background:rgba(75,151,255,.08)}
+    .badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:800}
+    .badge.active{background:rgba(107,166,255,.15);color:#9fd4ff}
+    .badge.help{background:rgba(255,120,120,.15);color:#ff9b9b}
+    .badge.completed{background:rgba(33,230,166,.12);color:#7dffc8}
+    .badge.expired,.badge.cancelled{background:rgba(154,160,166,.15);color:#9aa0a6}
+    .detail{margin-top:16px}
+    .detail h2{margin:0 0 10px;color:#ffd95a;font-size:18px}
+    .meta{color:#c8d4e0;font-size:13px;line-height:1.7;margin-bottom:12px}
+    .urlBox{padding:12px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid rgba(214,176,78,.25);font-family:Consolas,monospace;font-size:13px;word-break:break-all}
+    textarea.notes{width:100%;min-height:80px;margin-top:8px}
+    .hintBox{margin-top:12px}
+    .events{margin-top:14px;max-height:220px;overflow:auto;font-size:12px;color:#b8c4d0}
+    .events div{padding:6px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+    .err{color:#ff9b9b;font-size:13px;margin-top:10px}
+    .hidden{display:none!important}
+    .newLink{margin-top:12px;padding:14px;border-radius:12px;background:rgba(125,255,176,.08);border:1px solid rgba(125,255,176,.35)}
+    @media(max-width:900px){table{font-size:12px} th:nth-child(5),td:nth-child(5){display:none}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>케어 관리</h1>
+    <p class="sub">
+      Fiverr 등 외부 주문용 · 기존 deployer/buy 코드와 분리된 겉 케어 포털<br>
+      주문 즉시 링크 발급 → 손님은 <code>/care/?t=코드</code> 만 열면 됨 (설치·AnyDesk 없음)
+    </p>
+
+    <section class="panel" id="loginPanel">
+      <div class="row">
+        <div class="field">
+          <label for="adminEmail">관리자 이메일</label>
+          <input type="email" id="adminEmail" placeholder="support@humateck.com">
+        </div>
+        <div class="field">
+          <label for="adminKey">관리 키</label>
+          <input type="password" id="adminKey" placeholder="HUMATECK_CARE_ADMIN_KEY (또는 INQUIRY 키)">
+        </div>
+        <button type="button" class="btn" id="loginBtn">로그인</button>
+      </div>
+      <p class="err" id="loginErr"></p>
+    </section>
+
+    <section class="panel hidden" id="adminPanel">
+      <h2 style="margin:0 0 14px;color:#ffd95a;font-size:18px">새 주문 — 링크 즉시 발급</h2>
+      <div class="row">
+        <div class="field">
+          <label for="newLabel">손님 메모 (내부용)</label>
+          <input type="text" id="newLabel" placeholder="Fiverr buyer / order #">
+        </div>
+        <div class="field">
+          <label for="newOrderRef">Fiverr 주문번호</label>
+          <input type="text" id="newOrderRef" placeholder="선택">
+        </div>
+        <div class="field" style="max-width:120px">
+          <label for="newLang">언어</label>
+          <select id="newLang">
+            <option value="en">EN</option>
+            <option value="ko">KO</option>
+          </select>
+        </div>
+        <button type="button" class="btn success" id="createBtn">링크 발급</button>
+      </div>
+      <div class="newLink hidden" id="newLinkBox">
+        <div style="color:#7dffb0;font-weight:800;margin-bottom:8px">발급 완료 — Fiverr Order page에 바로 전달</div>
+        <div class="urlBox" id="newLinkUrl"></div>
+        <button type="button" class="btn secondary" id="copyLinkBtn" style="margin-top:10px">링크 복사</button>
+      </div>
+
+      <div class="toolbar" style="margin-top:22px">
+        <select id="statusFilter">
+          <option value="all">전체</option>
+          <option value="active">진행중</option>
+          <option value="help">도움요청</option>
+          <option value="completed">완료</option>
+          <option value="expired">만료</option>
+        </select>
+        <button type="button" class="btn secondary" id="refreshBtn">새로고침</button>
+        <button type="button" class="btn secondary" id="logoutBtn">로그아웃</button>
+        <span class="count" id="listCount"></span>
+      </div>
+
+      <div style="overflow:auto">
+        <table>
+          <thead>
+            <tr>
+              <th>업데이트</th>
+              <th>상태</th>
+              <th>단계</th>
+              <th>메모</th>
+              <th>주문</th>
+              <th>코드</th>
+            </tr>
+          </thead>
+          <tbody id="listBody"></tbody>
+        </table>
+      </div>
+
+      <div class="detail hidden" id="detailPanel">
+        <h2 id="detailTitle">세션 상세</h2>
+        <div class="meta" id="detailMeta"></div>
+        <div class="urlBox" id="detailUrl"></div>
+
+        <div class="row" style="margin-top:14px">
+          <div class="field">
+            <label for="detailStatus">상태</label>
+            <select id="detailStatus">
+              <option value="active">진행중</option>
+              <option value="help">도움요청</option>
+              <option value="completed">완료</option>
+              <option value="expired">만료</option>
+              <option value="cancelled">취소</option>
+            </select>
+          </div>
+          <div class="field" style="max-width:100px">
+            <label for="detailStep">단계</label>
+            <select id="detailStep">
+              <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+              <option value="4">4</option><option value="5">5</option><option value="6">6</option>
+            </select>
+          </div>
+          <button type="button" class="btn" id="saveBtn">저장</button>
+        </div>
+
+        <label class="hintBox" style="display:block;color:#9fd4ff;font-size:12px;font-weight:800">손님에게 보이는 안내 (원격 케어)</label>
+        <textarea class="notes" id="detailCareMsg" placeholder="예: 번역 단계에서 프롬프트 전체를 복사해 제미나이에 붙여넣으세요."></textarea>
+
+        <label style="display:block;margin-top:12px;color:#9fd4ff;font-size:12px;font-weight:800">내부 메모 (손님 비공개)</label>
+        <textarea class="notes" id="detailNotes" placeholder="Fiverr Order page 메모 등"></textarea>
+
+        <div class="events" id="detailEvents"></div>
+      </div>
+      <p class="err" id="adminErr"></p>
+    </section>
+  </div>
+
+  <script src="/humateck-care.js"></script>
+  <script>
+  (function(){
+    var email = "";
+    var adminKey = "";
+    var items = [];
+    var selectedId = null;
+
+    function fmtDate(v){
+      if(!v) return "-";
+      try { return new Date(v).toLocaleString("ko-KR"); } catch(e){ return v; }
+    }
+
+    function careUrl(token){
+      return "https://humateck.com/care/?t=" + token;
+    }
+
+    function badge(status){
+      return '<span class="badge ' + status + '">' + status + '</span>';
+    }
+
+    function loadCreds(){
+      try {
+        email = sessionStorage.getItem("care_admin_email") || "";
+        adminKey = sessionStorage.getItem("care_admin_key") || "";
+        if(email) document.getElementById("adminEmail").value = email;
+      } catch(e){}
+    }
+
+    function saveCreds(){
+      sessionStorage.setItem("care_admin_email", email);
+      sessionStorage.setItem("care_admin_key", adminKey);
+    }
+
+    function clearCreds(){
+      sessionStorage.removeItem("care_admin_email");
+      sessionStorage.removeItem("care_admin_key");
+    }
+
+    function showLogin(){
+      document.getElementById("loginPanel").classList.remove("hidden");
+      document.getElementById("adminPanel").classList.add("hidden");
+    }
+
+    function showAdmin(){
+      document.getElementById("loginPanel").classList.add("hidden");
+      document.getElementById("adminPanel").classList.remove("hidden");
+    }
+
+    async function login(){
+      email = document.getElementById("adminEmail").value.trim();
+      adminKey = document.getElementById("adminKey").value;
+      document.getElementById("loginErr").textContent = "";
+      try {
+        await HUMATECK_CARE.adminAuth(email, adminKey);
+        saveCreds();
+        showAdmin();
+        await refreshList();
+      } catch(e){
+        document.getElementById("loginErr").textContent = e.message || "로그인 실패";
+      }
+    }
+
+    async function refreshList(){
+      var status = document.getElementById("statusFilter").value;
+      var res = await HUMATECK_CARE.adminList(email, adminKey, status);
+      items = res.items || [];
+      document.getElementById("listCount").textContent = items.length + "건";
+      var body = document.getElementById("listBody");
+      body.innerHTML = "";
+      items.forEach(function(it){
+        var tr = document.createElement("tr");
+        tr.dataset.id = it.id;
+        if(it.id === selectedId) tr.classList.add("sel");
+        tr.innerHTML =
+          "<td>" + fmtDate(it.updated_at) + "</td>" +
+          "<td>" + badge(it.status) + "</td>" +
+          "<td>" + (it.current_step || 1) + "/6</td>" +
+          "<td>" + (it.customer_label || "-") + "</td>" +
+          "<td>" + (it.fiverr_order_ref || "-") + "</td>" +
+          "<td><code>" + it.token + "</code></td>";
+        tr.addEventListener("click", function(){ openDetail(it.id); });
+        body.appendChild(tr);
+      });
+    }
+
+    async function openDetail(id){
+      selectedId = id;
+      document.querySelectorAll("tr[data-id]").forEach(function(tr){
+        tr.classList.toggle("sel", tr.dataset.id === id);
+      });
+      var res = await HUMATECK_CARE.adminGet(email, adminKey, id);
+      var it = res.item;
+      document.getElementById("detailPanel").classList.remove("hidden");
+      document.getElementById("detailTitle").textContent = (it.customer_label || it.token) + " — 케어";
+      document.getElementById("detailMeta").innerHTML =
+        "생성: " + fmtDate(it.created_at) + "<br>" +
+        "최근 접속: " + fmtDate(it.last_seen_at) + "<br>" +
+        "도움요청: " + fmtDate(it.help_requested_at) + (it.help_message ? (" — " + it.help_message) : "") + "<br>" +
+        "완료: " + fmtDate(it.completed_at);
+      document.getElementById("detailUrl").textContent = careUrl(it.token);
+      document.getElementById("detailStatus").value = it.status;
+      document.getElementById("detailStep").value = String(it.current_step || 1);
+      document.getElementById("detailCareMsg").value = it.care_message || "";
+      document.getElementById("detailNotes").value = it.admin_notes || "";
+
+      var evRoot = document.getElementById("detailEvents");
+      evRoot.innerHTML = "<strong>이벤트 백업</strong>";
+      (res.events || []).forEach(function(ev){
+        var d = document.createElement("div");
+        d.textContent = fmtDate(ev.created_at) + " · " + ev.event_type;
+        evRoot.appendChild(d);
+      });
+    }
+
+    document.getElementById("loginBtn").addEventListener("click", login);
+    document.getElementById("logoutBtn").addEventListener("click", function(){
+      email = ""; adminKey = ""; selectedId = null;
+      clearCreds();
+      showLogin();
+    });
+    document.getElementById("refreshBtn").addEventListener("click", function(){
+      refreshList().catch(function(e){
+        document.getElementById("adminErr").textContent = e.message;
+      });
+    });
+    document.getElementById("statusFilter").addEventListener("change", function(){
+      refreshList().catch(function(e){
+        document.getElementById("adminErr").textContent = e.message;
+      });
+    });
+
+    document.getElementById("createBtn").addEventListener("click", async function(){
+      document.getElementById("adminErr").textContent = "";
+      try {
+        var res = await HUMATECK_CARE.adminCreate(email, adminKey, {
+          customer_label: document.getElementById("newLabel").value.trim(),
+          fiverr_order_ref: document.getElementById("newOrderRef").value.trim(),
+          lang: document.getElementById("newLang").value,
+          channel: "fiverr",
+        });
+        document.getElementById("newLinkUrl").textContent = res.care_url;
+        document.getElementById("newLinkBox").classList.remove("hidden");
+        await refreshList();
+        if(res.item && res.item.id) openDetail(res.item.id);
+      } catch(e){
+        document.getElementById("adminErr").textContent = e.message;
+      }
+    });
+
+    document.getElementById("copyLinkBtn").addEventListener("click", function(){
+      var url = document.getElementById("newLinkUrl").textContent;
+      navigator.clipboard.writeText(url).then(function(){
+        alert("복사됨");
+      }).catch(function(){
+        prompt("복사:", url);
+      });
+    });
+
+    document.getElementById("saveBtn").addEventListener("click", async function(){
+      if(!selectedId) return;
+      document.getElementById("adminErr").textContent = "";
+      try {
+        await HUMATECK_CARE.adminUpdate(email, adminKey, selectedId, {
+          status: document.getElementById("detailStatus").value,
+          current_step: Number(document.getElementById("detailStep").value),
+          care_message: document.getElementById("detailCareMsg").value,
+          admin_notes: document.getElementById("detailNotes").value,
+        });
+        await refreshList();
+        await openDetail(selectedId);
+        alert("저장됨 — 손님 페이지에 안내가 표시됩니다.");
+      } catch(e){
+        document.getElementById("adminErr").textContent = e.message;
+      }
+    });
+
+    loadCreds();
+    if(email && adminKey){
+      HUMATECK_CARE.adminAuth(email, adminKey).then(function(){
+        showAdmin();
+        return refreshList();
+      }).catch(showLogin);
+    }
+  })();
+  </script>
+</body>
+</html>

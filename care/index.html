@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Setup Care | Humateck</title>
+  <meta name="robots" content="noindex,nofollow">
+  <style>
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:#050b14;color:#f4f1e8;font-family:Arial,"Noto Sans KR",sans-serif}
+    a{color:#6ca6ff}
+    .wrap{max-width:760px;margin:0 auto;padding:24px 16px 80px}
+    .hero{border:1px solid rgba(214,176,78,.55);border-radius:20px;background:linear-gradient(180deg,#0b1423,#070b11);padding:28px 24px;margin-bottom:20px}
+    .hero h1{margin:0 0 8px;color:#4b97ff;font-size:26px}
+    .hero p{margin:0;color:#c8d4e0;font-size:15px;line-height:1.65}
+    .badge{display:inline-block;margin-bottom:12px;padding:4px 12px;border-radius:999px;background:rgba(255,217,90,.12);color:#ffd95a;font-size:12px;font-weight:800}
+    .careBox{border:2px solid rgba(125,255,176,.45);border-radius:14px;background:rgba(125,255,176,.08);padding:14px 16px;margin-bottom:18px;color:#d8ffe8;font-size:14px;line-height:1.65}
+    .careBox.hidden{display:none!important}
+    .steps{display:flex;flex-direction:column;gap:12px}
+    .step{border:1px solid rgba(214,176,78,.35);border-radius:16px;background:#101722;padding:18px}
+    .step.is-current{border-color:rgba(75,151,255,.65);box-shadow:0 0 0 1px rgba(75,151,255,.2)}
+    .step.is-done{opacity:.72}
+    .stepHead{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+    .num{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px;background:rgba(75,151,255,.18);color:#9fd4ff;flex-shrink:0}
+    .step.is-done .num{background:rgba(125,255,176,.18);color:#7dffb0}
+    .step h2{margin:0;font-size:17px;color:#ffd95a}
+    .step p{margin:0 0 12px;color:#c8d4e0;font-size:14px;line-height:1.65}
+    .links{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+    .linkBtn{display:inline-flex;align-items:center;padding:8px 14px;border-radius:10px;border:1px solid rgba(107,166,255,.45);background:#152238;color:#9fd4ff;font-size:13px;font-weight:700;text-decoration:none}
+    .linkBtn:hover{background:#1a2d4d;color:#fff}
+    .btn{padding:10px 16px;border-radius:10px;border:2px solid #d9b256;background:linear-gradient(180deg,#5c4315,#15110a);color:#fff;font-weight:900;cursor:pointer;font-size:14px}
+    .btn.secondary{border-color:rgba(107,166,255,.45);background:#152238}
+    .btn:disabled{opacity:.45;cursor:not-allowed}
+    .helpBar{position:fixed;left:0;right:0;bottom:0;padding:12px 16px;background:rgba(5,11,20,.96);border-top:1px solid rgba(214,176,78,.35)}
+    .helpInner{max-width:760px;margin:0 auto;display:flex;gap:10px;align-items:center}
+    .helpInner input{flex:1;padding:10px 12px;border-radius:10px;border:1px solid rgba(214,176,78,.35);background:#0b1423;color:#fff;font-size:14px}
+    .err{padding:16px;border-radius:14px;background:rgba(255,120,120,.1);border:1px solid rgba(255,120,120,.35);color:#ffb0b0}
+    .doneHero{text-align:center;padding:32px 20px}
+    .doneHero h2{color:#7dffb0;margin:0 0 8px}
+    .hidden{display:none!important}
+    @media(max-width:600px){.hero h1{font-size:22px}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div id="gateView" class="err hidden"></div>
+
+    <div id="mainView" class="hidden">
+      <section class="hero">
+        <span class="badge" id="sessionBadge">Your private setup</span>
+        <h1 id="heroTitle">YouTube Multilingual Setup Care</h1>
+        <p id="heroDesc">Follow each step below. We prepared everything — you only need to complete Google sign-in yourself. If you get stuck, tap Help at the bottom.</p>
+      </section>
+
+      <div class="careBox hidden" id="careMessageBox">
+        <strong id="careLabel">Message from your setup assistant:</strong>
+        <div id="careMessageText"></div>
+      </div>
+
+      <div class="steps" id="stepsRoot"></div>
+
+      <section class="doneHero hidden" id="doneView">
+        <h2>All steps complete</h2>
+        <p style="color:#c8d4e0">Your first registration setup is done. Thank you!</p>
+      </section>
+    </div>
+  </div>
+
+  <div class="helpBar hidden" id="helpBar">
+    <div class="helpInner">
+      <input type="text" id="helpInput" placeholder="Optional: where are you stuck?">
+      <button type="button" class="btn" id="helpBtn">Help</button>
+    </div>
+  </div>
+
+  <script src="/humateck-care.js"></script>
+  <script>
+  (function(){
+    var STEPS_EN = [
+      { title: "Open your setup page", desc: "You are here. This page is private to your order." },
+      { title: "Choose countries & plan", desc: "Open the practice tool and select your country plan (same as the real program)." },
+      { title: "Prepare translations", desc: "Use the guided prompt in the practice tool. Paste your title and description, then copy the translated result." },
+      { title: "Preview your result", desc: "Check country count and format in the preview before registration." },
+      { title: "Google sign-in (OAuth)", desc: "Complete Google authentication yourself using our step-by-step guide." },
+      { title: "First registration", desc: "Run your first successful registration. Tell us via Help if anything blocks you — we will care until it succeeds." }
+    ];
+    var STEPS_KO = [
+      { title: "설정 페이지 열기", desc: "지금 이 페이지입니다. 주문 전용 비공개 페이지예요." },
+      { title: "국가·플랜 선택", desc: "연습 도구를 열고 국가 플랜을 선택하세요 (실제 프로그램과 동일)." },
+      { title: "번역 준비", desc: "연습 도구의 안내 프롬프트를 사용하세요. 제목·설명을 붙여넣고 번역 결과를 복사하세요." },
+      { title: "결과 미리보기", desc: "등록 전에 국가 수와 형식을 미리보기에서 확인하세요." },
+      { title: "구글 인증 (OAuth)", desc: "단계별 가이드를 보며 구글 인증을 직접 완료하세요." },
+      { title: "최초 등록", desc: "첫 등록이 성공할 때까지 진행하세요. 막히면 아래 도움 요청 — 케어해 드립니다." }
+    ];
+    var LINKS = {
+      practice: "/deployer/index.html",
+      practiceEn: "/deployer-en/index.html",
+      oauth: "/oauth-guide/index.html",
+      oauthEn: "/oauth-guide-en/index.html"
+    };
+
+    var token = "";
+    var session = null;
+    var lang = "en";
+
+    function qs(name){
+      return new URLSearchParams(location.search).get(name) || "";
+    }
+
+    function t(en, ko){ return lang === "ko" ? ko : en; }
+
+    function showCareMessage(msg){
+      var box = document.getElementById("careMessageBox");
+      if(!msg){
+        box.classList.add("hidden");
+        return;
+      }
+      document.getElementById("careLabel").textContent = t("Message from your setup assistant:", "설정 도우미 메시지:");
+      document.getElementById("careMessageText").textContent = msg;
+      box.classList.remove("hidden");
+    }
+
+    function renderSteps(){
+      var steps = lang === "ko" ? STEPS_KO : STEPS_EN;
+      var root = document.getElementById("stepsRoot");
+      root.innerHTML = "";
+      var current = Number(session.current_step) || 1;
+      var doneMap = session.steps_json || {};
+
+      steps.forEach(function(step, idx){
+        var n = idx + 1;
+        var el = document.createElement("article");
+        el.className = "step";
+        if(n === current) el.classList.add("is-current");
+        if(doneMap[String(n)]) el.classList.add("is-done");
+
+        var head = document.createElement("div");
+        head.className = "stepHead";
+        head.innerHTML = '<span class="num">' + n + '</span><h2>' + step.title + '</h2>';
+        el.appendChild(head);
+
+        var p = document.createElement("p");
+        p.textContent = step.desc;
+        el.appendChild(p);
+
+        var links = document.createElement("div");
+        links.className = "links";
+        if(n === 2 || n === 3 || n === 4){
+          var pr = document.createElement("a");
+          pr.className = "linkBtn";
+          pr.target = "_blank";
+          pr.rel = "noopener";
+          pr.href = lang === "ko" ? LINKS.practice : LINKS.practiceEn;
+          pr.textContent = t("Open practice tool", "연습 도구 열기");
+          links.appendChild(pr);
+        }
+        if(n === 5){
+          var og = document.createElement("a");
+          og.className = "linkBtn";
+          og.target = "_blank";
+          og.rel = "noopener";
+          og.href = lang === "ko" ? LINKS.oauth : LINKS.oauthEn;
+          og.textContent = t("Open OAuth guide", "OAuth 가이드 열기");
+          links.appendChild(og);
+        }
+        if(links.childNodes.length) el.appendChild(links);
+
+        if(!doneMap[String(n)]){
+          var btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "btn";
+          btn.textContent = t("I finished this step", "이 단계 완료");
+          btn.addEventListener("click", function(){ completeStep(n); });
+          el.appendChild(btn);
+        } else {
+          var ok = document.createElement("p");
+          ok.style.color = "#7dffb0";
+          ok.style.fontSize = "13px";
+          ok.style.margin = "0";
+          ok.textContent = t("Done", "완료");
+          el.appendChild(ok);
+        }
+
+        root.appendChild(el);
+      });
+
+      if(session.status === "completed"){
+        document.getElementById("doneView").classList.remove("hidden");
+        document.getElementById("stepsRoot").classList.add("hidden");
+      }
+    }
+
+    function applySession(s){
+      session = s;
+      lang = s.lang === "ko" ? "ko" : "en";
+      document.documentElement.lang = lang;
+      document.getElementById("heroTitle").textContent = t(
+        "YouTube Multilingual Setup Care",
+        "유튜브 다국어 설정 케어"
+      );
+      document.getElementById("heroDesc").textContent = t(
+        "Follow each step below. We prepared everything — you only need to complete Google sign-in yourself. If you get stuck, tap Help at the bottom.",
+        "아래 단계를 따라가세요. 준비는 다 해두었습니다. 구글 인증만 직접 하시면 됩니다. 막히면 아래 도움 요청을 누르세요."
+      );
+      document.getElementById("helpInput").placeholder = t(
+        "Optional: where are you stuck?",
+        "선택: 어디서 막히셨나요?"
+      );
+      document.getElementById("helpBtn").textContent = t("Help", "도움 요청");
+      showCareMessage(s.care_message || "");
+      renderSteps();
+    }
+
+    async function completeStep(step){
+      try {
+        var res = await HUMATECK_CARE.stepComplete(token, step);
+        applySession(res.session);
+      } catch(e){
+        alert(e.message || "failed");
+      }
+    }
+
+    async function ping(){
+      if(!token) return;
+      try {
+        var res = await HUMATECK_CARE.sessionPing(token);
+        applySession(res.session);
+      } catch(e){}
+    }
+
+    async function init(){
+      token = (qs("t") || "").trim().toUpperCase();
+      var gate = document.getElementById("gateView");
+      if(!token){
+        gate.textContent = "Invalid link. Please use the private link from your order.";
+        gate.classList.remove("hidden");
+        return;
+      }
+      try {
+        var res = await HUMATECK_CARE.sessionOpen(token);
+        document.getElementById("mainView").classList.remove("hidden");
+        document.getElementById("helpBar").classList.remove("hidden");
+        applySession(res.session);
+        setInterval(ping, 15000);
+      } catch(e){
+        gate.textContent = e.message === "expired"
+          ? "This link has expired. Please contact support via your order page."
+          : (e.message || "Link not found.");
+        gate.classList.remove("hidden");
+      }
+    }
+
+    document.getElementById("helpBtn").addEventListener("click", async function(){
+      var msg = document.getElementById("helpInput").value.trim();
+      try {
+        var res = await HUMATECK_CARE.helpRequest(token, msg);
+        applySession(res.session);
+        document.getElementById("helpInput").value = "";
+        alert(t("Help request sent. We will reply via your order page.", "도움 요청을 보냈습니다. 주문 페이지로 답변드립니다."));
+      } catch(e){
+        alert(e.message || "failed");
+      }
+    });
+
+    init();
+  })();
+  </script>
+</body>
+</html>
