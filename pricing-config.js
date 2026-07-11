@@ -89,7 +89,7 @@
     buySubtitleEn: "Lifetime / 12-Month / 6-Month — 3 Pricing Plans",
     marketplace: {
       ko: { label: "크몽 입점 진행 중", url: "" },
-      en: { label: "파이버 입점 진행 중", url: "" },
+      en: { label: "Fiverr listing in progress", url: "" },
     },
   };
 })(typeof window !== "undefined" ? window : globalThis);
