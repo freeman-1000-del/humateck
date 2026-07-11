@@ -21,8 +21,8 @@
         "매번 번역문 복붙에 날아가던 소중한 내 시간, 단 한번의 결제로 자동화시키세요.",
       taglineEn:
         "Stop losing hours to copy-paste—automate with one payment.",
-      descKo: "PC 1대 · 설치 · 인증 티칭 영상 포함",
-      descEn: "1 PC · setup & OAuth tutorial videos included",
+      descKo: "PC 1대 · 구글 클라이언트 인증가이드",
+      descEn: "1 PC · Google Client Authentication Guide",
       mailSubjectKo: "DELUXE 일반",
       mailSubjectEn: "DELUXE Standard",
       options: {
@@ -40,8 +40,8 @@
         "MCN, 글로벌 에이전시 필수품. 직원 5명의 업무효율을 70배 끌어올려줍니다.",
       taglineEn:
         "Essential for MCNs and global agencies—boost a 5-person team’s efficiency by up to 70×.",
-      descKo: "PC 5대 (5인용) · 설치 · 인증 티칭 영상 포함",
-      descEn: "5 PCs (5 seats) · setup & OAuth tutorial videos included",
+      descKo: "PC 5대 (5인용) · 구글 클라이언트 인증가이드",
+      descEn: "5 PCs (5 seats) · Google Client Authentication Guide",
       mailSubjectKo: "PREMIUM 기업 5인 패키지",
       mailSubjectEn: "PREMIUM Enterprise 5-seat",
       featured: true,
