@@ -43,7 +43,10 @@
     .err{color:#ff9b9b;font-size:13px;margin-top:10px}
     .hidden{display:none!important}
     .newLink{margin-top:12px;padding:14px;border-radius:12px;background:rgba(125,255,176,.08);border:1px solid rgba(125,255,176,.35)}
-    @media(max-width:900px){table{font-size:12px} th:nth-child(5),td:nth-child(5){display:none}}
+    .googleBox{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:12px}
+    .googleEmail{color:#7dffb0;font-size:14px;font-weight:700}
+    #googleSignInBtn{min-height:44px}
+    .pinRow{max-width:420px}
   </style>
 </head>
 <body>
@@ -55,10 +58,15 @@
     </p>
 
     <section class="panel" id="loginPanel">
-      <div class="row">
-        <div class="field" style="max-width:200px">
+      <p class="sub" style="margin:0 0 14px">① 구글 로그인 (허용된 관리자 이메일만) → ② PIN 4자리</p>
+      <div class="googleBox">
+        <div id="googleSignInBtn"></div>
+        <span class="googleEmail hidden" id="googleEmail"></span>
+      </div>
+      <div class="row pinRow">
+        <div class="field" style="max-width:160px">
           <label for="adminPin">관리 PIN (4자리)</label>
-          <input type="password" id="adminPin" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="0000" autocomplete="off">
+          <input type="password" id="adminPin" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="1111" autocomplete="off">
         </div>
         <button type="button" class="btn" id="loginBtn">로그인</button>
       </div>
@@ -89,6 +97,26 @@
         <div style="color:#7dffb0;font-weight:800;margin-bottom:8px">발급 완료 — Fiverr Order page에 바로 전달</div>
         <div class="urlBox" id="newLinkUrl"></div>
         <button type="button" class="btn secondary" id="copyLinkBtn" style="margin-top:10px">링크 복사</button>
+      </div>
+
+      <div class="panel" style="margin-top:18px;padding:16px;background:rgba(0,0,0,.2)">
+        <h3 style="margin:0 0 10px;color:#ffd95a;font-size:16px">PIN 변경 (수시로 변경 가능)</h3>
+        <div class="row">
+          <div class="field" style="max-width:120px">
+            <label for="pinCurrent">현재 PIN</label>
+            <input type="password" id="pinCurrent" inputmode="numeric" maxlength="4">
+          </div>
+          <div class="field" style="max-width:120px">
+            <label for="pinNew">새 PIN</label>
+            <input type="password" id="pinNew" inputmode="numeric" maxlength="4">
+          </div>
+          <div class="field" style="max-width:120px">
+            <label for="pinNew2">새 PIN 확인</label>
+            <input type="password" id="pinNew2" inputmode="numeric" maxlength="4">
+          </div>
+          <button type="button" class="btn secondary" id="changePinBtn">PIN 변경</button>
+        </div>
+        <p class="err" id="pinErr"></p>
       </div>
 
       <div class="toolbar" style="margin-top:22px">
@@ -158,9 +186,12 @@
     </section>
   </div>
 
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script src="/humateck-care.js"></script>
   <script>
   (function(){
+    var googleCredential = "";
+    var googleEmail = "";
     var adminPin = "";
     var items = [];
     var selectedId = null;
@@ -180,16 +211,56 @@
 
     function loadCreds(){
       try {
+        googleCredential = sessionStorage.getItem("care_google_credential") || "";
+        googleEmail = sessionStorage.getItem("care_google_email") || "";
         adminPin = sessionStorage.getItem("care_admin_pin") || "";
       } catch(e){}
     }
 
     function saveCreds(){
+      sessionStorage.setItem("care_google_credential", googleCredential);
+      sessionStorage.setItem("care_google_email", googleEmail);
       sessionStorage.setItem("care_admin_pin", adminPin);
     }
 
     function clearCreds(){
+      sessionStorage.removeItem("care_google_credential");
+      sessionStorage.removeItem("care_google_email");
       sessionStorage.removeItem("care_admin_pin");
+    }
+
+    function showGoogleEmail(){
+      var el = document.getElementById("googleEmail");
+      if(googleEmail){
+        el.textContent = googleEmail;
+        el.classList.remove("hidden");
+      } else {
+        el.classList.add("hidden");
+      }
+    }
+
+    function initGoogle(){
+      if(!window.google || !HUMATECK_CARE.GOOGLE_CLIENT_ID) return;
+      google.accounts.id.initialize({
+        client_id: HUMATECK_CARE.GOOGLE_CLIENT_ID,
+        callback: function(res){
+          googleCredential = res.credential || "";
+          try {
+            var payload = JSON.parse(atob(googleCredential.split(".")[1].replace(/-/g,"+").replace(/_/g,"/")));
+            googleEmail = String(payload.email || "").toLowerCase();
+          } catch(e){ googleEmail = ""; }
+          showGoogleEmail();
+        },
+        auto_select: true,
+        cancel_on_tap_outside: false
+      });
+      google.accounts.id.renderButton(document.getElementById("googleSignInBtn"), {
+        theme: "filled_black",
+        size: "large",
+        text: "signin_with",
+        shape: "pill"
+      });
+      google.accounts.id.prompt();
     }
 
     function showLogin(){
@@ -200,28 +271,34 @@
     function showAdmin(){
       document.getElementById("loginPanel").classList.add("hidden");
       document.getElementById("adminPanel").classList.remove("hidden");
+      showGoogleEmail();
     }
 
     async function login(){
       adminPin = document.getElementById("adminPin").value.trim();
       document.getElementById("loginErr").textContent = "";
+      if(!googleCredential){
+        document.getElementById("loginErr").textContent = "먼저 구글 로그인을 해 주세요.";
+        return;
+      }
       if(!/^\d{4}$/.test(adminPin)){
-        document.getElementById("loginErr").textContent = "숫자 4자리를 입력하세요.";
+        document.getElementById("loginErr").textContent = "숫자 4자리 PIN을 입력하세요.";
         return;
       }
       try {
-        await HUMATECK_CARE.adminAuth(adminPin);
+        var res = await HUMATECK_CARE.adminAuth(googleCredential, adminPin);
+        googleEmail = res.email || googleEmail;
         saveCreds();
         showAdmin();
         await refreshList();
       } catch(e){
-        document.getElementById("loginErr").textContent = e.message || "로그인 실패";
+        document.getElementById("loginErr").textContent = e.message === "unauthorized" ? "허용되지 않은 이메일이거나 PIN이 틀립니다." : (e.message || "로그인 실패");
       }
     }
 
     async function refreshList(){
       var status = document.getElementById("statusFilter").value;
-      var res = await HUMATECK_CARE.adminList(adminPin, status);
+      var res = await HUMATECK_CARE.adminList(googleCredential, adminPin, status);
       items = res.items || [];
       document.getElementById("listCount").textContent = items.length + "건";
       var body = document.getElementById("listBody");
@@ -247,7 +324,7 @@
       document.querySelectorAll("tr[data-id]").forEach(function(tr){
         tr.classList.toggle("sel", tr.dataset.id === id);
       });
-      var res = await HUMATECK_CARE.adminGet(adminPin, id);
+      var res = await HUMATECK_CARE.adminGet(googleCredential, adminPin, id);
       var it = res.item;
       document.getElementById("detailPanel").classList.remove("hidden");
       document.getElementById("detailTitle").textContent = (it.customer_label || it.token) + " — 케어";
@@ -273,10 +350,16 @@
 
     document.getElementById("loginBtn").addEventListener("click", login);
     document.getElementById("logoutBtn").addEventListener("click", function(){
-      adminPin = ""; selectedId = null;
+      googleCredential = "";
+      googleEmail = "";
+      adminPin = "";
+      selectedId = null;
       document.getElementById("adminPin").value = "";
       clearCreds();
       showLogin();
+      if(window.google && HUMATECK_CARE.GOOGLE_CLIENT_ID){
+        google.accounts.id.disableAutoSelect();
+      }
     });
     document.getElementById("refreshBtn").addEventListener("click", function(){
       refreshList().catch(function(e){
@@ -292,7 +375,7 @@
     document.getElementById("createBtn").addEventListener("click", async function(){
       document.getElementById("adminErr").textContent = "";
       try {
-        var res = await HUMATECK_CARE.adminCreate(adminPin, {
+        var res = await HUMATECK_CARE.adminCreate(googleCredential, adminPin, {
           customer_label: document.getElementById("newLabel").value.trim(),
           fiverr_order_ref: document.getElementById("newOrderRef").value.trim(),
           lang: document.getElementById("newLang").value,
@@ -320,7 +403,7 @@
       if(!selectedId) return;
       document.getElementById("adminErr").textContent = "";
       try {
-        await HUMATECK_CARE.adminUpdate(adminPin, selectedId, {
+        await HUMATECK_CARE.adminUpdate(googleCredential, adminPin, selectedId, {
           status: document.getElementById("detailStatus").value,
           current_step: Number(document.getElementById("detailStep").value),
           care_message: document.getElementById("detailCareMsg").value,
@@ -334,12 +417,51 @@
       }
     });
 
+    document.getElementById("changePinBtn").addEventListener("click", async function(){
+      document.getElementById("pinErr").textContent = "";
+      var cur = document.getElementById("pinCurrent").value.trim();
+      var n1 = document.getElementById("pinNew").value.trim();
+      var n2 = document.getElementById("pinNew2").value.trim();
+      if(!/^\d{4}$/.test(cur) || !/^\d{4}$/.test(n1) || !/^\d{4}$/.test(n2)){
+        document.getElementById("pinErr").textContent = "PIN은 숫자 4자리입니다.";
+        return;
+      }
+      if(n1 !== n2){
+        document.getElementById("pinErr").textContent = "새 PIN 확인이 일치하지 않습니다.";
+        return;
+      }
+      try {
+        await HUMATECK_CARE.adminChangePin(googleCredential, cur, n1);
+        adminPin = n1;
+        document.getElementById("adminPin").value = n1;
+        document.getElementById("pinCurrent").value = "";
+        document.getElementById("pinNew").value = "";
+        document.getElementById("pinNew2").value = "";
+        saveCreds();
+        alert("PIN이 변경되었습니다.");
+      } catch(e){
+        document.getElementById("pinErr").textContent = e.message === "wrong pin" ? "현재 PIN이 틀립니다." : (e.message || "변경 실패");
+      }
+    });
+
     loadCreds();
-    if(adminPin && /^\d{4}$/.test(adminPin)){
-      HUMATECK_CARE.adminAuth(adminPin).then(function(){
-        showAdmin();
-        return refreshList();
-      }).catch(showLogin);
+    showGoogleEmail();
+
+    function boot(){
+      initGoogle();
+      if(googleCredential && adminPin && /^\d{4}$/.test(adminPin)){
+        HUMATECK_CARE.adminAuth(googleCredential, adminPin).then(function(res){
+          googleEmail = res.email || googleEmail;
+          showAdmin();
+          return refreshList();
+        }).catch(showLogin);
+      }
+    }
+
+    if(window.google){
+      boot();
+    } else {
+      window.addEventListener("load", boot);
     }
   })();
   </script>

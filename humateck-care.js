@@ -5,6 +5,8 @@
     "https://ajvtyotblrtexcxuazqm.supabase.co/functions/v1/humateck-care";
   var ANON =
     "sb_publishable_cmn9eVnnvaAjXVJWa6bRQA_qrb1xglQ";
+  var GOOGLE_CLIENT_ID =
+    "26300662380-gnpatoc7ightbshusgebts20femcbgvi.apps.googleusercontent.com";
 
   function headers() {
     return {
@@ -30,12 +32,19 @@
     return data;
   }
 
-  function withPin(pin, payload) {
-    return Object.assign({ admin_pin: String(pin || "").trim() }, payload || {});
+  function withAdmin(credential, pin, payload) {
+    return Object.assign(
+      {
+        google_credential: String(credential || ""),
+        admin_pin: String(pin || "").trim(),
+      },
+      payload || {}
+    );
   }
 
   global.HUMATECK_CARE = {
     api: API,
+    GOOGLE_CLIENT_ID: GOOGLE_CLIENT_ID,
     sessionOpen: function (token) {
       return post({ action: "session_open", token: token });
     },
@@ -57,23 +66,41 @@
         message: message || "",
       });
     },
-    adminAuth: function (pin) {
-      return post(withPin(pin, { action: "admin_auth" }));
+    adminAuth: function (credential, pin) {
+      return post(withAdmin(credential, pin, { action: "admin_auth" }));
     },
-    adminCreate: function (pin, fields) {
-      return post(withPin(pin, Object.assign({ action: "admin_create" }, fields || {})));
+    adminChangePin: function (credential, currentPin, newPin) {
+      return post(
+        withAdmin(credential, currentPin, {
+          action: "admin_change_pin",
+          current_pin: String(currentPin || "").trim(),
+          new_pin: String(newPin || "").trim(),
+        })
+      );
     },
-    adminList: function (pin, status) {
-      return post(withPin(pin, { action: "admin_list", status: status || "all" }));
+    adminCreate: function (credential, pin, fields) {
+      return post(
+        withAdmin(credential, pin, Object.assign({ action: "admin_create" }, fields || {}))
+      );
     },
-    adminGet: function (pin, id) {
-      return post(withPin(pin, { action: "admin_get", id: id }));
+    adminList: function (credential, pin, status) {
+      return post(
+        withAdmin(credential, pin, {
+          action: "admin_list",
+          status: status || "all",
+        })
+      );
     },
-    adminUpdate: function (pin, id, patch) {
-      return post(withPin(pin, Object.assign({ action: "admin_update", id: id }, patch || {})));
+    adminGet: function (credential, pin, id) {
+      return post(withAdmin(credential, pin, { action: "admin_get", id: id }));
     },
-    adminEvents: function (pin) {
-      return post(withPin(pin, { action: "admin_events" }));
+    adminUpdate: function (credential, pin, id, patch) {
+      return post(
+        withAdmin(credential, pin, Object.assign({ action: "admin_update", id: id }, patch || {}))
+      );
+    },
+    adminEvents: function (credential, pin) {
+      return post(withAdmin(credential, pin, { action: "admin_events" }));
     },
   };
 })(typeof window !== "undefined" ? window : globalThis);
