@@ -70,7 +70,8 @@
       ".webBuyHero .heroHook{font-size:16px}" +
       ".webBuyHero .priceSale{font-size:20px}" +
       ".webBuyHero .tierRow{padding:10px 12px}" +
-      ".pricingCurrencyNote{margin:0 0 18px;color:#9aa0a6;font-size:13px;font-weight:600;text-align:center}";
+      ".pricingCurrencyNote{margin:0 0 18px;color:#9aa0a6;font-size:13px;font-weight:600;text-align:center}" +
+      ".planMarketBtn.is-pending{cursor:default;opacity:.92}";
     document.head.appendChild(style);
   }
 
@@ -180,6 +181,12 @@
       currencyNote.style.display = lang === "en" ? "" : "none";
     }
 
+    var subtitleEl = document.querySelector(".hero .subtitle");
+    if (subtitleEl) {
+      subtitleEl.textContent =
+        lang === "en" ? cfg.buySubtitleEn : cfg.buySubtitleKo;
+    }
+
     document.querySelectorAll("[data-humateck-plan]").forEach(function (card) {
       var id = card.getAttribute("data-humateck-plan");
       var plan = cfg.plans[id];
@@ -187,17 +194,25 @@
       var tableHost = card.querySelector("[data-humateck-price-table]");
       var tierEl = card.querySelector(".planTier");
       var nameEl = card.querySelector(".planName");
-      var btnEl = card.querySelector(".planBuyBtn");
+      var btnEl = card.querySelector(".planMarketBtn");
 
       if (nameEl) nameEl.textContent = t(plan, "name");
       if (tierEl) tierEl.textContent = t(plan, "tier");
       if (tableHost) tableHost.innerHTML = buildPlanTiers(plan, launch);
       if (btnEl) {
-        var contactBase =
-          lang === "en" ? cfg.contactPath.en : cfg.contactPath.ko;
-        btnEl.href =
-          contactBase + "?plan=" + encodeURIComponent(id) + "&topic=product";
-        btnEl.textContent = lang === "en" ? "Contact us" : "문의하기";
+        var mp = lang === "en" ? cfg.marketplace.en : cfg.marketplace.ko;
+        btnEl.textContent = mp.label;
+        if (mp.url) {
+          btnEl.href = mp.url;
+          btnEl.removeAttribute("aria-disabled");
+          btnEl.classList.remove("is-pending");
+          btnEl.removeAttribute("role");
+        } else {
+          btnEl.removeAttribute("href");
+          btnEl.setAttribute("aria-disabled", "true");
+          btnEl.classList.add("is-pending");
+          btnEl.setAttribute("role", "button");
+        }
       }
     });
   }

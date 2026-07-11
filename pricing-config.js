@@ -85,5 +85,11 @@
     heroMoreEn: "More pricing info",
     buyPath: { ko: "/buy.html", en: "/buy-en.html" },
     contactPath: { ko: "/contact.html", en: "/contact-en.html" },
+    buySubtitleKo: "영구 · 12개월 · 6개월 · 3종 플랜",
+    buySubtitleEn: "Lifetime / 12-Month / 6-Month — 3 Pricing Plans",
+    marketplace: {
+      ko: { label: "입점 진행 중", url: "" },
+      en: { label: "Listing in progress", url: "" },
+    },
   };
 })(typeof window !== "undefined" ? window : globalThis);
