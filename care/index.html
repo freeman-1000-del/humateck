@@ -145,12 +145,20 @@
 
     function t(en, ko){ return lang === "ko" ? ko : en; }
 
-    function formatRemaining(ms){
+    function formatRemaining(ms, mode){
       if(ms <= 0) return t("Ended", "종료됨");
       var totalMin = Math.floor(ms / 60000);
       var days = Math.floor(totalMin / (60 * 24));
       var hours = Math.floor((totalMin % (60 * 24)) / 60);
       var mins = totalMin % 60;
+      if(mode === "agency" && days >= 30){
+        var months = Math.floor(days / 30);
+        var remDays = days % 30;
+        return t(
+          months + " mo " + remDays + " d",
+          months + "개월 " + remDays + "일"
+        );
+      }
       if(days > 0){
         return t(
           days + "d " + hours + "h " + mins + "m",
@@ -166,6 +174,26 @@
     function currentNoticeMessage(timeline){
       if(!timeline) return "";
       var level = timeline.notice_level || 0;
+      var agency = timeline.care_mode === "agency";
+      if(agency){
+        if(level === 1) return t(
+          "Agency support ends within 30 days. Contact us via Kmong to renew.",
+          "대행 AS가 30일 이내 종료됩니다. 갱신은 크몽 주문 페이지로 문의해 주세요."
+        );
+        if(level === 2) return t(
+          "Agency support ends within 2 weeks.",
+          "대행 AS가 2주 이내 종료됩니다."
+        );
+        if(level === 3) return t(
+          "Agency support ends within 7 days.",
+          "대행 AS가 7일 이내 종료됩니다."
+        );
+        if(level === 4) return t(
+          "Agency support ends within 3 days. Request help now if you still need it.",
+          "대행 AS가 3일 이내 종료됩니다. 필요한 지원은 지금 도움 요청해 주세요."
+        );
+        return "";
+      }
       if(level === 1) return t(
         "Care ends within 2 days. Your install package remains yours.",
         "케어가 2일 이내 종료됩니다. 설치본은 계속 사용하실 수 있어요."
@@ -188,7 +216,8 @@
     function updateCountdown(){
       if(!expiresAtMs) return;
       var ms = Math.max(0, expiresAtMs - Date.now());
-      document.getElementById("timeRemaining").textContent = formatRemaining(ms);
+      var mode = session && session.care_timeline ? session.care_timeline.care_mode : "setup";
+      document.getElementById("timeRemaining").textContent = formatRemaining(ms, mode);
       if(ms <= 0 && session){
         applySession(session);
       }
@@ -212,14 +241,18 @@
       var timeBox = document.getElementById("timeBox");
       if(closed){
         document.getElementById("closedTitle").textContent = t(
-          "Setup care has ended",
-          "케어 기간이 종료되었습니다"
+          session && session.care_timeline && session.care_timeline.care_mode === "agency"
+            ? "Agency support has ended"
+            : "Setup care has ended",
+          session && session.care_timeline && session.care_timeline.care_mode === "agency"
+            ? "대행 AS 기간이 종료되었습니다"
+            : "케어 기간이 종료되었습니다"
         );
         document.getElementById("closedDesc").textContent = session && session.closure_message
           ? session.closure_message
           : t(
             "You can keep using your install package and guides. For new questions, contact us via your order page.",
-            "설치본과 가이드로 계속 사용하실 수 있습니다. 새 문의는 주문 페이지로 연락해 주세요."
+            "프로그램은 계속 사용하실 수 있습니다. 새 문의는 주문 페이지로 연락해 주세요."
           );
         closedView.classList.remove("hidden");
         stepsRoot.classList.add("hidden");
@@ -323,23 +356,40 @@
       document.documentElement.lang = lang;
       var timeline = s.care_timeline || {};
       var closed = !!(s.care_closed || timeline.care_expired || s.status === "expired");
+      var agency = timeline.care_mode === "agency" || s.channel === "kmong";
 
-      document.getElementById("heroTitle").textContent = t(
-        "YouTube Multilingual Setup Care",
-        "유튜브 다국어 설정 케어"
-      );
-      document.getElementById("heroDesc").textContent = t(
-        "Follow each step below. We prepared everything — you only need to complete Google sign-in yourself. Use Gemini at the bottom for translation.",
-        "아래 단계를 따라가세요. 구글 인증만 직접 하시면 됩니다. 번역은 하단 Gemini를 사용하세요."
-      );
+      document.getElementById("heroTitle").textContent = agency
+        ? t("YouTube Multilingual Agency Support", "유튜브 다국어 채널 등록 대행 AS")
+        : t("YouTube Multilingual Setup Care", "유튜브 다국어 설정 케어");
+      document.getElementById("heroDesc").textContent = agency
+        ? t(
+          "Your agency support link. Follow the steps below and request help anytime during your AS period.",
+          "대행 AS 전용 페이지입니다. 아래 단계를 진행하고, AS 기간 중 언제든 도움을 요청하세요."
+        )
+        : t(
+          "Follow each step below. We prepared everything — you only need to complete Google sign-in yourself. Use Gemini at the bottom for translation.",
+          "아래 단계를 따라가세요. 구글 인증만 직접 하시면 됩니다. 번역은 하단 Gemini를 사용하세요."
+        );
       var limitEl = document.getElementById("heroLimit");
-      var periodDays = timeline.care_period_days || 3;
-      limitEl.textContent = t(
-        periodDays + "-day first-registration setup care · install package is yours to keep.",
-        periodDays + "일간 최초 1회 등록 케어 · 설치본은 계속 사용하실 수 있습니다."
-      );
+      var periodDays = timeline.care_period_days || (agency ? 180 : 3);
+      if(agency){
+        var periodLabel = periodDays >= 365
+          ? t("1-year agency AS", "1년 대행 AS")
+          : t("6-month agency AS", "6개월 대행 AS");
+        limitEl.textContent = periodLabel + t(
+          " · not lifetime · program remains yours after AS ends.",
+          " · 평생 아님 · AS 종료 후에도 프로그램은 계속 사용"
+        );
+      } else {
+        limitEl.textContent = t(
+          periodDays + "-day first-registration setup care · install package is yours to keep.",
+          periodDays + "일간 최초 1회 등록 케어 · 설치본은 계속 사용하실 수 있습니다."
+        );
+      }
 
-      document.getElementById("timeLabel").textContent = t("Care remaining:", "케어 잔여:");
+      document.getElementById("timeLabel").textContent = agency
+        ? t("AS remaining:", "AS 잔여:")
+        : t("Care remaining:", "케어 잔여:");
       if(s.expires_at){
         expiresAtMs = new Date(s.expires_at).getTime();
         updateCountdown();

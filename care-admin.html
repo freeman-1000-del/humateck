@@ -57,8 +57,8 @@
   <div class="wrap">
     <h1>케어 관리</h1>
     <p class="sub">
-      Fiverr 등 외부 주문용 · 기존 deployer/buy 코드와 분리된 겉 케어 포털<br>
-      주문 즉시 링크 발급 → 손님은 <code>/care/?t=코드</code> 만 열면 됨 · <strong>3일 케어</strong> (마감 알림 후 3일째 자동 종료 · 최초 1회 등록)
+      Fiverr · 크몽 외부 주문용 · deployer/buy와 분리된 케어 포털<br>
+      <strong>Fiverr</strong>: 3일 설치 케어 · <strong>크몽</strong>: 6개월 / 1년 대행 AS (평생 없음) · 손님·관리자 동일 잔여시간
     </p>
 
     <section class="panel" id="loginPanel">
@@ -73,26 +73,40 @@
     <section class="panel hidden" id="adminPanel">
       <h2 style="margin:0 0 14px;color:#ffd95a;font-size:18px">새 주문 — 링크 즉시 발급</h2>
       <div class="row">
-        <div class="field">
-          <label for="newLabel">손님 메모 (내부용)</label>
-          <input type="text" id="newLabel" placeholder="Fiverr buyer / order #">
+        <div class="field" style="max-width:140px">
+          <label for="newChannel">채널</label>
+          <select id="newChannel">
+            <option value="fiverr">Fiverr (3일)</option>
+            <option value="kmong" selected>크몽 (AS)</option>
+          </select>
+        </div>
+        <div class="field hidden" id="kmongPeriodField" style="max-width:140px">
+          <label for="newKmongPeriod">AS 기간</label>
+          <select id="newKmongPeriod">
+            <option value="180">6개월</option>
+            <option value="365">1년</option>
+          </select>
         </div>
         <div class="field">
-          <label for="newOrderRef">Fiverr 주문번호</label>
+          <label for="newLabel">손님 메모 (내부용)</label>
+          <input type="text" id="newLabel" placeholder="크몽 buyer / order #">
+        </div>
+        <div class="field">
+          <label for="newOrderRef" id="newOrderRefLabel">주문번호</label>
           <input type="text" id="newOrderRef" placeholder="선택">
         </div>
         <div class="field" style="max-width:120px">
           <label for="newLang">언어</label>
           <select id="newLang">
+            <option value="ko" selected>KO</option>
             <option value="en">EN</option>
-            <option value="ko">KO</option>
           </select>
         </div>
-        <button type="button" class="btn success" id="createBtn">링크 발급 (3일 케어)</button>
+        <button type="button" class="btn success" id="createBtn">링크 발급</button>
       </div>
-      <p class="sub" style="margin:8px 0 0;font-size:12px">손님·관리자 모두 케어 잔여시간 표시 · 48h/24h/12h/6h 마감 알림 · 3일째 자동 종료</p>
+      <p class="sub" id="createHint" style="margin:8px 0 0;font-size:12px">크몽: 대행 AS 기간 동안 케어 · 30/14/7/3일 마감 알림 · 기간 종료 시 자동 마감</p>
       <div class="newLink hidden" id="newLinkBox">
-        <div style="color:#7dffb0;font-weight:800;margin-bottom:8px">발급 완료 — Fiverr Order page에 바로 전달</div>
+        <div style="color:#7dffb0;font-weight:800;margin-bottom:8px" id="newLinkTitle">발급 완료 — 주문 페이지에 바로 전달</div>
         <div class="urlBox" id="newLinkUrl"></div>
         <button type="button" class="btn secondary" id="copyLinkBtn" style="margin-top:10px">링크 복사</button>
       </div>
@@ -130,11 +144,16 @@
 
       <div class="toolbar" style="margin-top:22px">
         <select id="statusFilter">
-          <option value="all">전체</option>
+          <option value="all">전체 상태</option>
           <option value="active">진행중</option>
           <option value="help">도움요청</option>
           <option value="completed">완료</option>
           <option value="expired">만료</option>
+        </select>
+        <select id="channelFilter">
+          <option value="all">전체 채널</option>
+          <option value="kmong">크몽</option>
+          <option value="fiverr">Fiverr</option>
         </select>
         <button type="button" class="btn secondary" id="refreshBtn">새로고침</button>
         <button type="button" class="btn secondary" id="logoutBtn">로그아웃</button>
@@ -146,6 +165,7 @@
           <thead>
             <tr>
               <th>업데이트</th>
+              <th>채널</th>
               <th>상태</th>
               <th>케어 잔여</th>
               <th>단계</th>
@@ -216,18 +236,55 @@
       var d = timeline.remaining_days || 0;
       var h = timeline.remaining_hours || 0;
       var m = timeline.remaining_minutes || 0;
+      if(timeline.care_mode === "agency" && d >= 30){
+        var months = timeline.remaining_months || Math.floor(d / 30);
+        var remDays = d % 30;
+        return months + "개월 " + remDays + "일";
+      }
       if(d > 0) return d + "일 " + h + "시간";
       if(h > 0) return h + "시간 " + m + "분";
       return m + "분";
     }
 
+    function channelLabel(channel){
+      if(channel === "kmong") return "크몽";
+      if(channel === "fiverr") return "Fiverr";
+      return channel || "-";
+    }
+
+    function periodLabel(days, channel){
+      if(channel === "fiverr") return "3일";
+      if(Number(days) === 365) return "1년 AS";
+      if(Number(days) === 180) return "6개월 AS";
+      return (days || "-") + "일";
+    }
+
     function noticeLabel(timeline){
       if(!timeline || timeline.care_expired) return "";
       var lv = timeline.notice_level || 0;
+      if(timeline.care_mode === "agency"){
+        if(lv >= 4) return " · 3일 내 종료";
+        if(lv >= 2) return " · 마감 임박";
+        if(lv >= 1) return " · 30일 내 종료";
+        return "";
+      }
       if(lv >= 4) return " · 오늘 마감";
       if(lv >= 2) return " · 마감 임박";
       if(lv >= 1) return " · 2일 내 종료";
       return "";
+    }
+
+    function syncCreateForm(){
+      var channel = document.getElementById("newChannel").value;
+      var isKmong = channel === "kmong";
+      document.getElementById("kmongPeriodField").classList.toggle("hidden", !isKmong);
+      document.getElementById("newLabel").placeholder = isKmong ? "크몽 buyer / order #" : "Fiverr buyer / order #";
+      document.getElementById("createHint").textContent = isKmong
+        ? "크몽: 대행 AS 기간 동안 케어 · 30/14/7/3일 마감 알림 · 기간 종료 시 자동 마감 (평생 없음)"
+        : "Fiverr: 3일 설치 케어 · 48/24/12/6h 마감 알림 · 3일째 자동 종료";
+      document.getElementById("newLinkTitle").textContent = isKmong
+        ? "발급 완료 — 크몽 주문 메시지에 바로 전달"
+        : "발급 완료 — Fiverr Order page에 바로 전달";
     }
 
     function careUrl(token){
@@ -362,7 +419,8 @@
 
     async function refreshList(){
       var status = document.getElementById("statusFilter").value;
-      var res = await HUMATECK_CARE.adminList(googleCredential, status);
+      var channel = document.getElementById("channelFilter").value;
+      var res = await HUMATECK_CARE.adminList(googleCredential, status, channel);
       items = res.items || [];
       document.getElementById("listCount").textContent = items.length + "건";
       var body = document.getElementById("listBody");
@@ -374,6 +432,7 @@
         var tl = it.care_timeline || {};
         tr.innerHTML =
           "<td>" + fmtDate(it.updated_at) + "</td>" +
+          "<td>" + channelLabel(it.channel) + "</td>" +
           "<td>" + badge(it.status) + "</td>" +
           "<td><strong>" + fmtRemaining(tl) + "</strong>" + noticeLabel(tl) + "</td>" +
           "<td>" + (it.current_step || 1) + "/6</td>" +
@@ -396,6 +455,7 @@
       document.getElementById("detailPanel").classList.remove("hidden");
       document.getElementById("detailTitle").textContent = (it.customer_label || it.token) + " — 케어";
       document.getElementById("detailMeta").innerHTML =
+        "채널: " + channelLabel(it.channel) + " · AS/케어: " + periodLabel(it.care_period_days, it.channel) + "<br>" +
         "생성: " + fmtDate(it.created_at) + "<br>" +
         "케어 마감: " + fmtDate(it.expires_at) + "<br>" +
         "<strong>케어 잔여: " + fmtRemaining(tl) + noticeLabel(tl) + "</strong><br>" +
@@ -437,16 +497,27 @@
         document.getElementById("adminErr").textContent = e.message;
       });
     });
+    document.getElementById("channelFilter").addEventListener("change", function(){
+      refreshList().catch(function(e){
+        document.getElementById("adminErr").textContent = e.message;
+      });
+    });
+    document.getElementById("newChannel").addEventListener("change", syncCreateForm);
 
     document.getElementById("createBtn").addEventListener("click", async function(){
       document.getElementById("adminErr").textContent = "";
+      var channel = document.getElementById("newChannel").value;
+      var payload = {
+        customer_label: document.getElementById("newLabel").value.trim(),
+        fiverr_order_ref: document.getElementById("newOrderRef").value.trim(),
+        lang: document.getElementById("newLang").value,
+        channel: channel,
+      };
+      if(channel === "kmong"){
+        payload.care_period_days = Number(document.getElementById("newKmongPeriod").value) || 180;
+      }
       try {
-        var res = await HUMATECK_CARE.adminCreate(googleCredential, {
-          customer_label: document.getElementById("newLabel").value.trim(),
-          fiverr_order_ref: document.getElementById("newOrderRef").value.trim(),
-          lang: document.getElementById("newLang").value,
-          channel: "fiverr",
-        });
+        var res = await HUMATECK_CARE.adminCreate(googleCredential, payload);
         document.getElementById("newLinkUrl").textContent = res.care_url;
         document.getElementById("newLinkBox").classList.remove("hidden");
         await refreshList();
@@ -504,6 +575,7 @@
 
     loadCreds();
     showGoogleEmail();
+    syncCreateForm();
 
     function boot(){
       initGoogle();

@@ -88,8 +88,18 @@
     buySubtitleKo: "영구 · 12개월 · 6개월 · 3종 플랜",
     buySubtitleEn: "Lifetime / 12-Month / 6-Month — 3 Pricing Plans",
     marketplace: {
-      ko: { label: "크몽 입점 진행 중", url: "" },
-      en: { label: "Fiverr listing in progress", url: "" },
+      ko: {
+        label: "크몽 입점 진행 중",
+        url: "",
+        channel: "kmong",
+        subtitleKo: "6개월 · 1년 대행 AS · 평생 없음",
+        subtitleEn: "6-month / 1-year agency AS · no lifetime",
+        durations: [
+          { id: "months6", days: 180, labelKo: "6개월 AS", labelEn: "6-month AS" },
+          { id: "months12", days: 365, labelKo: "1년 AS", labelEn: "1-year AS" },
+        ],
+      },
+      en: { label: "Fiverr listing in progress", url: "", channel: "fiverr" },
     },
   };
 })(typeof window !== "undefined" ? window : globalThis);

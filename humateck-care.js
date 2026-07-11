@@ -76,11 +76,12 @@
         withAdmin(credential, Object.assign({ action: "admin_create" }, fields || {}))
       );
     },
-    adminList: function (credential, status) {
+    adminList: function (credential, status, channel) {
       return post(
         withAdmin(credential, {
           action: "admin_list",
           status: status || "all",
+          channel: channel || "all",
         })
       );
     },
