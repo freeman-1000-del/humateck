@@ -33,6 +33,13 @@
     }
   }
 
+  function fixGeminiGreetingKo() {
+    var gemini = document.getElementById("geminiPromptText");
+    if (gemini && gemini.value.indexOf("Hello Gemini!") !== -1) {
+      gemini.value = gemini.value.replace(/Hello Gemini!/g, "안녕, 제미나이!");
+    }
+  }
+
   function fixCommand5Ko() {
     var ta = document.getElementById("commandText7");
     if (ta) {
@@ -47,6 +54,7 @@
     hidePricingAndBuy();
     softenCopy();
     fixCommand5Ko();
+    fixGeminiGreetingKo();
   }
 
   if (document.readyState === "loading") {
