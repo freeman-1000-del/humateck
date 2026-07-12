@@ -33,9 +33,20 @@
     }
   }
 
+  function fixCommand5Ko() {
+    var ta = document.getElementById("commandText7");
+    if (ta) {
+      ta.value = ta.value.replace(/Please move to the bottom\.?/g, "아래로 이동해 줘.");
+    }
+    document.querySelectorAll(".commandWarningOutside").forEach(function (el) {
+      el.innerHTML = el.innerHTML.replace(/Please move to the bottom\.?/g, "아래로 이동해 줘.");
+    });
+  }
+
   function run() {
     hidePricingAndBuy();
     softenCopy();
+    fixCommand5Ko();
   }
 
   if (document.readyState === "loading") {
