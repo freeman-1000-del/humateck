@@ -9,6 +9,18 @@
 <body>
   <script>
 (function () {
+  var REVIEW_KEY = "humateckReviewFiverrOk";
+  var REVIEW_UNTIL = new Date("2026-08-12T23:59:59+09:00").getTime();
+  try {
+    if (Date.now() > REVIEW_UNTIL || sessionStorage.getItem(REVIEW_KEY) !== "1") {
+      location.replace("/fiverr/demo.html");
+      return;
+    }
+  } catch (e) {
+    location.replace("/fiverr/demo.html");
+    return;
+  }
+
   window.__HUMATECK_OPEN_PRACTICE__ = true;
   window.__HUMATECK_PURE_PRODUCT__ = true;
   var STORAGE_BASE = "https://ajvtyotblrtexcxuazqm.supabase.co/storage/v1/object/public/humateck-site";
