@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Humateck 전체 등록플랜</title>
+<title>YouTube Global Video Mass Distribution</title>
 <style>
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;background:#050b14;color:#f4f1e8;font-family:Arial,"Noto Sans KR",sans-serif}
@@ -84,7 +84,6 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 .yellowStrong{color:#ffd95a!important;font-weight:900}.closeModalBtn{display:inline-flex;margin-top:18px;border:1px solid #caa24e;padding:10px 18px;border-radius:10px;color:#fff}
 </style>
 
-  
 
 <style>
 /* Humateck_New019 patch */
@@ -568,6 +567,32 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 
 
 <style>
+/* Humateck_Global_22 overall readability only */
+body{font-size:17px;}
+.kicker{font-size:19px!important;}
+.title{font-size:46px!important;}
+.subtitle{font-size:22px!important;}
+.sectionTitle{font-size:32px!important;}
+.card p,.card li,.notice,.faqItem p,.sidebox p,.right p,.guideModalBox p,.guideModalBox li{font-size:18px!important;line-height:1.78!important;}
+.card h1{font-size:40px!important;}
+.card h2{font-size:28px!important;}
+.card h3{font-size:22px!important;}
+.btn{font-size:21px!important;}
+input,textarea{font-size:16px!important;}
+.footer{font-size:16px!important;}
+</style>
+
+<style>
+/* Humateck_23 English order center readability */
+.orderLeftColumn .card,
+.orderLeftColumn .card p,
+.orderLeftColumn .card label,
+.orderLeftColumn .card li{font-size:18px!important;line-height:1.78!important;}
+.orderLeftColumn .card input,
+.orderLeftColumn .card textarea{font-size:16px!important;}
+</style>
+
+<style>
 /* Humateck_027 tiny transparent website account UI only */
 .account{
   left:8px!important;
@@ -619,6 +644,99 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
   justify-content:center!important;
 }
 </style>
+<style>
+/* Humateck OAuth success-only customer display */
+.oauthSuccessBadge{
+  display:none;
+  margin:16px auto 0;
+  max-width:420px;
+  padding:14px 18px;
+  border:1px solid rgba(80,220,120,.95);
+  border-radius:14px;
+  background:rgba(80,220,120,.12);
+  color:#7dff9d;
+  font-size:22px;
+  font-weight:900;
+  text-align:center;
+  box-shadow:0 0 22px rgba(80,220,120,.45);
+}
+.oauthSuccessBadge.show{display:block;}
+.oauthSuccessButton{
+  border-color:rgba(80,220,120,.95)!important;
+  color:#7dff9d!important;
+  box-shadow:0 0 24px rgba(80,220,120,.55)!important;
+}
+</style>
+
+
+<style>
+/* Humateck compact OAuth/guide popup height patch */
+.guideModalBox,
+.oauth-modal-dialog{
+  max-height:62vh!important;
+  overflow:auto!important;
+}
+.guideModalBox{
+  padding:16px 20px!important;
+}
+.oauth-modal-body{
+  padding:14px 18px!important;
+}
+.guideModalBox h2{
+  margin:0 0 8px!important;
+  font-size:22px!important;
+}
+.guideModalBox h3{
+  margin:12px 0 4px!important;
+  font-size:16px!important;
+}
+.guideModalBox p,
+.guideModalBox li{
+  margin:3px 0 7px!important;
+  line-height:1.42!important;
+  font-size:14px!important;
+}
+.oauth-inline-actions{
+  margin-top:8px!important;
+}
+.closeModalBtn{
+  margin-top:8px!important;
+  padding:8px 14px!important;
+}
+</style>
+
+
+<style>
+/* Humateck OAuth success-only display: no result windows */
+.oauthSuccessBadge{
+  display:none;
+  margin:16px auto 0;
+  max-width:420px;
+  padding:14px 18px;
+  border:1px solid rgba(80,220,120,.95);
+  border-radius:14px;
+  background:rgba(80,220,120,.12);
+  color:#7dff9d;
+  font-size:22px;
+  font-weight:900;
+  text-align:center;
+  box-shadow:0 0 22px rgba(80,220,120,.45);
+}
+.oauthSuccessBadge.show{display:block;}
+.oauthSuccessButton{
+  border-color:rgba(80,220,120,.95)!important;
+  color:#7dff9d!important;
+  box-shadow:0 0 24px rgba(80,220,120,.55)!important;
+}
+.oauthReceiveCheckBox,
+#authStatus,
+#authStatusSide,
+#oauthReceiveCheck{
+  display:none!important;
+}
+</style>
+
+
 <style>
 /* Humateck website cleanup: preparation / guide space only */
 .humateckOnlyNotice{
@@ -781,38 +899,10 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 }
 </style>
 
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 
 <style>
-/* Humateck_New005 Korean order cleanup */
-.registerNoticeBelow,
-.registerNoticeBelow *{
-  writing-mode:horizontal-tb!important;
-  white-space:normal!important;
-  text-align:left!important;
-  word-break:keep-all!important;
-  overflow-wrap:break-word!important;
-}
-.registerNoticeBelow h2{
-  display:block!important;
-  width:100%!important;
-  margin:0 0 14px!important;
-  color:#f4c95c!important;
-  font-size:26px!important;
-  line-height:1.45!important;
-}
-.registerNoticeBelow p{
-  display:block!important;
-  width:100%!important;
-  margin:8px 0!important;
-  color:#e6e0d4!important;
-  font-size:17px!important;
-  line-height:1.78!important;
-}
-</style>
-
-
-<style>
-/* Humateck_New006 OAuth Client ID masked input restore */
+/* Humateck_New009 EN OAuth Client ID masked input restore */
 #googleClientIdInput{
   margin-bottom:16px!important;
 }
@@ -824,7 +914,6 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 }
 </style>
 
-<script src="https://accounts.google.com/gsi/client" async defer></script>
 
 <style>
 /* Humateck_New010 registration result restore */
@@ -883,29 +972,6 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 <style>
 /* Humateck Production split: keep Gemini prompt box compact */
 #geminiPromptText{min-height:92px!important;height:92px!important;overflow:auto!important;}
-</style>
-
-
-<style>
-/* Humateck_Production_Order_v12 calm command warning */
-.commandWarningOutside{
-  display:block!important;
-  margin:16px 0 18px!important;
-  padding:13px 15px!important;
-  border:1px solid rgba(96,140,190,.55)!important;
-  border-radius:12px!important;
-  background:rgba(70,105,150,.10)!important;
-  color:#dce8f8!important;
-  font-weight:600!important;
-  line-height:1.65!important;
-  animation:none!important;
-  box-shadow:none!important;
-  text-shadow:none!important;
-}
-.commandWarningOutside .softStrong{
-  color:#f0c85a!important;
-  font-weight:900!important;
-}
 </style>
 
 
@@ -971,45 +1037,18 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 
 
 <style>
-/* 플랜 만료 카운트다운 */
-#planExpiryBox{
-  border:1px solid rgba(255,217,90,.55);
-  border-radius:16px;
-  padding:16px 20px;
-  background:rgba(255,217,90,.07);
-  margin-bottom:18px;
-  display:none;
+/* Humateck universal translation-source positioning */
+.universalTranslationNotice{
+  border:1px solid rgba(202,178,122,.58);
+  border-radius:14px;
+  padding:14px 16px;
+  margin:14px 0 16px;
+  background:rgba(202,178,122,.075);
+  color:#e8dcc5;
+  line-height:1.72;
+  font-weight:700;
 }
-#planExpiryBox.show{ display:block; }
-#planExpiryBox .expiryLabel{
-  color:#aaa; font-size:13px; margin:0 0 8px;
-}
-#planExpiryBox .expiryPlanName{
-  color:#ffd95a; font-weight:900; font-size:16px; margin:0 0 10px;
-}
-#planExpiryBox .countdownRow{
-  display:flex; gap:10px; flex-wrap:wrap; align-items:center;
-}
-#planExpiryBox .cdUnit{
-  text-align:center;
-  background:rgba(0,0,0,.3);
-  border:1px solid rgba(255,217,90,.3);
-  border-radius:10px;
-  padding:8px 14px;
-  min-width:64px;
-}
-#planExpiryBox .cdNum{
-  font-size:26px; font-weight:900; color:#ffd95a; line-height:1;
-}
-#planExpiryBox .cdLbl{
-  font-size:11px; color:#aaa; margin-top:3px;
-}
-#planExpiryBox .expiryExpired{
-  color:#ff6b5d; font-weight:900; font-size:15px;
-}
-#planExpiryBox .expirySoon{
-  color:#ff9966;
-}
+.universalTranslationNotice strong{color:#d8bf83;font-weight:900;}
 </style>
 </head>
 <body>
@@ -1021,150 +1060,137 @@ Do not add review, blocking, metadata judgment, hidden/admin menu, auto-correcti
 
 
 <div class="wrap" id="top">
-<header class="top"><a href="index.html"><img class="logo" src="FINAL_LOGO01.png" alt="Humateck"></a><div class="lang">◎ 한국어⌄</div></header>
-<div class="orderTopButtons"><a href="index.html">첫페이지 가기</a><a href="plans.html">전체플랜 가기</a></div>
+<header class="top"><a href="index.html"><img class="logo" src="FINAL_LOGO01.png" alt="Humateck"></a><div class="lang">◎ English⌄</div></header>
+<div class="orderTopButtons"><a href="index.html">Home</a><a href="./plans.html">View All Plans</a></div>
 <section class="orderMainGrid">
   <div class="orderLeftColumn">
     <section class="card">
-
-      <h1>글로벌 유튜브 영상 대량 배포 주문</h1>
-
-<!-- 플랜 만료 카운트다운 -->
-<div id="planExpiryBox">
-  <p class="expiryLabel">현재 구독 플랜</p>
-  <p class="expiryPlanName" id="expiryPlanName">—</p>
-  <p class="expiryLabel">플랜 종료까지 남은 시간</p>
-  <div class="countdownRow" id="countdownRow">
-    <div class="cdUnit"><div class="cdNum" id="cdDays">—</div><div class="cdLbl">일</div></div>
-    <div class="cdUnit"><div class="cdNum" id="cdHours">—</div><div class="cdLbl">시</div></div>
-    <div class="cdUnit"><div class="cdNum" id="cdMins">—</div><div class="cdLbl">분</div></div>
-    <div class="cdUnit"><div class="cdNum" id="cdSecs">—</div><div class="cdLbl">초</div></div>
-  </div>
-  <p id="expiryDateText" style="color:#888;font-size:13px;margin:10px 0 0;"></p>
-</div>
-<!-- /플랜 만료 카운트다운 -->
-
+      <h1>Global YouTube Video Mass Distribution Order</h1>
       <div class="order-intro-note">
-        <p>1. 본 주문양식은 구글의 검증된 보안 프로토콜인 OAuth2.0을 사용하므로 고객님의 개인정보를 일체 서버에 보관하지 않습니다.</p>
-        <p>2. 주문폼에 가이드된 제미나이AI 챗번역은 당사의 실험을 거친 최적 프롬프트입니다. 그러나, 본 유튜브 주문양식에 맞출 경우 고객님이 다른 번역툴로 준비하신 내용이나 전문가의 번역도 얼마든지 사용이 가능합니다.</p>
+        <p>1. This order form is open to everyone for experiencing Gemini AI chat translation.</p>
+        <p>2. However, the authority to finally register the translation results on YouTube is open only to subscribers of this service. Please do not misunderstand this point.</p>
       </div>
+      <div class="universalTranslationNotice"><strong>Flexible translation source:</strong> Humateck is not limited to Gemini translation. You may use Gemini, ChatGPT, DeepL, another AI translator, or your own prepared translation. As long as the final text follows the required <strong>Country Code / Title / Description</strong> format, Humateck can register it to YouTube.</div>
       <div class="nativeCodeLabelRow">
-  <label for="nativeLanguageCode">자국어 코드</label>
-  <button id="openNativeCodeListBtn" class="nativeCodeListBtn" type="button">70개 국가명/언어코드 목록</button>
+  <label for="nativeLanguageCode">Native Language Code</label>
+  <button id="openNativeCodeListBtn" class="nativeCodeListBtn" type="button">70 Country Names / Language Codes List</button>
 </div>
-<input id="nativeLanguageCode" type="text" placeholder="예: ko, ja, de, fr, es">
-<label>유튜브 영상 주소</label>
-      <textarea id="videoUrl" class="videoUrlTextarea" rows="2" placeholder="실제 롱폼/숏폼 영상주소를 입력해 주세요 (예 : https://www.youtube.com/watch?v=*********** 또는 https://www.youtube.com/shorts/**********)"></textarea>
-      <label>자국어 제목</label>
-      <input id="sourceTitle" type="text" placeholder="자국어 제목을 입력하세요">
-      <label>자국어 설명문</label>
-      <textarea id="sourceDescription" class="mediumTextarea" placeholder="자국어 설명문을 입력하세요"></textarea>
-      <div class="actions"><button class="btn copyButtonVisible" type="button" id="generateGeminiPrompt">제미나이 명령문 생성</button></div>
-      <div class="notice">여기서 제미나이 명령문을 생성한 뒤 복사하여 제미나이에 붙여넣고, 완료된 제미나이 결과물을 다시 이 주문서에 붙여넣으시면 됩니다.</div>
+<input id="nativeLanguageCode" type="text" placeholder="Example: ko, ja, de, fr, es">
+<label>YouTube Video URL</label>
+      <textarea id="videoUrl" class="videoUrlTextarea" rows="2" placeholder="Please enter the actual long-form/shorts video URL (example: https://www.youtube.com/watch?v=*********** or https://www.youtube.com/shorts/**********)"></textarea>
+      <label>Native Language Title</label>
+      <input id="sourceTitle" type="text" placeholder="Enter the native language title">
+      <label>Native Language Description</label>
+      <textarea id="sourceDescription" class="mediumTextarea" placeholder="Enter the native language description"></textarea>
+      <div class="actions"><button class="btn copyButtonVisible" type="button" id="generateGeminiPrompt">Generate Gemini Request Prompt</button></div>
+      <div class="notice">Generate the Gemini request prompt here, copy it, paste it into Gemini, and then paste the completed Gemini result back into this order form.</div>
     </section>
 
     <section id="gemini" class="card">
-      <h2>제미나이 명령문 복사</h2>
-      <div class="geminiCoreNotice">이 영역이 Humateck의 핵심입니다. 이 명령문을 복사해 제미나이에 붙여넣고, 완성된 번역 결과만 최종등록명령에 다시 붙여넣으시면 됩니다.</div>
+      <h2>Gemini Request Prompt Copy</h2>
+      <div class="geminiCoreNotice">This is the core of Humateck. Copy this prompt, paste it into Gemini, and paste only the completed translation result back into the final version box.</div>
       <textarea id="geminiPromptText" class="mediumTextarea" readonly>Hello Gemini!
-아무런 설명없이 오직 번역문만 출력해 줘.
+Without any explanation, output only the translated registration text.
 
-아래 유튜브 제목과 설명문을 {activeCount}개 국가 세트에 맞춰 번역해 줘.
-처음부터 끝까지 중간에 끊지 말고 계속 번역해 줘.
+Translate the following YouTube title and description for the {activeCount}-country set.
+Continue from beginning to end without stopping.
 
-[원문]
+[Source Text]
 Title:
 {sourceTitle}
 
 Description:
 {sourceDescription}
 
-[출력 형식]
+[Output Format]
 Number:
 Country Code:
 Country Name:
 Title:
 Description:
 
-아무런 설명없이 오직 번역문만 출력해 줘.
+Without any explanation, output only the translated registration text.
 
 [Country Code List]
 {countryBlock}
 
-아무런 설명없이 오직 번역문만 출력해 줘.</textarea>
-      <div class="actions"><button class="btn copyButtonVisible" type="button" data-copy-target="geminiPromptText">제미나이 명령문 복사</button></div>
-      <p id="geminiCopyStatus" class="copyStatus"></p><div class="actions"><a class="btn geminiChatButton" href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer">제미나이 챗번역 하러 가기</a></div>
+Without any explanation, output only the translated registration text.</textarea>
+      <div class="actions"><button class="btn copyButtonVisible" type="button" data-copy-target="geminiPromptText">Copy Gemini Prompt</button></div>
+      <p id="geminiCopyStatus" class="copyStatus"></p><div class="actions"><a class="btn geminiChatButton" href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer">Open Gemini Chat Translation</a></div>
     </section>
 
     <section class="card" id="geminiCommandCard">
-      <h2>제미나이 복붙 명령 순서</h2>
+      <h2>Gemini Command Copy-and-Paste Sequence</h2>
       <div class="commandFullRows">
-        <div class="commandFullItem"><div class="commandFullTop"><label>명령 1</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText1">복사</button></div><textarea id="commandText1" readonly>다른 언어의 혼입, 부자연스러운 문맥, 기타 문제가 없는지 자동으로 신중하게 확인해 줘.</textarea></div>
-        <div class="commandFullItem"><div class="commandFullTop"><label>명령 2</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText2">복사</button></div><textarea id="commandText2" readonly>Number: , Country Name:를 삭제해 줘.</textarea></div>
-        <div class="commandFullItem"><div class="commandFullTop"><label>명령 3</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText4">복사</button></div><textarea id="commandText4" readonly>다른 언어, 부자연스러운 문맥, 기타 문제가 없는지 다시 한 번 주의 깊게 확인해 줘.</textarea></div>
-        <div class="commandFullItem"><div class="commandFullTop"><label>명령 4</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText5">복사</button></div><textarea id="commandText5" readonly>제미나이의 설명문이나 해설 등을 모두 빼고 다시 출력해 줘.</textarea></div>
-        <div class="commandFullItem"><div class="commandFullTop"><label>명령 5</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText7">복사</button></div><textarea id="commandText7" readonly>아래로 이동해 줘</textarea></div>
-        <div class="commandWarningOutside"><span class="softStrong">⚠️ 중요</span> 반드시 “Please move to the bottom.” 위의 번역문 끝부분 ⧉ [응답 복사] 버튼을 누른 후 클립보드에 완전히 복사될 때까지 기다리신 후 <span class="softStrong">최종등록명령</span>에 복사 붙여넣기 하세요.<br><br><span class="softStrong">⚠️ 중요</span> 번역문 외 제미나이 설명문, 해설, 불필요한 말이 섞이면 유튜브 등록 오류가 날 수 있으니 반드시 번역문만 붙여넣어 주세요.</div>
+        <div class="commandFullItem"><div class="commandFullTop"><label>Command 1</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText1">Copy</button></div><textarea id="commandText1" readonly>Please automatically and carefully check for mixed-in other languages, unnatural context, and any other issues.</textarea></div>
+        <div class="commandFullItem"><div class="commandFullTop"><label>Command 2</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText2">Copy</button></div><textarea id="commandText2" readonly>Please delete the Number: , Country Name:.</textarea></div>
+        <div class="commandFullItem"><div class="commandFullTop"><label>Command 3</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText4">Copy</button></div><textarea id="commandText4" readonly>Carefully check once more for mixed-in other languages, unnatural context, and any other issues.</textarea></div>
+        <div class="commandFullItem"><div class="commandFullTop"><label>Command 4</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText5">Copy</button></div><textarea id="commandText5" readonly>Please remove all of Gemini's explanations and commentaries, and output it again.</textarea></div>
+        <div class="commandFullItem"><div class="commandFullTop"><label>Command 5</label><button class="btn copyCommandButton" type="button" data-copy-target="commandText7">Copy</button></div><textarea id="commandText7" readonly>Please move to the bottom.</textarea></div>
+        <div class="commandWarningOutside">⚠️ In the Gemini window, be sure to press the ⧉ Copy response button at the end of the last translation above the “Please move to the bottom.” command, then paste it into the final version field.<br><br>⚠️ Be careful not to include Gemini explanations, commentary, or unnecessary words other than the translation, as they may cause YouTube registration errors.</div>
       </div>
     </section>
 
     <section class="card" id="finalVersionCard">
-      <h2>최종등록명령</h2>
-            <textarea id="finalOutput" class="mediumTextarea" placeholder="유튜브 등록용 제미나이 최종 번역 결과를 붙여넣어 주세요."></textarea>
+      <h2>Paste Final Version</h2>
+      <textarea id="finalOutput" class="mediumTextarea" placeholder="Paste the final Gemini translation result."></textarea>
     </section>
 
 
 <section class="oauthInfoBox" id="googleOAuthNotice">
-      <h2>Google OAuth 인증관련 안내</h2>
-      <p>이제부터는 글로벌 유튜브 영상 대량 배포를 위해 필수적으로 거쳐야 될 Google OAuth 인증 순서입니다.</p>
-      <p class="yellowStrong">Google OAuth 인증키를 이미 받으신 분들은 ‘중요설정 ’를 건너 띄시기 바랍니다.</p>
-      <div class="actions"><a class="btn guideOpenButton" href="#oauthGuideModal">중요설정 길잡이</a><a class="btn" href="plans.html">플랜 구독하러 가기</a></div>
+      <h2>Google OAuth Setup Guide Notice</h2>
+      <p>From here, this is the Google OAuth authentication sequence that subscribers must complete. Non-subscribers may also complete this authentication, but final register multilingual content is open only to subscribers. Please do not misunderstand this point.</p>
+      <p class="yellowStrong">If you have already received a Google OAuth authentication key, please skip the “Important Setup Guide.”</p>
+      <center><p class="yellowStrong">Once configured, it can be used for multiple channels.</p></center>
+      <div class="actions"><a class="btn guideOpenButton" href="#oauthGuideModal">Important Setup Guide</a><a class="btn" href="./plans.html">Subscribe to a Plan</a></div>
       <div class="oauthPanelBelow">
-        <h2>Google OAuth 인증</h2>
-        <p>유튜브 등록할 때마다 필히 Google OAuth 인증(인증키 확인)을 받아야 합니다.</p>
+        <h2>Google OAuth Setup Guide</h2>
+        <p class="oauthLaunchNotice">This authentication allows visitors to experience the reality of AI chat translation and YouTube registration. However, actual registration is available only to subscribers. Please do not misunderstand this point.</p>
         <label for="googleClientIdInput">Google OAuth Web Client ID</label>
-        <input id="googleClientIdInput" type="password" autocomplete="off" placeholder="Google OAuth Web Client ID를 붙여넣으세요">
+        <input id="googleClientIdInput" type="password" autocomplete="off" placeholder="Paste your Google OAuth Web Client ID">
         <div class="oauthCenterButton">
-  <button id="oauthStartBtn" class="btn" type="button">OAuth 인증받기</button>
-</div></div>
+  <button id="oauthStartBtn" class="btn" type="button">OAuth Authorization</button>
+</div>
+<div id="oauthSuccessBadge" class="oauthSuccessBadge">Authentication Successful</div>
+</div>
     </section>
 <section class="card">
-      <h2>유튜브 등록</h2>
-      <div class="actions"><button class="btn" type="button" id="sendOrderBtn">유튜브 등록</button></div>
+      <h2>YouTube Video Distribution</h2>
+      <div class="actions"><button class="btn humateckOnlyButton" type="button" id="sendOrderBtn">YouTube Video Distribution</button></div>
     </section>
 <section class="card registerNoticeBelow">
-      <h2>유튜브 등록관련 공지사항</h2>
-      <p>당사는 고객님의 번역 승인본에 대해 어떠한 <span class="highlightAction">검수나 차단 · 변경 · 추가</span>를 하지 않으며, 고객 승인 내용 그대로 발송합니다.</p>
-    <section class="card" id="deliveryResultCard">
-      <h2>등록결과</h2>
-      <textarea id="deliveryLog" class="mediumTextarea" readonly placeholder="유튜브 등록결과가 여기에 표시됩니다."></textarea>
+<h2>YouTube Distribution Notice</h2>
+<p>All translations are registered to the YouTube channel immediately. But Humateck does not review, block, change, or add anything to the customer-approved translation. The approved content is sent as-is.</p>
+<section class="card" id="deliveryResultCard">
+      <h2>Distribution Result</h2>
+      <textarea id="deliveryLog" class="mediumTextarea" readonly placeholder="YouTube distribution results will appear here."></textarea>
     </section>
     <section class="card" id="customerComplaintCard">
-      <h2>불편사항 신고</h2>
-      <p>사용 중 불편한 점이 있으시면 적어 주세요. 저희 스탭이 신속히 해결해 드리겠습니다.</p>
-      <textarea id="customerComplaintText" class="mediumTextarea" placeholder="사용 중 불편한 점을 적어 주세요."></textarea>
+      <h2>Customer Feedback</h2>
+      <p>If you experience any inconvenience while using the service, please write it here. Our staff will resolve it quickly.</p>
+      <textarea id="customerComplaintText" class="mediumTextarea" placeholder="Please write any inconvenience you experienced while using the service."></textarea>
     </section>
 </section>
   </div>
 
   <aside class="right">
-    <h2 class="yellowNotice">상태 안내</h2>
-    <h3>빠른 안내</h3>
-    <p>1) 본 서비스를 이용하기 위한 필수 첫단계는 구글 OAuth 승인 설정입니다. 아래의 '중요설정 길잡이'의 상세 안내에 따라 설정을 진행해 주세요.</p>
-    <p>2) 여러 채널의 유튜브 다국어 번역콘텐츠를 등록하시려는 경우에도, Google OAuth 설정을 채널마다 새로 만들 필요는 없습니다. 다만 Google 인증을 진행한 계정이 해당 유튜브 채널 또는 영상에 수정 권한을 가지고 있어야 정상 등록이 가능합니다.</p>
-    <p>3) 유튜브 등록할 때마다 필히 Google OAuth 인증(인증키 확인)을 받아야 합니다.</p>
+    <h2 class="yellowNotice">Status Notice</h2>
+    <h3>Quick Notice</h3>
+    <p>1) The essential first step for using this service is Google OAuth approval setup. Please proceed according to the detailed guidance in the “Important Setup Guide” below.</p>
+    <p>2) Even if you want to register multilingual YouTube content for multiple channels, you do not need to create a separate Google OAuth setup for each channel. However, the Google account used for authorization must have permission to edit the relevant YouTube channel or video in order for registration to work properly.</p>
+    <p>3) Google OAuth authorization is required each time you regist YouTube video content.</p>
 <section id="faq" class="faqCollapsed">
 <details open>
-<summary>유튜브 AI 챗번역 FAQ</summary>
+<summary>YouTube AI Chat Translation FAQ</summary>
 <div class="faqDetails">
-<div class="faqItem"><p class="question"><b>1. 문) 동영상 기본어 설정을 분명히 자국어로 했습니다. 그런데 다국어 번역컨텐츠 등록 후 확인해보니, 동영상 언어 설정이 미국 영어로 변했습니다. 이유가 뭘까요?</b></p><p>
-답) 다국어 번역컨텐츠 등록시 유튜브 다국어 번역컨텐츠 표시시스템상 동영상 기본설정이 미국 영어로 고정되어 있기 때문입니다. 그러나 이는 오류가 아니며, 고객님의 자국어 제목이나 설명문은 언제든지 자국어로 수정하실 수 있사오니 착오 없으시기 바랍니다.</p></div>
-<details><summary>자세히 보기</summary>
-<div class="faqItem"><p class="question"><b>2. 문) 유튜브 다국어 번역컨텐츠 등록하기를 누르니 할당량 초과 메시지가 뜹니다.</b></p><p>답) 유튜브 다국어 번역컨텐츠등록 일일 API 무료할당량이 초과된 경우입니다. 다음날 할당량이 다시 충전될 때까지 기다렸다가 다시 시도하시기 바랍니다.</p></div>
-<div class="faqItem"><p class="question"><b>4. 문) 구글 OAuth 설정이 무엇인가요? 사용시마다 설정해야 하나요?</b></p><p>답) 내 유튜브 채널에 자막을 등록해도 좋다고 구글에 허락받는 연결 과정입니다. 한 번 설정 후 장기간 여러 채널에 쓰실 수 있습니다.</p></div>
-<div class="faqItem"><p class="question"><b>5. 문) 여러 채널을 운영 중입니다. OAuth 설정을 단 한번만 받아도 되나요?</b></p><p>답) 여러 채널의 유튜브 다국어 번역콘텐츠를 등록하시려는 경우에도, Google OAuth 설정을 채널마다 새로 만들 필요는 없습니다. 다만 Google 인증을 진행한 계정이 해당 유튜브 채널 또는 영상에 수정 권한을 가지고 있어야 정상 등록이 가능합니다.</p></div>
-<div class="faqItem"><p class="question"><b>6. 문) 유튜브 다국어 등록하기를 누르니 할당량 초과 메시지가 뜹니다.</b></p><p>답) 유튜브 다국어 번역컨텐츠등록 일일 API 무료할당량이 초과된 경우입니다. 다음날 할당량이 재충전될 때까지 기다렸다가 다시 시도하시기 바랍니다.</p></div>
-<div class="faqItem"><p class="question"><b>7. 문) 이 등록시스템이 혹시나 등록 오류가 잦을까봐 선뜻 쓰기가 꺼려집니다.</b></p><p>답) 고객님의 그 마음 충분히 이해합니다. 그러나 시스템이 너무 심플해서, 어떤 불가항력적인 외부 악조건이 없는 한 저희의 어떤 훼방도 없이 그 어떤 컨텐츠도 곧바로 유튜브에 등록되는 시스템이오니 걱정하지 않으셔도 될 것 같습니다.</p></div>
+<div class="faqItem"><p class="question"><b>1. Q) I clearly set the default video language to my native language. However, after registering multilingual translations, I checked and found that the video language setting had changed to U.S. English. Why did this happen?</b></p><p>
+A) This is because YouTube content display system fixes the default video setting to U.S. English when multilingual translations are registered. However, this is not an error, and you may edit your native-language title or description at any time. Please do not misunderstand this point.</p></div>
+<details><summary>View Details</summary>
+<div class="faqItem"><p class="question"><b>2. Q) When I press YouTube video distribution, a quota exceeded message appears.</b></p><p>A) This means the daily free API quota for YouTube video distribution has been exceeded. Please wait until the quota is recharged the next day, then try again.</p></div>
+<div class="faqItem"><p class="question"><b>4. Q) What is Google OAuth setup? Do I need to set it up every time I use the service?</b></p><p>A) It is the connection process of receiving permission from Google to register multilingual translations on your YouTube channel. After one setup, you can use it for multiple channels over a long period of time.</p></div>
+<div class="faqItem"><p class="question"><b>5. Q) I operate multiple YouTube channels. Do I need to create a separate OAuth setting for each channel?</b></p><p>A) You do not need to create a new Google OAuth setting for each channel. However, the Google account used for authorization must have permission to edit the relevant YouTube channel or video in order for registration to work properly.</p></div>
+<div class="faqItem"><p class="question"><b>6. Q) I see a quota exceeded message when I click global YouTube video distribution. What does this mean?</b></p><p>A) This means the daily free YouTube API quota for global video distribution has been exceeded. Please wait until the quota is refreshed the next day and try again.</p></div>
+<div class="faqItem"><p class="question"><b>7. Q) I am hesitant to use this registration system because I worry it might have frequent registration errors.</b></p><p>A) We fully understand that concern. However, the system is very simple. Unless there is an unavoidable external condition, your approved content is sent directly to YouTube without any interference from us, so you do not need to worry.</p></div>
 </details>
 </div>
 </details>
@@ -1176,89 +1202,86 @@ Description:
 </section>
 <div id="oauthGuideModal" class="guideModal">
   <div class="guideModalBox">
-    <h2>중요설정 길잡이</h2>
+    <h2>Important Setup Guide</h2>
+    <p class="guideSubTitle">Google OAuth authorization guide for first-time users.</p>
 
-     <div class="guideSection">
-      <h3>준비단계. 구글 개발자센터 가입</h3>
-      <p> Google 개발자센터로 이동하여 로그인 해 주세요. 
-      <a class="guideCloudBtn" href="https://console.cloud.google.com/apis/dashboard?project=fourth-cedar-489307-b1" target="_blank" rel="noopener noreferrer">Google 개발자센터 바로가기</a>  
-        기존 생성한 구글 계정이 없는 경우에는 '계정 만들기'를 클릭하여 Google 계정을 생성해 주세요.</p>
+    <div class="guideIntroBox">
+      <p>This setup may feel unfamiliar at first. It is the official Google authorization process required to register multilingual content to your YouTube video.</p>
+      <p><span class="guidePoint">A Google OAuth Client ID is generally reusable for a considerable period after setup, but reconfiguration or reauthorization may be required due to token expiration from heavy usage or other reasons.</span></p>
     </div>
- 
-     <div class="guideSection">
-      <h3>1단계. 새 프로젝트를 'YouTube Data API v3'로 등록하세요.</h3>
-      <p>구글 클라이언트 ID를 생성하기 위해서는 먼저 새로운 프로젝트를 등록해야 합니다. 좌측 '사용 설정된 API 및 서비스'를 눌러 상단 ' API 및 서비스 사용자 설정' 버튼을 눌러 주세요. 
-        API 라이브러리가 나오고, API 및 서비스 검색창이 바로 아래에 보입니다. 
-        검색창에 'YouTube Data API v3'를 입력하고 누르면 'YouTube Data API v3' 화면이 나옵니다. 다른 선택지 없이 중앙의 파란색 [활성화(Enable)] 버튼을 클릭합니다.</p>
-    </div>
-    
-    <div class="guideSection">
-      <h3>2단계. Google 클라우드로 이동하세요.</h3>
-      <p>아래 버튼을 눌러 Google 클라우드 설정 화면으로 이동해 주세요(마우스 우측키를 눌러 '한국어로 번역'을 선택).</p>
-      <a class="guideCloudBtn" href="https://console.cloud.google.com/auth/audience?hl=ko&project=fourth-cedar-489307-b1" target="_blank" rel="noopener noreferrer">Google 클라우드 바로가기</a>
-      <p>Google 클라우드에 접속한 뒤, 유튜브 등록에 사용할 고객님의 Google 계정으로 로그인해 주세요.</p>
-    </div>
-
 
     <div class="guideSection">
-      <h3>3단계. 브랜딩 정보를 입력해 주세요.</h3>
-      <p>왼쪽 메뉴에서 <span class="guideCode">브랜딩</span>을 눌러 주세요.</p>
+      <h3>Step 1. Go to Google Cloud</h3>
+      <p>Click the button below to open the Google Cloud setup page.</p>
+      <a class="guideCloudBtn" href="https://console.cloud.google.com/auth/audience?hl=ko&project=fourth-cedar-489307-b1" target="_blank" rel="noopener noreferrer">Open Google Cloud</a>
+      <p>Sign in with the Google account you will use for YouTube registration.</p>
+    </div>
+
+    <div class="guideSection">
+      <h3>Step 2. Enable YouTube Data API v3</h3>
+      <p>Search for <span class="guideCode">YouTube Data API v3</span> in Google Cloud and enable it.</p>
+      <p>This API must be enabled to send multilingual title and description registration requests to YouTube.</p>
+    </div>
+
+    <div class="guideSection">
+      <h3>Step 3. Enter Branding information</h3>
+      <p>Open <span class="guideCode">Branding</span> from the left menu.</p>
       <ul class="guideList">
-        <li><span class="guidePoint">앱 이름</span>에는 고객님이 알아보기 쉬운 이름을 적어 주세요.</li>
-        <li><span class="guidePoint">사용자 지원 이메일</span>에는 고객님의 Google 이메일을 선택해 주세요.</li>
-        <li><span class="guidePoint">개발자 연락처 정보</span>에도 연락 가능한 이메일을 적어 주세요.</li>
+        <li>Enter an easy-to-recognize name in <span class="guidePoint">App name</span>.</li>
+        <li>Select your Google email for <span class="guidePoint">User support email</span>.</li>
+        <li>Enter a reachable email under <span class="guidePoint">Developer contact information</span>.</li>
       </ul>
     </div>
 
     <div class="guideSection">
-      <h3>4단계. 대상 / 테스트 사용자를 확인해 주세요.</h3>
-      <p>왼쪽 메뉴에서 <span class="guideCode">대상</span>을 눌러 주세요.</p>
-      <p>사용자 유형을 외부로 선택하신 후<span class="guidePoint">테스트 사용자</span>의 사용자 정보에 실제 인증을 진행할 Google 이메일을 넣어 주세요.</p>
+      <h3>Step 4. Check Target / Test users</h3>
+      <p>Open <span class="guideCode">Target</span> from the left menu.</p>
+      <p>If the app is in testing status, add the Google email that will perform authorization under <span class="guidePoint">Test users</span>.</p>
     </div>
 
     <div class="guideSection">
-      <h3>5단계. 클라이언트(OAuth Client)화면에서 웹 클라이언트(Web application)ID를 만들어 주세요</h3>
-      <p>왼쪽 메뉴에서 <span class="guideCode">클라이언트</span>를 누른 뒤 <span class="guideCode">클라이언트 만들기</span>를 선택해 주세요.</p>
-      <p>'애플리케이션 유형'이 나오면 반드시 <span class="guidePoint">웹 애플리케이션</span>을 선택해 주세요.</p>
+      <h3>Step 5. Create a Web application OAuth Client</h3>
+      <p>Open <span class="guideCode">Client</span>, then select <span class="guideCode">Create client</span>.</p>
+      <p>The application type must be <span class="guidePoint">Web application</span>.</p>
     </div>
 
     <div class="guideSection">
-      <h3>6단계. 승인된 JavaScript 원본을 등록해 주세요.</h3>
-      <p>홈페이지에서 직접 Google 인증을 진행하려면 현재 사용하는 홈페이지 주소를 등록해야 합니다.</p>
+      <h3>Step 6. Add Authorized JavaScript origins</h3>
+      <p>To authorize directly from the website, add the website origin you are using.</p>
       <ul class="guideList">
-        <li>정식 사이트 예: <span class="guideCode">https://humateck.com</span></li>
-        <li>www 주소를 쓰는 경우: <span class="guideCode">https://www.humateck.com</span></li>
-        <li>로컬 테스트 시: <span class="guideCode">http://localhost:5500</span> 또는 실제 사용 중인 localhost 주소</li>
+        <li>Official site example: <span class="guideCode">https://humateck.com</span></li>
+        <li>If using www: <span class="guideCode">https://www.humateck.com</span></li>
+        <li>For local testing: <span class="guideCode">http://localhost:5500</span> or your actual localhost origin</li>
       </ul>
-      <p><span class="guidePoint">끝에 / 를 붙이거나, /order.html 같은 경로를 넣으면 안 됩니다.</span></p>
+      <p><span class="guidePoint">Do not add a trailing slash or a path such as /order.html.</span></p>
     </div>
 
     <div class="guideSection">
-      <h3>7단계. OAuth 클라이언트 ID를 복사해 주세요.</h3>
-      <p>생성된 <span class="guidePoint">Client ID</span>를 복사한 뒤, 주문페이지의 Google OAuth 웹 클라이언트 ID 입력칸에 붙여넣어 주세요.</p>
-      <p>입력칸은 보안을 위해 마스킹되어 보일 수 있습니다.</p>
+      <h3>Step 7. Copy the OAuth Client ID</h3>
+      <p>Copy the generated <span class="guidePoint">Client ID</span> and paste it into the Google OAuth Web Client ID field on the order page.</p>
+      <p>The input may be masked for security.</p>
     </div>
 
     <div class="guideSection">
-      <h3>8단계. Google 인증하기를 눌러 승인해 주세요.</h3>
-      <p>주문페이지에서 <span class="guidePoint">Google 인증하기</span> 버튼을 누르면 Google 공식 인증창이 열립니다.</p>
-      <p>해당 Google 계정이 등록하려는 유튜브 채널 또는 영상에 수정 권한을 가지고 있어야 정상 등록이 가능합니다.</p>
+      <h3>Step 8. Click Google Authorization</h3>
+      <p>Click <span class="guidePoint">Google Authorization</span> on the order page to open the official Google authorization window.</p>
+      <p>The Google account must have edit permission for the target YouTube channel or video.</p>
     </div>
 
     <div class="guideWarning">
-      <h3>중요 안내</h3>
-      <p>여러 채널을 운영하더라도 같은 Google 계정이 해당 채널들의 관리 권한을 가지고 있다면, 각 영상의 실제 유튜브 영상 주소를 입력해 등록을 진행할 수 있습니다.</p>
-      <p>Google OAuth Client ID는 상당기간 재사용되는 것이 일반적이지만, 사용량 과다로 인한 토큰 만료나 기타 이유로 재설정 또는 재승인이 필요할 수 있습니다.</p>
-      <p>이는 서비스 오류가 아니라 Google 계정 보호와 YouTube API 사용을 위한 정상 보안 절차입니다.</p>
+      <h3>Important Notice</h3>
+      <p>If the same Google account has management permission for multiple channels, you can proceed by entering the actual YouTube video URL for each target video.</p>
+      <p>A Google OAuth Client ID is generally reusable for a considerable period, but reconfiguration or reauthorization may be required due to token expiration from heavy usage or other reasons.</p>
+      <p>This is a normal Google security process for account protection and YouTube API usage, not a service error.</p>
     </div>
 
-    <a class="closeModalBtn" href="#top">닫기</a>
+    <a class="closeModalBtn" href="#top">Close</a>
   </div>
 </div>
 
 
 </div>
-<div class="account"><a href="#" title="Google 공식 인증">G</a><a href="#" title="Apple 공식 인증">●</a><a href="#" title="Email 공식 인증">@</a></div>
+<div class="account"><a href="#" title="Google Official Authentication">G</a><a href="#" title="Apple Official Authentication">●</a><a href="#" title="Email Official Authentication">@</a></div>
 
 
 <script>
@@ -1266,7 +1289,8 @@ Description:
   function applyHumateckPlan(plan){
     if(!plan) return;
     if(plan === "monthly70") plan = "monthly70";
-    var allowed = {asia30:true, europe30:true, africa30:true, america30:true, oceania30:true, global50:true, global70:true};
+    if(plan === "yearly70") plan = "yearly70";
+    var allowed = {free7:true, monthly30:true, monthly50:true, monthly70:true, yearly70:true};
     if(!allowed[plan]) return;
     window.humateckPaymentSubscriptionPlan = plan;
     var hidden = document.getElementById("humateckActivePlanValue");
@@ -1276,10 +1300,11 @@ Description:
   }
 
   function getHumateckPlanLimit(plan){
-    if(plan === "asia30" || plan === "europe30" || plan === "africa30" || plan === "america30" || plan === "oceania30") return 30;
-    if(plan === "global50") return 50;
-    if(plan === "global70") return 70;
-    return 30;
+    if(plan === "free7") return 15;
+    if(plan === "monthly30") return 30;
+    if(plan === "monthly50") return 50;
+    if(plan === "monthly70" || plan === "yearly70") return 70;
+    return 0;
   }
 
   function loadPlanSelectedFromPlansPage(){
@@ -1299,7 +1324,7 @@ Description:
       var res = await fetch(url, { credentials:"include", cache:"no-store" });
       if(!res.ok) return;
       var data = await res.json().catch(function(){ return {}; });
-      if(data && (data.admin === true || data.is_admin === true)){ window.humateckIsAdminMember = true; applyHumateckPlan("global70", 70); return; }
+      if(data && (data.admin === true || data.is_admin === true)){ window.humateckIsAdminMember = true; applyHumateckPlan("yearly70", 70); return; }
       if(data && (data.active === true || data.status === "active")){ applyHumateckPlan(data.plan || data.plan_type || data.subscription_plan, data.country_limit); }
     }catch(e){}
   }
@@ -1338,7 +1363,11 @@ Description:
 
     if(window.humateckIsAdminMember === true) return 70;
 
+    if(plan === "free7") return 15;
+    if(plan === "monthly50") return 50;
     if(plan === "monthly70") return 70;
+    if(plan === "yearly70") return 70;
+    if(plan === "monthly30") return 30;
 
     return 30;
   }
@@ -1348,129 +1377,114 @@ Description:
     var sourceTitle = getValue("sourceTitle");
     var sourceDescription = getValue("sourceDescription");
 
-    // ── 플랜별 국가코드 리스트 (YouTube 시장 중요도순) ──
-    var PLAN_COUNTRY_LISTS = {
-      "global70": [
-        "1. en | 영어(미국/영국/호주 등)","2. hi | 힌디어(인도)","3. pt | 포르투갈어(브라질)",
-        "4. id | 인도네시아어","5. es-419 | 스페인어(라틴아메리카)","6. ja | 일본어",
-        "7. ru | 러시아어","8. de | 독일어","9. tr | 튀르키예어","10. ko | 한국어",
-        "11. fr | 프랑스어","12. vi | 베트남어","13. th | 태국어","14. fil | 필리핀어",
-        "15. ar | 아랍어(중동/북아프리카)","16. it | 이탈리아어","17. ms | 말레이어",
-        "18. zh-TW | 중국어(대만)","19. uk | 우크라이나어","20. pl | 폴란드어",
-        "21. nl | 네덜란드어","22. es | 스페인어(스페인)","23. sv | 스웨덴어",
-        "24. ro | 루마니아어","25. cs | 체코어","26. hu | 헝가리어","27. el | 그리스어",
-        "28. zh-HK | 중국어(홍콩)","29. ur | 우르두어(파키스탄)","30. bn | 벵골어(방글라데시)",
-        "31. pt-PT | 포르투갈어(포르투갈)","32. fa | 페르시아어(이란)","33. iw | 히브리어(이스라엘)",
-        "34. sw | 스와힐리어(동아프리카)","35. am | 암하라어(에티오피아)","36. af | 아프리칸스어(남아공)",
-        "37. ta | 타밀어(인도/스리랑카)","38. te | 텔루구어(인도)","39. mr | 마라티어(인도)",
-        "40. my | 버마어(미얀마)","41. km | 크메르어(캄보디아)","42. ne | 네팔어",
-        "43. lo | 라오어(라오스)","44. gu | 구자라트어(인도)","45. kn | 칸나다어(인도)",
-        "46. ml | 말라얄람어(인도)","47. pa | 펀자브어(인도/파키스탄)","48. no | 노르웨이어",
-        "49. da | 덴마크어","50. fi | 핀란드어","51. sk | 슬로바키아어","52. bg | 불가리아어",
-        "53. hr | 크로아티아어","54. sr | 세르비아어","55. lt | 리투아니아어","56. lv | 라트비아어",
-        "57. et | 에스토니아어","58. az | 아제르바이잔어","59. ka | 조지아어","60. be | 벨라루스어",
-        "61. bs | 보스니아어","62. mk | 마케도니아어","63. sq | 알바니아어","64. fr-CA | 프랑스어(캐나다)",
-        "65. es-US | 스페인어(미국)","66. sr-Latn | 세르비아어(라틴)","67. ca | 카탈로니아어",
-        "68. eu | 바스크어","69. gl | 갈리시아어","70. zh-CN | 중국어(중국본토)"
-      ],
-      "asia30": [
-        "1. hi | 힌디어(인도)","2. id | 인도네시아어","3. ja | 일본어","4. ko | 한국어",
-        "5. vi | 베트남어","6. th | 태국어","7. fil | 필리핀어","8. ms | 말레이어",
-        "9. zh-TW | 중국어(대만)","10. zh-HK | 중국어(홍콩)","11. ur | 우르두어(파키스탄)",
-        "12. bn | 벵골어(방글라데시)","13. fa | 페르시아어(이란)","14. iw | 히브리어(이스라엘)",
-        "15. ar | 아랍어(중동)","16. ta | 타밀어(인도/스리랑카)","17. te | 텔루구어(인도)",
-        "18. mr | 마라티어(인도)","19. my | 버마어(미얀마)","20. km | 크메르어(캄보디아)",
-        "21. ne | 네팔어","22. lo | 라오어(라오스)","23. gu | 구자라트어(인도)",
-        "24. kn | 칸나다어(인도)","25. ml | 말라얄람어(인도)","26. pa | 펀자브어(인도/파키스탄)",
-        "27. az | 아제르바이잔어","28. ka | 조지아어","29. en | 영어","30. ru | 러시아어"
-      ],
-      "europe30": [
-        "1. ru | 러시아어","2. de | 독일어","3. fr | 프랑스어","4. tr | 튀르키예어",
-        "5. it | 이탈리아어","6. es | 스페인어(스페인)","7. pl | 폴란드어","8. uk | 우크라이나어",
-        "9. nl | 네덜란드어","10. sv | 스웨덴어","11. ro | 루마니아어","12. cs | 체코어",
-        "13. hu | 헝가리어","14. el | 그리스어","15. pt-PT | 포르투갈어(포르투갈)",
-        "16. no | 노르웨이어","17. da | 덴마크어","18. fi | 핀란드어","19. sk | 슬로바키아어",
-        "20. bg | 불가리아어","21. hr | 크로아티아어","22. sr | 세르비아어","23. lt | 리투아니아어",
-        "24. lv | 라트비아어","25. et | 에스토니아어","26. be | 벨라루스어","27. bs | 보스니아어",
-        "28. mk | 마케도니아어","29. sq | 알바니아어","30. ka | 조지아어"
-      ],
-      "africa30": [
-        "1. ar | 아랍어(이집트/북아프리카)","2. en | 영어(나이지리아/가나/케냐/남아공)",
-        "3. fr | 프랑스어(서/중앙아프리카)","4. sw | 스와힐리어(케냐/탄자니아)",
-        "5. am | 암하라어(에티오피아)","6. af | 아프리칸스어(남아공)","7. pt | 포르투갈어(앙골라/모잠비크)",
-        "8. hi | 힌디어(인도)","9. id | 인도네시아어","10. ja | 일본어","11. ko | 한국어",
-        "12. vi | 베트남어","13. th | 태국어","14. fil | 필리핀어","15. ms | 말레이어",
-        "16. zh-TW | 중국어(대만)","17. zh-HK | 중국어(홍콩)","18. ur | 우르두어(파키스탄)",
-        "19. bn | 벵골어(방글라데시)","20. fa | 페르시아어(이란)","21. iw | 히브리어(이스라엘)",
-        "22. ru | 러시아어","23. de | 독일어","24. tr | 튀르키예어","25. it | 이탈리아어",
-        "26. es | 스페인어","27. pl | 폴란드어","28. nl | 네덜란드어","29. uk | 우크라이나어",
-        "30. sv | 스웨덴어"
-      ],
-      "america30": [
-        "1. en | 영어(미국/캐나다)","2. es-419 | 스페인어(라틴아메리카)","3. pt | 포르투갈어(브라질)",
-        "4. es | 스페인어","5. es-US | 스페인어(미국)","6. fr-CA | 프랑스어(캐나다)",
-        "7. hi | 힌디어(인도)","8. id | 인도네시아어","9. ja | 일본어","10. ko | 한국어",
-        "11. vi | 베트남어","12. th | 태국어","13. fil | 필리핀어","14. ms | 말레이어",
-        "15. zh-TW | 중국어(대만)","16. zh-HK | 중국어(홍콩)","17. ur | 우르두어(파키스탄)",
-        "18. bn | 벵골어(방글라데시)","19. fa | 페르시아어(이란)","20. iw | 히브리어(이스라엘)",
-        "21. ar | 아랍어","22. ru | 러시아어","23. de | 독일어","24. tr | 튀르키예어",
-        "25. fr | 프랑스어","26. it | 이탈리아어","27. nl | 네덜란드어","28. pl | 폴란드어",
-        "29. uk | 우크라이나어","30. sv | 스웨덴어"
-      ],
-      "oceania30": [
-        "1. en | 영어(호주/뉴질랜드/태평양)","2. fil | 필리핀어(태평양 필리핀계)",
-        "3. hi | 힌디어(인도)","4. id | 인도네시아어","5. ja | 일본어","6. ko | 한국어",
-        "7. vi | 베트남어","8. th | 태국어","9. ms | 말레이어","10. zh-TW | 중국어(대만)",
-        "11. zh-HK | 중국어(홍콩)","12. ur | 우르두어(파키스탄)","13. bn | 벵골어(방글라데시)",
-        "14. fa | 페르시아어(이란)","15. iw | 히브리어(이스라엘)","16. ar | 아랍어",
-        "17. ru | 러시아어","18. de | 독일어","19. tr | 튀르키예어","20. fr | 프랑스어",
-        "21. it | 이탈리아어","22. es | 스페인어","23. nl | 네덜란드어","24. pl | 폴란드어",
-        "25. uk | 우크라이나어","26. sv | 스웨덴어","27. ro | 루마니아어","28. cs | 체코어",
-        "29. hu | 헝가리어","30. el | 그리스어"
-      ]
-    };
-    // global50 = global70 앞 50개
-    PLAN_COUNTRY_LISTS["global50"] = PLAN_COUNTRY_LISTS["global70"].slice(0, 50);
-
-    var activePlan = window.humateckPaymentSubscriptionPlan ||
-      (function(){ try{ return localStorage.getItem("humateckSelectedPlan") || ""; }catch(e){ return ""; } })();
-    var planList = PLAN_COUNTRY_LISTS[activePlan] || PLAN_COUNTRY_LISTS["global70"];
-    var countryBlock = ["Country Code / 국가명 매핑표", ""].concat(planList).join("
-");
+    var countryBlock = [
+      "Country Code / Country Name Mapping Table",
+      "",
+      "1. en | English",
+      "2. es | Spanish",
+      "3. es-419 | Spanish (Latin America)",
+      "4. es-US | Spanish (United States)",
+      "5. pt | Portuguese",
+      "6. pt-PT | Portuguese (Portugal)",
+      "7. fr | French",
+      "8. fr-CA | French (Canada)",
+      "9. de | German",
+      "10. ja | Japanese",
+      "11. ko | Korean",
+      "12. zh-CN | Chinese (China)",
+      "13. zh-TW | Chinese (Taiwan)",
+      "14. zh-HK | Chinese (Hong Kong)",
+      "15. hi | Hindi",
+      "16. id | Indonesian",
+      "17. ar | Arabic",
+      "18. ru | Russian",
+      "19. it | Italian",
+      "20. tr | Turkish",
+      "21. vi | Vietnamese",
+      "22. th | Thai",
+      "23. fil | Filipino",
+      "24. ms | Malay",
+      "25. nl | Dutch",
+      "26. pl | Polish",
+      "27. uk | Ukrainian",
+      "28. sv | Swedish",
+      "29. no | Norwegian",
+      "30. da | Danish",
+      "31. fi | Finnish",
+      "32. el | Greek",
+      "33. ro | Romanian",
+      "34. hu | Hungarian",
+      "35. cs | Czech",
+      "36. sk | Slovak",
+      "37. bg | Bulgarian",
+      "38. hr | Croatian",
+      "39. sr | Serbian",
+      "40. sr-Latn | Serbian (Latin)",
+      "41. sq | Albanian",
+      "42. mk | Macedonian",
+      "43. et | Estonian",
+      "44. lv | Latvian",
+      "45. lt | Lithuanian",
+      "46. iw | Hebrew",
+      "47. fa | Persian",
+      "48. ur | Urdu",
+      "49. bn | Bengali",
+      "50. ta | Tamil",
+      "51. te | Telugu",
+      "52. mr | Marathi",
+      "53. gu | Gujarati",
+      "54. kn | Kannada",
+      "55. ml | Malayalam",
+      "56. pa | Punjabi",
+      "57. ne | Nepali",
+      "58. my | Burmese",
+      "59. km | Khmer",
+      "60. lo | Lao",
+      "61. am | Amharic",
+      "62. sw | Swahili",
+      "63. af | Afrikaans",
+      "64. az | Azerbaijani",
+      "65. be | Belarusian",
+      "66. bs | Bosnian",
+      "67. ca | Catalan",
+      "68. eu | Basque",
+      "69. gl | Galician",
+      "70. ka | Georgian"
+    ].slice(0, activeCount + 2).join("\n");
 
     var prompt =
 `Hello Gemini!
-아무런 설명없이 오직 번역문만 출력해 줘.
+Without any explanation, output only the translated registration text.
 
-아래 유튜브 제목과 설명문을 ${activeCount}개 국가 세트에 맞춰 번역해 줘.
-처음부터 끝까지 중간에 끊지 말고 계속 번역해 줘.
+Translate the following YouTube title and description for the ${activeCount}-country set.
+Continue from beginning to end without stopping.
 
-[원문]
+[Source Text]
 Title:
 ${sourceTitle}
 
 Description:
 ${sourceDescription}
 
-[출력 형식]
+[Output Format]
 Number:
 Country Code:
 Country Name:
 Title:
 Description:
 
-아무런 설명없이 오직 번역문만 출력해 줘.
+Without any explanation, output only the translated registration text.
 
 [Country Code List]
 ${countryBlock}
 
-아무런 설명없이 오직 번역문만 출력해 줘.`;
+Without any explanation, output only the translated registration text.`;
 
     setValue("geminiPromptText", prompt);
     var gemini = document.getElementById("gemini");
     if(gemini) gemini.scrollIntoView({behavior:"smooth", block:"start"});
     var status = document.getElementById("geminiCopyStatus");
-    if(status) status.textContent = "제미나이 의뢰문이 생성되었습니다. 복사 버튼을 눌러 주세요.";
+    if(status) status.textContent = "The Gemini request prompt has been generated. Please press the copy button.";
   }
 
   window.buildGeminiPrompt = buildGeminiPrompt;
@@ -1489,7 +1503,7 @@ ${countryBlock}
 
     var status = document.getElementById("geminiCopyStatus");
     if(status && targetId === "geminiPromptText"){
-      status.textContent = done ? "복사되었습니다." : "복사가 되지 않으면 칸 안의 내용을 선택해 복사해 주세요.";
+      status.textContent = done ? "Copied." : "If copying does not work, please select the content inside the field and copy it.";
     }
   }
 
@@ -1519,8 +1533,21 @@ ${countryBlock}
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 <script>
-/* Humateck_New008 direct Google OAuth token restore only */
+/* Humateck_New009 direct Google OAuth token restore only - EN */
 (function(){
   function $(id){ return document.getElementById(id); }
 
@@ -1553,7 +1580,7 @@ ${countryBlock}
         callback();
       }else if(tries > 80){
         clearInterval(timer);
-        setAuthStatus("Google 인증 라이브러리를 불러오지 못했습니다. 브라우저의 스크립트 차단 여부를 확인해 주세요.", "bad");
+        setAuthStatus("Google authorization library could not be loaded. Please check browser script blocking settings.", "bad");
       }
     }, 150);
   }
@@ -1561,14 +1588,14 @@ ${countryBlock}
   function startOAuth(){
     var clientId = getClientId();
     if(!clientId){
-      alert("Google OAuth Web Client ID를 입력해 주세요.");
-      setAuthStatus("Google OAuth Web Client ID가 비어 있습니다.", "bad");
+      alert("Please enter your Google OAuth Web Client ID.");
+      setAuthStatus("Google OAuth Web Client ID is empty.", "bad");
       return;
     }
 
     if(!/^https?:$/.test(window.location.protocol)){
-      alert("Google OAuth는 file:// 실행에서 정상 작동하지 않습니다. 도메인 또는 localhost에서 실행해 주세요.");
-      setAuthStatus("현재 실행 주소에서는 Google OAuth가 제한될 수 있습니다. 현재 origin: " + window.location.origin, "bad");
+      alert("Google OAuth does not work properly from file://. Please run this page from your domain or localhost.");
+      setAuthStatus("Google OAuth may be limited from the current origin: " + window.location.origin, "bad");
       return;
     }
 
@@ -1586,23 +1613,23 @@ ${countryBlock}
                 sessionStorage.setItem("humateckGoogleAccessToken", response.access_token);
                 sessionStorage.setItem("humateckGoogleOAuthScope", response.scope || YOUTUBE_SCOPE);
               }catch(e){}
-              setAuthStatus("Google OAuth 인증(인증키 확인)이 완료되었습니다. 이제 유튜브 등록을 진행할 수 있습니다.", "ok");
+              setAuthStatus("Google OAuth authorization has been completed. You can now proceed with YouTube registration.", "ok");
             }else{
-              setAuthStatus("Google OAuth 인증 응답을 받지 못했습니다. Authorized JavaScript origins와 Client ID를 확인해 주세요. 현재 origin: " + window.location.origin, "bad");
+              setAuthStatus("No Google OAuth response was received. Please check Authorized JavaScript origins and Client ID. Current origin: " + window.location.origin, "bad");
             }
           },
           error_callback: function(error){
-            var msg = "Google OAuth 인증에 실패했습니다.";
-            if(error && error.type) msg += " 오류: " + error.type;
-            msg += " / 현재 origin: " + window.location.origin;
+            var msg = "Google OAuth authorization failed.";
+            if(error && error.type) msg += " Error: " + error.type;
+            msg += " / Current origin: " + window.location.origin;
             setAuthStatus(msg, "bad");
             alert(msg);
           }
         });
         tokenClient.requestAccessToken({prompt:"consent select_account"});
-        setAuthStatus("Google OAuth 인증창을 열었습니다. Google 창에서 승인을 완료해 주세요.");
+        setAuthStatus("Google OAuth authorization window has opened. Please complete approval in the Google window.");
       }catch(e){
-        var msg = "Google OAuth 시작 중 오류가 발생했습니다: " + (e && e.message ? e.message : e);
+        var msg = "An error occurred while starting Google OAuth: " + (e && e.message ? e.message : e);
         setAuthStatus(msg, "bad");
         alert(msg);
       }
@@ -1621,99 +1648,101 @@ ${countryBlock}
 })();
 </script>
 
-<script src="../youtube-register.js"></script>
+
+
+<script src="youtube-register.js"></script>
 
 
 <div id="nativeCodeModal" class="nativeCodeModal" aria-hidden="true">
   <div class="nativeCodeModalBox">
     <div class="nativeCodeModalHeader">
-      <h2>70개 국가명 / 언어코드 목록</h2>
-      <button id="closeNativeCodeListBtn" class="nativeCodeCloseBtn" type="button">닫기</button>
+      <h2>70 Country Names / Language Codes List</h2>
+      <button id="closeNativeCodeListBtn" class="nativeCodeCloseBtn" type="button">Close</button>
     </div>
     <div class="nativeCodeGrid">
-      <div class="nativeCodeItem"><div class="nativeCodeText"><strong>af</strong> | 아프리칸스어</div><button type="button" data-native-code="af">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>am</strong> | 암하라어</div><button type="button" data-native-code="am">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ar</strong> | 아랍어</div><button type="button" data-native-code="ar">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>as</strong> | 아삼어</div><button type="button" data-native-code="as">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>az</strong> | 아제르바이잔어</div><button type="button" data-native-code="az">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>be</strong> | 벨라루스어</div><button type="button" data-native-code="be">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>bg</strong> | 불가리아어</div><button type="button" data-native-code="bg">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>bn</strong> | 벵골어</div><button type="button" data-native-code="bn">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>bs</strong> | 보스니아어</div><button type="button" data-native-code="bs">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ca</strong> | 카탈로니아어</div><button type="button" data-native-code="ca">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>cs</strong> | 체코어</div><button type="button" data-native-code="cs">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>da</strong> | 덴마크어</div><button type="button" data-native-code="da">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>de</strong> | 독일어</div><button type="button" data-native-code="de">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>el</strong> | 그리스어</div><button type="button" data-native-code="el">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>en-GB</strong> | 영어(영국)</div><button type="button" data-native-code="en-GB">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>en-IN</strong> | 영어(인도)</div><button type="button" data-native-code="en-IN">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>en</strong> | 영어</div><button type="button" data-native-code="en">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>es</strong> | 스페인어</div><button type="button" data-native-code="es">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>es-419</strong> | 스페인어(라틴 아메리카)</div><button type="button" data-native-code="es-419">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>es-US</strong> | 스페인어(미국)</div><button type="button" data-native-code="es-US">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>et</strong> | 에스토니아어</div><button type="button" data-native-code="et">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>eu</strong> | 바스크어</div><button type="button" data-native-code="eu">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>fa</strong> | 페르시아어</div><button type="button" data-native-code="fa">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>fi</strong> | 핀란드어</div><button type="button" data-native-code="fi">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>fil</strong> | 필리핀어</div><button type="button" data-native-code="fil">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>fr-CA</strong> | 프랑스어(캐나다)</div><button type="button" data-native-code="fr-CA">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>fr</strong> | 프랑스어</div><button type="button" data-native-code="fr">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>gl</strong> | 갈리시아어</div><button type="button" data-native-code="gl">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>gu</strong> | 구자라트어</div><button type="button" data-native-code="gu">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>hi</strong> | 힌디어</div><button type="button" data-native-code="hi">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>hr</strong> | 크로아티아어</div><button type="button" data-native-code="hr">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>hu</strong> | 헝가리어</div><button type="button" data-native-code="hu">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>hy</strong> | 아르메니아어</div><button type="button" data-native-code="hy">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>id</strong> | 인도네시아어</div><button type="button" data-native-code="id">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>is</strong> | 아이슬란드어</div><button type="button" data-native-code="is">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>it</strong> | 이탈리아어</div><button type="button" data-native-code="it">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>iw</strong> | 히브리어</div><button type="button" data-native-code="iw">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ja</strong> | 일본어</div><button type="button" data-native-code="ja">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ka</strong> | 조지아어</div><button type="button" data-native-code="ka">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>kk</strong> | 카자흐어</div><button type="button" data-native-code="kk">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>km</strong> | 크메르어</div><button type="button" data-native-code="km">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>kn</strong> | 칸나다어</div><button type="button" data-native-code="kn">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ko</strong> | 한국어</div><button type="button" data-native-code="ko">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ky</strong> | 키르기스어</div><button type="button" data-native-code="ky">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>lo</strong> | 라오어</div><button type="button" data-native-code="lo">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>lt</strong> | 리투아니아어</div><button type="button" data-native-code="lt">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>lv</strong> | 라트비아어</div><button type="button" data-native-code="lv">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>mk</strong> | 마케도니아어</div><button type="button" data-native-code="mk">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ml</strong> | 말라얄람어</div><button type="button" data-native-code="ml">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>mn</strong> | 몽골어</div><button type="button" data-native-code="mn">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>mr</strong> | 마라티어</div><button type="button" data-native-code="mr">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ms</strong> | 말레이어</div><button type="button" data-native-code="ms">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>my</strong> | 버마어</div><button type="button" data-native-code="my">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>no</strong> | 노르웨이어</div><button type="button" data-native-code="no">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ne</strong> | 네팔어</div><button type="button" data-native-code="ne">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>nl</strong> | 네덜란드어</div><button type="button" data-native-code="nl">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>or</strong> | 오리야어</div><button type="button" data-native-code="or">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>pa</strong> | 펀자브어</div><button type="button" data-native-code="pa">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>pl</strong> | 폴란드어</div><button type="button" data-native-code="pl">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>pt</strong> | 포르투갈어</div><button type="button" data-native-code="pt">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>pt-PT</strong> | 포르투갈어(포르투갈)</div><button type="button" data-native-code="pt-PT">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ro</strong> | 루마니아어</div><button type="button" data-native-code="ro">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ru</strong> | 러시아어</div><button type="button" data-native-code="ru">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>si</strong> | 싱할라어</div><button type="button" data-native-code="si">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>sk</strong> | 슬로바키아어</div><button type="button" data-native-code="sk">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>sl</strong> | 슬로베니아어</div><button type="button" data-native-code="sl">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>sq</strong> | 알바니아어</div><button type="button" data-native-code="sq">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>sr-Latn</strong> | 세르비아어(로마자)</div><button type="button" data-native-code="sr-Latn">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>sr</strong> | 세르비아어</div><button type="button" data-native-code="sr">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>sv</strong> | 스웨덴어</div><button type="button" data-native-code="sv">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>sw</strong> | 스와힐리어</div><button type="button" data-native-code="sw">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ta</strong> | 타밀어</div><button type="button" data-native-code="ta">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>te</strong> | 텔루구어</div><button type="button" data-native-code="te">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>th</strong> | 태국어</div><button type="button" data-native-code="th">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>tr</strong> | 튀르키예어</div><button type="button" data-native-code="tr">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>uk</strong> | 우크라이나어</div><button type="button" data-native-code="uk">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ur</strong> | 우르두어</div><button type="button" data-native-code="ur">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>uz</strong> | 우즈베크어</div><button type="button" data-native-code="uz">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>vi</strong> | 베트남어</div><button type="button" data-native-code="vi">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>zh-CN</strong> | 중국어(중국)</div><button type="button" data-native-code="zh-CN">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>zh-HK</strong> | 중국어(홍콩)</div><button type="button" data-native-code="zh-HK">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>zh-TW</strong> | 중국어(대만)</div><button type="button" data-native-code="zh-TW">선택</button></div>
-<div class="nativeCodeItem"><div class="nativeCodeText"><strong>zu</strong> | 줄루어</div><button type="button" data-native-code="zu">선택</button></div>
+      <div class="nativeCodeItem"><div class="nativeCodeText"><strong>af</strong> | Afrikaans</div><button type="button" data-native-code="af">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>am</strong> | Amharic</div><button type="button" data-native-code="am">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ar</strong> | Arabic</div><button type="button" data-native-code="ar">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>as</strong> | Assamese</div><button type="button" data-native-code="as">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>az</strong> | Azerbaijani</div><button type="button" data-native-code="az">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>be</strong> | Belarusian</div><button type="button" data-native-code="be">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>bg</strong> | Bulgarian</div><button type="button" data-native-code="bg">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>bn</strong> | Bengali</div><button type="button" data-native-code="bn">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>bs</strong> | Bosnian</div><button type="button" data-native-code="bs">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ca</strong> | Catalan</div><button type="button" data-native-code="ca">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>cs</strong> | Czech</div><button type="button" data-native-code="cs">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>da</strong> | Danish</div><button type="button" data-native-code="da">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>de</strong> | German</div><button type="button" data-native-code="de">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>el</strong> | Greek</div><button type="button" data-native-code="el">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>en-GB</strong> | English (United Kingdom)</div><button type="button" data-native-code="en-GB">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>en-IN</strong> | English (India)</div><button type="button" data-native-code="en-IN">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>en</strong> | English</div><button type="button" data-native-code="en">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>es</strong> | Spanish</div><button type="button" data-native-code="es">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>es-419</strong> | Spanish (Latin America)</div><button type="button" data-native-code="es-419">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>es-US</strong> | Spanish (United States)</div><button type="button" data-native-code="es-US">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>et</strong> | Estonian</div><button type="button" data-native-code="et">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>eu</strong> | Basque</div><button type="button" data-native-code="eu">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>fa</strong> | Persian</div><button type="button" data-native-code="fa">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>fi</strong> | Finnish</div><button type="button" data-native-code="fi">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>fil</strong> | Filipino</div><button type="button" data-native-code="fil">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>fr-CA</strong> | French (Canada)</div><button type="button" data-native-code="fr-CA">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>fr</strong> | French</div><button type="button" data-native-code="fr">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>gl</strong> | Galician</div><button type="button" data-native-code="gl">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>gu</strong> | Gujarati</div><button type="button" data-native-code="gu">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>hi</strong> | Hindi</div><button type="button" data-native-code="hi">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>hr</strong> | Croatian</div><button type="button" data-native-code="hr">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>hu</strong> | Hungarian</div><button type="button" data-native-code="hu">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>hy</strong> | Armenian</div><button type="button" data-native-code="hy">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>id</strong> | Indonesian</div><button type="button" data-native-code="id">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>is</strong> | Icelandic</div><button type="button" data-native-code="is">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>it</strong> | Italian</div><button type="button" data-native-code="it">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>iw</strong> | Hebrew</div><button type="button" data-native-code="iw">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ja</strong> | Japanese</div><button type="button" data-native-code="ja">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ka</strong> | Georgian</div><button type="button" data-native-code="ka">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>kk</strong> | Kazakh</div><button type="button" data-native-code="kk">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>km</strong> | Khmer</div><button type="button" data-native-code="km">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>kn</strong> | Kannada</div><button type="button" data-native-code="kn">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ko</strong> | Korean</div><button type="button" data-native-code="ko">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ky</strong> | Kyrgyz</div><button type="button" data-native-code="ky">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>lo</strong> | Lao</div><button type="button" data-native-code="lo">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>lt</strong> | Lithuanian</div><button type="button" data-native-code="lt">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>lv</strong> | Latvian</div><button type="button" data-native-code="lv">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>mk</strong> | Macedonian</div><button type="button" data-native-code="mk">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ml</strong> | Malayalam</div><button type="button" data-native-code="ml">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>mn</strong> | Mongolian</div><button type="button" data-native-code="mn">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>mr</strong> | Marathi</div><button type="button" data-native-code="mr">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ms</strong> | Malay</div><button type="button" data-native-code="ms">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>my</strong> | Burmese</div><button type="button" data-native-code="my">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>no</strong> | Norwegian</div><button type="button" data-native-code="no">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ne</strong> | Nepali</div><button type="button" data-native-code="ne">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>nl</strong> | Dutch</div><button type="button" data-native-code="nl">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>or</strong> | Odia</div><button type="button" data-native-code="or">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>pa</strong> | Punjabi</div><button type="button" data-native-code="pa">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>pl</strong> | Polish</div><button type="button" data-native-code="pl">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>pt</strong> | Portuguese</div><button type="button" data-native-code="pt">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>pt-PT</strong> | Portuguese (Portugal)</div><button type="button" data-native-code="pt-PT">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ro</strong> | Romanian</div><button type="button" data-native-code="ro">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ru</strong> | Russian</div><button type="button" data-native-code="ru">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>si</strong> | Sinhala</div><button type="button" data-native-code="si">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>sk</strong> | Slovak</div><button type="button" data-native-code="sk">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>sl</strong> | Slovenian</div><button type="button" data-native-code="sl">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>sq</strong> | Albanian</div><button type="button" data-native-code="sq">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>sr-Latn</strong> | Serbian (Latin)</div><button type="button" data-native-code="sr-Latn">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>sr</strong> | Serbian</div><button type="button" data-native-code="sr">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>sv</strong> | Swedish</div><button type="button" data-native-code="sv">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>sw</strong> | Swahili</div><button type="button" data-native-code="sw">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ta</strong> | Tamil</div><button type="button" data-native-code="ta">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>te</strong> | Telugu</div><button type="button" data-native-code="te">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>th</strong> | Thai</div><button type="button" data-native-code="th">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>tr</strong> | Turkish</div><button type="button" data-native-code="tr">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>uk</strong> | Ukrainian</div><button type="button" data-native-code="uk">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>ur</strong> | Urdu</div><button type="button" data-native-code="ur">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>uz</strong> | Uzbek</div><button type="button" data-native-code="uz">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>vi</strong> | Vietnamese</div><button type="button" data-native-code="vi">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>zh-CN</strong> | Chinese (China)</div><button type="button" data-native-code="zh-CN">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>zh-HK</strong> | Chinese (Hong Kong)</div><button type="button" data-native-code="zh-HK">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>zh-TW</strong> | Chinese (Taiwan)</div><button type="button" data-native-code="zh-TW">Select</button></div>
+<div class="nativeCodeItem"><div class="nativeCodeText"><strong>zu</strong> | Zulu</div><button type="button" data-native-code="zu">Select</button></div>
     </div>
   </div>
 </div>
@@ -1847,98 +1876,4 @@ ${countryBlock}
 })();
 </script>
 
-
-
-
-<script>
-/* 플랜 만료일 카운트다운 */
-(function(){
-  var _expiryTime = null;
-  var _cdTimer = null;
-
-  function pad(n){ return String(n).padStart(2,'0'); }
-
-  function startCountdown(expiryDate, planName){
-    _expiryTime = new Date(expiryDate).getTime();
-    if(isNaN(_expiryTime)){ return; }
-
-    var box = document.getElementById('planExpiryBox');
-    var nameEl = document.getElementById('expiryPlanName');
-    var dateEl = document.getElementById('expiryDateText');
-    if(!box) return;
-    box.classList.add('show');
-    if(nameEl && planName) nameEl.textContent = planName;
-    if(dateEl){
-      var d = new Date(_expiryTime);
-      dateEl.textContent = '만료일시: ' + d.getFullYear() + '.' +
-        pad(d.getMonth()+1) + '.' + pad(d.getDate()) + ' ' +
-        pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
-    }
-
-    if(_cdTimer) clearInterval(_cdTimer);
-    function tick(){
-      var now = Date.now();
-      var diff = _expiryTime - now;
-      var dEl = document.getElementById('cdDays');
-      var hEl = document.getElementById('cdHours');
-      var mEl = document.getElementById('cdMins');
-      var sEl = document.getElementById('cdSecs');
-      if(!dEl) return;
-      if(diff <= 0){
-        dEl.textContent = hEl.textContent = mEl.textContent = sEl.textContent = '00';
-        box.classList.add('expirySoon');
-        clearInterval(_cdTimer);
-        return;
-      }
-      var days  = Math.floor(diff / 86400000);
-      var hours = Math.floor((diff % 86400000) / 3600000);
-      var mins  = Math.floor((diff % 3600000) / 60000);
-      var secs  = Math.floor((diff % 60000) / 1000);
-      dEl.textContent = pad(days);
-      hEl.textContent = pad(hours);
-      mEl.textContent = pad(mins);
-      sEl.textContent = pad(secs);
-      if(days < 3) box.classList.add('expirySoon');
-    }
-    tick();
-    _cdTimer = setInterval(tick, 1000);
-  }
-
-  // check-subscription 응답에서 만료일 추출
-  var _origLoad = window._humateckLoadSubscription;
-  var PLAN_NAMES_KO = {
-    asia30:'아시아 플랜', europe30:'유럽 플랜', africa30:'아프리카 플랜',
-    america30:'아메리카 플랜', oceania30:'오세아니아 플랜',
-    global50:'글로벌 50개국', global70:'글로벌 70개국'
-  };
-  var PLAN_NAMES_EN = {
-    asia30:'Asia Plan', europe30:'Europe Plan', africa30:'Africa Plan',
-    america30:'Americas Plan', oceania30:'Oceania Plan',
-    global50:'Global 50 Countries', global70:'Global 70 Countries'
-  };
-  var PNAMES = (document.documentElement.lang === 'ko') ? PLAN_NAMES_KO : PLAN_NAMES_EN;
-
-  // check-subscription fetch 후 만료일 처리
-  var _origFetch = window.fetch;
-  window.fetch = function(url, opts){
-    var p = _origFetch.apply(this, arguments);
-    if(typeof url === 'string' && url.indexOf('check-subscription') !== -1){
-      p.then(function(res){
-        return res.clone().json().catch(function(){ return {}; });
-      }).then(function(data){
-        if(!data) return;
-        // 만료일 필드: expires_at, end_date, valid_until, current_period_end, expiry_date
-        var expiry = data.expires_at || data.end_date || data.valid_until ||
-                     data.current_period_end || data.expiry_date || data.expiry || null;
-        var planKey = data.plan || data.plan_type || data.subscription_plan || '';
-        var planName = PNAMES[planKey] || planKey;
-        if(expiry){ startCountdown(expiry, planName); }
-      }).catch(function(){});
-    }
-    return p;
-  };
-
-  window._humateckStartCountdown = startCountdown;
-})();
-</script>
 </body></html>
