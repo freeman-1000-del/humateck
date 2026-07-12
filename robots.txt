@@ -5,9 +5,6 @@ Allow: /
 Disallow: /kmong/
 Disallow: /fiverr/
 
-# Review demo — direct link + password only
-Disallow: /humateck-Deployer/review-demo/
-
 # Internal ops only
 Disallow: /license-app.html
 Disallow: /care-admin.html

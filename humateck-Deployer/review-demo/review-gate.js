@@ -11,8 +11,8 @@
     title: cfg.title || (isKo ? "심사용 등록기" : "Marketplace Review Demo"),
     badge: isKo ? "심사 전용 · 제한 공개" : "Reviewer access only · Limited release",
     lead: isKo
-      ? "마켓플레이스 심사를 위해 별도 개설한 등록기 데모입니다. 일반 공개 웹사이트·쇼핑몰이 아닙니다."
-      : "A registration-tool demo opened exclusively for marketplace product review. Not a public website or storefront.",
+      ? "Humateck Deployer 등록기의 마켓플레이스 심사용 접속입니다. 별도 웹사이트가 아니라 납품 제품의 심사 전용 창구입니다."
+      : "Marketplace review access for the Humateck Deployer registration tool. Not a separate website — a reviewer-only entry point for the delivered product.",
     valid: isKo ? "접속 유효기간: " : "Access valid until: ",
     codeLabel: isKo ? "심사용 접속 코드" : "Reviewer access code",
     codeHint: isKo
@@ -23,7 +23,7 @@
     expired: isKo
       ? "심사용 데모 유효기간(30일)이 종료되었습니다. support@humateck.com"
       : "This review demo has expired (30-day window). Contact support@humateck.com",
-    foot: isKo ? "Humateck · 심사용 한시 공개" : "Humateck · Temporary review access",
+    foot: isKo ? "Humateck Deployer · 심사용 접속" : "Humateck Deployer · Review access",
   };
 
   function isValidPeriod() {
