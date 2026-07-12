@@ -117,7 +117,9 @@
         err.hidden = false;
         return;
       }
-      if ((input.value || "").trim() === cfg.password) {
+      var entered = (input.value || "").trim().toUpperCase();
+      var expected = String(cfg.password || "").trim().toUpperCase();
+      if (entered && entered === expected) {
         setAuthed();
         err.hidden = true;
         showDemo();
