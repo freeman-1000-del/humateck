@@ -23,10 +23,16 @@
     .btn.secondary{background:transparent;border-color:rgba(159,212,255,.55);color:#9fd4ff}
     .section{margin-bottom:22px}
     .section h2{margin:0 0 14px;color:#ffd95a;font-size:24px;font-weight:900}
-    .featureBlock{border:1px solid rgba(214,176,78,.72);border-radius:20px;background:rgba(16,23,31,.94);padding:24px 28px}
-    .featureList{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:14px}
-    .featureList li{position:relative;padding:0 0 0 22px;color:#e6e0d4;font-size:16px;line-height:1.7}
-    .featureList li:before{content:"";position:absolute;left:0;top:.6em;width:8px;height:8px;border-radius:50%;background:#ffd95a;box-shadow:0 0 10px rgba(255,217,90,.45)}
+    .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px}
+    @media(max-width:900px){.grid3{grid-template-columns:1fr}}
+    .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+    .card{border:1px solid rgba(214,176,78,.72);border-radius:20px;background:rgba(16,23,31,.94);padding:22px 24px}
+    .card.featured{border-color:#ffd95a;box-shadow:0 0 24px rgba(255,217,90,.1)}
+    .card .label{margin:0 0 4px;color:#9fd4ff;font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+    .card h3{margin:0 0 10px;color:#ffd95a;font-size:20px;line-height:1.35}
+    .card p{margin:0;color:#e6e0d4;font-size:15px;line-height:1.68}
+    .card .cardHighlight{margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,217,90,.28);color:#ffd95a;font-size:15px;line-height:1.65;font-weight:700}
+    .card ul{margin:12px 0 0;padding-left:18px;color:#e6e0d4;font-size:15px;line-height:1.65}
     .flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
     .step{border:1px solid rgba(159,212,255,.35);border-radius:16px;padding:18px;background:rgba(159,212,255,.06)}
     .step .num{color:#ffd95a;font-size:13px;font-weight:900;margin-bottom:8px}
@@ -58,14 +64,49 @@
 
     <section class="section">
       <h2>What does this product do?</h2>
-      <div class="featureBlock">
-        <ul class="featureList">
-          <li>High-quality, context-aware multilingual (up to 70 countries) simultaneous chat-translation guide (Gemini AI)</li>
-          <li>Robust security system built on Google's authentication protocol</li>
-          <li>Once translation is complete, content is deployed to your channel in just seconds</li>
-          <li>Eliminates the labor and cost of manual content uploads</li>
-          <li>Windows PC application for creators, agencies, and MCN teams entering overseas markets</li>
-        </ul>
+      <div class="grid3">
+        <article class="card">
+          <h3>Large-scale multilingual metadata</h3>
+          <p>Prepare one source title and description, then apply localized versions across your selected country set — up to 70 supported markets.</p>
+        </article>
+        <article class="card">
+          <h3>Gemini-assisted translation workflow</h3>
+          <p>Optimized prompts for Gemini AI chat translation — the strongest fit for human context-aware translation and simultaneous multilingual processing.</p>
+        </article>
+        <article class="card">
+          <h3>Google OAuth on your PC</h3>
+          <p>Per Google security policy, we guide you to obtain a Google OAuth key — a Client ID — for YouTube channel access.</p>
+        </article>
+      </div>
+      <article class="card">
+        <h3>Web demo vs PC app</h3>
+        <p>The web demo shows the translation flow and OAuth practice. Full YouTube registration runs in the delivered PC desktop application.</p>
+      </article>
+    </section>
+
+    <section class="section">
+      <h2>Editions</h2>
+      <div class="grid2">
+        <article class="card">
+          <p class="label">Deluxe</p>
+          <h3>Standard · 1 PC</h3>
+          <p>For solo creators and small channels.</p>
+          <ul>
+            <li>1 licensed PC</li>
+            <li>Google Client Authentication Guide (PDF)</li>
+            <li>All country scope options</li>
+          </ul>
+        </article>
+        <article class="card featured">
+          <p class="label">Premium</p>
+          <h3>Enterprise · 5 PC pack</h3>
+          <p>For MCNs, agencies, and small teams running parallel workflows.</p>
+          <ul>
+            <li>5 licensed PCs (5 seats)</li>
+            <li>Google Client Authentication Guide (PDF)</li>
+            <li>Option suited for enterprise or large-scale team management</li>
+          </ul>
+        </article>
       </div>
     </section>
 
@@ -83,13 +124,13 @@
     </section>
 
     <section class="section">
-      <h2>Review &amp; demo checklist</h2>
+      <h2>Review &amp; Demo Checklist</h2>
       <div class="note">
-        <strong>For marketplace reviewers:</strong><br>
-        1) Open the <a href="/fiverr/demo.html">live demo</a> ·
-        2) Read the <a href="/oauth-guide-en/index.html?return=fiverr">OAuth guide</a> ·
-        3) Check <a href="/fiverr/scope.html">country coverage</a> ·
-        4) PC install package is delivered after order (not downloadable from this page).
+        <strong>Guide for marketplace reviewers:</strong><br>
+        1) Open the <a href="/fiverr/demo.html">live demo</a><br>
+        2) Read the <a href="/oauth-guide-en/index.html?return=fiverr">OAuth guide</a><br>
+        3) Check the <a href="/fiverr/scope.html">supported countries</a><br>
+        4) The PC installation package is provided after purchase (not available for download on this page).
       </div>
     </section>
 
