@@ -3,38 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Marketplace Review Demo | Humateck Deployer</title>
-  <meta name="description" content="Humateck Deployer — marketplace review access for the registration tool (password required).">
+  <title>Humateck Deployer — Review copy (EN)</title>
+  <meta name="description" content="Humateck Deployer registration tool — review copy, unmodified from product source.">
   <style>
     *{box-sizing:border-box}
-    html,body{margin:0;padding:0;height:100%;background:#050b14;color:#f4f1e8;font-family:Arial,"Segoe UI",sans-serif}
-    .reviewGateWrap{min-height:100vh;display:flex;flex-direction:column}
-    .reviewGateBox{width:520px;max-width:calc(100vw - 32px);margin:48px auto;padding:32px 28px;border:1px solid rgba(214,176,78,.65);border-radius:20px;background:#121a23;box-shadow:0 24px 64px rgba(0,0,0,.55)}
-    .reviewBadge{display:inline-block;margin:0 0 14px;padding:6px 12px;border-radius:999px;border:1px solid rgba(255,217,90,.55);color:#ffd95a;font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
-    .reviewGateBox h1{margin:0 0 12px;font-size:24px;color:#ffd95a}
-    .reviewLead,.reviewHint,.reviewValid,.reviewFoot{margin:0 0 14px;color:#c8c4b8;font-size:14px;line-height:1.65}
-    .reviewValid strong{color:#eee5d5}
-    .reviewGateBox label{display:block;margin:0 0 8px;font-size:14px;font-weight:700;color:#eee5d5}
-    .reviewGateBox input{width:100%;padding:12px 14px;border-radius:10px;border:1px solid #4b5d6d;background:#050b14;color:#f7f1e6;margin-bottom:8px}
-    .reviewBtn{min-width:140px;padding:12px 18px;border:2px solid #d9b256;border-radius:12px;background:linear-gradient(180deg,#5c4315,#15110a);color:#fff;font-weight:900;cursor:pointer}
-    .reviewErr{margin:10px 0 0;color:#ff9a9a;font-size:13px}
-    .reviewExpired{margin:0;color:#ff9a9a;font-size:14px;line-height:1.6}
-    .reviewFoot{margin-top:18px;font-size:12px;color:#9aa0a6}
-    .reviewDemoFrame{width:100%;flex:1;min-height:calc(100vh - 1px);border:0;display:block;background:#050b14}
-    .reviewLoading{padding:24px;text-align:center;color:#c8c4b8;font-size:15px;line-height:1.7}
+    html,body{margin:0;padding:0;height:100%;overflow:hidden;background:#050b14;color:#f4f1e8;font-family:Arial,"Segoe UI",sans-serif}
+    a{color:#6ca6ff;text-decoration:none}
+    .wrap{width:1180px;max-width:calc(100vw - 32px);height:100vh;margin:0 auto;display:flex;flex-direction:column}
+    .demoFrame{width:100%;flex:1;min-height:0;border:0;display:block;background:#050b14}
+    .foot{text-align:center;padding:10px 0 14px;color:#9aa0a6;font-size:13px;flex-shrink:0}
   </style>
 </head>
 <body>
-  <script>
-    window.HUMATECK_REVIEW_GATE = {
-      validUntil: "2026-08-12T23:59:59+09:00",
-      password: "1111",
-      storageKey: "humateckReviewDemoEnOk",
-      embedSrc: "practice-embed.html",
-      lang: "en",
-      title: "Marketplace Review Demo — Registration Tool"
-    };
-  </script>
-  <script src="review-gate.js?v=20260713b"></script>
+  <div class="wrap">
+    <iframe class="demoFrame" src="practice-embed.html" title="Humateck Deployer EN" loading="eager"></iframe>
+    <p class="foot"><a href="/humateck-Deployer/">Humateck Deployer</a> · <a href="/terms.html" target="_top">Terms</a></p>
+  </div>
 </body>
 </html>
