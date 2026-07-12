@@ -23,10 +23,16 @@
     .btn.secondary{background:transparent;border-color:rgba(159,212,255,.55);color:#9fd4ff}
     .section{margin-bottom:22px}
     .section h2{margin:0 0 14px;color:#ffd95a;font-size:24px;font-weight:900}
-    .featureBlock{border:1px solid rgba(214,176,78,.72);border-radius:20px;background:rgba(16,23,31,.94);padding:24px 28px}
-    .featureList{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:14px}
-    .featureList li{position:relative;padding:0 0 0 22px;color:#e6e0d4;font-size:16px;line-height:1.7}
-    .featureList li:before{content:"";position:absolute;left:0;top:.65em;width:8px;height:8px;border-radius:50%;background:#ffd95a;box-shadow:0 0 10px rgba(255,217,90,.45)}
+    .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px}
+    @media(max-width:900px){.grid3{grid-template-columns:1fr}}
+    .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+    .card{border:1px solid rgba(214,176,78,.72);border-radius:20px;background:rgba(16,23,31,.94);padding:22px 24px}
+    .card.featured{border-color:#ffd95a;box-shadow:0 0 24px rgba(255,217,90,.1)}
+    .card .label{margin:0 0 4px;color:#9fd4ff;font-size:13px;font-weight:800;letter-spacing:.08em}
+    .card h3{margin:0 0 10px;color:#ffd95a;font-size:20px;line-height:1.35}
+    .card p{margin:0;color:#e6e0d4;font-size:15px;line-height:1.68}
+    .card .cardHighlight{margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,217,90,.28);color:#ffd95a;font-size:15px;line-height:1.65;font-weight:700}
+    .card ul{margin:12px 0 0;padding-left:18px;color:#e6e0d4;font-size:15px;line-height:1.65}
     .flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
     .step{border:1px solid rgba(159,212,255,.35);border-radius:16px;padding:18px;background:rgba(159,212,255,.06)}
     .step .num{color:#ffd95a;font-size:13px;font-weight:900;margin-bottom:8px}
@@ -41,6 +47,7 @@
     <div class="topBar">
       <a href="/kmong/"><img class="logo" src="/FINAL_LOGO01.png" alt="Humateck"></a>
       <nav class="topNav">
+        <a class="miniNav" href="/kmong/demo.html">크몽 데모</a>
         <a class="miniNav" href="/plans.html">국가 범위 안내</a>
         <a class="miniNav" href="/oauth-guide/index.html?return=kmong">OAuth 가이드</a>
       </nav>
@@ -50,20 +57,56 @@
       <p class="eyebrow">상품 참고 · 크몽 공급용</p>
       <h1 class="title">유튜브 다국어콘텐츠 고속 등록 서비스</h1>
       <div class="heroActions">
+        <a class="btn" href="/kmong/demo.html">크몽 데모 열기</a>
         <a class="btn secondary" href="/oauth-guide/index.html?return=kmong">Google OAuth 설정 가이드</a>
       </div>
     </section>
 
     <section class="section">
       <h2>이 제품의 기능은 무엇인가요?</h2>
-      <div class="featureBlock">
-        <ul class="featureList">
-          <li>고품질의 인간 문맥인식 다국어(최대 70개국) 동시 챗번역 가이드(제미나이 AI)</li>
-          <li>구글 인증시스템 채용으로 철저한 보안체계 확립</li>
-          <li>컨텐츠 번역이 완성된 경우 몇 초 만에 채널전송(등록) 완료</li>
-          <li>컨텐츠 등록 노동력과 인건비 손실 방지</li>
-          <li>크리에이터/에이전시/MCN 팀 등의 해외시장 진출용 Windows PC 애플리케이션</li>
-        </ul>
+      <div class="grid3">
+        <article class="card">
+          <h3>대규모 다국어 메타데이터</h3>
+          <p>하나의 원본 제목·설명을 준비한 뒤, 선택한 국가 묶음에 맞춰 현지화 버전을 적용합니다. 최대 70개국까지 지원합니다.</p>
+        </article>
+        <article class="card">
+          <h3>Gemini-assisted translation workflow</h3>
+          <p class="cardHighlight">현존 인간 맥락번역과 다국어 동시 고속처리의 적응자인 제미나이 AI 챗번역을 위한 최적화 프롬프트를 제공합니다.</p>
+        </article>
+        <article class="card">
+          <h3>PC에서 Google OAuth 사용하기</h3>
+          <p class="cardHighlight">구글의 보안정책에 따라 유튜브 채널 접근을 위한 구글 OAuth인증카드 즉 클라이언트ID를 발급받도록 가이드합니다.</p>
+        </article>
+      </div>
+      <article class="card">
+        <h3>웹 데모 vs PC 앱</h3>
+        <p>웹 데모는 번역 흐름과 OAuth 사용법을 보여줍니다. 유튜브 공식 등록 기능은 전달받은 PC 데스크톱 앱 안에서 시연됩니다.</p>
+      </article>
+    </section>
+
+    <section class="section">
+      <h2>에디션</h2>
+      <div class="grid2">
+        <article class="card">
+          <p class="label">Deluxe</p>
+          <h3>Standard · PC 1대</h3>
+          <p>1인 크리에이터·소규모 채널용</p>
+          <ul>
+            <li>PC 1대 라이선스</li>
+            <li>Google Client Authentication Guide (PDF)</li>
+            <li>전체 국가 범위 선택</li>
+          </ul>
+        </article>
+        <article class="card featured">
+          <p class="label">Premium</p>
+          <h3>Enterprise · PC 5대 팩</h3>
+          <p>MCN·에이전시·소규모 팀용</p>
+          <ul>
+            <li>PC 5대(5시트) 라이선스</li>
+            <li>Google Client Authentication Guide (PDF)</li>
+            <li>기업형 또는 대규모 관리에 편리한 옵션</li>
+          </ul>
+        </article>
       </div>
     </section>
 
@@ -80,7 +123,19 @@
       </p>
     </section>
 
+    <section class="section">
+      <h2>검토 및 데모 체크리스트</h2>
+      <div class="note">
+        <strong>마켓플레이스 리뷰어를 위한 안내:</strong><br>
+        1) <a href="/kmong/demo.html">라이브 데모</a>를 열어보세요.<br>
+        2) <a href="/oauth-guide/index.html?return=kmong">OAuth 가이드</a>를 읽어보세요.<br>
+        3) <a href="/plans.html">지원 국가</a>를 확인하세요.<br>
+        4) PC 설치 패키지는 주문 후 제공됩니다(이 페이지에서는 다운로드할 수 없습니다).
+      </div>
+    </section>
+
     <p class="foot">
+      <a href="/kmong/demo.html">데모</a>
       <a href="/plans.html">국가 범위</a>
       <a href="/terms.html">이용약관</a>
       <a href="/privacy.html">개인정보처리방침</a>
