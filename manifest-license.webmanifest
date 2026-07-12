@@ -1,0 +1,25 @@
+{
+  "name": "Humateck 라이선스",
+  "short_name": "라이선스",
+  "description": "라이선스 부여 · 내부 장부 · 납품 자료",
+  "start_url": "/license-app.html",
+  "display": "standalone",
+  "background_color": "#050b14",
+  "theme_color": "#050b14",
+  "orientation": "portrait",
+  "lang": "ko",
+  "icons": [
+    {
+      "src": "/assets/app/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/app/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

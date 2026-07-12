@@ -2,100 +2,107 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>라이선스·장부 | Humateck</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="라이선스">
+  <meta name="theme-color" content="#050b14">
+  <link rel="manifest" href="/manifest-license.webmanifest">
+  <link rel="apple-touch-icon" href="/assets/app/icon-192.svg">
+  <title>Humateck 라이선스</title>
   <meta name="robots" content="noindex,nofollow">
-  <script>
-    if(/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)&&!/license-app/i.test(location.pathname)){
-      location.replace("/license-app.html");
-    }
-  </script>
   <style>
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-    body{margin:0;background:#050b14;color:#f4f1e8;font-family:Arial,"Noto Sans KR",sans-serif;font-size:16px;line-height:1.5}
-    .wrap{max-width:480px;margin:0 auto;padding:16px 14px 48px}
-    h1{margin:0;font-size:21px;color:#ffd95a}
-    .sub{margin:6px 0 0;color:#9aa0a6;font-size:13px}
-    .panel{border:1px solid rgba(214,176,78,.35);border-radius:14px;background:#101722;padding:16px;margin-bottom:14px}
+    body{margin:0;background:#050b14;color:#f4f1e8;font-family:Arial,"Noto Sans KR",sans-serif;font-size:16px;line-height:1.5;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+    .wrap{max-width:440px;margin:0 auto;padding:14px 14px 32px}
+    h1{margin:0;font-size:20px;color:#ffd95a}
+    .sub{margin:4px 0 0;color:#9aa0a6;font-size:12px}
+    .panel{border:1px solid rgba(214,176,78,.35);border-radius:16px;background:#101722;padding:16px;margin-bottom:12px}
     .hidden{display:none!important}
-    .err{color:#ff9b9b;font-size:14px;margin-top:8px}
-    label{display:block;margin-bottom:6px;color:#9fd4ff;font-size:12px;font-weight:800}
+    .err{color:#ff9b9b;font-size:13px;margin-top:8px}
+    label{display:block;margin-bottom:5px;color:#9fd4ff;font-size:11px;font-weight:800}
     input,select,textarea{width:100%;padding:14px;border-radius:12px;border:1px solid rgba(214,176,78,.35);background:#0b1423;color:#fff;font-size:16px;font-family:inherit;margin-bottom:10px}
-    .btn{display:block;width:100%;padding:15px;border-radius:12px;border:none;font-size:16px;font-weight:900;cursor:pointer;margin-top:6px}
+    .btn{display:block;width:100%;padding:16px;border-radius:14px;border:none;font-size:16px;font-weight:900;cursor:pointer;margin-top:6px;text-align:center;text-decoration:none;color:inherit}
     .btnPri{background:#123524;color:#fff}
     .btnSec{background:#152238;color:#9fd4ff;border:2px solid rgba(107,166,255,.4)}
-    .btnSm{padding:12px;font-size:14px;margin-top:8px}
+    .btnFile{background:#1a1520;color:#ffd95a;border:2px solid rgba(255,217,90,.45);padding:14px}
     .row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
     .row2 select{margin-bottom:0}
-    .asset{display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
-    .asset a{color:#6ca6ff;font-size:13px;word-break:break-all;flex:1;min-width:160px}
-    .card{border-radius:12px;padding:14px;margin-bottom:10px;background:#0b1423;border:1px solid rgba(255,255,255,.08)}
-    .card.pending{border-color:rgba(255,217,90,.45)}
-    .name{font-size:17px;font-weight:900}
-    .meta{font-size:13px;color:#9aa0a6;margin:4px 0 8px}
-    .key{font-family:Consolas,monospace;font-size:14px;color:#7dffc8;word-break:break-all}
-    .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#123524;color:#7dffc8;padding:12px 18px;border-radius:999px;font-weight:800;font-size:14px;opacity:0;transition:opacity .2s;z-index:9}
+    .hint{font-size:12px;color:#9aa0a6;margin:0 0 10px;line-height:1.5}
+    .card{border-radius:12px;padding:12px;margin-bottom:8px;background:#0b1423;border:1px solid rgba(255,255,255,.08)}
+    .card.pending{border-color:rgba(255,217,90,.5)}
+    .name{font-size:16px;font-weight:900}
+    .meta{font-size:12px;color:#9aa0a6;margin:3px 0 6px}
+    .key{font-family:Consolas,monospace;font-size:13px;color:#7dffc8;word-break:break-all}
+    .toast{position:fixed;left:50%;bottom:max(20px,env(safe-area-inset-bottom));transform:translateX(-50%);background:#123524;color:#7dffc8;padding:12px 20px;border-radius:999px;font-weight:800;font-size:14px;opacity:0;transition:opacity .2s;z-index:99;white-space:nowrap}
     .toast.on{opacity:1}
-    #googleSignInBtn{min-height:48px}
-    .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-    .linkBtn{background:none;border:none;color:#9aa0a6;font-size:13px;cursor:pointer;padding:8px}
+    .top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;gap:8px}
+    .linkBtn{background:none;border:none;color:#9aa0a6;font-size:13px;padding:8px;cursor:pointer}
+    .steps{counter-reset:s;margin:0;padding:0;list-style:none}
+    .steps li{counter-increment:s;font-size:12px;color:#c8d4e0;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+    .steps li::before{content:counter(s) ". ";color:#ffd95a;font-weight:900}
+    #googleSignInBtn{min-height:48px;width:100%}
+    .installTip{margin-top:10px;padding:12px;border-radius:12px;background:rgba(255,217,90,.08);border:1px solid rgba(255,217,90,.25);font-size:12px;color:#ffe9a8;line-height:1.55}
   </style>
 </head>
 <body>
   <div class="wrap">
     <section id="loginPanel">
-      <h1>Humateck 라이선스·장부</h1>
-      <p class="sub">내부용 — 크몽/피버 메시지함에 보낼 때만 사용</p>
+      <h1>Humateck 라이선스</h1>
+      <p class="sub">휴대폰 앱 — 크몽 납품용</p>
       <div class="panel" style="margin-top:14px">
         <div id="googleSignInBtn"></div>
         <p class="err" id="loginErr"></p>
+        <div class="installTip">
+          <strong>처음 한 번:</strong> 브라우저 메뉴 → 「홈 화면에 추가」<br>
+          앱처럼 실행됩니다.
+        </div>
       </div>
     </section>
 
     <div class="hidden" id="app">
       <div class="top">
         <div>
-          <h1>라이선스·장부</h1>
+          <h1>Humateck 라이선스</h1>
           <p class="sub" id="who"></p>
         </div>
-        <button type="button" class="linkBtn" id="refreshBtn">새로고침</button>
+        <button type="button" class="linkBtn" id="refreshBtn">↻</button>
       </div>
 
       <section class="panel">
-        <p class="sub" style="margin:0 0 12px;color:#e6e0d4">크몽 메시지에 첨부·링크로 보낼 자료</p>
-        <div class="asset">
-          <a id="linkStd" href="#" target="_blank" rel="noopener">일반 ZIP</a>
-          <button type="button" class="btn btnSec btnSm" style="width:auto;margin:0" data-copy="std">URL복사</button>
-        </div>
-        <div class="asset">
-          <a id="linkEnt" href="#" target="_blank" rel="noopener">기업 ZIP</a>
-          <button type="button" class="btn btnSec btnSm" style="width:auto;margin:0" data-copy="ent">URL복사</button>
-        </div>
-        <div class="asset">
-          <a id="linkPdf" href="#" target="_blank" rel="noopener">인증 안내 (PDF/웹)</a>
-          <button type="button" class="btn btnSec btnSm" style="width:auto;margin:0" data-copy="pdf">URL복사</button>
-        </div>
+        <p class="sub" style="margin:0 0 8px;color:#ffd95a;font-weight:800">📁 폰에 저장 (크몽 첨부용)</p>
+        <p class="hint">각 버튼 → 다운로드 → 파일 앱에 저장. 크몽 메시지에서 첨부.</p>
+        <a class="btn btnFile" id="dlStd" download="youtube-register-standard-v1.zip">⬇ 일반 설치 ZIP</a>
+        <a class="btn btnFile" id="dlEnt" download="youtube-register-enterprise-v1.zip">⬇ 기업 설치 ZIP</a>
+        <a class="btn btnFile" id="dlPdf" download="oauth-guide-ko.pdf">⬇ 인증 PDF</a>
+        <p class="hint" style="margin-top:8px;margin-bottom:0">PDF 없으면: <a id="dlPdfWeb" href="#" target="_blank" rel="noopener" style="color:#6ca6ff">웹 안내</a> 저장</p>
       </section>
 
       <section class="panel">
-        <p class="sub" style="margin:0 0 10px;color:#ffd95a;font-weight:800">① 라이선스 부여 (보내기 전)</p>
-        <div class="row2">
+        <p class="sub" style="margin:0 0 8px;color:#ffd95a;font-weight:800">🔑 라이선스 부여</p>
+        <ol class="steps">
+          <li>아래 등록 → 키 생성</li>
+          <li>메시지 복사</li>
+          <li>크몽 앱 → 주문 메시지 → 붙여넣기 + ZIP/PDF 첨부</li>
+          <li>「크몽에 보냄」표시</li>
+        </ol>
+        <div class="row2" style="margin-top:10px">
           <div><label for="ch">채널</label><select id="ch"><option value="kmong" selected>크몽</option><option value="fiverr">Fiverr</option></select></div>
           <div><label for="ed">상품</label><select id="ed"><option value="standard" selected>일반</option><option value="enterprise">기업</option></select></div>
         </div>
         <div class="hidden" id="asWrap"><label for="as">AS</label><select id="as"><option value="180">6개월</option><option value="365">1년</option></select></div>
         <label for="nm">손님</label>
-        <input id="nm" placeholder="이름" autocomplete="off">
+        <input id="nm" placeholder="이름" autocomplete="off" enterkeyhint="next">
         <label for="ord">주문번호</label>
-        <input id="ord" placeholder="KM-12345" autocomplete="off">
+        <input id="ord" placeholder="KM-12345" autocomplete="off" enterkeyhint="done">
         <button type="button" class="btn btnPri" id="grantBtn">라이선스 부여</button>
-        <textarea id="msgOut" rows="12" readonly placeholder="부여 후 크몽 메시지에 붙여넣을 내용" style="margin-top:12px;font-size:14px;line-height:1.6"></textarea>
-        <button type="button" class="btn btnSec hidden" id="copyMsgBtn">메시지 복사</button>
-        <button type="button" class="btn btnPri hidden" id="sentBtn">크몽에 보냄 (장부 표시)</button>
+        <textarea id="msgOut" rows="10" readonly placeholder="부여 후 크몽에 붙여넣을 내용" style="margin-top:10px;font-size:14px;line-height:1.55"></textarea>
+        <button type="button" class="btn btnSec hidden" id="copyMsgBtn">📋 메시지 복사</button>
+        <button type="button" class="btn btnPri hidden" id="sentBtn">✓ 크몽에 보냄 (장부)</button>
       </section>
 
       <section class="panel">
-        <p class="sub" style="margin:0 0 10px;color:#ffd95a;font-weight:800">② 내부 장부</p>
+        <p class="sub" style="margin:0 0 8px;color:#ffd95a;font-weight:800">📒 장부</p>
         <div id="ledger"></div>
         <p class="sub" id="ledgerEmpty">기록 없음</p>
       </section>
@@ -115,53 +122,42 @@
       std: BASE + "youtube-register-standard-v1.zip",
       ent: BASE + "youtube-register-enterprise-v1.zip",
       pdf: BASE + "oauth-guide-ko.pdf",
-      pdfFallback: "https://humateck.com/oauth-guide/index.html"
+      pdfWeb: "https://humateck.com/oauth-guide/index.html"
     };
     var cred = "", email = "", items = [], lastId = null;
 
-    document.getElementById("linkStd").href = ASSETS.std;
-    document.getElementById("linkStd").textContent = "일반 ZIP";
-    document.getElementById("linkEnt").href = ASSETS.ent;
-    document.getElementById("linkEnt").textContent = "기업 ZIP";
-    document.getElementById("linkPdf").href = ASSETS.pdf;
-    document.getElementById("linkPdf").textContent = "인증 PDF";
+    document.getElementById("dlStd").href = ASSETS.std;
+    document.getElementById("dlEnt").href = ASSETS.ent;
+    document.getElementById("dlPdf").href = ASSETS.pdf;
+    document.getElementById("dlPdfWeb").href = ASSETS.pdfWeb;
 
-    function toast(t){ var e=document.getElementById("toast"); e.textContent=t; e.classList.add("on"); setTimeout(function(){e.classList.remove("on");},1600); }
-    function copy(s){ if(!s)return; navigator.clipboard.writeText(s).then(function(){toast("복사됨");}).catch(function(){prompt("복사:",s);}); }
-
-    document.querySelectorAll("[data-copy]").forEach(function(b){
-      b.addEventListener("click", function(){
-        var k = b.dataset.copy;
-        if(k==="pdf") copy(ASSETS.pdf + "\n(없으면) " + ASSETS.pdfFallback);
-        else copy(ASSETS[k]);
-      });
-    });
+    function toast(t){ var e=document.getElementById("toast"); e.textContent=t; e.classList.add("on"); setTimeout(function(){e.classList.remove("on");},1800); }
+    function copy(s){ if(!s)return; navigator.clipboard.writeText(s).then(function(){toast("복사됨 — 크몽 앱으로");}).catch(function(){prompt("복사:",s);}); }
 
     function loadCreds(){ try{ cred=sessionStorage.getItem("care_google_credential")||""; email=sessionStorage.getItem("care_google_email")||""; }catch(e){} }
     function saveCreds(){ sessionStorage.setItem("care_google_credential",cred); sessionStorage.setItem("care_google_email",email); }
 
-    function sent(it){ return !!(it.package_sent_at || it.fulfillment_stage==="sent" || it.fulfillment_stage==="customer_active" || it.fulfillment_stage==="setup" || it.fulfillment_stage==="completed"); }
+    function sent(it){ return !!(it.package_sent_at || (it.fulfillment_stage&&it.fulfillment_stage!=="awaiting_send")); }
 
     function renderLedger(){
       var root = document.getElementById("ledger");
       root.innerHTML = "";
       if(!items.length){ document.getElementById("ledgerEmpty").classList.remove("hidden"); return; }
       document.getElementById("ledgerEmpty").classList.add("hidden");
-      items.forEach(function(it){
+      items.slice(0,20).forEach(function(it){
         var d = document.createElement("div");
         d.className = "card" + (sent(it)?"":" pending");
         var ch = it.channel==="kmong"?"크몽":"Fiverr";
         var ed = it.edition==="enterprise"?"기업":"일반";
         d.innerHTML = "<div class=\"name\">"+(it.customer_label||"-")+"</div>"+
-          "<div class=\"meta\">"+ch+" · "+ed+" · "+(it.fiverr_order_ref||"-")+" · "+(sent(it)?"보냄":"<strong style='color:#ffd95a'>미전달</strong>")+"</div>"+
+          "<div class=\"meta\">"+ch+" · "+ed+" · "+(it.fiverr_order_ref||"-")+" · "+(sent(it)?"보냄":"<span style='color:#ffd95a'>미전달</span>")+"</div>"+
           "<div class=\"key\">"+(it.license_key||"-")+"</div>";
         d.addEventListener("click", function(){
           document.getElementById("msgOut").value = it.delivery_message || "";
           document.getElementById("copyMsgBtn").classList.remove("hidden");
           lastId = it.id;
-          if(!sent(it)) document.getElementById("sentBtn").classList.remove("hidden");
-          else document.getElementById("sentBtn").classList.add("hidden");
-          document.getElementById("msgOut").scrollIntoView({behavior:"smooth",block:"nearest"});
+          document.getElementById("sentBtn").classList.toggle("hidden", sent(it));
+          document.getElementById("msgOut").scrollIntoView({behavior:"smooth",block:"center"});
         });
         root.appendChild(d);
       });
@@ -193,7 +189,7 @@
         },
         auto_select:true
       });
-      google.accounts.id.renderButton(document.getElementById("googleSignInBtn"),{theme:"filled_black",size:"large",text:"signin_with",shape:"pill",width:280});
+      google.accounts.id.renderButton(document.getElementById("googleSignInBtn"),{theme:"filled_black",size:"large",text:"signin_with",shape:"pill",width:320});
     }
 
     document.getElementById("ch").addEventListener("change", function(){
@@ -210,7 +206,7 @@
         lang: ch==="kmong"?"ko":"en"
       };
       if(ch==="kmong") payload.care_period_days = Number(document.getElementById("as").value)||180;
-      if(!payload.customer_label){ document.getElementById("err").textContent="손님 이름 입력"; return; }
+      if(!payload.customer_label){ document.getElementById("err").textContent="손님 이름"; return; }
       try{
         var r = await HUMATECK_CARE.adminCreate(cred, payload);
         lastId = r.item&&r.item.id;
@@ -218,7 +214,7 @@
         document.getElementById("copyMsgBtn").classList.remove("hidden");
         document.getElementById("sentBtn").classList.remove("hidden");
         document.getElementById("nm").value=""; document.getElementById("ord").value="";
-        toast("라이선스 부여됨");
+        toast("키 생성됨");
         await refresh();
       }catch(e){ document.getElementById("err").textContent=e.message; }
     });
@@ -226,7 +222,7 @@
     document.getElementById("copyMsgBtn").addEventListener("click", function(){ copy(document.getElementById("msgOut").value); });
     document.getElementById("sentBtn").addEventListener("click", async function(){
       if(!lastId) return;
-      try{ await HUMATECK_CARE.adminMarkSent(cred,lastId); toast("장부: 보냄"); document.getElementById("sentBtn").classList.add("hidden"); await refresh(); }
+      try{ await HUMATECK_CARE.adminMarkSent(cred,lastId); toast("장부 저장"); document.getElementById("sentBtn").classList.add("hidden"); await refresh(); }
       catch(e){ document.getElementById("err").textContent=e.message; }
     });
     document.getElementById("refreshBtn").addEventListener("click", function(){ refresh().catch(function(e){ document.getElementById("err").textContent=e.message; }); });

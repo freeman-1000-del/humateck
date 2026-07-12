@@ -83,12 +83,13 @@
         withAdmin(credential, Object.assign({ action: "admin_create" }, fields || {}))
       );
     },
-    adminList: function (credential, status, channel) {
+    adminList: function (credential, status, channel, fulfillmentStage) {
       return post(
         withAdmin(credential, {
           action: "admin_list",
           status: status || "all",
           channel: channel || "all",
+          fulfillment_stage: fulfillmentStage || "all",
         })
       );
     },
@@ -98,6 +99,11 @@
     adminUpdate: function (credential, id, patch) {
       return post(
         withAdmin(credential, Object.assign({ action: "admin_update", id: id }, patch || {}))
+      );
+    },
+    adminMarkSent: function (credential, id) {
+      return post(
+        withAdmin(credential, { action: "admin_mark_sent", id: id })
       );
     },
     adminEvents: function (credential) {
