@@ -4,14 +4,27 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>심사용 데모</title>
-  <style>body{margin:0;background:#050b14}</style>
+  <style>
+    body{margin:0;background:#050b14;color:#e6e0d4;font-family:Arial,"Noto Sans KR",sans-serif}
+    #reviewLoadMsg{padding:32px 24px;text-align:center;line-height:1.7;font-size:15px;color:#c8c4b8}
+    #reviewLoadMsg strong{color:#ffd95a}
+  </style>
 </head>
 <body>
+  <p id="reviewLoadMsg"><strong>등록기 불러오는 중…</strong><br>인터넷 연결에 따라 30초~1분 걸릴 수 있습니다.</p>
   <script>
 (function () {
   var REVIEW_KEY = "humateckReviewDemoKoOk";
   var REVIEW_UNTIL = new Date("2026-08-12T23:59:59+09:00").getTime();
   var GATE_URL = "/humateck-Deployer/review-demo/ko/";
+
+  function showError(msg) {
+    document.body.innerHTML =
+      '<p style="color:#e6e0d4;font-family:Arial,"Noto Sans KR",sans-serif;padding:24px;text-align:center">' +
+      msg +
+      ' <a href="mailto:support@humateck.com" style="color:#6ca6ff">support@humateck.com</a></p>';
+  }
+
   try {
     if (Date.now() > REVIEW_UNTIL || sessionStorage.getItem(REVIEW_KEY) !== "1") {
       location.replace(GATE_URL);
@@ -62,6 +75,8 @@
       return res.text();
     })
     .then(function (html) {
+      var msg = document.getElementById("reviewLoadMsg");
+      if (msg) msg.parentNode.removeChild(msg);
       document.open();
       document.write(patchDemoHtml(html));
       document.close();
@@ -69,9 +84,7 @@
       attachDemoAssets();
     })
     .catch(function () {
-      document.body.innerHTML =
-        '<p style="color:#e6e0d4;font-family:Arial,"Noto Sans KR",sans-serif;padding:24px;text-align:center">심사용 데모를 불러오지 못했습니다. ' +
-        '<a href="mailto:support@humateck.com" style="color:#6ca6ff">support@humateck.com</a></p>';
+      showError("심사용 데모를 불러오지 못했습니다.");
     });
 })();
   </script>

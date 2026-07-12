@@ -24,6 +24,9 @@
       ? "심사용 데모 유효기간(30일)이 종료되었습니다. support@humateck.com"
       : "This review demo has expired (30-day window). Contact support@humateck.com",
     foot: isKo ? "Humateck Deployer · 심사용 접속" : "Humateck Deployer · Review access",
+    loading: isKo
+      ? "등록기 불러오는 중… 인터넷 연결에 따라 30초~1분 걸릴 수 있습니다."
+      : "Loading registration tool… This may take 30–60 seconds depending on your connection.",
   };
 
   function isValidPeriod() {
@@ -57,11 +60,33 @@
     }
   }
 
+  function ensureFrame() {
+    var frame = document.getElementById("reviewDemoFrame");
+    if (!frame) return null;
+    if (!frame.getAttribute("data-src")) {
+      frame.setAttribute("data-src", cfg.embedSrc);
+    }
+    return frame;
+  }
+
+  function startEmbedLoad() {
+    var frame = ensureFrame();
+    var loading = document.getElementById("reviewLoading");
+    if (!frame) return;
+    if (!frame.src) {
+      frame.src = frame.getAttribute("data-src") || cfg.embedSrc;
+    }
+    if (loading) loading.hidden = false;
+    frame.hidden = false;
+    frame.onload = function () {
+      if (loading) loading.hidden = true;
+    };
+  }
+
   function showDemo() {
     var gate = document.getElementById("reviewGate");
-    var frame = document.getElementById("reviewDemoFrame");
     if (gate) gate.hidden = true;
-    if (frame) frame.hidden = false;
+    startEmbedLoad();
   }
 
   function buildGate() {
@@ -87,7 +112,7 @@
         ? '<label for="reviewCode">' +
           T.codeLabel +
           "</label>" +
-          '<input id="reviewCode" type="password" autocomplete="off" placeholder="••••••••••••" />' +
+          '<input id="reviewCode" type="password" autocomplete="off" placeholder="••••" />' +
           '<p class="reviewHint">' +
           T.codeHint +
           "</p>" +
@@ -100,9 +125,10 @@
       T.foot +
       "</p>" +
       "</div>" +
-      '<iframe id="reviewDemoFrame" class="reviewDemoFrame" hidden title="Review demo" src="' +
-      cfg.embedSrc +
-      '"></iframe>';
+      '<p id="reviewLoading" class="reviewLoading" hidden>' +
+      T.loading +
+      "</p>" +
+      '<iframe id="reviewDemoFrame" class="reviewDemoFrame" hidden title="Review demo"></iframe>';
     document.body.appendChild(wrap);
 
     if (!isValidPeriod()) return;
@@ -117,8 +143,8 @@
         err.hidden = false;
         return;
       }
-      var entered = (input.value || "").trim().toUpperCase();
-      var expected = String(cfg.password || "").trim().toUpperCase();
+      var entered = (input.value || "").trim();
+      var expected = String(cfg.password || "").trim();
       if (entered && entered === expected) {
         setAuthed();
         err.hidden = true;
@@ -136,12 +162,10 @@
   }
 
   function init() {
-    if (isValidPeriod() && isAuthed()) {
-      buildGate();
-      showDemo();
-      return;
-    }
     buildGate();
+    if (isValidPeriod() && isAuthed()) {
+      showDemo();
+    }
   }
 
   if (document.readyState === "loading") {
