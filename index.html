@@ -3,211 +3,143 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Content Scouter · Rising Keyword Tool</title>
+  <title>High-Speed YouTube Content Deployment Service | Humateck</title>
+  <meta name="description" content="Context-aware multilingual deployment for up to 70 countries. Gemini AI translation guide, Google OAuth security, seconds to channel. Windows PC app for creators, agencies, and MCN teams.">
+  <meta name="robots" content="noindex, nofollow">
   <style>
     *{box-sizing:border-box}
-    html,body{margin:0;padding:0;background:#3a3a3a;color:#eef1f6;font-family:Arial,"Segoe UI",sans-serif}
-    a{color:inherit;text-decoration:none}
-
-    /* ── full width row with breathing room ── */
-    .pageRow{
-      position:relative;
-      width:100%;
-      padding:28px 20px 36px;
-    }
-    .pageRowInner{
-      display:flex;width:100%;align-items:flex-start;justify-content:center;
-      gap:24px;max-width:1440px;margin:0 auto;
-    }
-    .adCol{
-      width:160px;flex:0 0 160px;
-      padding-top:24px;
-    }
-    .centerPanel{
-      flex:1 1 auto;min-width:0;width:100%;
-      background:#0d0f14;border-radius:10px;
-      box-shadow:0 6px 40px rgba(0,0,0,.45);
-      overflow:hidden;
-    }
-
-    /* floating ad card — not flush to center */
-    .deployerAd{
-      display:block;width:160px;min-height:600px;
-      padding:16px 12px 18px;text-align:center;
-      background:linear-gradient(180deg,#0e1a2e 0%,#080f1a 100%);
-      border:1px solid rgba(108,166,255,.45);border-radius:10px;color:#dbe9ff;
-      box-shadow:0 10px 36px rgba(0,0,0,.5),0 2px 8px rgba(0,0,0,.35);
-      transition:transform .18s, box-shadow .18s;
-    }
-    .deployerAd:hover{
-      transform:translateY(-4px);
-      box-shadow:0 16px 48px rgba(0,0,0,.55),0 0 24px rgba(70,144,255,.18);
-      border-color:rgba(108,166,255,.75);
-    }
-    .deployerAd .tag{
-      font-size:10px;font-weight:800;letter-spacing:.1em;color:#9ec5ff;
-      text-transform:uppercase;margin-bottom:12px;display:block;
-    }
-    .deployerAd .globe{
-      width:60px;height:60px;border-radius:50%;margin:0 auto 10px;
-      border:2px solid rgba(93,160,255,.65);
-      background:radial-gradient(circle at 50% 50%,rgba(58,126,255,.4),rgba(4,18,45,.92) 68%);
-      box-shadow:0 0 18px rgba(70,144,255,.3);
-    }
-    .deployerAd .play{
-      width:40px;height:28px;border-radius:8px;margin:-22px auto 14px;
-      background:linear-gradient(145deg,#ffe070,#b98217);
-      box-shadow:0 0 12px rgba(235,180,62,.45);position:relative;
-    }
-    .deployerAd .play:after{
-      content:"";position:absolute;left:15px;top:6px;
-      border-left:13px solid #1a1307;border-top:8px solid transparent;border-bottom:8px solid transparent;
-    }
-    .deployerAd .title{display:block;font-size:12px;line-height:1.5;color:#fff;font-weight:800;margin-bottom:8px}
-    .deployerAd .line{font-size:11px;line-height:1.55;color:#9eb8d8;margin-bottom:4px}
-    .deployerAd .cta{
-      display:block;margin-top:14px;padding-top:12px;
-      font-size:11px;font-weight:800;color:#ffd95a;
-      border-top:1px solid rgba(108,166,255,.25);
-    }
-
-    .toolFrame{width:100%;min-height:820px;height:calc(100vh - 100px);border:0;display:block;background:#0d0f14}
-
-    .jumpBar{
-      display:flex;justify-content:center;gap:0;
-      background:#1a1a1a;border-bottom:2px solid #444;
-      position:sticky;top:0;z-index:10;
-    }
-    .jumpBar a{
-      padding:12px 28px;font-size:14px;font-weight:800;color:#888;border-bottom:3px solid transparent;
-    }
-    .jumpBar a.on{color:#ff5436;border-bottom-color:#ff5436}
-    .jumpBar a.kw.on{color:#ffd24a;border-bottom-color:#c77dff}
-    .jumpBar a.dep{color:#c8d4e0;border-bottom-color:transparent;font-weight:600}
-    .jumpBar a.dep:hover{color:#fff}
-    .jumpBar a.depSignup{color:#0b1119;background:#f4f1e8;border-radius:999px;padding:8px 16px;margin:4px 8px;font-weight:800;border-bottom:none}
-    .jumpBar a.depSignup:hover{background:#fff;color:#0b1119}
-
-    .foot{padding:10px;text-align:center;color:#666;font-size:10px;background:#2a2a2a}
-    .foot a{color:#888}
-
-    @media(max-width:960px){
-      .pageRowInner{flex-direction:column;align-items:center;padding:0;gap:16px}
-      .adCol{width:100%;flex:0 0 auto;padding-top:0;max-width:480px;position:static!important}
-      .deployerAd{width:100%;min-height:auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;padding:14px}
-      .deployerAd .globe,.deployerAd .play{margin:0}
-      .deployerAd .cta{margin-top:0;border-top:0;padding-top:0}
-      .centerPanel{width:100%}
-      .toolFrame{height:80vh;min-height:520px}
-    }
-    @media(min-width:961px){
-      .pageRow{padding-left:calc(160px + 36px);padding-right:calc(160px + 36px)}
-      .pageRowInner{display:block;max-width:none}
-      .pageRow .adCol{
-        position:fixed;top:52px;width:160px;z-index:30;
-        padding-top:24px;
-      }
-      .pageRow .adCol:first-child{left:max(16px,calc(50% - 720px))}
-      .pageRow .adCol:last-child{right:max(16px,calc(50% - 720px))}
-      .centerPanel{max-width:none;margin:0 auto}
-    }
+    html,body{margin:0;padding:0;background:#050b14;color:#f4f1e8;font-family:Arial,"Segoe UI",sans-serif}
+    a{color:#6ca6ff;text-decoration:none}
+    .wrap{width:1180px;max-width:calc(100vw - 32px);margin:0 auto;padding:20px 0 48px}
+    .topBar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+    .logo{width:190px;height:auto;display:block}
+    .topNav{display:flex;gap:8px;flex-wrap:wrap}
+    .miniNav{display:inline-flex;padding:8px 14px;border:1px solid rgba(214,176,78,.55);border-radius:999px;color:#f4d16d;font-size:14px;font-weight:700}
+    .hero{position:relative;overflow:hidden;border:1px solid rgba(214,176,78,.72);border-radius:30px;background:radial-gradient(circle at 68% 20%,rgba(75,151,255,.24),transparent 35%),radial-gradient(circle at 30% 42%,rgba(214,176,78,.18),transparent 35%),linear-gradient(180deg,#0b1423,#070b11);padding:36px 28px 32px;margin-bottom:22px;box-shadow:0 22px 70px rgba(0,0,0,.46)}
+    .hero .eyebrow{display:inline-block;margin:0 0 14px;padding:6px 14px;border-radius:999px;border:1px solid rgba(159,212,255,.45);color:#9fd4ff;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+    .hero .title{margin:0;color:#4b97ff;font-size:clamp(28px,4vw,36px);line-height:1.25;font-weight:900}
+    .heroActions{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 20px;border:2px solid #d9b256;border-radius:12px;color:#fff;font-size:15px;font-weight:900;background:linear-gradient(180deg,#5c4315,#15110a)}
+    .btn.secondary{background:transparent;border-color:rgba(159,212,255,.55);color:#9fd4ff}
+    .section{margin-bottom:22px}
+    .section h2{margin:0 0 14px;color:#ffd95a;font-size:24px;font-weight:900}
+    .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px}
+    @media(max-width:900px){.grid3{grid-template-columns:1fr}}
+    .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+    .card{border:1px solid rgba(214,176,78,.72);border-radius:20px;background:rgba(16,23,31,.94);padding:22px 24px}
+    .card.featured{border-color:#ffd95a;box-shadow:0 0 24px rgba(255,217,90,.1)}
+    .card .label{margin:0 0 4px;color:#9fd4ff;font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+    .card h3{margin:0 0 10px;color:#ffd95a;font-size:20px;line-height:1.35}
+    .card p{margin:0;color:#e6e0d4;font-size:15px;line-height:1.68}
+    .card .cardHighlight{margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,217,90,.28);color:#ffd95a;font-size:15px;line-height:1.65;font-weight:700}
+    .card ul{margin:12px 0 0;padding-left:18px;color:#e6e0d4;font-size:15px;line-height:1.65}
+    .flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+    .step{border:1px solid rgba(159,212,255,.35);border-radius:16px;padding:18px;background:rgba(159,212,255,.06)}
+    .step .num{color:#ffd95a;font-size:13px;font-weight:900;margin-bottom:8px}
+    .step p{margin:0;color:#e6e0d4;font-size:15px;line-height:1.6}
+    .note{border:1px solid rgba(159,212,255,.45);border-radius:16px;padding:18px;background:rgba(159,212,255,.08);color:#cfe8ff;font-size:15px;line-height:1.7}
+    .foot{margin-top:28px;text-align:center;color:#9aa0a6;font-size:14px}
+    .foot a{margin:0 8px}
   </style>
 </head>
 <body>
-
-  <nav class="jumpBar">
-    <a class="on" href="#scouter">Content Scouter</a>
-    <a class="kw" href="#keyword">Rising Keyword Tool</a>
-    <a class="dep" href="https://humateck.com/deployer-en.html">Practice</a>
-    <a class="dep depSignup" href="https://humateck.com/deployer.html">한국어</a>
-  </nav>
-
-  <!-- ① Content Scouter — English tool, floating Deployer ads -->
-  <section id="scouter" class="pageRow">
-    <div class="pageRowInner">
-    <aside class="adCol">
-      <a class="deployerAd" href="https://humateck.com/deployer-en.html">
-        <span class="tag">Sponsored</span>
-        <div class="globe"></div>
-        <div class="play"></div>
-        <span class="title">YouTube Practice Register</span>
-        <span class="line">Multilingual metadata</span>
-        <span class="line">Free sign-up · then deploy</span>
-        <span class="cta">Sign in free →</span>
-      </a>
-    </aside>
-
-    <div class="centerPanel">
-      <iframe class="toolFrame" src="scouter.html" title="Content Scouter" loading="lazy"></iframe>
+  <div class="wrap">
+    <div class="topBar">
+      <a href="/fiverr/"><img class="logo" src="/FINAL_LOGO01.png" alt="Humateck"></a>
+      <nav class="topNav">
+        <a class="miniNav" href="/fiverr/demo.html">Live demo</a>
+        <a class="miniNav" href="/fiverr/scope.html">Country coverage</a>
+        <a class="miniNav" href="/oauth-guide-en/index.html?return=fiverr">OAuth guide</a>
+      </nav>
     </div>
 
-    <aside class="adCol">
-      <a class="deployerAd" href="https://humateck.com/deployer-en.html">
-        <span class="tag">Sponsored</span>
-        <div class="globe"></div>
-        <div class="play"></div>
-        <span class="title">YouTube Practice Register</span>
-        <span class="line">Gemini prompt workflow</span>
-        <span class="line">Free preview first</span>
-        <span class="cta">Sign in free →</span>
-      </a>
-    </aside>
-    </div>
-  </section>
+    <section class="hero">
+      <p class="eyebrow">Product reference · Fiverr supply</p>
+      <h1 class="title">High-Speed YouTube Content Deployment Service</h1>
+      <div class="heroActions">
+        <a class="btn" href="/fiverr/demo.html">Open interactive demo</a>
+        <a class="btn secondary" href="/oauth-guide-en/index.html?return=fiverr">Google OAuth setup guide</a>
+      </div>
+    </section>
 
-  <!-- ② Rising Keyword Tool -->
-  <section id="keyword" class="pageRow">
-    <div class="pageRowInner">
-    <aside class="adCol">
-      <a class="deployerAd" href="https://humateck.com/deployer-en.html">
-        <span class="tag">Sponsored</span>
-        <div class="globe"></div>
-        <div class="play"></div>
-        <span class="title">YouTube Practice Register</span>
-        <span class="line">After keywords, deploy</span>
-        <span class="line">Free sign-up first</span>
-        <span class="cta">Sign in free →</span>
-      </a>
-    </aside>
+    <section class="section">
+      <h2>What does this product do?</h2>
+      <div class="grid3">
+        <article class="card">
+          <h3>Large-scale multilingual metadata</h3>
+          <p>Prepare one source title and description, then apply localized versions across your selected country set — up to 70 supported markets.</p>
+        </article>
+        <article class="card">
+          <h3>Gemini-assisted translation workflow</h3>
+          <p>Optimized prompts for Gemini AI chat translation — the strongest fit for human context-aware translation and simultaneous multilingual processing.</p>
+        </article>
+        <article class="card">
+          <h3>Google OAuth on your PC</h3>
+          <p>Per Google security policy, we guide you to obtain a Google OAuth key — a Client ID — for YouTube channel access.</p>
+        </article>
+      </div>
+      <article class="card">
+        <h3>Web demo vs PC app</h3>
+        <p>The web demo shows the translation flow and OAuth practice. Full YouTube registration runs in the delivered PC desktop application.</p>
+      </article>
+    </section>
 
-    <div class="centerPanel">
-      <iframe class="toolFrame" src="rising-keyword.html" title="Rising Keyword Tool" loading="lazy"></iframe>
-    </div>
+    <section class="section">
+      <h2>Editions</h2>
+      <div class="grid2">
+        <article class="card">
+          <p class="label">Deluxe</p>
+          <h3>Standard · 1 PC</h3>
+          <p>For solo creators and small channels.</p>
+          <ul>
+            <li>1 licensed PC</li>
+            <li>Google Client Authentication Guide (PDF)</li>
+            <li>All country scope options</li>
+          </ul>
+        </article>
+        <article class="card featured">
+          <p class="label">Premium</p>
+          <h3>Enterprise · 5 PC pack</h3>
+          <p>For MCNs, agencies, and small teams running parallel workflows.</p>
+          <ul>
+            <li>5 licensed PCs (5 seats)</li>
+            <li>Google Client Authentication Guide (PDF)</li>
+            <li>Option suited for enterprise or large-scale team management</li>
+          </ul>
+        </article>
+      </div>
+    </section>
 
-    <aside class="adCol">
-      <a class="deployerAd" href="https://humateck.com/deployer-en.html">
-        <span class="tag">Sponsored</span>
-        <div class="globe"></div>
-        <div class="play"></div>
-        <span class="title">YouTube Practice Register</span>
-        <span class="line">Free web practice · OAuth walkthrough</span>
-        <span class="line">Start with free sign-up</span>
-        <span class="cta">Sign in free →</span>
-      </a>
-    </aside>
-    </div>
-  </section>
+    <section class="section">
+      <h2>Typical delivery flow (Fiverr service)</h2>
+      <div class="flow">
+        <div class="step"><p class="num">Step 1</p><p>Order confirmed on Fiverr</p></div>
+        <div class="step"><p class="num">Step 2</p><p>Install package link + setup care portal access</p></div>
+        <div class="step"><p class="num">Step 3</p><p>Remote setup: OAuth, first run, walkthrough</p></div>
+        <div class="step"><p class="num">Step 4</p><p>3-day install care for questions during setup</p></div>
+      </div>
+      <p class="note" style="margin-top:16px">
+        Service terms, pricing, and revisions are defined on the Fiverr gig page — not on this product reference site.
+      </p>
+    </section>
 
-  <footer class="foot">
-    <a href="#scouter">Content Scouter</a> ·
-    <a href="#keyword">Rising Keyword Tool</a> ·
-    <a href="https://humateck.com/deployer-en.html?signin=1">Sign in</a> ·
-    <a href="https://humateck.com/deployer-en.html">Practice home</a> ·
-    <a href="mailto:support@humateck.com">support@humateck.com</a>
-  </footer>
+    <section class="section">
+      <h2>Review &amp; Demo Checklist</h2>
+      <div class="note">
+        <strong>Guide for marketplace reviewers:</strong><br>
+        1) Open the <a href="/fiverr/demo.html">live demo</a><br>
+        2) Read the <a href="/oauth-guide-en/index.html?return=fiverr">OAuth guide</a><br>
+        3) Check the <a href="/fiverr/scope.html">supported countries</a><br>
+        4) The PC installation package is provided after purchase (not available for download on this page).
+      </div>
+    </section>
 
-  <script>
-  (function(){
-    var links = document.querySelectorAll('.jumpBar a');
-    var sections = [document.getElementById('scouter'), document.getElementById('keyword')];
-    function onScroll(){
-      var y = window.scrollY + 80;
-      var idx = y >= sections[1].offsetTop ? 1 : 0;
-      links.forEach(function(a,i){ a.classList.toggle('on', i === idx); });
-    }
-    window.addEventListener('scroll', onScroll, {passive:true});
-    onScroll();
-  })();
-  </script>
+    <p class="foot">
+      <a href="/fiverr/demo.html">Demo</a>
+      <a href="/fiverr/scope.html">Coverage</a>
+      <a href="/terms.html">Terms</a>
+      <a href="/privacy.html">Privacy</a>
+    </p>
+  </div>
 </body>
 </html>
