@@ -1,145 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>High-Speed YouTube Content Deployment Service | Humateck</title>
-  <meta name="description" content="Context-aware multilingual deployment for up to 70 countries. Gemini AI translation guide, Google OAuth security, seconds to channel. Windows PC app for creators, agencies, and MCN teams.">
-  <meta name="robots" content="noindex, nofollow">
+  <title>유튜브 다국어채널 고속 등록기 — 구글 인증 연습기 | Humateck</title>
+  <meta name="description" content="제미나이 AI 챗번역 체험과 Google OAuth 인증 연습. 실제 유튜브 등록은 PC 영구판 프로그램에서 수행합니다.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://humateck.com/">
   <style>
     *{box-sizing:border-box}
-    html,body{margin:0;padding:0;background:#050b14;color:#f4f1e8;font-family:Arial,"Segoe UI",sans-serif}
+    html,body{margin:0;padding:0;height:100%;overflow:hidden;background:#050b14;color:#f4f1e8;font-family:Arial,"Noto Sans KR",sans-serif}
     a{color:#6ca6ff;text-decoration:none}
-    .wrap{width:1180px;max-width:calc(100vw - 32px);margin:0 auto;padding:20px 0 48px}
-    .topBar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
-    .logo{width:190px;height:auto;display:block}
-    .topNav{display:flex;gap:8px;flex-wrap:wrap}
-    .miniNav{display:inline-flex;padding:8px 14px;border:1px solid rgba(214,176,78,.55);border-radius:999px;color:#f4d16d;font-size:14px;font-weight:700}
-    .hero{position:relative;overflow:hidden;border:1px solid rgba(214,176,78,.72);border-radius:30px;background:radial-gradient(circle at 68% 20%,rgba(75,151,255,.24),transparent 35%),radial-gradient(circle at 30% 42%,rgba(214,176,78,.18),transparent 35%),linear-gradient(180deg,#0b1423,#070b11);padding:36px 28px 32px;margin-bottom:22px;box-shadow:0 22px 70px rgba(0,0,0,.46)}
-    .hero .eyebrow{display:inline-block;margin:0 0 14px;padding:6px 14px;border-radius:999px;border:1px solid rgba(159,212,255,.45);color:#9fd4ff;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
-    .hero .title{margin:0;color:#4b97ff;font-size:clamp(28px,4vw,36px);line-height:1.25;font-weight:900}
-    .heroActions{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
-    .btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 20px;border:2px solid #d9b256;border-radius:12px;color:#fff;font-size:15px;font-weight:900;background:linear-gradient(180deg,#5c4315,#15110a)}
-    .btn.secondary{background:transparent;border-color:rgba(159,212,255,.55);color:#9fd4ff}
-    .section{margin-bottom:22px}
-    .section h2{margin:0 0 14px;color:#ffd95a;font-size:24px;font-weight:900}
-    .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px}
-    @media(max-width:900px){.grid3{grid-template-columns:1fr}}
-    .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
-    .card{border:1px solid rgba(214,176,78,.72);border-radius:20px;background:rgba(16,23,31,.94);padding:22px 24px}
-    .card.featured{border-color:#ffd95a;box-shadow:0 0 24px rgba(255,217,90,.1)}
-    .card .label{margin:0 0 4px;color:#9fd4ff;font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
-    .card h3{margin:0 0 10px;color:#ffd95a;font-size:20px;line-height:1.35}
-    .card p{margin:0;color:#e6e0d4;font-size:15px;line-height:1.68}
-    .card .cardHighlight{margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,217,90,.28);color:#ffd95a;font-size:15px;line-height:1.65;font-weight:700}
-    .card ul{margin:12px 0 0;padding-left:18px;color:#e6e0d4;font-size:15px;line-height:1.65}
-    .flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
-    .step{border:1px solid rgba(159,212,255,.35);border-radius:16px;padding:18px;background:rgba(159,212,255,.06)}
-    .step .num{color:#ffd95a;font-size:13px;font-weight:900;margin-bottom:8px}
-    .step p{margin:0;color:#e6e0d4;font-size:15px;line-height:1.6}
-    .note{border:1px solid rgba(159,212,255,.45);border-radius:16px;padding:18px;background:rgba(159,212,255,.08);color:#cfe8ff;font-size:15px;line-height:1.7}
-    .foot{margin-top:28px;text-align:center;color:#9aa0a6;font-size:14px}
-    .foot a{margin:0 8px}
+    .wrap{width:1180px;max-width:calc(100vw - 32px);height:100vh;margin:0 auto;padding:0;display:flex;flex-direction:column}
+    .practiceFrame{width:100%;flex:1;min-height:0;border:0;display:block;background:#050b14}
+    .foot{text-align:center;padding:10px 0 14px;color:#9aa0a6;font-size:13px;flex-shrink:0}
   </style>
+  <script defer src="/analytics-humateck.js"></script>
 </head>
 <body>
   <div class="wrap">
-    <div class="topBar">
-      <a href="/fiverr/"><img class="logo" src="/FINAL_LOGO01.png" alt="Humateck"></a>
-      <nav class="topNav">
-        <a class="miniNav" href="/fiverr/demo.html">Live demo</a>
-        <a class="miniNav" href="/fiverr/scope.html">Country coverage</a>
-        <a class="miniNav" href="/oauth-guide-en/index.html?return=fiverr">OAuth guide</a>
-      </nav>
-    </div>
-
-    <section class="hero">
-      <p class="eyebrow">Product reference · Fiverr supply</p>
-      <h1 class="title">High-Speed YouTube Content Deployment Service</h1>
-      <div class="heroActions">
-        <a class="btn" href="/fiverr/demo.html">Open interactive demo</a>
-        <a class="btn secondary" href="/oauth-guide-en/index.html?return=fiverr">Google OAuth setup guide</a>
-      </div>
-    </section>
-
-    <section class="section">
-      <h2>What does this product do?</h2>
-      <div class="grid3">
-        <article class="card">
-          <h3>Large-scale multilingual metadata</h3>
-          <p>Prepare one source title and description, then apply localized versions across your selected country set — up to 70 supported markets.</p>
-        </article>
-        <article class="card">
-          <h3>Gemini-assisted translation workflow</h3>
-          <p>Optimized prompts for Gemini AI chat translation — the strongest fit for human context-aware translation and simultaneous multilingual processing.</p>
-        </article>
-        <article class="card">
-          <h3>Google OAuth on your PC</h3>
-          <p>Per Google security policy, we guide you to obtain a Google OAuth key — a Client ID — for YouTube channel access.</p>
-        </article>
-      </div>
-      <article class="card">
-        <h3>Web demo vs PC app</h3>
-        <p>The web demo shows the translation flow and OAuth practice. Full YouTube registration runs in the delivered PC desktop application.</p>
-      </article>
-    </section>
-
-    <section class="section">
-      <h2>Editions</h2>
-      <div class="grid2">
-        <article class="card">
-          <p class="label">Deluxe</p>
-          <h3>Standard · 1 PC</h3>
-          <p>For solo creators and small channels.</p>
-          <ul>
-            <li>1 licensed PC</li>
-            <li>Google Client Authentication Guide (PDF)</li>
-            <li>All country scope options</li>
-          </ul>
-        </article>
-        <article class="card featured">
-          <p class="label">Premium</p>
-          <h3>Enterprise · 5 PC pack</h3>
-          <p>For MCNs, agencies, and small teams running parallel workflows.</p>
-          <ul>
-            <li>5 licensed PCs (5 seats)</li>
-            <li>Google Client Authentication Guide (PDF)</li>
-            <li>Option suited for enterprise or large-scale team management</li>
-          </ul>
-        </article>
-      </div>
-    </section>
-
-    <section class="section">
-      <h2>Typical delivery flow (Fiverr service)</h2>
-      <div class="flow">
-        <div class="step"><p class="num">Step 1</p><p>Order confirmed on Fiverr</p></div>
-        <div class="step"><p class="num">Step 2</p><p>Install package link + setup care portal access</p></div>
-        <div class="step"><p class="num">Step 3</p><p>Remote setup: OAuth, first run, walkthrough</p></div>
-        <div class="step"><p class="num">Step 4</p><p>3-day install care for questions during setup</p></div>
-      </div>
-      <p class="note" style="margin-top:16px">
-        Service terms, pricing, and revisions are defined on the Fiverr gig page — not on this product reference site.
-      </p>
-    </section>
-
-    <section class="section">
-      <h2>Review &amp; Demo Checklist</h2>
-      <div class="note">
-        <strong>Guide for marketplace reviewers:</strong><br>
-        1) Open the <a href="/fiverr/demo.html">live demo</a><br>
-        2) Read the <a href="/oauth-guide-en/index.html?return=fiverr">OAuth guide</a><br>
-        3) Check the <a href="/fiverr/scope.html">supported countries</a><br>
-        4) The PC installation package is provided after purchase (not available for download on this page).
-      </div>
-    </section>
-
+    <iframe class="practiceFrame" id="humateckPracticeFrame" src="/practice-embed.html" title="구글 인증 연습기" loading="eager"></iframe>
     <p class="foot">
-      <a href="/fiverr/demo.html">Demo</a>
-      <a href="/fiverr/scope.html">Coverage</a>
-      <a href="/terms.html">Terms</a>
-      <a href="/privacy.html">Privacy</a>
+      <a href="/terms.html" target="_top">이용약관</a> · <a href="/privacy.html" target="_top">개인정보처리방침</a>
     </p>
   </div>
+  <script>
+  (function () {
+    var frame = document.getElementById("humateckPracticeFrame");
+    if (!frame) return;
+    frame.addEventListener("load", function () {
+      function ping() {
+        if (typeof window.humateckTrackEvent === "function") {
+          window.humateckTrackEvent("humateck_shell_iframe_load", { iframe_src: frame.src || "" });
+        } else {
+          setTimeout(ping, 300);
+        }
+      }
+      ping();
+    });
+  })();
+  </script>
 </body>
 </html>

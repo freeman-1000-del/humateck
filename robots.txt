@@ -1,4 +1,14 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://contentscouter.com/sitemap.xml
+# Marketplace submission pages — keep live for reviewers, hide from search
+Disallow: /kmong/
+Disallow: /fiverr/
+
+# Internal ops only
+Disallow: /license-app.html
+Disallow: /care-admin.html
+Disallow: /inquiry-admin.html
+Disallow: /care/
+Disallow: /install/
+Disallow: /assets/delivery/
