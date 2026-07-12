@@ -1,10 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!--
+DEVELOPER NOTICE - HUMATECK FIXED RULES
+1. The order form must remain a delivery form only: customer-approved text -> Google browser OAuth result -> YouTube API delivery -> YouTube response display.
+2. Remove unnecessary weight and never add it back. Do not introduce independent JS logic, parser expansion, metadata judgment, content inspection, content correction, pre-blocking, risk-scoring, internal review, or internal gatekeeping into the order form.
+3. Google performs authentication. YouTube decides acceptance/rejection. Humateck must not act as an internal reviewer, editor, blocker, or judge.
+4. English/global PayPal subscription links must stay open. Korean payment flow must not use direct PayPal buttons and must remain separated until a Korean payment method is finalized.
+5. Target set is fixed at 70 countries. Do not restore previous expanded-country wording or previous expanded-country plan logic without explicit approval.
+6. Free 7-day plan is fixed at 15 major countries. Gemini target-country order must follow country importance, not alphabetical order.
+7. Hidden/admin/test menus must not be added to the customer order page. Internal membership/testing must stay server-side and invisible to customers.
+-->
+
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>YouTube Global Video Mass Distribution</title>
+<title>YouTube Multilingual Registration</title>
 <style>
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;background:#050b14;color:#f4f1e8;font-family:Arial,"Noto Sans KR",sans-serif}
@@ -1065,7 +1076,7 @@ Do not add review, blocking, metadata judgment, hidden/admin menu, auto-correcti
 <section class="orderMainGrid">
   <div class="orderLeftColumn">
     <section class="card">
-      <h1>Global YouTube Video Mass Distribution Order</h1>
+      <h1>Multilingual Subtitle Registration Order Form</h1>
       <div class="order-intro-note">
         <p>1. This order form is open to everyone for experiencing Gemini AI chat translation.</p>
         <p>2. However, the authority to finally register the translation results on YouTube is open only to subscribers of this service. Please do not misunderstand this point.</p>
@@ -1155,15 +1166,15 @@ Without any explanation, output only the translated registration text.</textarea
 </div>
     </section>
 <section class="card">
-      <h2>YouTube Video Distribution</h2>
-      <div class="actions"><button class="btn humateckOnlyButton" type="button" id="sendOrderBtn">YouTube Video Distribution</button></div>
+      <h2>YouTube Subtitle Registration</h2>
+      <div class="actions"><button class="btn humateckOnlyButton" type="button" id="sendOrderBtn">YouTube Subtitle Registration</button></div>
     </section>
 <section class="card registerNoticeBelow">
-<h2>YouTube Distribution Notice</h2>
+<h2>YouTube Registration Notice</h2>
 <p>All translations are registered to the YouTube channel immediately. But Humateck does not review, block, change, or add anything to the customer-approved translation. The approved content is sent as-is.</p>
 <section class="card" id="deliveryResultCard">
-      <h2>Distribution Result</h2>
-      <textarea id="deliveryLog" class="mediumTextarea" readonly placeholder="YouTube distribution results will appear here."></textarea>
+      <h2>Registration Result</h2>
+      <textarea id="deliveryLog" class="mediumTextarea" readonly placeholder="YouTube registration results will appear here."></textarea>
     </section>
     <section class="card" id="customerComplaintCard">
       <h2>Customer Feedback</h2>
@@ -1178,7 +1189,7 @@ Without any explanation, output only the translated registration text.</textarea
     <h3>Quick Notice</h3>
     <p>1) The essential first step for using this service is Google OAuth approval setup. Please proceed according to the detailed guidance in the “Important Setup Guide” below.</p>
     <p>2) Even if you want to register multilingual YouTube content for multiple channels, you do not need to create a separate Google OAuth setup for each channel. However, the Google account used for authorization must have permission to edit the relevant YouTube channel or video in order for registration to work properly.</p>
-    <p>3) Google OAuth authorization is required each time you regist YouTube video content.</p>
+    <p>3) Google OAuth authorization is required each time you regist YouTube Subtitle content.</p>
 <section id="faq" class="faqCollapsed">
 <details open>
 <summary>YouTube AI Chat Translation FAQ</summary>
@@ -1186,10 +1197,10 @@ Without any explanation, output only the translated registration text.</textarea
 <div class="faqItem"><p class="question"><b>1. Q) I clearly set the default video language to my native language. However, after registering multilingual translations, I checked and found that the video language setting had changed to U.S. English. Why did this happen?</b></p><p>
 A) This is because YouTube content display system fixes the default video setting to U.S. English when multilingual translations are registered. However, this is not an error, and you may edit your native-language title or description at any time. Please do not misunderstand this point.</p></div>
 <details><summary>View Details</summary>
-<div class="faqItem"><p class="question"><b>2. Q) When I press YouTube video distribution, a quota exceeded message appears.</b></p><p>A) This means the daily free API quota for YouTube video distribution has been exceeded. Please wait until the quota is recharged the next day, then try again.</p></div>
+<div class="faqItem"><p class="question"><b>2. Q) When I press YouTube content registration, a quota exceeded message appears.</b></p><p>A) This means the daily free API quota for YouTube content registration has been exceeded. Please wait until the quota is recharged the next day, then try again.</p></div>
 <div class="faqItem"><p class="question"><b>4. Q) What is Google OAuth setup? Do I need to set it up every time I use the service?</b></p><p>A) It is the connection process of receiving permission from Google to register multilingual translations on your YouTube channel. After one setup, you can use it for multiple channels over a long period of time.</p></div>
 <div class="faqItem"><p class="question"><b>5. Q) I operate multiple YouTube channels. Do I need to create a separate OAuth setting for each channel?</b></p><p>A) You do not need to create a new Google OAuth setting for each channel. However, the Google account used for authorization must have permission to edit the relevant YouTube channel or video in order for registration to work properly.</p></div>
-<div class="faqItem"><p class="question"><b>6. Q) I see a quota exceeded message when I click global YouTube video distribution. What does this mean?</b></p><p>A) This means the daily free YouTube API quota for global video distribution has been exceeded. Please wait until the quota is refreshed the next day and try again.</p></div>
+<div class="faqItem"><p class="question"><b>6. Q) I see a quota exceeded message when I click YouTube multilingual registration. What does this mean?</b></p><p>A) This means the daily free YouTube API quota for multilingual registration has been exceeded. Please wait until the quota is refreshed the next day and try again.</p></div>
 <div class="faqItem"><p class="question"><b>7. Q) I am hesitant to use this registration system because I worry it might have frequent registration errors.</b></p><p>A) We fully understand that concern. However, the system is very simple. Unless there is an unavoidable external condition, your approved content is sent directly to YouTube without any interference from us, so you do not need to worry.</p></div>
 </details>
 </div>
