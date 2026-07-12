@@ -10,15 +10,35 @@
   <script>
 (function () {
   var STORAGE_BASE = "https://ajvtyotblrtexcxuazqm.supabase.co/storage/v1/object/public/humateck-site";
-  var src = STORAGE_BASE + "/deployer-en/index.html?v=" + Date.now();
-  fetch(src, { cache: "no-store" })
+
+  function patchReviewHtml(html) {
+    html = html.replace(
+      /<button class="btn" type="button" id="sendOrderBtn" disabled aria-disabled="true" data-web-register-disabled="1"[^>]*>Registration unavailable \(PC app required\)<\/button>/,
+      '<button class="btn" type="button" id="sendOrderBtn">YouTube Multilingual Registration</button>'
+    );
+    html = html.replace(
+      /<h2>Registration result \(PC app only — not available on web\)<\/h2>/,
+      "<h2>Registration result</h2>"
+    );
+    html = html.replace(
+      /<script src="deployer-auth\.js"><\/script>/,
+      '<script src="' + STORAGE_BASE + '/deployer-en/deployer-auth.js"><\/script>'
+    );
+    html = html.replace(
+      /<script src="youtube-register\.js"><\/script>/,
+      '<script src="' + STORAGE_BASE + '/deployer-en/youtube-register.js"><\/script>'
+    );
+    return html;
+  }
+
+  fetch(STORAGE_BASE + "/deployer-en/index.html?v=" + Date.now(), { cache: "no-store" })
     .then(function (res) {
       if (!res.ok) throw new Error(String(res.status));
       return res.text();
     })
     .then(function (html) {
       document.open();
-      document.write(html);
+      document.write(patchReviewHtml(html));
       document.close();
     })
     .catch(function () {
