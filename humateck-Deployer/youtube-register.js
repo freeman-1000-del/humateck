@@ -5,11 +5,26 @@ Allowed: use the Google OAuth result and deliver the customer-approved text to Y
 Forbidden: review, block, judge, pre-validate, modify, auto-correct, add metadata logic, add hidden/admin/test menus, or create self-made registration errors.
 Humateck is a delivery system. Google handles authentication. YouTube handles registration response.
 Do not move this logic back into order.html.
-*/
 
-/* Humateck_New055 YouTube API spec delivery - customer clean output */
+Failover principle:
+- Primary delivery path: localizations-only update.
+- Backup delivery path: snippet + localizations update using the existing YouTube snippet.
+- The backup path is not a reviewer. It only retries the same customer-approved delivery with a safer YouTube request shape.
+*/
 (function(){
+  "use strict";
+
   function $(id){ return document.getElementById(id); }
+
+  var COUNTRY_ORDER_70 = [
+    "en","ja","ko","zh-CN","zh-TW","es","es-419","es-US","pt","pt-PT",
+    "fr","fr-CA","de","it","ru","hi","ar","id","tr","vi",
+    "th","fil","ms","nl","pl","uk","sv","no","da","fi",
+    "el","ro","hu","cs","sk","bg","hr","sr","sr-Latn","sq",
+    "mk","et","lv","lt","iw","fa","ur","bn","ta","te",
+    "mr","gu","kn","ml","pa","ne","sw","af","am","az",
+    "be","bs","ca","eu","gl","hy","ka","kk","km","lo"
+  ];
 
   function showResult(message){
     var box = $("deliveryLog");
@@ -19,180 +34,229 @@ Do not move this logic back into order.html.
     }
   }
 
+  function setButtonBusy(isBusy){
+    var btn = $("sendOrderBtn") || $("youtubeRegisterBtn");
+    if(!btn) return;
+    btn.disabled = !!isBusy;
+    btn.textContent = isBusy ? "Registration in Progress" : "YouTube Multilingual Registration";
+  }
+
+  function getValue(ids){
+    for(var i=0;i<ids.length;i++){
+      var el = $(ids[i]);
+      if(el && typeof el.value === "string" && el.value.trim()) return el.value.trim();
+    }
+    return "";
+  }
+
   function getAccessToken(){
     if(window.humateckGoogleAccessToken) return window.humateckGoogleAccessToken;
     try{
       var saved = sessionStorage.getItem("humateckGoogleAccessToken");
       if(saved) return saved;
     }catch(e){}
-    var token = "";
-    var candidates = ["googleAccessToken","accessToken","oauthAccessToken","authToken"];
-    for(var i=0;i<candidates.length;i++){
-      var el = document.getElementById(candidates[i]);
-      if(el && el.value) return el.value.trim();
-    }
-    return token;
+    return getValue(["googleAccessToken","accessToken","oauthAccessToken","authToken"]);
   }
 
+  function getVideoUrl(){ return getValue(["videoUrl", "sourceVideoUrl", "youtubeUrl"]); }
+  function getFinalText(){ return getValue(["finalOutput", "finalText", "finalResultText"]); }
+  function getNativeLanguageCode(){ return getValue(["nativeLanguageCode"]) || "en"; }
+  function getNativeTitle(){ return getValue(["sourceTitle"]); }
+  function getNativeDescription(){ return getValue(["sourceDescription"]); }
 
-  function getNativeLanguageCode(){
-    var el = $("nativeLanguageCode");
-    return el && el.value && el.value.trim() ? el.value.trim() : "en";
-  }
-
-  function getNativeTitle(){
-    var el = $("sourceTitle");
-    return el && el.value ? el.value.trim() : "";
-  }
-
-  function getNativeDescription(){
-    var el = $("sourceDescription");
-    return el && el.value ? el.value.trim() : "";
-  }
-
-  function getVideoUrl(){
-    var ids = ["videoUrl", "sourceVideoUrl", "youtubeUrl"];
-    for(var i=0;i<ids.length;i++){
-      var el = $(ids[i]);
-      if(el && el.value && el.value.trim()) return el.value.trim();
-    }
-    return "";
-  }
-
-  function extractVideoId(url){
-    if(!url) return "";
+  function extractVideoId(value){
+    var raw = String(value || "").trim();
+    if(!raw) return "";
+    if(/^[a-zA-Z0-9_-]{8,}$/.test(raw) && raw.indexOf("http") !== 0) return raw;
     try{
-      var u = new URL(url);
-      if(u.hostname.indexOf("youtu.be") >= 0) return u.pathname.replace("/", "").trim();
-      if(u.searchParams.get("v")) return u.searchParams.get("v").trim();
-      var parts = u.pathname.split("/");
+      var u = new URL(raw);
+      if(u.hostname.indexOf("youtu.be") >= 0) return u.pathname.replace(/^\//, "").split("/")[0].trim();
+      var v = u.searchParams.get("v");
+      if(v) return v.trim();
+      var parts = u.pathname.split("/").filter(Boolean);
       var idx = parts.indexOf("shorts");
       if(idx >= 0 && parts[idx + 1]) return parts[idx + 1].trim();
+      idx = parts.indexOf("live");
+      if(idx >= 0 && parts[idx + 1]) return parts[idx + 1].trim();
     }catch(e){}
-    return "";
+    return raw;
   }
 
-  function getFinalText(){
-    var ids = ["finalOutput", "finalText", "finalResultText"];
-    for(var i=0;i<ids.length;i++){
-      var el = $(ids[i]);
-      if(el && el.value && el.value.trim()) return el.value.trim();
-    }
-    return "";
+  function clean(v){ return String(v || "").replace(/^\s+|\s+$/g, ""); }
+  function stripNumberAndCountryName(text){
+    return String(text || "")
+      .replace(/^\s*Number\s*:\s*.*$/gmi, "")
+      .replace(/^\s*Country\s*Name\s*:\s*.*$/gmi, "");
   }
 
-
-  function parseFinalTextToLocalizations(finalText){
-    var normalized = String(finalText || "").replace(/\r/g, "");
-    var blocks = normalized.split("Country Code:").slice(1);
+  /* 🛠️ [수정 완료] 맨 첫 줄에 나오는 첫 번째 국가 코드도 누락 없이 완벽히 세도록 로직 보완 */
+  function parseLabeledCountryCode(finalText){
+    var text = stripNumberAndCountryName(String(finalText || "").replace(/\r/g, "")).trim();
+    
+    // 줄바꿈 기호(\n) 의존성을 없애고 'Country Code :' 단어 자체로 안전하게 분할합니다.
+    var parts = text.split(/\s*Country\s*Code\s*:\s*/i);
     var localizations = {};
 
-    blocks.forEach(function(raw){
-      var block = raw.replace(/^\s+/, "");
-      var firstBreak = block.indexOf("\n");
-      var code = (firstBreak >= 0 ? block.slice(0, firstBreak) : block).trim();
-      var rest = firstBreak >= 0 ? block.slice(firstBreak + 1) : "";
-      if(!code) return;
-
-      var title = "";
-      var description = "";
-      var titleMatch = rest.match(/(?:^|\n)Title:\s*(.*)/);
-      if(titleMatch) title = titleMatch[1].trim();
-
-      var descIndex = rest.indexOf("Description:");
-      if(descIndex >= 0){
-        description = rest.slice(descIndex + "Description:".length).replace(/^\n/, "").trimEnd();
-      }
-
-      localizations[code] = { title: title, description: description };
-    });
-
+    for(var i=1; i<parts.length; i++){
+      var block = parts[i];
+      var lines = block.split("\n");
+      var code = clean(lines.shift() || "");
+      if(!code) continue;
+      var parsed = parseTitleDescription(lines.join("\n"));
+      localizations[code] = parsed;
+    }
     return localizations;
   }
 
+  function parseCodeLineBlocks(finalText){
+    var text = stripNumberAndCountryName(String(finalText || "").replace(/\r/g, ""));
+    var localizations = {};
+    var codes = COUNTRY_ORDER_70.slice();
+
+    for(var i=0;i<codes.length;i++){
+      var code = codes[i].replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      var nextCodes = codes.slice(i+1).map(function(c){ return c.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }).join("|");
+      var end = nextCodes ? "(?=\\n\\s*(?:" + nextCodes + ")\\s*\\n|$)" : "(?=$)";
+      var re = new RegExp("(?:^|\\n)\\s*(" + code + ")\\s*\\n([\\s\\S]*?)" + end, "i");
+      var m = text.match(re);
+      if(m){
+        localizations[codes[i]] = parseTitleDescription(m[2]);
+      }
+    }
+    return localizations;
+  }
+
+  function parseSequentialTitleDescription(finalText){
+    var text = stripNumberAndCountryName(String(finalText || "").replace(/\r/g, ""));
+    var localizations = {};
+    var pattern = /(?:^|\n)\s*Title\s*:\s*([^\n]*)([\s\S]*?)(?=\n\s*Title\s*:|$)/gi;
+    var match;
+    var index = 0;
+    while((match = pattern.exec(text)) && index < COUNTRY_ORDER_70.length){
+      var title = clean(match[1]);
+      var body = match[2] || "";
+      var description = "";
+      var d = body.search(/\n\s*Description\s*:/i);
+      if(d >= 0){
+        description = body.slice(d).replace(/^\n\s*Description\s*:\s*/i, "").replace(/\n+$/g, "");
+      }else{
+        description = body.replace(/^\n+/, "").replace(/\n+$/g, "");
+      }
+      localizations[COUNTRY_ORDER_70[index]] = { title: title, description: description };
+      index++;
+    }
+    return localizations;
+  }
+
+  function parseTitleDescription(text){
+    var source = String(text || "");
+    var title = "";
+    var description = "";
+    var titleMatch = source.match(/(?:^|\n)\s*Title\s*:\s*([^\n]*)/i);
+    if(titleMatch) title = clean(titleMatch[1]);
+    var descMatch = source.match(/(?:^|\n)\s*Description\s*:\s*([\s\S]*)/i);
+    if(descMatch) description = String(descMatch[1] || "").replace(/^\n+/, "").replace(/\n+$/g, "");
+    return { title: title, description: description };
+  }
+
+  function chooseLocalizations(finalText){
+    var first = parseLabeledCountryCode(finalText);
+    if(Object.keys(first).length) return first;
+    var second = parseCodeLineBlocks(finalText);
+    if(Object.keys(second).length) return second;
+    return parseSequentialTitleDescription(finalText);
+  }
+
   async function youtubeJson(url, options){
-    var res = await fetch(url, options);
+    var res = await fetch(url, options || {});
     var data = await res.json().catch(function(){ return {}; });
     if(!res.ok){
-      var message = data && data.error && data.error.message ? data.error.message : "YouTube API error";
-      throw new Error(message);
+      var msg = data && data.error && data.error.message ? data.error.message : "Temporary YouTube registration response was not accepted.";
+      throw new Error(msg);
     }
     return data;
   }
 
-  async function deliverByYouTubeSpec(){
+  async function engineLocalizationsOnly(ctx){
+    await youtubeJson("https://www.googleapis.com/youtube/v3/videos?part=localizations", {
+      method: "PUT",
+      headers: {
+        Authorization: "Bearer " + ctx.token,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ id: ctx.videoId, localizations: ctx.localizations })
+    });
+  }
+
+  async function engineSnippetMerge(ctx){
+    var existing = await youtubeJson(
+      "https://www.googleapis.com/youtube/v3/videos?part=snippet,localizations&id=" + encodeURIComponent(ctx.videoId),
+      { headers: { Authorization: "Bearer " + ctx.token } }
+    );
+    var video = existing.items && existing.items[0] ? existing.items[0] : {};
+    var snippet = video.snippet || {};
+    var merged = Object.assign({}, video.localizations || {}, ctx.localizations || {});
+    var body = {
+      id: ctx.videoId,
+      snippet: {
+        title: getNativeTitle() || snippet.title || "",
+        description: getNativeDescription() || snippet.description || "",
+        categoryId: snippet.categoryId || "22",
+        defaultLanguage: getNativeLanguageCode() || snippet.defaultLanguage || "en"
+      },
+      localizations: merged
+    };
+    await youtubeJson("https://www.googleapis.com/youtube/v3/videos?part=snippet,localizations", {
+      method: "PUT",
+      headers: {
+        Authorization: "Bearer " + ctx.token,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(body)
+    });
+  }
+
+  async function deliver(){
+    var started = Date.now();
     var token = getAccessToken();
-
-    var rawVideoUrl = getVideoUrl();
-    var videoId = extractVideoId(rawVideoUrl) || rawVideoUrl;
-
-
-    var nativeCode = getNativeLanguageCode();
-    var nativeTitle = getNativeTitle();
-    var nativeDescription = getNativeDescription();
-
-
+    var videoId = extractVideoId(getVideoUrl());
     var finalText = getFinalText();
-
-    var localizations = parseFinalTextToLocalizations(finalText);
+    var localizations = chooseLocalizations(finalText);
     var codes = Object.keys(localizations);
+    var ctx = { token: token, videoId: videoId, localizations: localizations };
 
-    var btn = $("sendOrderBtn") || $("youtubeRegisterBtn");
-    if(btn){ btn.disabled = true; btn.textContent = "Registration in Progress"; }
-
-    var startTime = Date.now();
-    showResult("register multilingual content is in progress.");
+    setButtonBusy(true);
+    showResult("YouTube multilingual registration is in progress.");
 
     try{
-      var existing = await youtubeJson(
-        "https://www.googleapis.com/youtube/v3/videos?part=snippet,localizations&id=" + encodeURIComponent(videoId),
-        { headers: { Authorization: "Bearer " + token } }
-      );
-
-      var video = existing.items && existing.items[0];
-      var snippet = video && video.snippet ? video.snippet : {};
-      var mergedLocalizations = Object.assign({}, video.localizations || {}, localizations);
-
-      var body = {
-        id: videoId,
-        snippet: {
-          title: getNativeTitle() || snippet.title || "",
-          description: getNativeDescription() || snippet.description || "",
-          categoryId: snippet.categoryId || "22",
-          defaultLanguage: getNativeLanguageCode()
-        },
-        localizations: mergedLocalizations
-      };
-
-      await youtubeJson(
-        "https://www.googleapis.com/youtube/v3/videos?part=snippet,localizations",
-        {
-          method: "PUT",
-          headers: { Authorization: "Bearer " + token, "Content-Type": "application/json" },
-          body: JSON.stringify(body)
-        }
-      );
-
-      var seconds = Math.max(1, Math.round((Date.now() - startTime) / 1000));
+      try{
+        await engineLocalizationsOnly(ctx);
+      }catch(primaryError){
+        await engineSnippetMerge(ctx);
+      }
+      var seconds = Math.max(1, Math.round((Date.now() - started) / 1000));
       showResult(
         "Registration Results\n" +
         "Number of target registration languages: " + codes.length + " languages\n" +
         "Registration time: " + seconds + " seconds"
       );
-      alert("register multilingual content has been completed.");
     }catch(error){
-      var message = error && error.message ? error.message : String(error);
+      var message = error && error.message ? error.message : String(error || "Temporary registration delay occurred.");
       showResult(message);
-      alert(message);
     }finally{
-      if(btn){ btn.disabled = false; btn.textContent = "YouTube Multilingual Registration"; }
+      setButtonBusy(false);
     }
   }
+
+  window.HumateckYouTubeRegister = {
+    deliver: deliver,
+    parse: chooseLocalizations
+  };
 
   document.addEventListener("click", function(event){
     var btn = event.target.closest("#sendOrderBtn, #youtubeRegisterBtn");
     if(!btn) return;
     event.preventDefault();
-    deliverByYouTubeSpec();
+    deliver();
   }, true);
 })();
