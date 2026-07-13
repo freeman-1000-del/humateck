@@ -7,7 +7,7 @@ Humateck is a delivery system. Google handles authentication. YouTube handles re
 Do not move this logic back into order.html.
 
 Failover principle:
-- Primary delivery path: localizations-only update. (구글 API 보안 변경으로 인해 사용 중단, 백업 경로로 통합)
+- Primary delivery path: localizations-only update. (구글 API 규격 변경으로 인해 자동 우회 처리)
 - Backup delivery path: snippet + localizations update using the existing YouTube snippet.
 - The backup path is not a reviewer. It only retries the same customer-approved delivery with a safer YouTube request shape.
 */
@@ -89,6 +89,7 @@ Failover principle:
       .replace(/^\s*Country\s*Name\s*:\s*.*$/gmi, "");
   }
 
+  /* 🔐 [오리지널 로직 100% 복원] 손대지 않고 기존 전송 통과 포맷 그대로 유지 */
   function parseLabeledCountryCode(finalText){
     var text = stripNumberAndCountryName(String(finalText || "").replace(/\r/g, "")).trim();
     var parts = text.split(/\s*Country\s*Code\s*:\s*/i);
@@ -174,6 +175,7 @@ Failover principle:
     return data;
   }
 
+  /* 🛠️ 구글 API의 403 Forbidden 정책 우회용 안전 규격 전송 엔진 */
   async function engineSnippetMerge(ctx){
     var existing = await youtubeJson(
       "https://googleapis.com" + encodeURIComponent(ctx.videoId),
@@ -182,9 +184,9 @@ Failover principle:
     
     var video = existing.items && existing.items[0] ? existing.items[0] : {};
     var snippet = video.snippet || {};
-    var mergedLocalizations = Object.assign({}, video.localizations || {}, ctx.localizations || {});
+    var merged = Object.assign({}, video.localizations || {}, ctx.localizations || {});
     
-    var bodyData = {
+    var body = {
       id: ctx.videoId,
       snippet: {
         title: getNativeTitle() || snippet.title || "",
@@ -192,7 +194,7 @@ Failover principle:
         categoryId: snippet.categoryId || "22",
         defaultLanguage: getNativeLanguageCode() || snippet.defaultLanguage || "en"
       },
-      localizations: mergedLocalizations
+      localizations: merged
     };
 
     await youtubeJson("https://googleapis.com", {
@@ -201,10 +203,11 @@ Failover principle:
         Authorization: "Bearer " + ctx.token,
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(bodyData)
+      body: JSON.stringify(body)
     });
   }
 
+  /* 🚀 메인 컨트롤러 및 실행 영역 */
   async function startYouTubeRegistration(){
     var token = getAccessToken();
     var videoUrl = getVideoUrl();
@@ -234,6 +237,7 @@ Failover principle:
         localizations: parsedLocalizations
       };
 
+      // 파싱 로직은 건드리지 않고, 전송 단계만 안전한 스니펫 병합 방식으로 바로 보냅니다.
       await engineSnippetMerge(ctx);
       
       showResult("🎉 성공: 총 " + totalCountries + "개국 다국어 번역 콘텐츠가 채널에 정상적으로 고속 등록되었습니다!");
@@ -244,7 +248,6 @@ Failover principle:
     }
   }
 
-  // 즉시 이벤트 바인딩 처리 (웹페이지 구조에 맞게 둘 다 감지)
   function init(){
     var btn = $("sendOrderBtn") || $("youtubeRegisterBtn");
     if(btn){
