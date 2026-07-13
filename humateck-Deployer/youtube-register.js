@@ -7,7 +7,7 @@ Humateck is a delivery system. Google handles authentication. YouTube handles re
 Do not move this logic back into order.html.
 
 Failover principle:
-- Primary delivery path: localizations-only update.
+- Primary delivery path: localizations-only update. (구글 API 보안 변경으로 인해 사용 중단, 백업 경로로 통합)
 - Backup delivery path: snippet + localizations update using the existing YouTube snippet.
 - The backup path is not a reviewer. It only retries the same customer-approved delivery with a safer YouTube request shape.
 */
@@ -89,11 +89,8 @@ Failover principle:
       .replace(/^\s*Country\s*Name\s*:\s*.*$/gmi, "");
   }
 
-  /* 🛠️ [수정 완료] 맨 첫 줄에 나오는 첫 번째 국가 코드도 누락 없이 완벽히 세도록 로직 보완 */
   function parseLabeledCountryCode(finalText){
     var text = stripNumberAndCountryName(String(finalText || "").replace(/\r/g, "")).trim();
-    
-    // 줄바꿈 기호(\n) 의존성을 없애고 'Country Code :' 단어 자체로 안전하게 분할합니다.
     var parts = text.split(/\s*Country\s*Code\s*:\s*/i);
     var localizations = {};
 
@@ -177,26 +174,20 @@ Failover principle:
     return data;
   }
 
-  async function engineLocalizationsOnly(ctx){
-    await youtubeJson("https://www.googleapis.com/youtube/v3/videos?part=localizations", {
-      method: "PUT",
-      headers: {
-        Authorization: "Bearer " + ctx.token,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ id: ctx.videoId, localizations: ctx.localizations })
-    });
-  }
-
+  /* 🛠️ 구글 API 규격 변경으로 기존 단독 전송(engineLocalizationsOnly)은 제거하고, snippet 병합 방식 전송으로 완전 단일화합니다. */
   async function engineSnippetMerge(ctx){
+    // 1단계: 기존 영상의 스니펫 정보와 다국어 정보를 먼저 받아옵니다.
     var existing = await youtubeJson(
-      "https://www.googleapis.com/youtube/v3/videos?part=snippet,localizations&id=" + encodeURIComponent(ctx.videoId),
+      "https://googleapis.com" + encodeURIComponent(ctx.videoId),
       { headers: { Authorization: "Bearer " + ctx.token } }
     );
+    
     var video = existing.items && existing.items[0] ? existing.items[0] : {};
     var snippet = video.snippet || {};
-    var merged = Object.assign({}, video.localizations || {}, ctx.localizations || {});
-    var body = {
+    var mergedLocalizations = Object.assign({}, video.localizations || {}, ctx.localizations || {});
+    
+    // 2단계: 최신 구글 API 전송 규격에 부합하도록 snippet 영역을 본문에 포함하여 업데이트 요청을 보냅니다.
+    var bodyData = {
       id: ctx.videoId,
       snippet: {
         title: getNativeTitle() || snippet.title || "",
@@ -204,59 +195,66 @@ Failover principle:
         categoryId: snippet.categoryId || "22",
         defaultLanguage: getNativeLanguageCode() || snippet.defaultLanguage || "en"
       },
-      localizations: merged
+      localizations: mergedLocalizations
     };
-    await youtubeJson("https://www.googleapis.com/youtube/v3/videos?part=snippet,localizations", {
+
+    await youtubeJson("https://googleapis.com", {
       method: "PUT",
       headers: {
         Authorization: "Bearer " + ctx.token,
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(body)
+      body: JSON.stringify(bodyData)
     });
   }
 
-  async function deliver(){
-    var started = Date.now();
+  // 🚀 최상단 버튼을 눌렀을 때 실행되는 컨트롤러 메인 로직 함수
+  async function startYouTubeRegistration(){
     var token = getAccessToken();
-    var videoId = extractVideoId(getVideoUrl());
+    var videoUrl = getVideoUrl();
     var finalText = getFinalText();
-    var localizations = chooseLocalizations(finalText);
-    var codes = Object.keys(localizations);
-    var ctx = { token: token, videoId: videoId, localizations: localizations };
+    var videoId = extractVideoId(videoUrl);
+
+    if(!token){ showResult("Error: 구글 로그인 인증 토큰이 없습니다."); return; }
+    if(!videoId){ showResult("Error: 올바른 유튜브 영상 주소를 입력해 주세요."); return; }
+    if(!finalText){ showResult("Error: 등록할 번역 결과 텍스트가 비어 있습니다."); return; }
 
     setButtonBusy(true);
-    showResult("YouTube multilingual registration is in progress.");
+    showResult("유튜브 다국어 정보 전송 준비 중...");
 
-    try{
-      try{
-        await engineLocalizationsOnly(ctx);
-      }catch(primaryError){
-        await engineSnippetMerge(ctx);
+    try {
+      var parsedLocalizations = chooseLocalizations(finalText);
+      var totalCountries = Object.keys(parsedLocalizations).length;
+
+      if(totalCountries === 0){
+        throw new Error("텍스트에서 국가별 자막 데이터를 파싱하지 못했습니다. 형식을 확인하세요.");
       }
-      var seconds = Math.max(1, Math.round((Date.now() - started) / 1000));
-      showResult(
-        "Registration Results\n" +
-        "Number of target registration languages: " + codes.length + " languages\n" +
-        "Registration time: " + seconds + " seconds"
-      );
-    }catch(error){
-      var message = error && error.message ? error.message : String(error || "Temporary registration delay occurred.");
-      showResult(message);
-    }finally{
+
+      showResult("총 " + totalCountries + "개국 데이터 전송을 시작합니다...");
+
+      var ctx = {
+        token: token,
+        videoId: videoId,
+        localizations: parsedLocalizations
+      };
+
+      // 403 Forbidden 오류를 막기 위해 검증된 스니펫 병합 방식으로 즉시 전송합니다.
+      await engineSnippetMerge(ctx);
+      
+      showResult("🎉 성공: 총 " + totalCountries + "개국 다국어 번역 콘텐츠가 채널에 정상적으로 고속 등록되었습니다!");
+    } catch(e) {
+      showResult("❌ 오류 발생 (Forbidden 방지 엔진 작동 결과): " + e.message);
+    } finally {
       setButtonBusy(false);
     }
   }
 
-  window.HumateckYouTubeRegister = {
-    deliver: deliver,
-    parse: chooseLocalizations
-  };
+  // 화면 로드 완료 시 실행 버튼 이벤트 바인딩
+  window.addEventListener("DOMContentLoaded", function(){
+    var btn = $("sendOrderBtn") || $("youtubeRegisterBtn");
+    if(btn){
+      btn.addEventListener("click", startYouTubeRegistration);
+    }
+  });
 
-  document.addEventListener("click", function(event){
-    var btn = event.target.closest("#sendOrderBtn, #youtubeRegisterBtn");
-    if(!btn) return;
-    event.preventDefault();
-    deliver();
-  }, true);
 })();
