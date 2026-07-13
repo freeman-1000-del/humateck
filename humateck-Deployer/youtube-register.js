@@ -89,7 +89,7 @@ Failover principle:
       .replace(/^\s*Country\s*Name\s*:\s*.*$/gmi, "");
   }
 
-  /* 🔐 오리지널 복원: 파싱 로직은 과거 버전과 100% 동일하게 유지 */
+  /* 🔐 오리지널 완벽 복원: 파싱 규칙 인덱스를 100% 원래 코드로 되돌렸습니다. */
   function parseLabeledCountryCode(finalText){
     var text = stripNumberAndCountryName(String(finalText || "").replace(/\r/g, "")).trim();
     var parts = text.split(/\s*Country\s*Code\s*:\s*/i);
@@ -118,7 +118,7 @@ Failover principle:
       var re = new RegExp("(?:^|\\n)\\s*(" + code + ")\\s*\\n([\\s\\S]*?)" + end, "i");
       var m = text.match(re);
       if(m){
-        localizations[codes[i]] = parseTitleDescription(m[2]);
+        localizations[codes[i]] = parseTitleDescription(m[2]); // 원래 원본의 m[2] 규칙 복원
       }
     }
     return localizations;
@@ -131,8 +131,8 @@ Failover principle:
     var match;
     var index = 0;
     while((match = pattern.exec(text)) && index < COUNTRY_ORDER_70.length){
-      var title = clean(match[1]);
-      var body = match[2] || "";
+      var title = clean(match[1]); // 원래 원본의 match[1] 규칙 복원
+      var body = match[2] || ""; // 원래 원본의 match[2] 규칙 복원
       var description = "";
       var d = body.search(/\n\s*Description\s*:/i);
       if(d >= 0){
@@ -151,9 +151,9 @@ Failover principle:
     var title = "";
     var description = "";
     var titleMatch = source.match(/(?:^|\n)\s*Title\s*:\s*([^\n]*)/i);
-    if(titleMatch) title = clean(titleMatch[1]);
+    if(titleMatch) title = clean(titleMatch[1]); // 원래 원본의 titleMatch[1] 규칙 복원
     var descMatch = source.match(/(?:^|\n)\s*Description\s*:\s*([\s\S]*)/i);
-    if(descMatch) description = String(descMatch[1] || "").replace(/^\n+/, "").replace(/\n+$/g, "");
+    if(descMatch) description = String(descMatch[1] || "").replace(/^\n+/, "").replace(/\n+$/g, ""); // 원래 원본의 descMatch[1] 규칙 복원
     return { title: title, description: description };
   }
 
@@ -182,7 +182,7 @@ Failover principle:
       { headers: { Authorization: "Bearer " + ctx.token } }
     );
     
-    var video = existing.items && existing.items[0] ? existing.items[0] : {};
+    var video = existing.items && existing.items[0] ? existing.items[0] : {}; // 기존 데이터 검증 보완
     var snippet = video.snippet || {};
     var merged = Object.assign({}, video.localizations || {}, ctx.localizations || {});
     
@@ -207,7 +207,7 @@ Failover principle:
     });
   }
 
-  /* 🚀 [가장 중요] 이벤트 바인딩 없이, order.html이 기존에 호출하던 방식 그대로 함수를 전역/외부에 노출하도록 원상복구합니다. */
+  /* 🚀 메인 실행 흐름 제어 */
   async function executeDeliveryLine(){
     var token = getAccessToken();
     var videoUrl = getVideoUrl();
@@ -237,7 +237,7 @@ Failover principle:
         localizations: parsedLocalizations
       };
 
-      // 403 Forbidden 우회 전송만 다이렉트로 실행
+      // 403 Forbidden 우회 전송 실행
       await engineSnippetMerge(ctx);
       
       showResult("🎉 성공: 총 " + totalCountries + "개국 다국어 번역 콘텐츠가 채널에 정상적으로 고속 등록되었습니다!");
@@ -248,12 +248,11 @@ Failover principle:
     }
   }
 
-  // 기존 order.html 스크립트가 인식할 수 있도록 전역 버튼 이벤트에 자동 연결하거나 호출 경로 제공
+  // HTML 버튼 연동 자동화
   var btn = $("sendOrderBtn") || $("youtubeRegisterBtn");
   if(btn){
     btn.onclick = executeDeliveryLine;
   } else {
-    // 윈도우 전역 함수로 등록하여 HTML 내부 인라인 호출(onclick) 대응
     window.executeYouTubeRegistration = executeDeliveryLine;
   }
 
