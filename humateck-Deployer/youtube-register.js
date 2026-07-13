@@ -220,6 +220,7 @@ Failover principle:
     var started = Date.now();
     var token = getAccessToken();
     var videoId = extractVideoId(getVideoUrl());
+    alert("VIDEO ID CHECK: [" + videoId + "]");
     var finalText = getFinalText();
     var localizations = chooseLocalizations(finalText);
     var codes = Object.keys(localizations);
