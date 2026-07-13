@@ -70,7 +70,7 @@ Failover principle:
     if(/^[a-zA-Z0-9_-]{8,}$/.test(raw) && raw.indexOf("http") !== 0) return raw;
     try{
       var u = new URL(raw);
-      if(u.hostname.indexOf("youtu.be") >= 0) return u.pathname.replace(/^\//, "").split("/")[0].trim();
+      if(u.hostname.indexOf("youtu.be") >= 0) return u.pathname.replace(/^\//, "").split("/").trim();
       var v = u.searchParams.get("v");
       if(v) return v.trim();
       var parts = u.pathname.split("/").filter(Boolean);
@@ -174,9 +174,7 @@ Failover principle:
     return data;
   }
 
-  /* 🛠️ 구글 API 규격 변경으로 기존 단독 전송(engineLocalizationsOnly)은 제거하고, snippet 병합 방식 전송으로 완전 단일화합니다. */
   async function engineSnippetMerge(ctx){
-    // 1단계: 기존 영상의 스니펫 정보와 다국어 정보를 먼저 받아옵니다.
     var existing = await youtubeJson(
       "https://googleapis.com" + encodeURIComponent(ctx.videoId),
       { headers: { Authorization: "Bearer " + ctx.token } }
@@ -186,7 +184,6 @@ Failover principle:
     var snippet = video.snippet || {};
     var mergedLocalizations = Object.assign({}, video.localizations || {}, ctx.localizations || {});
     
-    // 2단계: 최신 구글 API 전송 규격에 부합하도록 snippet 영역을 본문에 포함하여 업데이트 요청을 보냅니다.
     var bodyData = {
       id: ctx.videoId,
       snippet: {
@@ -208,7 +205,6 @@ Failover principle:
     });
   }
 
-  // 🚀 최상단 버튼을 눌렀을 때 실행되는 컨트롤러 메인 로직 함수
   async function startYouTubeRegistration(){
     var token = getAccessToken();
     var videoUrl = getVideoUrl();
@@ -238,23 +234,28 @@ Failover principle:
         localizations: parsedLocalizations
       };
 
-      // 403 Forbidden 오류를 막기 위해 검증된 스니펫 병합 방식으로 즉시 전송합니다.
       await engineSnippetMerge(ctx);
       
       showResult("🎉 성공: 총 " + totalCountries + "개국 다국어 번역 콘텐츠가 채널에 정상적으로 고속 등록되었습니다!");
     } catch(e) {
-      showResult("❌ 오류 발생 (Forbidden 방지 엔진 작동 결과): " + e.message);
+      showResult("❌ 오류 발생: " + e.message);
     } finally {
       setButtonBusy(false);
     }
   }
 
-  // 화면 로드 완료 시 실행 버튼 이벤트 바인딩
-  window.addEventListener("DOMContentLoaded", function(){
+  // 즉시 이벤트 바인딩 처리 (웹페이지 구조에 맞게 둘 다 감지)
+  function init(){
     var btn = $("sendOrderBtn") || $("youtubeRegisterBtn");
     if(btn){
       btn.addEventListener("click", startYouTubeRegistration);
     }
-  });
+  }
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", init);
+  }else{
+    init();
+  }
 
 })();
