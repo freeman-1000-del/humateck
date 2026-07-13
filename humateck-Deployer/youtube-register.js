@@ -89,7 +89,7 @@ Failover principle:
       .replace(/^\s*Country\s*Name\s*:\s*.*$/gmi, "");
   }
 
-  /* 🔐 [오리지널 로직 100% 복원] 손대지 않고 기존 전송 통과 포맷 그대로 유지 */
+  /* 🔐 오리지널 복원: 파싱 로직은 과거 버전과 100% 동일하게 유지 */
   function parseLabeledCountryCode(finalText){
     var text = stripNumberAndCountryName(String(finalText || "").replace(/\r/g, "")).trim();
     var parts = text.split(/\s*Country\s*Code\s*:\s*/i);
@@ -175,7 +175,7 @@ Failover principle:
     return data;
   }
 
-  /* 🛠️ 구글 API의 403 Forbidden 정책 우회용 안전 규격 전송 엔진 */
+  /* 🛠️ 오직 이 전송 부문만 403 Forbidden 정책 우회 규격으로 패치 */
   async function engineSnippetMerge(ctx){
     var existing = await youtubeJson(
       "https://googleapis.com" + encodeURIComponent(ctx.videoId),
@@ -207,8 +207,8 @@ Failover principle:
     });
   }
 
-  /* 🚀 메인 컨트롤러 및 실행 영역 */
-  async function startYouTubeRegistration(){
+  /* 🚀 [가장 중요] 이벤트 바인딩 없이, order.html이 기존에 호출하던 방식 그대로 함수를 전역/외부에 노출하도록 원상복구합니다. */
+  async function executeDeliveryLine(){
     var token = getAccessToken();
     var videoUrl = getVideoUrl();
     var finalText = getFinalText();
@@ -237,7 +237,7 @@ Failover principle:
         localizations: parsedLocalizations
       };
 
-      // 파싱 로직은 건드리지 않고, 전송 단계만 안전한 스니펫 병합 방식으로 바로 보냅니다.
+      // 403 Forbidden 우회 전송만 다이렉트로 실행
       await engineSnippetMerge(ctx);
       
       showResult("🎉 성공: 총 " + totalCountries + "개국 다국어 번역 콘텐츠가 채널에 정상적으로 고속 등록되었습니다!");
@@ -248,17 +248,13 @@ Failover principle:
     }
   }
 
-  function init(){
-    var btn = $("sendOrderBtn") || $("youtubeRegisterBtn");
-    if(btn){
-      btn.addEventListener("click", startYouTubeRegistration);
-    }
-  }
-
-  if(document.readyState === "loading"){
-    document.addEventListener("DOMContentLoaded", init);
-  }else{
-    init();
+  // 기존 order.html 스크립트가 인식할 수 있도록 전역 버튼 이벤트에 자동 연결하거나 호출 경로 제공
+  var btn = $("sendOrderBtn") || $("youtubeRegisterBtn");
+  if(btn){
+    btn.onclick = executeDeliveryLine;
+  } else {
+    // 윈도우 전역 함수로 등록하여 HTML 내부 인라인 호출(onclick) 대응
+    window.executeYouTubeRegistration = executeDeliveryLine;
   }
 
 })();
