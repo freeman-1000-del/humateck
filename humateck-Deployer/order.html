@@ -1613,7 +1613,7 @@ Without any explanation, output only the translated registration text.`;
                 sessionStorage.setItem("humateckGoogleAccessToken", response.access_token);
                 sessionStorage.setItem("humateckGoogleOAuthScope", response.scope || YOUTUBE_SCOPE);
               }catch(e){}
-alert("SCOPE CHECK: " + (response.scope || "NONE"));
+              alert("SCOPE CHECK: " + (response.scope || "NONE"));
               setAuthStatus("Google OAuth authorization has been completed. You can now proceed with YouTube registration.", "ok");
             }else{
               setAuthStatus("No Google OAuth response was received. Please check Authorized JavaScript origins and Client ID. Current origin: " + window.location.origin, "bad");
