@@ -12,7 +12,7 @@
       seats: 1,
       amountUsd: 33,
       amountKrwNote: 45000,
-      planId: "", // e.g. P-xxxxxxxx
+      planId: "P-8PS57707AL2928019NJLB7NY",
       subscribeUrl: "", // auto-filled below when planId set
     },
     premium: {
@@ -21,7 +21,7 @@
       seats: 5,
       amountUsd: 98,
       amountKrwNote: 135000,
-      planId: "",
+      planId: "", // pending — create after Standard
       subscribeUrl: "",
     },
   };
