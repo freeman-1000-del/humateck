@@ -430,16 +430,39 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 <div class="wrap"><header class="top"><a href="index.html"><img class="logo" src="FINAL_LOGO01.png" alt="Humateck"></a></header>
 <div class="top-left-tools"><a class="miniNavButton" href="index.html">Back to First Page</a><a class="miniNavButton" href="order.html">View Order Page</a></div>
 <section class="card"><h1>YouTube Multilingual Registration — Web Subscription</h1>
-<p style="color:#e6e0d4;font-size:16px;line-height:1.6;margin:10px 0 0">Web subscription (own site · PayPal). Marketplace PC license pricing is separate and must stay above these rates.</p>
+<p style="color:#e6e0d4;font-size:16px;line-height:1.6;margin:10px 0 0">Overseas web · PayPal. Korea buyers use Kmong (PC license). Fiverr is a separate overseas track.</p>
 </section>
 <section class="plans">
 <article class="plan" data-subscription-plan="free7"><div class="currentPlanBadge">Currently Active</div><h2>7-Day Free Plan</h2><div class="price">USD 0 / 7 days</div><p>Try the flow first. Work that can take around 35 minutes by hand for ~70 countries usually finishes registration in a few seconds.</p><a class="btn" href="order.html?plan=free7">Start Free Trial</a></article>
-<article class="plan" data-subscription-plan="monthly_standard"><div class="currentPlanBadge">Currently Active</div><h2>Standard</h2><div class="price">KRW 45,000 / month</div><p>≈ USD 33 / month · 1 seat · Full country scope on the web order flow.</p><a class="btn" href="#" aria-disabled="true" onclick="return false;">PayPal setup in progress</a></article>
-<article class="plan featured" data-subscription-plan="monthly_premium"><div class="currentPlanBadge">Currently Active</div><h2>Enterprise 5-seat</h2><div class="price">KRW 135,000 / month</div><p>≈ USD 98 / month · 5 seats · Same web registration flow for team use.</p><a class="btn" href="#" aria-disabled="true" onclick="return false;">PayPal setup in progress</a></article>
+<article class="plan" data-subscription-plan="monthly_standard"><div class="currentPlanBadge">Currently Active</div><h2>Standard</h2><div class="price">USD 33 / month</div><p>1 seat · Full country scope on the web order flow. (≈ KRW 45,000)</p><a class="btn paypalSubBtn" href="#" data-paypal-tier="standard" aria-disabled="true">PayPal — add plan ID</a></article>
+<article class="plan featured" data-subscription-plan="monthly_premium"><div class="currentPlanBadge">Currently Active</div><h2>Enterprise 5-seat</h2><div class="price">USD 98 / month</div><p>5 seats · Same web registration flow for team use. (≈ KRW 135,000)</p><a class="btn paypalSubBtn" href="#" data-paypal-tier="premium" aria-disabled="true">PayPal — add plan ID</a></article>
 </section></div><div class="account"><a href="#" title="Google Official Authorization">G</a><a href="#" title="Apple Official Authorization">●</a><a href="#" title="Email Official Authorization">@</a></div>
 
+<script src="../paypal-plans.js?v=20260714a"></script>
 <script>
 (function(){
+  function wirePayPalButtons(){
+    var cfg = window.HUMATECK_PAYPAL_WEB;
+    if(!cfg) return;
+    document.querySelectorAll(".paypalSubBtn").forEach(function(btn){
+      var tier = btn.getAttribute("data-paypal-tier");
+      var plan = cfg[tier];
+      if(plan && plan.subscribeUrl){
+        btn.href = plan.subscribeUrl;
+        btn.target = "_blank";
+        btn.rel = "noopener noreferrer";
+        btn.removeAttribute("aria-disabled");
+        btn.textContent = "Subscribe with PayPal";
+        btn.onclick = null;
+      } else {
+        btn.href = "#";
+        btn.setAttribute("aria-disabled", "true");
+        btn.textContent = "PayPal — plan ID pending";
+        btn.onclick = function(e){ e.preventDefault(); return false; };
+      }
+    });
+  }
+  wirePayPalButtons();
   document.addEventListener("click", function(e){
     var btn = e.target.closest(".plan .btn");
     if(!btn) return;
