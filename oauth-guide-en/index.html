@@ -227,8 +227,6 @@
   .g-toc a{font-size:15px!important;}
   .g-callout{font-size:15px!important;}
   .g-tip{font-size:15px!important;}
-
-
   .g-back-btn{
     display:inline-flex;align-items:center;gap:8px;
     padding:10px 18px;border-radius:999px;
@@ -324,59 +322,70 @@
       <div class="g-step-head">
         <div class="g-step-num">2</div>
         <div class="g-step-text">
-          Go to the Create a Google Client page.
+          Go to the Create a Google Client page. You'll see "Application Types."
           <br>
-          <a class="g-step-link" href="https://console.cloud.google.com/auth/clients/create" target="_blank" rel="noopener">Create a Google Client → https://console.cloud.google.com/auth/clients/create?project=fourth-cedar-489307-b1</a>
+          <a class="g-step-link" href="https://console.cloud.google.com/auth/clients/create" target="_blank" rel="noopener">Create a Google Client → https://console.cloud.google.com/auth/clients/create</a>
         </div>
       </div>
       <div class="g-shot">
         <div class="g-shot-bar"><span></span><span></span><span></span></div>
-        <img src="images/c1.png" alt="Create OAuth Client ID screen" loading="lazy">
+        <img src="images/en_n1.jpg" alt="Create OAuth Client ID screen" loading="lazy">
       </div>
     </div>
 
     <div class="g-step">
       <div class="g-step-head">
         <div class="g-step-num">3</div>
-        <div class="g-step-text">Open the "Application Types" dropdown and select <b>"Desktop App."</b></div>
+        <div class="g-step-text">Open the "Application Types" dropdown and select <b>"Web applications."</b></div>
       </div>
       <div class="g-shot">
         <div class="g-shot-bar"><span></span><span></span><span></span></div>
-        <img src="images/c2.png" alt="Selecting Desktop App from the Application Types dropdown" loading="lazy">
+        <img src="images/en_n2.jpg" alt="Selecting Web applications from the Application Types dropdown" loading="lazy">
       </div>
     </div>
 
     <div class="g-step">
       <div class="g-step-head">
         <div class="g-step-num">4</div>
-        <div class="g-step-text">Enter any name you like in the "Name" field, then click the <b>"CREATE"</b> button at the bottom.</div>
+        <div class="g-step-text">Enter any name you like in the "Name" field.</div>
       </div>
       <div class="g-shot">
         <div class="g-shot-bar"><span></span><span></span><span></span></div>
-        <img src="images/c4.png" alt="Entering a client name and clicking CREATE" loading="lazy">
+        <img src="images/en_n3.jpg" alt="Entering a client name" loading="lazy">
       </div>
     </div>
 
     <div class="g-step">
       <div class="g-step-head">
         <div class="g-step-num">5</div>
+        <div class="g-step-text">Scroll down and you'll see <b>"Approved JavaScript origins"</b> and <b>"Approved redirect URI."</b> Enter <b>"https://humateck.com"</b> in each, then click the <b>"CREATE"</b> button at the bottom.</div>
+      </div>
+      <div class="g-shot">
+        <div class="g-shot-bar"><span></span><span></span><span></span></div>
+        <img src="images/en_n4.jpg" alt="Entering Approved JavaScript origins and redirect URI" loading="lazy">
+      </div>
+    </div>
+
+    <div class="g-step">
+      <div class="g-step-head">
+        <div class="g-step-num">6</div>
         <div class="g-step-text">Your Client ID and Client Secret are generated. Be sure to copy and store both values somewhere safe, then click <b>"OK"</b> in the bottom-right corner.</div>
       </div>
       <div class="g-shot">
         <div class="g-shot-bar"><span></span><span></span><span></span></div>
-        <img src="images/c5.png" alt="OAuth client created confirmation dialog" loading="lazy">
+        <img src="images/en_n5.jpg" alt="OAuth client created confirmation dialog" loading="lazy">
       </div>
       <div class="g-callout">⚠ Once you close this dialog, the Client Secret cannot be viewed again. Make sure you've saved it before continuing.</div>
     </div>
 
     <div class="g-step">
       <div class="g-step-head">
-        <div class="g-step-num">6</div>
-        <div class="g-step-text">Your Client ID now appears in the list. You're ready to use this Google Client ID in your app.</div>
+        <div class="g-step-num">7</div>
+        <div class="g-step-text">Your Client ID now appears in the list. This ID is your Google OAuth authentication key.</div>
       </div>
       <div class="g-shot">
         <div class="g-shot-bar"><span></span><span></span><span></span></div>
-        <img src="images/c3.png" alt="OAuth 2.0 Client ID list" loading="lazy">
+        <img src="images/en_n6.jpg" alt="OAuth 2.0 Client ID list" loading="lazy">
       </div>
     </div>
 
@@ -390,7 +399,7 @@
 </div>
 <script>
 (function(){
-  var map={deployer:"/deployer.html",tutor:"/tutor.html","deployer-en":"/deployer-en.html","tutor-en":"/tutor-en.html"};
+  var map={deployer:"/deployer.html",tutor:"/tutor.html","deployer-en":"/deployer-en.html","tutor-en":"/tutor-en.html",fiverr:"/fiverr/demo.html",kmong:"/kmong/demo.html"};
   var key=new URLSearchParams(location.search).get("return")||"deployer-en";
   var url=map[key]||map.deployer-en;
   document.querySelectorAll(".g-back-link").forEach(function(a){a.href=url;});
