@@ -21,7 +21,7 @@
       seats: 5,
       amountUsd: 98,
       amountKrwNote: 135000,
-      planId: "", // pending — create after Standard
+      planId: "P-1UN50163GG809631LNJLCZOY", // Enterprise 5-seat USD 98
       subscribeUrl: "",
     },
   };
