@@ -18,9 +18,9 @@
       tierKo: "일반",
       tierEn: "Standard",
       taglineKo:
-        "매번 번역문 복붙에 날아가던 소중한 내 시간, 단 한번의 결제로 자동화시키세요.",
+        "70개국 분량도 수작업이면 대략 35분 가까이 걸리기 쉽습니다. 등록 자체는 보통 수 초면 끝납니다.",
       taglineEn:
-        "Stop losing hours to copy-paste—automate with one payment.",
+        "Manual work across ~70 countries often takes around 35 minutes. Registration itself usually finishes in a few seconds.",
       descKo: "PC 1대 · 구글 클라이언트 인증가이드(PDF) 제공",
       descEn: "1 PC · Google Client Authentication Guide (PDF) included",
       mailSubjectKo: "DELUXE 일반",
@@ -37,9 +37,9 @@
       tierKo: "기업 5인 패키지",
       tierEn: "Enterprise 5-seat pack",
       taglineKo:
-        "MCN, 글로벌 에이전시 필수품. 직원 5명의 업무효율을 70배 끌어올려줍니다.",
+        "MCN·에이전시용 5인 패키지. 같은 등록 작업을 최대 5대 PC에서 나눠 쓰고, 반복 복붙 시간을 줄입니다.",
       taglineEn:
-        "Essential for MCNs and global agencies—boost a 5-person team’s efficiency by up to 70×.",
+        "5-seat pack for MCN and agency teams. Share the same registration flow across up to 5 PCs and cut repetitive copy-paste time.",
       descKo: "PC 5대 (5인용) · 구글 클라이언트 인증가이드(PDF) 제공",
       descEn: "5 PCs (5 seats) · Google Client Authentication Guide (PDF) included",
       mailSubjectKo: "PREMIUM 기업 5인 패키지",
