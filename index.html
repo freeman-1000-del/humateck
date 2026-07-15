@@ -153,8 +153,8 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
   display:inline-flex;align-items:center;justify-content:center;padding:10px 16px;
   border:1px solid rgba(214,176,78,.68);border-radius:999px;color:#f4d16d;background:rgba(214,176,78,.12);font-weight:800
 }
-.planPriceHint{width:100%;margin:0;color:#9fd4ff;font-size:15px;font-weight:800;line-height:1.5}
-.planPriceHint strong{color:#ffd95a}
+.planPriceHint{width:100%;margin:2px 0 0;color:#9aa0a6;font-size:13px;font-weight:600;line-height:1.45;min-height:1.2em}
+.planPriceHint strong{color:#cfe8ff;font-weight:700}
 .commandFullRows{display:grid;grid-template-columns:1fr;gap:14px}
 .commandFullItem{border:1px solid rgba(214,176,78,.35);border-radius:14px;padding:14px;background:rgba(5,11,20,.48)}
 .commandFullTop{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:8px}
@@ -1075,18 +1075,20 @@ Do not add review, blocking, metadata judgment, hidden/admin menu, auto-correcti
 <header class="top"><a href="index.html"><img class="logo" src="FINAL_LOGO01.png" alt="Humateck"></a><div class="lang">◎ English⌄</div></header>
 <div class="orderTopButtons"><a href="index.html">Home</a></div>
 <div class="planPickerRow">
-  <label for="orderPlanSelect">Plan</label>
-  <select id="orderPlanSelect" aria-label="Select subscription plan">
-    <option value="">Select a plan…</option>
-    <option value="free7_standard">Standard · 7-Day Free — USD 0</option>
-    <option value="free7_enterprise">Enterprise · 7-Day Free — USD 0</option>
-    <option value="monthly_standard">Standard Monthly — USD 33 / month</option>
-    <option value="yearly_standard">Standard Annual — USD 316.80 / year (20% off)</option>
-    <option value="monthly_premium">Enterprise Monthly — USD 91 / month</option>
-    <option value="yearly_premium">Enterprise Annual — USD 873.60 / year (20% off)</option>
+  <label for="orderPlanSelect">Distribution countries</label>
+  <select id="orderPlanSelect" aria-label="Select distribution country scope">
+    <option value="">Select distribution countries…</option>
+    <option value="asia30">Asia Plan (30 countries)</option>
+    <option value="europe30">Europe Plan (30 countries)</option>
+    <option value="africa30">Africa Plan (30 countries)</option>
+    <option value="america30">Americas Plan (30 countries)</option>
+    <option value="oceania30">Oceania Plan (30 countries)</option>
+    <option value="global16">Global 16 Countries</option>
+    <option value="global50">Global 50 Countries</option>
+    <option value="global70">Global 70 Countries</option>
   </select>
   <a class="plansSideBtn" href="/humateck-Deployer/plans.html">Plans page</a>
-  <p class="planPriceHint" id="orderPlanPriceHint">Select a plan to see price and country scope.</p>
+  <p class="planPriceHint" id="orderPlanPriceHint"></p>
 </div>
 <section class="orderMainGrid">
   <div class="orderLeftColumn">
@@ -1319,6 +1321,8 @@ A) This is because YouTube content display system fixes the default video settin
     if(plan === "monthly70") plan = "monthly70";
     if(plan === "yearly70") plan = "yearly70";
     var allowed = {
+      asia30:true, europe30:true, africa30:true, america30:true, oceania30:true,
+      global16:true, global50:true, global70:true, custom50:true,
       free7:true, free7_standard:true, free7_enterprise:true,
       monthly_standard:true, yearly_standard:true,
       monthly_premium:true, yearly_premium:true,
@@ -1334,22 +1338,26 @@ A) This is because YouTube content display system fixes the default video settin
 
   function getHumateckPlanLimit(plan){
     if(plan === "free7" || plan === "free7_standard" || plan === "free7_enterprise") return 5;
+    if(plan === "asia30" || plan === "europe30" || plan === "africa30" || plan === "america30" || plan === "oceania30" || plan === "monthly30") return 30;
+    if(plan === "global16") return 16;
+    if(plan === "global50" || plan === "custom50" || plan === "monthly50") return 50;
+    if(plan === "global70" || plan === "monthly70" || plan === "yearly70") return 70;
     if(plan === "monthly_standard" || plan === "yearly_standard" || plan === "monthly_premium" || plan === "yearly_premium") return 70;
-    if(plan === "monthly30") return 30;
-    if(plan === "monthly50") return 50;
-    if(plan === "monthly70" || plan === "yearly70") return 70;
     return 0;
   }
 
   function getHumateckPlanPriceText(plan){
+    /* Soft price peek only — continent/scope names stay in the dropdown. */
     var map = {
-      free7: "USD 0 / 7 days · 1 seat · 5 countries",
-      free7_standard: "USD 0 / 7 days · 1 seat · 5 countries",
-      free7_enterprise: "USD 0 / 7 days · 5 seats · 5 countries",
-      monthly_standard: "USD 33 / month · 1 seat · full country scope (≈ KRW 45,000)",
-      yearly_standard: "USD 316.80 / year · 1 seat · 20% off vs monthly (≈ KRW 432,000)",
-      monthly_premium: "USD 91 / month · 5 seats · full country scope (≈ KRW 125,000)",
-      yearly_premium: "USD 873.60 / year · 5 seats · 20% off vs monthly (≈ KRW 1,200,000)"
+      asia30: "30 countries · from USD 33/mo",
+      europe30: "30 countries · from USD 33/mo",
+      africa30: "30 countries · from USD 33/mo",
+      america30: "30 countries · from USD 33/mo",
+      oceania30: "30 countries · from USD 33/mo",
+      global16: "16 countries · from USD 33/mo",
+      global50: "50 countries · from USD 33/mo",
+      global70: "70 countries · from USD 33/mo · Enterprise USD 91/mo (5 seats)",
+      custom50: "Up to 50 countries · from USD 33/mo"
     };
     return map[plan] || "";
   }
@@ -1363,9 +1371,7 @@ A) This is because YouTube content display system fixes the default video settin
     }
     if(hint){
       var text = getHumateckPlanPriceText(plan);
-      hint.innerHTML = text
-        ? ("Price: <strong>" + text + "</strong>")
-        : "Select a plan to see price and country scope.";
+      hint.innerHTML = text ? ("<strong>" + text + "</strong>") : "";
     }
   }
 
@@ -1445,11 +1451,11 @@ A) This is because YouTube content display system fixes the default video settin
     if(window.humateckIsAdminMember === true) return 70;
 
     if(plan === "free7" || plan === "free7_standard" || plan === "free7_enterprise") return 5;
+    if(plan === "asia30" || plan === "europe30" || plan === "africa30" || plan === "america30" || plan === "oceania30" || plan === "monthly30") return 30;
+    if(plan === "global16") return 16;
+    if(plan === "global50" || plan === "custom50" || plan === "monthly50") return 50;
+    if(plan === "global70" || plan === "monthly70" || plan === "yearly70") return 70;
     if(plan === "monthly_standard" || plan === "yearly_standard" || plan === "monthly_premium" || plan === "yearly_premium") return 70;
-    if(plan === "monthly50") return 50;
-    if(plan === "monthly70") return 70;
-    if(plan === "yearly70") return 70;
-    if(plan === "monthly30") return 30;
 
     return 30;
   }
