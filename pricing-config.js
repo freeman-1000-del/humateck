@@ -87,21 +87,18 @@
     contactPath: { ko: "/contact.html", en: "/contact-en.html" },
     buySubtitleKo: "영구 · 12개월 · 6개월 · 3종 플랜",
     buySubtitleEn: "Lifetime / 12-Month / 6-Month — 3 Pricing Plans",
-    marketplace: {
+    /* Ads / CTAs → own-site web Deployer (PayPal). Marketplace listing buttons retired. */
+    webCta: {
       ko: {
-        label: "크몽 입점 진행 중",
-        url: "",
-        channel: "kmong",
-        subtitleKo: "6개월 · 1년 대행 AS · 평생 없음",
-        subtitleEn: "6-month / 1-year agency AS · no lifetime",
-        durations: [
-          { id: "months6", days: 180, labelKo: "6개월 AS", labelEn: "6-month AS" },
-          { id: "months12", days: 365, labelKo: "1년 AS", labelEn: "1-year AS" },
-        ],
+        label: "웹 구독 플랜 보기",
+        url: "/humateck-Deployer/plans.html",
       },
-      en: { label: "Fiverr listing in progress", url: "", channel: "fiverr" },
+      en: {
+        label: "View web subscription plans",
+        url: "/humateck-Deployer/plans.html",
+      },
     },
-    /* Own-site web subscription — must stay below marketplace PC prices in messaging, never undercut 6mo PC floors when compared annualized */
+    /* Own-site web subscription — Standard $33/$316.80 · Enterprise $91/$873.60 */
     webSubscription: {
       standard: {
         seats: 1,

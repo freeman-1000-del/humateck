@@ -203,19 +203,15 @@
       if (tierEl) tierEl.textContent = t(plan, "tier");
       if (tableHost) tableHost.innerHTML = buildPlanTiers(plan, launch);
       if (btnEl) {
-        var mp = lang === "en" ? cfg.marketplace.en : cfg.marketplace.ko;
-        btnEl.textContent = mp.label;
-        if (mp.url) {
-          btnEl.href = mp.url;
-          btnEl.removeAttribute("aria-disabled");
-          btnEl.classList.remove("is-pending");
-          btnEl.removeAttribute("role");
-        } else {
-          btnEl.removeAttribute("href");
-          btnEl.setAttribute("aria-disabled", "true");
-          btnEl.classList.add("is-pending");
-          btnEl.setAttribute("role", "button");
-        }
+        var cta = (cfg.webCta && (lang === "en" ? cfg.webCta.en : cfg.webCta.ko)) || {
+          label: lang === "en" ? "View web subscription plans" : "웹 구독 플랜 보기",
+          url: "/humateck-Deployer/plans.html",
+        };
+        btnEl.textContent = cta.label;
+        btnEl.href = cta.url;
+        btnEl.removeAttribute("aria-disabled");
+        btnEl.classList.remove("is-pending");
+        btnEl.removeAttribute("role");
       }
     });
   }
