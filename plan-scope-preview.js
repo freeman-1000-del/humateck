@@ -266,7 +266,9 @@
       "#planScopePreview{display:none;position:fixed;inset:0;z-index:130;align-items:center;justify-content:center;padding:24px;background:rgba(0,0,0,.78)}" +
       "#planScopePreview.open{display:flex}" +
       "#planScopePreview .pspBox{width:640px;max-width:calc(100vw - 36px);max-height:82vh;overflow:auto;border:1px solid rgba(214,176,78,.75);border-radius:18px;background:linear-gradient(180deg,#161e28,#0c1219);padding:24px 22px;box-shadow:0 22px 60px rgba(0,0,0,.55)}" +
-      "#planScopePreview h2{margin:0 0 8px;color:#ffd95a;font-size:24px;font-weight:900}" +
+      "#planScopePreview h2{margin:0;color:#ffd95a;font-size:24px;font-weight:900;flex:1;min-width:0;padding-right:12px}" +
+      "#planScopePreview .pspHead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin:0 0 8px}" +
+      "#planScopePreview .pspHead .pspClose{margin-top:0;flex:0 0 auto}" +
       "#planScopePreview .pspLead{margin:0 0 14px;color:#e6e0d4;font-size:15px;line-height:1.55}" +
       "#planScopePreview .pspList{margin:0;padding:0;list-style:none;display:grid;gap:8px}" +
       "#planScopePreview .pspList li{padding:10px 12px;border:1px solid rgba(214,176,78,.28);border-radius:10px;background:rgba(255,255,255,.03);color:#f4f1e8;font-size:15px;line-height:1.45}" +

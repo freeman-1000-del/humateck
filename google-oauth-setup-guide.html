@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Google OAuth Setup Guide | Humateck</title>
+<style>
+  :root{
+    --navy:#1a1f36;
+    --navy2:#202a4e;
+    --blue:#4285F4;
+    --blue-light:#e8f0fe;
+    --blue-text:#1967d2;
+    --green:#34A853;
+    --green-bg:#e6f4ea;
+    --amber:#f9ab00;
+    --amber-bg:#fef7e0;
+    --ink:#202124;
+    --sub:#5f6368;
+    --line:#dadce0;
+    --page-bg:#f4f6fb;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Malgun Gothic","Apple SD Gothic Neo",Roboto,sans-serif;
+    background:var(--page-bg);
+    color:var(--ink);
+    line-height:1.7;
+  }
+  .guide-wrap{
+    max-width:860px;
+    margin:0 auto;
+    padding:0 0 60px 0;
+  }
+  /* ---- Hero ---- */
+  .g-hero{
+    position:relative;
+    overflow:hidden;
+    background:linear-gradient(155deg,#1a1f36 0%,#202a4e 55%,#274690 100%);
+    border-radius:0 0 22px 22px;
+    padding:48px 32px 40px 32px;
+    color:#fff;
+  }
+  .g-hero::before{
+    content:"";
+    position:absolute;
+    top:-100px; right:-100px;
+    width:320px; height:320px;
+    border-radius:50%;
+    background:radial-gradient(circle, rgba(66,133,244,0.35) 0%, rgba(66,133,244,0) 70%);
+    pointer-events:none;
+  }
+  .g-eyebrow{
+    display:inline-block;
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:#8ab4f8;
+    border:1px solid rgba(138,180,248,.5);
+    border-radius:20px;
+    padding:4px 14px;
+    margin-bottom:18px;
+    position:relative;
+  }
+  .g-hero h1{
+    font-size:clamp(24px,4vw,34px);
+    line-height:1.35;
+    margin:0 0 14px 0;
+    font-weight:800;
+    position:relative;
+  }
+  .g-hero p{
+    font-size:15px;
+    color:#c7d2f0;
+    max-width:560px;
+    margin:0;
+    position:relative;
+  }
+  .g-dots{margin-top:22px;display:flex;gap:6px;position:relative;}
+  .g-dots span{width:30px;height:4px;border-radius:2px;background:var(--blue);display:inline-block;}
+  .g-dots span.g{background:var(--green);}
+  .g-dots span.y{background:var(--amber);}
+  .g-dots span.r{background:#EA4335;}
+
+  .g-toc{
+    margin-top:28px;
+    background:rgba(255,255,255,.07);
+    border:1px solid rgba(255,255,255,.16);
+    border-radius:12px;
+    padding:6px 20px;
+    position:relative;
+  }
+  .g-toc a{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px 0;
+    border-bottom:1px solid rgba(255,255,255,.09);
+    color:#eef1fb;
+    text-decoration:none;
+    font-size:14px;
+    transition:opacity .15s ease;
+  }
+  .g-toc a:hover{opacity:.75;}
+  .g-toc a:last-child{border-bottom:none;}
+  .g-toc-num{font-size:11px;color:#8ab4f8;min-width:20px;font-variant-numeric:tabular-nums;}
+
+  /* ---- Section ---- */
+  .g-section{
+    padding:0 28px;
+  }
+  .g-section-header{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin:44px 0 18px 0;
+    padding-bottom:12px;
+    border-bottom:2.5px solid var(--navy);
+  }
+  .g-badge{
+    width:32px;height:32px;
+    border-radius:8px;
+    background:var(--navy);
+    color:#fff;
+    display:flex;align-items:center;justify-content:center;
+    font-size:14px;font-weight:700;
+    flex-shrink:0;
+  }
+  .g-section-header h2{
+    font-size:19px;
+    font-weight:700;
+    color:var(--navy);
+    margin:0;
+  }
+  .g-section-desc{
+    color:var(--sub);
+    font-size:14.5px;
+    margin:0 0 26px 0;
+  }
+
+  /* ---- Step ---- */
+  .g-step{margin-bottom:28px;}
+  .g-step-head{display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;}
+  .g-step-num{
+    flex-shrink:0;width:26px;height:26px;border-radius:50%;
+    background:var(--blue);color:#fff;font-size:12px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;margin-top:1px;
+  }
+  .g-step-text{font-size:15px;color:var(--ink);}
+  .g-step-text b{color:var(--navy);}
+  .g-step-link{
+    display:inline-block;
+    margin-top:8px;
+    font-size:13px;
+    color:var(--blue-text);
+    background:var(--blue-light);
+    border-radius:6px;
+    padding:6px 12px;
+    word-break:break-all;
+    text-decoration:none;
+  }
+  .g-step-link:hover{text-decoration:underline;}
+
+  .g-shot{
+    margin:12px 0 0 38px;
+    border-radius:12px;
+    border:1px solid var(--line);
+    box-shadow:0 2px 14px rgba(32,33,36,.10);
+    overflow:hidden;
+    background:#000;
+  }
+  .g-shot-bar{
+    height:20px;background:#edeef2;border-bottom:1px solid var(--line);
+    display:flex;align-items:center;gap:5px;padding:0 10px;
+  }
+  .g-shot-bar span{width:7px;height:7px;border-radius:50%;background:#d0d3d9;}
+  .g-shot img{display:block;width:100%;height:auto;}
+
+  .g-callout{
+    margin:12px 0 0 38px;
+    background:var(--amber-bg);
+    border-left:3px solid var(--amber);
+    border-radius:4px;
+    padding:9px 14px;
+    font-size:13.5px;
+    color:#5f4a00;
+  }
+
+  .g-tip{
+    margin:30px 0 0 0;
+    background:var(--green-bg);
+    border-left:3px solid var(--green);
+    border-radius:4px;
+    padding:12px 16px;
+    font-size:14px;
+    color:#1e4620;
+  }
+  .g-tip b{color:#0f3d15;}
+
+  .g-footer{
+    text-align:center;
+    color:#9aa0a6;
+    font-size:12.5px;
+    padding:40px 28px 0 28px;
+  }
+
+  @media (max-width:600px){
+    .g-hero{padding:36px 20px 30px 20px; border-radius:0 0 16px 16px;}
+    .g-section{padding:0 18px;}
+    .g-shot, .g-callout{margin-left:0;}
+    .g-step-text{font-size:14.5px;}
+  }
+</style>
+</head>
+<body>
+<div class="guide-wrap">
+
+  <div class="g-hero">
+    <span class="g-eyebrow">HUMATECK · ONBOARDING GUIDE</span>
+    <h1>Google OAuth Setup Guide<br>From Project Creation to Client ID Issuance</h1>
+    <p>A step-by-step walkthrough of the Google Cloud Console setup required to connect the YouTube Data API v3.</p>
+    <div class="g-dots"><span></span><span class="g"></span><span class="y"></span><span class="r"></span></div>
+    <div class="g-toc">
+      <a href="#section-1"><span class="g-toc-num">01</span><span>Creating a Google Project</span></a>
+      <a href="#section-2"><span class="g-toc-num">02</span><span>Creating a Google Client ID</span></a>
+    </div>
+  </div>
+
+  <!-- ============ SECTION 1 ============ -->
+  <div class="g-section" id="section-1">
+    <div class="g-section-header">
+      <div class="g-badge">1</div>
+      <h2>Creating a Google Project</h2>
+    </div>
+    <p class="g-section-desc">A Google Project is required before you can obtain Google OAuth verification (a Client ID). Follow the steps below.</p>
+
+    <div class="g-step">
+      <div class="g-step-head">
+        <div class="g-step-num">1</div>
+        <div class="g-step-text"><b>Do you already have a Google Project?</b> — No.</div>
+      </div>
+    </div>
+
+    <div class="g-step">
+      <div class="g-step-head">
+        <div class="g-step-num">2</div>
+        <div class="g-step-text">
+          You'll need to create a Google Project first in order to obtain Google OAuth verification (Client ID).<br>
+          Open the link below and create a new project.
+          <br>
+          <a class="g-step-link" href="https://console.cloud.google.com/projectcreate" target="_blank" rel="noopener">Create a Google Project → https://console.cloud.google.com/projectcreate</a>
+        </div>
+      </div>
+      <div class="g-shot">
+        <div class="g-shot-bar"><span></span><span></span><span></span></div>
+        <img src="images/p1.png" alt="Google Cloud new project creation screen" loading="lazy">
+      </div>
+    </div>
+
+    <div class="g-step">
+      <div class="g-step-head">
+        <div class="g-step-num">3</div>
+        <div class="g-step-text">Your Google Project has been created.</div>
+      </div>
+      <div class="g-shot">
+        <div class="g-shot-bar"><span></span><span></span><span></span></div>
+        <img src="images/p2.png" alt="Google project created dashboard" loading="lazy">
+      </div>
+    </div>
+
+    <div class="g-tip"><b>TIP.</b> Your project name and project ID can always be found later at the top of the Console dashboard.</div>
+  </div>
+
+  <!-- ============ SECTION 2 ============ -->
+  <div class="g-section" id="section-2">
+    <div class="g-section-header">
+      <div class="g-badge">2</div>
+      <h2>Creating a Google Client ID</h2>
+    </div>
+    <p class="g-section-desc">Once your Google Project is ready, the next step is to issue an OAuth Client ID.</p>
+
+    <div class="g-step">
+      <div class="g-step-head">
+        <div class="g-step-num">1</div>
+        <div class="g-step-text"><b>Do you already have a Google Project?</b> — Yes.</div>
+      </div>
+    </div>
+
+    <div class="g-step">
+      <div class="g-step-head">
+        <div class="g-step-num">2</div>
+        <div class="g-step-text">
+          Go to the Create a Google Client page. You'll see "Application Types."
+          <br>
+          <a class="g-step-link" href="https://console.cloud.google.com/auth/clients/create" target="_blank" rel="noopener">Create a Google Client → https://console.cloud.google.com/auth/clients/create</a>
+        </div>
+      </div>
+      <div class="g-shot">
+        <div class="g-shot-bar"><span></span><span></span><span></span></div>
+        <img src="images/en_n1.jpg" alt="Create OAuth Client ID screen" loading="lazy">
+      </div>
+    </div>
+
+    <div class="g-step">
+      <div class="g-step-head">
+        <div class="g-step-num">3</div>
+        <div class="g-step-text">Open the "Application Types" dropdown and select <b>"Web applications."</b></div>
+      </div>
+      <div class="g-shot">
+        <div class="g-shot-bar"><span></span><span></span><span></span></div>
+        <img src="images/en_n2.jpg" alt="Selecting Web applications from the Application Types dropdown" loading="lazy">
+      </div>
+    </div>
+
+    <div class="g-step">
+      <div class="g-step-head">
+        <div class="g-step-num">4</div>
+        <div class="g-step-text">Enter any name you like in the "Name" field.</div>
+      </div>
+      <div class="g-shot">
+        <div class="g-shot-bar"><span></span><span></span><span></span></div>
+        <img src="images/en_n3.jpg" alt="Entering a client name" loading="lazy">
+      </div>
+    </div>
+
+    <div class="g-step">
+      <div class="g-step-head">
+        <div class="g-step-num">5</div>
+        <div class="g-step-text">Scroll down and you'll see <b>"Approved JavaScript origins"</b> and <b>"Approved redirect URI."</b> Enter <b>"https://humateck.com"</b> in each, then click the <b>"CREATE"</b> button at the bottom.</div>
+      </div>
+      <div class="g-shot">
+        <div class="g-shot-bar"><span></span><span></span><span></span></div>
+        <img src="images/en_n4.jpg" alt="Entering Approved JavaScript origins and redirect URI" loading="lazy">
+      </div>
+    </div>
+
+    <div class="g-step">
+      <div class="g-step-head">
+        <div class="g-step-num">6</div>
+        <div class="g-step-text">Your Client ID and Client Secret are generated. Be sure to copy and store both values somewhere safe, then click <b>"OK"</b> in the bottom-right corner.</div>
+      </div>
+      <div class="g-shot">
+        <div class="g-shot-bar"><span></span><span></span><span></span></div>
+        <img src="images/en_n5.jpg" alt="OAuth client created confirmation dialog" loading="lazy">
+      </div>
+      <div class="g-callout">⚠ Once you close this dialog, the Client Secret cannot be viewed again. Make sure you've saved it before continuing.</div>
+    </div>
+
+    <div class="g-step">
+      <div class="g-step-head">
+        <div class="g-step-num">7</div>
+        <div class="g-step-text">Your Client ID now appears in the list. This ID is your Google OAuth authentication key.</div>
+      </div>
+      <div class="g-shot">
+        <div class="g-shot-bar"><span></span><span></span><span></span></div>
+        <img src="images/en_n6.jpg" alt="OAuth 2.0 Client ID list" loading="lazy">
+      </div>
+    </div>
+
+    <div class="g-tip"><b>TIP.</b> The Client ID and Client Secret are used as-is when configuring OAuth login for the YouTube Data API v3. Keep them private and never expose them publicly.</div>
+  </div>
+
+  <div class="g-footer">Humateck · humateck.com</div>
+
+</div>
+</body>
+</html>

@@ -1170,7 +1170,7 @@ Without any explanation, output only the translated registration text.</textarea
       <p>From here, this is the Google OAuth authentication sequence that subscribers must complete. Non-subscribers may also complete this authentication, but final register multilingual content is open only to subscribers. Please do not misunderstand this point.</p>
       <p class="yellowStrong">If you have already received a Google OAuth authentication key, please skip the “Important Setup Guide.”</p>
       <center><p class="yellowStrong">Once configured, it can be used for multiple channels.</p></center>
-      <div class="actions"><a class="btn guideOpenButton" href="#oauthGuideModal">Important Setup Guide</a><a class="btn" href="/humateck-Deployer/plans.html">Subscribe to a Plan</a></div>
+      <div class="actions"><a class="btn guideOpenButton" href="/google-oauth-setup-guide.html" target="_blank" rel="noopener noreferrer">Important Setup Guide</a><a class="btn" href="/humateck-Deployer/plans.html">Subscribe to a Plan</a></div>
       <div class="oauthPanelBelow">
         <h2>Google OAuth Setup Guide</h2>
         <p class="oauthLaunchNotice">This authentication allows visitors to experience the reality of AI chat translation and YouTube registration. However, actual registration is available only to subscribers. Please do not misunderstand this point.</p>
@@ -1202,11 +1202,10 @@ Without any explanation, output only the translated registration text.</textarea
   </div>
 
   <aside class="right">
-    <h2 class="yellowNotice">Status Notice</h2>
+    <h2 class="yellowNotice">Quick Notice</h2>
     <h3>Quick Notice</h3>
-    <p>1) The essential first step for using this service is Google OAuth approval setup. Please proceed according to the detailed guidance in the “Important Setup Guide” below.</p>
+    <p>1) The essential first step for using this service is Google OAuth approval setup. Please proceed according to the detailed guidance in the “Important Setup Guide” (opens in a new tab).</p>
     <p>2) Even if you want to register multilingual YouTube content for multiple channels, you do not need to create a separate Google OAuth setup for each channel. However, the Google account used for authorization must have permission to edit the relevant YouTube channel or video in order for registration to work properly.</p>
-    <p>3) Google OAuth authorization is required each time you regist YouTube video content.</p>
 <section id="faq" class="faqCollapsed">
 <details open>
 <summary>YouTube AI Chat Translation FAQ</summary>
@@ -1229,86 +1228,6 @@ A) This is because YouTube content display system fixes the default video settin
 </details>
   </aside>
 </section>
-<div id="oauthGuideModal" class="guideModal">
-  <div class="guideModalBox">
-    <h2>Important Setup Guide</h2>
-    <p class="guideSubTitle">Google OAuth authorization guide for first-time users.</p>
-
-    <div class="guideIntroBox">
-      <p>This setup may feel unfamiliar at first. It is the official Google authorization process required to register multilingual content to your YouTube video.</p>
-      <p><span class="guidePoint">A Google OAuth Client ID is generally reusable for a considerable period after setup, but reconfiguration or reauthorization may be required due to token expiration from heavy usage or other reasons.</span></p>
-    </div>
-
-    <div class="guideSection">
-      <h3>Step 1. Go to Google Cloud</h3>
-      <p>Click the button below to open the Google Cloud setup page.</p>
-      <a class="guideCloudBtn" href="https://console.cloud.google.com/auth/audience?hl=ko&project=fourth-cedar-489307-b1" target="_blank" rel="noopener noreferrer">Open Google Cloud</a>
-      <p>Sign in with the Google account you will use for YouTube registration.</p>
-    </div>
-
-    <div class="guideSection">
-      <h3>Step 2. Enable YouTube Data API v3</h3>
-      <p>Search for <span class="guideCode">YouTube Data API v3</span> in Google Cloud and enable it.</p>
-      <p>This API must be enabled to send multilingual title and description registration requests to YouTube.</p>
-    </div>
-
-    <div class="guideSection">
-      <h3>Step 3. Enter Branding information</h3>
-      <p>Open <span class="guideCode">Branding</span> from the left menu.</p>
-      <ul class="guideList">
-        <li>Enter an easy-to-recognize name in <span class="guidePoint">App name</span>.</li>
-        <li>Select your Google email for <span class="guidePoint">User support email</span>.</li>
-        <li>Enter a reachable email under <span class="guidePoint">Developer contact information</span>.</li>
-      </ul>
-    </div>
-
-    <div class="guideSection">
-      <h3>Step 4. Check Target / Test users</h3>
-      <p>Open <span class="guideCode">Target</span> from the left menu.</p>
-      <p>If the app is in testing status, add the Google email that will perform authorization under <span class="guidePoint">Test users</span>.</p>
-    </div>
-
-    <div class="guideSection">
-      <h3>Step 5. Create a Web application OAuth Client</h3>
-      <p>Open <span class="guideCode">Client</span>, then select <span class="guideCode">Create client</span>.</p>
-      <p>The application type must be <span class="guidePoint">Web application</span>.</p>
-    </div>
-
-    <div class="guideSection">
-      <h3>Step 6. Add Authorized JavaScript origins</h3>
-      <p>To authorize directly from the website, add the website origin you are using.</p>
-      <ul class="guideList">
-        <li>Official site example: <span class="guideCode">https://humateck.com</span></li>
-        <li>If using www: <span class="guideCode">https://www.humateck.com</span></li>
-        <li>For local testing: <span class="guideCode">http://localhost:5500</span> or your actual localhost origin</li>
-      </ul>
-      <p><span class="guidePoint">Do not add a trailing slash or a path such as /order.html.</span></p>
-    </div>
-
-    <div class="guideSection">
-      <h3>Step 7. Copy the OAuth Client ID</h3>
-      <p>Copy the generated <span class="guidePoint">Client ID</span> and paste it into the Google OAuth Web Client ID field on the order page.</p>
-      <p>The input may be masked for security.</p>
-    </div>
-
-    <div class="guideSection">
-      <h3>Step 8. Click Google Authorization</h3>
-      <p>Click <span class="guidePoint">Google Authorization</span> on the order page to open the official Google authorization window.</p>
-      <p>The Google account must have edit permission for the target YouTube channel or video.</p>
-    </div>
-
-    <div class="guideWarning">
-      <h3>Important Notice</h3>
-      <p>If the same Google account has management permission for multiple channels, you can proceed by entering the actual YouTube video URL for each target video.</p>
-      <p>A Google OAuth Client ID is generally reusable for a considerable period, but reconfiguration or reauthorization may be required due to token expiration from heavy usage or other reasons.</p>
-      <p>This is a normal Google security process for account protection and YouTube API usage, not a service error.</p>
-    </div>
-
-    <a class="closeModalBtn" href="#top">Close</a>
-  </div>
-</div>
-
-
 </div>
 <footer class="footer"><a href="terms.html">Terms of Service</a><span>|</span><a href="privacy.html">Privacy Policy</a><span>|</span><a href="refund.html">Refund Policy</a><span>|</span><a href="/contact-en.html">Contact us</a></footer>
 
