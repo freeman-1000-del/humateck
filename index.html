@@ -540,6 +540,11 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
   font-weight:900;
   cursor:pointer;
 }
+.nativeCodeModalFooter{
+  display:flex;
+  justify-content:flex-end;
+  margin-top:16px;
+}
 .nativeCodeGrid{
   display:grid;
   grid-template-columns:repeat(2, minmax(0, 1fr));
@@ -1818,6 +1823,9 @@ Without any explanation, output only the translated registration text.`;
 <div class="nativeCodeItem"><div class="nativeCodeText"><strong>zh-TW</strong> | Chinese (Taiwan)</div><button type="button" data-native-code="zh-TW">Select</button></div>
 <div class="nativeCodeItem"><div class="nativeCodeText"><strong>zu</strong> | Zulu</div><button type="button" data-native-code="zu">Select</button></div>
     </div>
+    <div class="nativeCodeModalFooter">
+      <button id="closeNativeCodeListBtnBottom" class="nativeCodeCloseBtn" type="button">Close</button>
+    </div>
   </div>
 </div>
 
@@ -1851,7 +1859,7 @@ Without any explanation, output only the translated registration text.`;
       return;
     }
 
-    var closeBtn = event.target.closest("#closeNativeCodeListBtn");
+    var closeBtn = event.target.closest("#closeNativeCodeListBtn, #closeNativeCodeListBtnBottom, .nativeCodeCloseBtn");
     if(closeBtn){
       event.preventDefault();
       closeModal();
