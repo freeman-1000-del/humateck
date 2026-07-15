@@ -279,7 +279,8 @@
     wrap.setAttribute("aria-modal", "true");
     wrap.innerHTML =
       '<div class="pspBox">' +
-      '<h2 id="pspTitle">Selected plan countries</h2>' +
+      '<div class="pspHead"><h2 id="pspTitle">Selected plan countries</h2>' +
+      '<button type="button" class="pspClose" id="pspCloseTop">Close</button></div>' +
       '<p class="pspLead" id="pspLead"></p>' +
       '<ul class="pspList" id="pspList"></ul>' +
       '<button type="button" class="pspClose" id="pspClose">Close</button>' +
@@ -287,7 +288,7 @@
     document.body.appendChild(wrap);
 
     wrap.addEventListener("click", function (e) {
-      if (e.target === wrap || e.target.id === "pspClose") closePreview();
+      if (e.target === wrap || e.target.id === "pspClose" || e.target.id === "pspCloseTop") closePreview();
     });
   }
 
