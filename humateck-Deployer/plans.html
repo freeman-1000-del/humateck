@@ -410,11 +410,11 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 <p style="color:#e6e0d4;font-size:16px;line-height:1.6;margin:10px 0 0">Web registration · PayPal subscription. Free 7-day trial (5 countries) · Standard $33/mo · Enterprise $91/mo · Annual 20% off.</p>
 </section>
 <section class="plans">
-<article class="plan" data-subscription-plan="free7_standard"><h2>Standard · 7-Day Free</h2><div class="price">USD 0 / 7 days</div><p>1 seat free trial · 5-country practice scope. Then upgrade to Standard $33/mo or Annual $316.80.</p><a class="btn" href="/?plan=free7_standard" data-plan-action="free">Start Standard Free Trial</a></article>
-<article class="plan" data-subscription-plan="monthly_standard"><h2>Standard</h2><div class="price">USD 33 / month</div><p>1 seat · Full country scope. (≈ KRW 45,000)</p><a class="btn paypalSubBtn" href="#" data-paypal-tier="standard" data-plan-action="paid" aria-disabled="true">Subscribe with PayPal</a></article>
-<article class="plan" data-subscription-plan="yearly_standard"><h2>Standard Annual</h2><div class="price">USD 316.80 / year</div><p>1 seat · Billed yearly · <strong>20% off</strong> vs monthly. (≈ KRW 432,000)</p><a class="btn paypalSubBtn" href="#" data-paypal-tier="standardYearly" data-plan-action="paid" aria-disabled="true">Subscribe with PayPal</a></article>
-<article class="plan featured" data-subscription-plan="monthly_premium"><h2>Enterprise 5-seat</h2><div class="price">USD 91 / month</div><p>5 seats · Team web registration. (≈ KRW 125,000)</p><a class="btn paypalSubBtn" href="#" data-paypal-tier="premium" data-plan-action="paid" aria-disabled="true">Subscribe with PayPal</a></article>
-<article class="plan featured" data-subscription-plan="yearly_premium"><h2>Enterprise Annual</h2><div class="price">USD 873.60 / year</div><p>5 seats · Billed yearly · <strong>20% off</strong> vs monthly. (≈ KRW 1,200,000)</p><a class="btn paypalSubBtn" href="#" data-paypal-tier="premiumYearly" data-plan-action="paid" aria-disabled="true">Subscribe with PayPal</a></article>
+<article class="plan" data-subscription-plan="free7_standard"><h2>Standard · 7-Day Free</h2><div class="price">USD 0 / 7 days</div><p>1 seat free trial · 5-country practice scope. Then upgrade to Standard $33/mo or Annual $316.80.</p><a class="btn" href="start.html?plan=free7_standard">Start Standard Free Trial</a></article>
+<article class="plan" data-subscription-plan="monthly_standard"><h2>Standard</h2><div class="price">USD 33 / month</div><p>1 seat · Full country scope. (≈ KRW 45,000)</p><a class="btn paypalSubBtn" href="https://www.paypal.com/webapps/billing/plans/subscribe?plan_id=P-8PS57707AL2928019NJLB7NY" target="_blank" rel="noopener noreferrer" data-paypal-tier="standard">Subscribe with PayPal</a></article>
+<article class="plan" data-subscription-plan="yearly_standard"><h2>Standard Annual</h2><div class="price">USD 316.80 / year</div><p>1 seat · Billed yearly · <strong>20% off</strong> vs monthly. (≈ KRW 432,000)</p><a class="btn paypalSubBtn" href="#" data-paypal-tier="standardYearly" aria-disabled="true">PayPal — plan ID pending</a></article>
+<article class="plan featured" data-subscription-plan="monthly_premium"><h2>Enterprise 5-seat</h2><div class="price">USD 91 / month</div><p>5 seats · Team web registration. (≈ KRW 125,000)</p><a class="btn paypalSubBtn" href="#" data-paypal-tier="premium" aria-disabled="true">PayPal — plan ID pending</a></article>
+<article class="plan featured" data-subscription-plan="yearly_premium"><h2>Enterprise Annual</h2><div class="price">USD 873.60 / year</div><p>5 seats · Billed yearly · <strong>20% off</strong> vs monthly. (≈ KRW 1,200,000)</p><a class="btn paypalSubBtn" href="#" data-paypal-tier="premiumYearly" aria-disabled="true">PayPal — plan ID pending</a></article>
 </section>
 <footer class="footer" style="display:flex;justify-content:center;gap:20px;margin-top:28px;color:#cfc8b9;font-size:15px;flex-wrap:wrap">
   <a href="terms.html">Terms of Service</a><span>|</span>
@@ -424,63 +424,28 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 </footer>
 </div>
 
-<script src="paypal-plans.js?v=20260716c"></script>
-<script src="membership-gate.js?v=20260716d"></script>
+<script src="paypal-plans.js?v=20260716f"></script>
 <script>
 (function(){
-  function wirePayPalButtons(){
-    var cfg = window.HUMATECK_PAYPAL_WEB;
-    if(!cfg) return;
-    document.querySelectorAll(".paypalSubBtn").forEach(function(btn){
-      var tier = btn.getAttribute("data-paypal-tier");
-      var plan = cfg[tier];
-      if(plan && plan.subscribeUrl){
-        btn.setAttribute("data-paypal-url", plan.subscribeUrl);
-        btn.href = "#";
-        btn.removeAttribute("target");
-        btn.removeAttribute("aria-disabled");
-        btn.textContent = "Subscribe with PayPal";
-      } else {
-        btn.removeAttribute("data-paypal-url");
-        btn.href = "#";
-        btn.setAttribute("aria-disabled", "true");
-        btn.textContent = "PayPal — plan ID pending";
-      }
-    });
-  }
-  wirePayPalButtons();
-
-  document.addEventListener("click", function(e){
-    var btn = e.target.closest(".plan .btn");
-    if(!btn) return;
-    e.preventDefault();
-    e.stopPropagation();
-
-    var planCard = btn.closest(".plan");
-    var plan = planCard ? planCard.getAttribute("data-subscription-plan") : "";
-    var h2 = planCard ? planCard.querySelector("h2") : null;
-    var label = h2 ? h2.textContent.trim() : "";
-    var paypalUrl = btn.getAttribute("data-paypal-url") || "";
-    var gate = window.HumateckMemberGate;
-
-    // Paid = PayPal first (no signup modal before payment)
-    if(!gate || !gate.isFreePlan(plan)){
-      try{ localStorage.setItem("humateckSelectedPlan", plan || ""); }catch(err){}
-      if(paypalUrl){
-        window.location.href = paypalUrl;
-      } else {
-        alert("PayPal plan ID is pending. Please finish PayPal plan linking first.");
-      }
-      return;
+  var cfg = window.HUMATECK_PAYPAL_WEB;
+  if(!cfg) return;
+  document.querySelectorAll(".paypalSubBtn").forEach(function(btn){
+    var tier = btn.getAttribute("data-paypal-tier");
+    var plan = cfg[tier];
+    if(plan && plan.subscribeUrl){
+      btn.href = plan.subscribeUrl;
+      btn.target = "_blank";
+      btn.rel = "noopener noreferrer";
+      btn.removeAttribute("aria-disabled");
+      btn.textContent = "Subscribe with PayPal";
+    } else {
+      btn.href = "#";
+      btn.removeAttribute("target");
+      btn.setAttribute("aria-disabled", "true");
+      btn.textContent = "PayPal — plan ID pending";
+      btn.addEventListener("click", function(e){ e.preventDefault(); });
     }
-
-    // Free = membership signup first, then order page + Free login
-    gate.open({
-      plan: plan,
-      planLabel: label || gate.planLabel(plan),
-      next: "order"
-    });
-  }, true);
+  });
 })();
 </script>
 
