@@ -143,18 +143,66 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 /* Humateck_New020 patch */
 .orderTopButtons{display:flex;gap:10px;margin:0 0 16px;flex-wrap:wrap;align-items:center}
 .orderTopButtons a{display:inline-flex;align-items:center;justify-content:center;padding:10px 16px;border:1px solid rgba(214,176,78,.68);border-radius:999px;color:#f4d16d;background:rgba(214,176,78,.12);font-weight:800}
-.planPickerRow{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;margin:0 0 16px}
-.planPickerRow label{color:#ffd95a;font-weight:900;font-size:15px}
+.planPickerRow{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  gap:10px;
+  margin:18px 0 20px;
+  padding:16px 18px;
+  border:1px solid rgba(214,176,78,.48);
+  border-radius:16px;
+  background:rgba(214,176,78,.08);
+}
+.planPickerRow label{
+  display:block;
+  color:#ffd95a;
+  font-weight:900;
+  font-size:18px!important;
+  margin:0;
+}
+.planPickerControls{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:12px;
+}
 .planPickerRow select{
-  min-width:min(100%,320px);max-width:100%;padding:10px 14px;border-radius:12px;
-  border:1px solid rgba(214,176,78,.68);background:#101722;color:#f4f1e8;font-size:15px;font-weight:700
+  flex:1 1 280px;
+  min-width:min(100%,280px);
+  max-width:100%;
+  padding:14px 16px;
+  border-radius:12px;
+  border:1px solid rgba(214,176,78,.68);
+  background:#101722;
+  color:#f4f1e8;
+  font-size:18px!important;
+  font-weight:800;
+  line-height:1.35;
 }
 .planPickerRow .plansSideBtn{
-  display:inline-flex;align-items:center;justify-content:center;padding:10px 16px;
-  border:1px solid rgba(214,176,78,.68);border-radius:999px;color:#f4d16d;background:rgba(214,176,78,.12);font-weight:800
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:14px 18px;
+  border:1px solid rgba(214,176,78,.68);
+  border-radius:12px;
+  color:#f4d16d;
+  background:rgba(214,176,78,.12);
+  font-size:17px!important;
+  font-weight:900;
+  white-space:nowrap;
 }
-.planPriceHint{width:100%;margin:2px 0 0;color:#9aa0a6;font-size:13px;font-weight:600;line-height:1.45;min-height:1.2em}
-.planPriceHint strong{color:#cfe8ff;font-weight:700}
+.planPriceHint{
+  width:100%;
+  margin:0;
+  color:#9aa0a6;
+  font-size:16px!important;
+  font-weight:600;
+  line-height:1.45;
+  min-height:1.2em;
+}
+.planPriceHint strong{color:#cfe8ff;font-weight:800}
 .commandFullRows{display:grid;grid-template-columns:1fr;gap:14px}
 .commandFullItem{border:1px solid rgba(214,176,78,.35);border-radius:14px;padding:14px;background:rgba(5,11,20,.48)}
 .commandFullTop{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:8px}
@@ -1074,24 +1122,6 @@ Do not add review, blocking, metadata judgment, hidden/admin menu, auto-correcti
 <div class="wrap" id="top">
 <header class="top"><a href="index.html"><img class="logo" src="FINAL_LOGO01.png" alt="Humateck"></a><div class="lang">◎ English⌄</div></header>
 <div class="orderTopButtons"><a href="index.html">Home</a></div>
-<div class="planPickerRow">
-  <label for="orderPlanSelect">Distribution countries</label>
-  <select id="orderPlanSelect" aria-label="Select distribution country scope">
-    <option value="">Select distribution countries…</option>
-    <option value="free7_standard">Standard · 7-Day Free (5 countries)</option>
-    <option value="free7_enterprise">Enterprise · 7-Day Free (5 countries)</option>
-    <option value="asia30">Asia Plan (30 countries)</option>
-    <option value="europe30">Europe Plan (30 countries)</option>
-    <option value="africa30">Africa Plan (30 countries)</option>
-    <option value="america30">Americas Plan (30 countries)</option>
-    <option value="oceania30">Oceania Plan (30 countries)</option>
-    <option value="global16">Global 16 Countries</option>
-    <option value="global50">Global 50 Countries</option>
-    <option value="global70">Global 70 Countries</option>
-  </select>
-  <a class="plansSideBtn" href="/humateck-Deployer/plans.html">Plans page</a>
-  <p class="planPriceHint" id="orderPlanPriceHint"></p>
-</div>
 <section class="orderMainGrid">
   <div class="orderLeftColumn">
     <section class="card">
@@ -1101,6 +1131,26 @@ Do not add review, blocking, metadata judgment, hidden/admin menu, auto-correcti
         <p>2. However, the authority to finally register the translation results on YouTube is open only to subscribers of this service. Please do not misunderstand this point.</p>
       </div>
       <div class="universalTranslationNotice"><strong>Flexible translation source:</strong> Humateck is not limited to Gemini translation. You may use Gemini, ChatGPT, DeepL, another AI translator, or your own prepared translation. As long as the final text follows the required <strong>Country Code / Title / Description</strong> format, Humateck can register it to YouTube.</div>
+      <div class="planPickerRow">
+        <label for="orderPlanSelect">Distribution countries</label>
+        <div class="planPickerControls">
+          <select id="orderPlanSelect" aria-label="Select distribution country scope">
+            <option value="">Select distribution countries…</option>
+            <option value="free7_standard">Standard · 7-Day Free (5 countries)</option>
+            <option value="free7_enterprise">Enterprise · 7-Day Free (5 countries)</option>
+            <option value="asia30">Asia Plan (30 countries)</option>
+            <option value="europe30">Europe Plan (30 countries)</option>
+            <option value="africa30">Africa Plan (30 countries)</option>
+            <option value="america30">Americas Plan (30 countries)</option>
+            <option value="oceania30">Oceania Plan (30 countries)</option>
+            <option value="global16">Global 16 Countries</option>
+            <option value="global50">Global 50 Countries</option>
+            <option value="global70">Global 70 Countries</option>
+          </select>
+          <a class="plansSideBtn" href="/humateck-Deployer/plans.html">Plans page</a>
+        </div>
+        <p class="planPriceHint" id="orderPlanPriceHint"></p>
+      </div>
       <div class="nativeCodeLabelRow">
   <label for="nativeLanguageCode">Native Language Code</label>
   <button id="openNativeCodeListBtn" class="nativeCodeListBtn" type="button">70 Country Names / Language Codes List</button>
