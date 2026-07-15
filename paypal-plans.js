@@ -31,7 +31,7 @@
       interval: "year",
       amountUsd: yearlyFromMonthly(33), // 316.80
       amountKrwNote: 432000,
-      planId: "",
+      planId: "P-0NJ04331VT693812JNJL56AQ",
       subscribeUrl: "",
     },
     premium: {
