@@ -1307,7 +1307,7 @@ A) This is because YouTube content display system fixes the default video settin
   }
 
   function getHumateckPlanLimit(plan){
-    if(plan === "free7" || plan === "free7_standard" || plan === "free7_enterprise") return 15;
+    if(plan === "free7" || plan === "free7_standard" || plan === "free7_enterprise") return 5;
     if(plan === "monthly_standard" || plan === "yearly_standard" || plan === "monthly_premium" || plan === "yearly_premium") return 70;
     if(plan === "monthly30") return 30;
     if(plan === "monthly50") return 50;
@@ -1371,7 +1371,7 @@ A) This is because YouTube content display system fixes the default video settin
 
     if(window.humateckIsAdminMember === true) return 70;
 
-    if(plan === "free7" || plan === "free7_standard" || plan === "free7_enterprise") return 15;
+    if(plan === "free7" || plan === "free7_standard" || plan === "free7_enterprise") return 5;
     if(plan === "monthly_standard" || plan === "yearly_standard" || plan === "monthly_premium" || plan === "yearly_premium") return 70;
     if(plan === "monthly50") return 50;
     if(plan === "monthly70") return 70;
