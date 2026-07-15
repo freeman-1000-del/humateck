@@ -90,12 +90,12 @@
     /* Ads / CTAs → own-site web Deployer (PayPal). Marketplace listing buttons retired. */
     webCta: {
       ko: {
-        label: "웹 구독 플랜 보기",
-        url: "/humateck-Deployer/plans.html",
+        label: "웹 주문폼으로 이동",
+        url: "/humateck-Deployer/order.html",
       },
       en: {
-        label: "View web subscription plans",
-        url: "/humateck-Deployer/plans.html",
+        label: "Go to order form",
+        url: "/humateck-Deployer/order.html",
       },
     },
     /* Own-site web subscription — Standard $33/$316.80 · Enterprise $91/$873.60 */

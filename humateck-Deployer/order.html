@@ -141,8 +141,20 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 
 <style>
 /* Humateck_New020 patch */
-.orderTopButtons{display:flex;gap:10px;margin:0 0 16px;flex-wrap:wrap}
+.orderTopButtons{display:flex;gap:10px;margin:0 0 16px;flex-wrap:wrap;align-items:center}
 .orderTopButtons a{display:inline-flex;align-items:center;justify-content:center;padding:10px 16px;border:1px solid rgba(214,176,78,.68);border-radius:999px;color:#f4d16d;background:rgba(214,176,78,.12);font-weight:800}
+.planPickerRow{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;margin:0 0 16px}
+.planPickerRow label{color:#ffd95a;font-weight:900;font-size:15px}
+.planPickerRow select{
+  min-width:min(100%,320px);max-width:100%;padding:10px 14px;border-radius:12px;
+  border:1px solid rgba(214,176,78,.68);background:#101722;color:#f4f1e8;font-size:15px;font-weight:700
+}
+.planPickerRow .plansSideBtn{
+  display:inline-flex;align-items:center;justify-content:center;padding:10px 16px;
+  border:1px solid rgba(214,176,78,.68);border-radius:999px;color:#f4d16d;background:rgba(214,176,78,.12);font-weight:800
+}
+.planPriceHint{width:100%;margin:0;color:#9fd4ff;font-size:15px;font-weight:800;line-height:1.5}
+.planPriceHint strong{color:#ffd95a}
 .commandFullRows{display:grid;grid-template-columns:1fr;gap:14px}
 .commandFullItem{border:1px solid rgba(214,176,78,.35);border-radius:14px;padding:14px;background:rgba(5,11,20,.48)}
 .commandFullTop{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:8px}
@@ -1061,7 +1073,21 @@ Do not add review, blocking, metadata judgment, hidden/admin menu, auto-correcti
 
 <div class="wrap" id="top">
 <header class="top"><a href="index.html"><img class="logo" src="FINAL_LOGO01.png" alt="Humateck"></a><div class="lang">◎ English⌄</div></header>
-<div class="orderTopButtons"><a href="index.html">Home</a><a href="./plans.html">View All Plans</a></div>
+<div class="orderTopButtons"><a href="index.html">Home</a></div>
+<div class="planPickerRow">
+  <label for="orderPlanSelect">Plan</label>
+  <select id="orderPlanSelect" aria-label="Select subscription plan">
+    <option value="">Select a plan…</option>
+    <option value="free7_standard">Standard · 7-Day Free — USD 0</option>
+    <option value="free7_enterprise">Enterprise · 7-Day Free — USD 0</option>
+    <option value="monthly_standard">Standard Monthly — USD 33 / month</option>
+    <option value="yearly_standard">Standard Annual — USD 316.80 / year (20% off)</option>
+    <option value="monthly_premium">Enterprise Monthly — USD 91 / month</option>
+    <option value="yearly_premium">Enterprise Annual — USD 873.60 / year (20% off)</option>
+  </select>
+  <a class="plansSideBtn" href="./plans.html">Plans page</a>
+  <p class="planPriceHint" id="orderPlanPriceHint">Select a plan to see price and country scope.</p>
+</div>
 <section class="orderMainGrid">
   <div class="orderLeftColumn">
     <section class="card">
@@ -1315,15 +1341,62 @@ A) This is because YouTube content display system fixes the default video settin
     return 0;
   }
 
+  function getHumateckPlanPriceText(plan){
+    var map = {
+      free7: "USD 0 / 7 days · 1 seat · 5 countries",
+      free7_standard: "USD 0 / 7 days · 1 seat · 5 countries",
+      free7_enterprise: "USD 0 / 7 days · 5 seats · 5 countries",
+      monthly_standard: "USD 33 / month · 1 seat · full country scope (≈ KRW 45,000)",
+      yearly_standard: "USD 316.80 / year · 1 seat · 20% off vs monthly (≈ KRW 432,000)",
+      monthly_premium: "USD 91 / month · 5 seats · full country scope (≈ KRW 125,000)",
+      yearly_premium: "USD 873.60 / year · 5 seats · 20% off vs monthly (≈ KRW 1,200,000)"
+    };
+    return map[plan] || "";
+  }
+
+  function syncOrderPlanPicker(plan){
+    var sel = document.getElementById("orderPlanSelect");
+    var hint = document.getElementById("orderPlanPriceHint");
+    if(sel && plan){
+      var opt = sel.querySelector('option[value="'+plan+'"]');
+      if(opt) sel.value = plan;
+    }
+    if(hint){
+      var text = getHumateckPlanPriceText(plan);
+      hint.innerHTML = text
+        ? ("Price: <strong>" + text + "</strong>")
+        : "Select a plan to see price and country scope.";
+    }
+  }
+
   function loadPlanSelectedFromPlansPage(){
     try{
       var params = new URLSearchParams(window.location.search || "");
       var plan = params.get("plan") || localStorage.getItem("humateckSelectedPlan") || "";
-      if(plan){ applyHumateckPlan(plan, getHumateckPlanLimit(plan)); }
+      if(plan === "free7") plan = "free7_standard";
+      if(plan){
+        applyHumateckPlan(plan, getHumateckPlanLimit(plan));
+        syncOrderPlanPicker(plan);
+      }
     }catch(e){}
   }
 
   loadPlanSelectedFromPlansPage();
+
+  (function bindOrderPlanSelect(){
+    var sel = document.getElementById("orderPlanSelect");
+    if(!sel) return;
+    sel.addEventListener("change", function(){
+      var plan = sel.value || "";
+      if(!plan){
+        syncOrderPlanPicker("");
+        return;
+      }
+      try{ localStorage.setItem("humateckSelectedPlan", plan); }catch(err){}
+      applyHumateckPlan(plan, getHumateckPlanLimit(plan));
+      syncOrderPlanPicker(plan);
+    });
+  })();
 
   async function loadHumateckSubscriptionStatus(){
     try{
