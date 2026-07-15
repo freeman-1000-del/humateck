@@ -51,6 +51,7 @@ export default async function handler(req, res) {
     return res.status(200).json({
       active: isActive,
       status: isExpired ? "expired" : row.status,
+      email: row.email || email,
       plan: row.plan_type,
       plan_type: row.plan_type,
       subscription_plan: row.plan_type,

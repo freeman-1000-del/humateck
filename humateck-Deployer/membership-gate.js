@@ -1,12 +1,10 @@
 /**
- * Humateck membership gate — email signup before free order or paid PayPal.
- * Free / paid share one modal; next step depends on selected plan.
+ * Humateck membership + login badge
+ * Free: signup modal → Free Login
+ * Paid: PayPal first (no pre-login); after PayPal email is known → Paid Login
  */
 (function (global) {
-  var FREE_PLANS = {
-    free7: true,
-    free7_standard: true,
-  };
+  var FREE_PLANS = { free7: true, free7_standard: true };
 
   var PLAN_LABELS = {
     free7_standard: "Standard · 7-Day Free",
@@ -24,6 +22,7 @@
   function getMemberEmail() {
     try {
       return (
+        localStorage.getItem("humateckPaidEmail") ||
         localStorage.getItem("humateckMemberEmail") ||
         localStorage.getItem("humateckUserEmail") ||
         localStorage.getItem("humateckEmail") ||
@@ -35,30 +34,120 @@
     }
   }
 
+  function getLoginType() {
+    try {
+      var t = localStorage.getItem("humateckLoginType") || "";
+      if (t === "paid" || t === "free") return t;
+      if (localStorage.getItem("humateckPaidEmail")) return "paid";
+      if (
+        localStorage.getItem("humateckFreeTrialEmail") ||
+        localStorage.getItem("humateckFreeOnlyTrialActive") === "true"
+      )
+        return "free";
+      if (getMemberEmail()) return "free";
+      return "";
+    } catch (e) {
+      return "";
+    }
+  }
+
   function hasMembership() {
     return !!getMemberEmail();
   }
 
-  function saveMembership(email, name, plan) {
+  function hasFreeMembership() {
+    return getLoginType() === "free" && !!getMemberEmail();
+  }
+
+  function ensureLoginStyles() {
+    if (document.getElementById("humateckLoginBadgeStyle")) return;
+    var style = document.createElement("style");
+    style.id = "humateckLoginBadgeStyle";
+    style.textContent =
+      "#humateckLoginBadge{display:none;align-items:center;gap:8px;margin-left:auto;padding:8px 14px;border:1px solid rgba(214,176,78,.65);border-radius:999px;background:rgba(214,176,78,.12);color:#ffd95a;font-size:14px;font-weight:800;max-width:min(420px,70vw);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}" +
+      "#humateckLoginBadge.show{display:inline-flex}" +
+      "#humateckLoginBadge.paid{border-color:rgba(103,168,255,.7);background:rgba(75,151,255,.14);color:#9ec5ff}" +
+      "#humateckLoginBadge .lbType{flex:0 0 auto}" +
+      "#humateckLoginBadge .lbEmail{opacity:.95;font-weight:700;overflow:hidden;text-overflow:ellipsis}";
+    document.head.appendChild(style);
+  }
+
+  function refreshLoginBadge() {
+    ensureLoginStyles();
+    var type = getLoginType();
+    var email = getMemberEmail();
+    var badge = document.getElementById("humateckLoginBadge");
+    if (!badge) {
+      badge = document.createElement("div");
+      badge.id = "humateckLoginBadge";
+      badge.innerHTML =
+        '<span class="lbType"></span><span class="lbEmail"></span>';
+      var host =
+        document.querySelector(".orderTopButtons") ||
+        document.querySelector(".top-left-tools") ||
+        document.querySelector(".top");
+      if (host) host.appendChild(badge);
+      else return;
+    }
+    if (!type || !email) {
+      badge.classList.remove("show", "paid");
+      return;
+    }
+    badge.classList.add("show");
+    badge.classList.toggle("paid", type === "paid");
+    badge.querySelector(".lbType").textContent =
+      type === "paid" ? "Paid Login" : "Free Login";
+    badge.querySelector(".lbEmail").textContent = "· " + email;
+    badge.title = (type === "paid" ? "Paid Login" : "Free Login") + ": " + email;
+  }
+
+  function setFreeLogin(email, plan) {
     var startMs = Date.now();
     var endMs = startMs + 7 * 24 * 60 * 60 * 1000;
+    email = (email || "").trim();
     try {
+      localStorage.setItem("humateckLoginType", "free");
       localStorage.setItem("humateckMemberEmail", email);
       localStorage.setItem("humateckUserEmail", email);
       localStorage.setItem("humateckEmail", email);
-      if (name) localStorage.setItem("humateckMemberName", name);
-      localStorage.setItem("humateckMemberPlan", plan || "");
-      localStorage.setItem("humateckMemberAt", String(startMs));
-      localStorage.setItem("humateckSelectedPlan", plan || "");
-      if (isFreePlan(plan)) {
-        localStorage.setItem("humateckFreeTrialEmail", email);
-        localStorage.setItem("humateckFreeOnlyTrialActive", "true");
-        localStorage.setItem("humateckFreeOnlyTrialStartMs", String(startMs));
-        localStorage.setItem("humateckFreeOnlyTrialEndMs", String(endMs));
+      localStorage.setItem("humateckFreeTrialEmail", email);
+      localStorage.setItem("humateckFreeOnlyTrialActive", "true");
+      localStorage.setItem("humateckFreeOnlyTrialStartMs", String(startMs));
+      localStorage.setItem("humateckFreeOnlyTrialEndMs", String(endMs));
+      if (plan) {
+        localStorage.setItem("humateckMemberPlan", plan);
+        localStorage.setItem("humateckSelectedPlan", plan);
         localStorage.setItem("humateckFreeOnlyActivePlan", plan);
         localStorage.setItem("humateckFreeOnlySubscriberPlan", plan);
       }
+      localStorage.setItem("humateckMemberAt", String(startMs));
     } catch (e) {}
+    refreshLoginBadge();
+  }
+
+  function setPaidLogin(email, plan) {
+    email = (email || "").trim();
+    if (!email) return;
+    try {
+      localStorage.setItem("humateckLoginType", "paid");
+      localStorage.setItem("humateckPaidEmail", email);
+      localStorage.setItem("humateckUserEmail", email);
+      localStorage.setItem("humateckEmail", email);
+      localStorage.setItem("humateckMemberEmail", email);
+      if (plan) {
+        localStorage.setItem("humateckMemberPlan", plan);
+        localStorage.setItem("humateckSelectedPlan", plan);
+      }
+    } catch (e) {}
+    refreshLoginBadge();
+  }
+
+  function saveMembership(email, name, plan) {
+    try {
+      if (name) localStorage.setItem("humateckMemberName", name);
+    } catch (e) {}
+    if (isFreePlan(plan)) setFreeLogin(email, plan);
+    else setPaidLogin(email, plan);
     global.humateckPaymentSubscriptionPlan = plan || "";
   }
 
@@ -93,13 +182,13 @@
     el.setAttribute("aria-modal", "true");
     el.innerHTML =
       '<div class="mgBox">' +
-      "<h2>Create Humateck Account</h2>" +
-      '<p class="mgLead">Sign up with your email before continuing. Free and paid plans both require membership first.</p>' +
+      '<h2 id="mgTitle">Free Plan Sign-up</h2>' +
+      '<p class="mgLead" id="mgLead">Create your free account with email. Then Free Login appears on every page.</p>' +
       '<div class="mgPlan" id="mgPlanLabel"></div>' +
       '<p class="mgErr" id="mgErr"></p>' +
       '<label for="mgEmail">Email</label>' +
       '<input id="mgEmail" type="email" autocomplete="email" placeholder="your@email.com">' +
-      '<label for="mgName">Name (optional)</label>' +
+      '<label for="mgName" id="mgNameLabel">Name (optional)</label>' +
       '<input id="mgName" type="text" autocomplete="name" placeholder="Your name">' +
       '<div class="mgActions">' +
       '<button type="button" class="mgBtn" id="mgContinue">Continue</button>' +
@@ -124,6 +213,7 @@
     var plan = opts.plan || "";
     if (plan === "free7_enterprise") plan = "free7_standard";
     if (plan === "free7") plan = "free7_standard";
+    var mode = opts.mode || (isFreePlan(plan) ? "free" : "paidBind");
 
     function finish(already) {
       var email = getMemberEmail();
@@ -131,42 +221,51 @@
         opts.onReady({ email: email, plan: plan, alreadyMember: !!already });
         return;
       }
-      var next = opts.next || (isFreePlan(plan) ? "order" : "paypal");
-      var paypalUrl = opts.paypalUrl || "";
-      if (next === "paypal") {
-        if (paypalUrl) global.location.href = paypalUrl;
-        else alert("PayPal plan ID is pending. Please try again after plan ID is linked.");
-        return;
-      }
       global.location.href = "/?plan=" + encodeURIComponent(plan || "free7_standard");
     }
 
-    if (hasMembership()) {
+    if (mode === "free" && hasFreeMembership()) {
       try {
         localStorage.setItem("humateckSelectedPlan", plan || "");
-        localStorage.setItem("humateckMemberPlan", plan || "");
       } catch (e) {}
-      global.humateckPaymentSubscriptionPlan = plan || "";
       finish(true);
+      return;
+    }
+
+    if (mode === "paidBind" && getLoginType() === "paid" && getMemberEmail()) {
+      if (typeof opts.onReady === "function") {
+        opts.onReady({ email: getMemberEmail(), plan: plan, alreadyMember: true });
+      }
       return;
     }
 
     var el = ensureModal();
     pending = {
       plan: plan,
-      paypalUrl: opts.paypalUrl || "",
-      next: opts.next || (isFreePlan(plan) ? "order" : "paypal"),
+      mode: mode,
       onReady: opts.onReady || null,
     };
 
+    document.getElementById("mgTitle").textContent =
+      mode === "paidBind" ? "Paid Login" : "Free Plan Sign-up";
+    document.getElementById("mgLead").textContent =
+      mode === "paidBind"
+        ? "Enter the email address you used on PayPal. It will show as Paid Login on every page."
+        : "Create your free account with email. Then Free Login appears on every page.";
     document.getElementById("mgPlanLabel").textContent =
       opts.planLabel || PLAN_LABELS[plan] || plan || "Selected plan";
+    document.getElementById("mgPlanLabel").style.display = plan ? "" : "none";
     document.getElementById("mgErr").style.display = "none";
     document.getElementById("mgEmail").value = "";
     document.getElementById("mgName").value = "";
-    document.getElementById("mgNote").textContent = isFreePlan(plan)
-      ? "Next: open the order form with your free trial scope."
-      : "Next: continue to PayPal subscription checkout.";
+    document.getElementById("mgName").style.display =
+      mode === "paidBind" ? "none" : "";
+    document.getElementById("mgNameLabel").style.display =
+      mode === "paidBind" ? "none" : "";
+    document.getElementById("mgNote").textContent =
+      mode === "paidBind"
+        ? "Use the same email as your PayPal subscription."
+        : "Next: open the free-trial order form.";
 
     el.classList.add("open");
     setTimeout(function () {
@@ -187,11 +286,12 @@
     }
 
     var plan = pending.plan;
-    var next = pending.next;
-    var paypalUrl = pending.paypalUrl;
+    var mode = pending.mode;
     var onReady = pending.onReady;
 
-    saveMembership(email, name, plan);
+    if (mode === "paidBind") setPaidLogin(email, plan);
+    else saveMembership(email, name, plan || "free7_standard");
+
     closeGate();
 
     if (typeof onReady === "function") {
@@ -199,16 +299,40 @@
       return;
     }
 
-    if (next === "paypal") {
-      if (paypalUrl) {
-        global.location.href = paypalUrl;
-      } else {
-        alert("PayPal plan ID is pending. Membership saved — please try again after plan ID is linked.");
-      }
+    if (mode === "paidBind") {
+      global.location.href = "/";
       return;
     }
-
     global.location.href = "/?plan=" + encodeURIComponent(plan || "free7_standard");
+  }
+
+  function handlePayPalReturn() {
+    try {
+      var params = new URLSearchParams(global.location.search || "");
+      var paidReturn =
+        params.get("paid") === "1" ||
+        params.get("paypal") === "success" ||
+        params.get("paypal") === "return" ||
+        !!params.get("ba_token") ||
+        !!params.get("subscription_id");
+      if (!paidReturn) return;
+      var plan =
+        params.get("plan") ||
+        localStorage.getItem("humateckSelectedPlan") ||
+        "";
+      if (getLoginType() === "paid" && getMemberEmail()) {
+        refreshLoginBadge();
+        return;
+      }
+      openMemberGate({
+        mode: "paidBind",
+        plan: plan,
+        planLabel: PLAN_LABELS[plan] || "PayPal subscription",
+        onReady: function () {
+          refreshLoginBadge();
+        },
+      });
+    } catch (e) {}
   }
 
   function bindOnce() {
@@ -227,6 +351,15 @@
         closeGate();
       }
     });
+    function boot() {
+      refreshLoginBadge();
+      handlePayPalReturn();
+    }
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", boot);
+    } else {
+      boot();
+    }
   }
 
   bindOnce();
@@ -235,11 +368,16 @@
     open: openMemberGate,
     close: closeGate,
     hasMembership: hasMembership,
+    hasFreeMembership: hasFreeMembership,
     getEmail: getMemberEmail,
+    getLoginType: getLoginType,
     isFreePlan: isFreePlan,
     planLabel: function (plan) {
       return PLAN_LABELS[plan] || plan || "";
     },
     saveMembership: saveMembership,
+    setFreeLogin: setFreeLogin,
+    setPaidLogin: setPaidLogin,
+    refreshLoginBadge: refreshLoginBadge,
   };
 })(typeof window !== "undefined" ? window : globalThis);

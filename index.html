@@ -1309,7 +1309,7 @@ A) This is because YouTube content display system fixes the default video settin
 <footer class="footer"><a href="terms.html">Terms of Service</a><span>|</span><a href="privacy.html">Privacy Policy</a><span>|</span><a href="refund.html">Refund Policy</a><span>|</span><a href="/contact-en.html">Contact us</a></footer>
 
 
-<script src="membership-gate.js?v=20260716a"></script>
+<script src="membership-gate.js?v=20260716d"></script>
 <script>
 (function(){
   function applyHumateckPlan(plan){
@@ -1362,14 +1362,16 @@ A) This is because YouTube content display system fixes the default video settin
       function applyNow(){
         applyHumateckPlan(plan, getHumateckPlanLimit(plan));
         syncOrderPlanPicker(plan);
+        if(window.HumateckMemberGate) window.HumateckMemberGate.refreshLoginBadge();
       }
 
       var gate = window.HumateckMemberGate;
-      if(gate && !gate.hasMembership()){
+      // Only free trial requires signup-before-order. Paid is PayPal-first.
+      if(gate && gate.isFreePlan(plan) && !gate.hasFreeMembership()){
         gate.open({
           plan: plan,
           planLabel: gate.planLabel(plan),
-          next: "order",
+          mode: "free",
           onReady: function(){ applyNow(); }
         });
         return;
@@ -1394,17 +1396,17 @@ A) This is because YouTube content display system fixes the default video settin
         try{ localStorage.setItem("humateckSelectedPlan", plan); }catch(err){}
         applyHumateckPlan(plan, getHumateckPlanLimit(plan));
         syncOrderPlanPicker(plan);
+        if(window.HumateckMemberGate) window.HumateckMemberGate.refreshLoginBadge();
       }
 
       var gate = window.HumateckMemberGate;
-      if(gate && !gate.hasMembership()){
+      if(gate && gate.isFreePlan(plan) && !gate.hasFreeMembership()){
         gate.open({
           plan: plan,
           planLabel: gate.planLabel(plan),
-          next: "order",
+          mode: "free",
           onReady: function(){ applyNow(); }
         });
-        // revert select until signup completes
         sel.value = "";
         return;
       }
@@ -1414,13 +1416,19 @@ A) This is because YouTube content display system fixes the default video settin
 
   async function loadHumateckSubscriptionStatus(){
     try{
-      var email = localStorage.getItem("humateckUserEmail") || localStorage.getItem("humateckEmail") || "";
+      var email = localStorage.getItem("humateckPaidEmail") || localStorage.getItem("humateckUserEmail") || localStorage.getItem("humateckEmail") || "";
       var url = "/api/check-subscription" + (email ? ("?email=" + encodeURIComponent(email)) : "");
       var res = await fetch(url, { credentials:"include", cache:"no-store" });
       if(!res.ok) return;
       var data = await res.json().catch(function(){ return {}; });
       if(data && (data.admin === true || data.is_admin === true)){ window.humateckIsAdminMember = true; applyHumateckPlan("yearly70", 70); return; }
-      if(data && (data.active === true || data.status === "active")){ applyHumateckPlan(data.plan || data.plan_type || data.subscription_plan, data.country_limit); }
+      if(data && (data.active === true || data.status === "active")){
+        var paidEmail = data.email || email;
+        if(paidEmail && window.HumateckMemberGate){
+          window.HumateckMemberGate.setPaidLogin(paidEmail, data.plan || data.plan_type || data.subscription_plan || "");
+        }
+        applyHumateckPlan(data.plan || data.plan_type || data.subscription_plan, data.country_limit);
+      }
     }catch(e){}
   }
 

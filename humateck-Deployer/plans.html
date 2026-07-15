@@ -425,7 +425,7 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 </div>
 
 <script src="paypal-plans.js?v=20260716c"></script>
-<script src="membership-gate.js?v=20260716a"></script>
+<script src="membership-gate.js?v=20260716d"></script>
 <script>
 (function(){
   function wirePayPalButtons(){
@@ -462,25 +462,23 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
     var label = h2 ? h2.textContent.trim() : "";
     var paypalUrl = btn.getAttribute("data-paypal-url") || "";
     var gate = window.HumateckMemberGate;
-    if(!gate){
-      if(plan) window.location.href = "/?plan=" + encodeURIComponent(plan);
+
+    // Paid = PayPal first (no signup modal before payment)
+    if(!gate || !gate.isFreePlan(plan)){
+      try{ localStorage.setItem("humateckSelectedPlan", plan || ""); }catch(err){}
+      if(paypalUrl){
+        window.location.href = paypalUrl;
+      } else {
+        alert("PayPal plan ID is pending. Please finish PayPal plan linking first.");
+      }
       return;
     }
 
-    if(gate.isFreePlan(plan)){
-      gate.open({
-        plan: plan,
-        planLabel: label || gate.planLabel(plan),
-        next: "order"
-      });
-      return;
-    }
-
+    // Free = membership signup first, then order page + Free login
     gate.open({
       plan: plan,
       planLabel: label || gate.planLabel(plan),
-      next: "paypal",
-      paypalUrl: paypalUrl
+      next: "order"
     });
   }, true);
 })();
