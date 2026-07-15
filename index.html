@@ -1078,6 +1078,8 @@ Do not add review, blocking, metadata judgment, hidden/admin menu, auto-correcti
   <label for="orderPlanSelect">Distribution countries</label>
   <select id="orderPlanSelect" aria-label="Select distribution country scope">
     <option value="">Select distribution countries…</option>
+    <option value="free7_standard">Standard · 7-Day Free (5 countries)</option>
+    <option value="free7_enterprise">Enterprise · 7-Day Free (5 countries)</option>
     <option value="asia30">Asia Plan (30 countries)</option>
     <option value="europe30">Europe Plan (30 countries)</option>
     <option value="africa30">Africa Plan (30 countries)</option>
@@ -1349,6 +1351,9 @@ A) This is because YouTube content display system fixes the default video settin
   function getHumateckPlanPriceText(plan){
     /* Soft price peek only — continent/scope names stay in the dropdown. */
     var map = {
+      free7: "USD 0 / 7 days · 1 seat · 5 countries",
+      free7_standard: "USD 0 / 7 days · 1 seat · 5 countries",
+      free7_enterprise: "USD 0 / 7 days · 5 seats · 5 countries",
       asia30: "30 countries · from USD 33/mo",
       europe30: "30 countries · from USD 33/mo",
       africa30: "30 countries · from USD 33/mo",
