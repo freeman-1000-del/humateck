@@ -41,7 +41,7 @@
       interval: "month",
       amountUsd: 91,
       amountKrwNote: 125000,
-      planId: "",
+      planId: "P-1JA19021N3174844UNJL6IAY",
       subscribeUrl: "",
     },
     premiumYearly: {
