@@ -29,7 +29,7 @@
       label: "Standard (Annual)",
       seats: 1,
       interval: "year",
-      amountUsd: yearlyFromMonthly(33),
+      amountUsd: yearlyFromMonthly(33), // 316.80
       amountKrwNote: 432000,
       planId: "",
       subscribeUrl: "",
@@ -49,7 +49,7 @@
       label: "Enterprise 5-seat (Annual)",
       seats: 5,
       interval: "year",
-      amountUsd: yearlyFromMonthly(91),
+      amountUsd: yearlyFromMonthly(91), // 873.60
       amountKrwNote: 1200000,
       planId: "",
       subscribeUrl: "",

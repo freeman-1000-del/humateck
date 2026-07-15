@@ -91,11 +91,11 @@
     webCta: {
       ko: {
         label: "웹 주문폼으로 이동",
-        url: "/humateck-Deployer/order.html",
+        url: "/",
       },
       en: {
         label: "Go to order form",
-        url: "/humateck-Deployer/order.html",
+        url: "/",
       },
     },
     /* Own-site web subscription — Standard $33/$316.80 · Enterprise $91/$873.60 */
