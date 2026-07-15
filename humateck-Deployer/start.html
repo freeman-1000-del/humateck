@@ -29,8 +29,8 @@
   function kst(ms){var d=new Date(ms+(9*60*60*1000));return d.getUTCFullYear()+"-"+pad(d.getUTCMonth()+1)+"-"+pad(d.getUTCDate())+" "+pad(d.getUTCHours())+":"+pad(d.getUTCMinutes())+":"+pad(d.getUTCSeconds())+" KST"}
     var params=new URLSearchParams(window.location.search||"");
     var plan=params.get("plan")||"free7_standard";
-    if(plan!=="free7_enterprise" && plan!=="free7_standard" && plan!=="free7") plan="free7_standard";
-    if(plan==="free7") plan="free7_standard";
+    if(plan==="free7_enterprise" || plan==="free7") plan="free7_standard";
+    if(plan!=="free7_standard") plan="free7_standard";
     var btn=document.getElementById('startTrialBtn');
   btn.addEventListener('click',function(){
     var email=(document.getElementById('trialEmail').value||'').trim();

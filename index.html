@@ -193,16 +193,6 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
   font-weight:900;
   white-space:nowrap;
 }
-.planPriceHint{
-  width:100%;
-  margin:0;
-  color:#9aa0a6;
-  font-size:16px!important;
-  font-weight:600;
-  line-height:1.45;
-  min-height:1.2em;
-}
-.planPriceHint strong{color:#cfe8ff;font-weight:800}
 .commandFullRows{display:grid;grid-template-columns:1fr;gap:14px}
 .commandFullItem{border:1px solid rgba(214,176,78,.35);border-radius:14px;padding:14px;background:rgba(5,11,20,.48)}
 .commandFullTop{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:8px}
@@ -1093,7 +1083,6 @@ Do not add review, blocking, metadata judgment, hidden/admin menu, auto-correcti
           <select id="orderPlanSelect" aria-label="Select distribution country scope">
             <option value="">Select distribution countries…</option>
             <option value="free7_standard">Standard · 7-Day Free (5 countries)</option>
-            <option value="free7_enterprise">Enterprise · 7-Day Free (5 countries)</option>
             <option value="asia30">Asia Plan (30 countries)</option>
             <option value="europe30">Europe Plan (30 countries)</option>
             <option value="africa30">Africa Plan (30 countries)</option>
@@ -1326,10 +1315,11 @@ A) This is because YouTube content display system fixes the default video settin
     if(!plan) return;
     if(plan === "monthly70") plan = "monthly70";
     if(plan === "yearly70") plan = "yearly70";
+    if(plan === "free7_enterprise") plan = "free7_standard";
     var allowed = {
       asia30:true, europe30:true, africa30:true, america30:true, oceania30:true,
       global16:true, global50:true, global70:true, custom50:true,
-      free7:true, free7_standard:true, free7_enterprise:true,
+      free7:true, free7_standard:true,
       monthly_standard:true, yearly_standard:true,
       monthly_premium:true, yearly_premium:true,
       monthly30:true, monthly50:true, monthly70:true, yearly70:true
@@ -1343,7 +1333,7 @@ A) This is because YouTube content display system fixes the default video settin
   }
 
   function getHumateckPlanLimit(plan){
-    if(plan === "free7" || plan === "free7_standard" || plan === "free7_enterprise") return 5;
+    if(plan === "free7" || plan === "free7_standard") return 5;
     if(plan === "asia30" || plan === "europe30" || plan === "africa30" || plan === "america30" || plan === "oceania30" || plan === "monthly30") return 30;
     if(plan === "global16") return 16;
     if(plan === "global50" || plan === "custom50" || plan === "monthly50") return 50;
@@ -1352,35 +1342,11 @@ A) This is because YouTube content display system fixes the default video settin
     return 0;
   }
 
-  function getHumateckPlanPriceText(plan){
-    /* Soft price peek only — continent/scope names stay in the dropdown. */
-    var map = {
-      free7: "USD 0 / 7 days · 1 seat · 5 countries",
-      free7_standard: "USD 0 / 7 days · 1 seat · 5 countries",
-      free7_enterprise: "USD 0 / 7 days · 5 seats · 5 countries",
-      asia30: "30 countries · from USD 33/mo",
-      europe30: "30 countries · from USD 33/mo",
-      africa30: "30 countries · from USD 33/mo",
-      america30: "30 countries · from USD 33/mo",
-      oceania30: "30 countries · from USD 33/mo",
-      global16: "16 countries · from USD 33/mo",
-      global50: "50 countries · from USD 33/mo",
-      global70: "70 countries · from USD 33/mo · Enterprise USD 91/mo (5 seats)",
-      custom50: "Up to 50 countries · from USD 33/mo"
-    };
-    return map[plan] || "";
-  }
-
   function syncOrderPlanPicker(plan){
     var sel = document.getElementById("orderPlanSelect");
-    var hint = document.getElementById("orderPlanPriceHint");
     if(sel && plan){
       var opt = sel.querySelector('option[value="'+plan+'"]');
       if(opt) sel.value = plan;
-    }
-    if(hint){
-      var text = getHumateckPlanPriceText(plan);
-      hint.innerHTML = text ? ("<strong>" + text + "</strong>") : "";
     }
   }
 
@@ -1459,7 +1425,7 @@ A) This is because YouTube content display system fixes the default video settin
 
     if(window.humateckIsAdminMember === true) return 70;
 
-    if(plan === "free7" || plan === "free7_standard" || plan === "free7_enterprise") return 5;
+    if(plan === "free7" || plan === "free7_standard") return 5;
     if(plan === "asia30" || plan === "europe30" || plan === "africa30" || plan === "america30" || plan === "oceania30" || plan === "monthly30") return 30;
     if(plan === "global16") return 16;
     if(plan === "global50" || plan === "custom50" || plan === "monthly50") return 50;
