@@ -27,7 +27,11 @@
 (function(){
   function pad(n){return String(n).padStart(2,"0")}
   function kst(ms){var d=new Date(ms+(9*60*60*1000));return d.getUTCFullYear()+"-"+pad(d.getUTCMonth()+1)+"-"+pad(d.getUTCDate())+" "+pad(d.getUTCHours())+":"+pad(d.getUTCMinutes())+":"+pad(d.getUTCSeconds())+" KST"}
-  var btn=document.getElementById('startTrialBtn');
+    var params=new URLSearchParams(window.location.search||"");
+    var plan=params.get("plan")||"free7_standard";
+    if(plan!=="free7_enterprise" && plan!=="free7_standard" && plan!=="free7") plan="free7_standard";
+    if(plan==="free7") plan="free7_standard";
+    var btn=document.getElementById('startTrialBtn');
   btn.addEventListener('click',function(){
     var email=(document.getElementById('trialEmail').value||'').trim();
     if(!email){alert('Please enter your email.');return;}
@@ -38,12 +42,13 @@
       localStorage.setItem('humateckFreeOnlyTrialActive','true');
       localStorage.setItem('humateckFreeOnlyTrialStartMs',String(startMs));
       localStorage.setItem('humateckFreeOnlyTrialEndMs',String(endMs));
-      localStorage.setItem('humateckFreeOnlyActivePlan','free7');
-      localStorage.setItem('humateckFreeOnlySubscriberPlan','free7');
+      localStorage.setItem('humateckFreeOnlyActivePlan',plan);
+      localStorage.setItem('humateckFreeOnlySubscriberPlan',plan);
+      localStorage.setItem('humateckSelectedPlan',plan);
     }catch(e){}
     var box=document.getElementById('trialDone');
     box.style.display='block';
-    box.innerHTML='Free trial activated.<br>Trial ends at: <span class="highlight">'+kst(endMs)+'</span><br><a class="btn" href="order.html">Continue to Free Trial Order Page</a>';
+    box.innerHTML='Free trial activated.<br>Trial ends at: <span class="highlight">'+kst(endMs)+'</span><br><a class="btn" href="order.html?plan='+encodeURIComponent(plan)+'">Continue to Free Trial Order Page</a>';
   });
 })();
 </script>

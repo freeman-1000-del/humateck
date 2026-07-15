@@ -1292,7 +1292,12 @@ A) This is because YouTube content display system fixes the default video settin
     if(!plan) return;
     if(plan === "monthly70") plan = "monthly70";
     if(plan === "yearly70") plan = "yearly70";
-    var allowed = {free7:true, monthly30:true, monthly50:true, monthly70:true, yearly70:true};
+    var allowed = {
+      free7:true, free7_standard:true, free7_enterprise:true,
+      monthly_standard:true, yearly_standard:true,
+      monthly_premium:true, yearly_premium:true,
+      monthly30:true, monthly50:true, monthly70:true, yearly70:true
+    };
     if(!allowed[plan]) return;
     window.humateckPaymentSubscriptionPlan = plan;
     var hidden = document.getElementById("humateckActivePlanValue");
@@ -1302,7 +1307,8 @@ A) This is because YouTube content display system fixes the default video settin
   }
 
   function getHumateckPlanLimit(plan){
-    if(plan === "free7") return 15;
+    if(plan === "free7" || plan === "free7_standard" || plan === "free7_enterprise") return 15;
+    if(plan === "monthly_standard" || plan === "yearly_standard" || plan === "monthly_premium" || plan === "yearly_premium") return 70;
     if(plan === "monthly30") return 30;
     if(plan === "monthly50") return 50;
     if(plan === "monthly70" || plan === "yearly70") return 70;
@@ -1365,7 +1371,8 @@ A) This is because YouTube content display system fixes the default video settin
 
     if(window.humateckIsAdminMember === true) return 70;
 
-    if(plan === "free7") return 15;
+    if(plan === "free7" || plan === "free7_standard" || plan === "free7_enterprise") return 15;
+    if(plan === "monthly_standard" || plan === "yearly_standard" || plan === "monthly_premium" || plan === "yearly_premium") return 70;
     if(plan === "monthly50") return 50;
     if(plan === "monthly70") return 70;
     if(plan === "yearly70") return 70;
