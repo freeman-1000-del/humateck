@@ -1309,6 +1309,7 @@ A) This is because YouTube content display system fixes the default video settin
 <footer class="footer"><a href="terms.html">Terms of Service</a><span>|</span><a href="privacy.html">Privacy Policy</a><span>|</span><a href="refund.html">Refund Policy</a><span>|</span><a href="/contact-en.html">Contact us</a></footer>
 
 
+<script src="membership-gate.js?v=20260716a"></script>
 <script>
 (function(){
   function applyHumateckPlan(plan){
@@ -1355,10 +1356,25 @@ A) This is because YouTube content display system fixes the default video settin
       var params = new URLSearchParams(window.location.search || "");
       var plan = params.get("plan") || localStorage.getItem("humateckSelectedPlan") || "";
       if(plan === "free7") plan = "free7_standard";
-      if(plan){
+      if(plan === "free7_enterprise") plan = "free7_standard";
+      if(!plan) return;
+
+      function applyNow(){
         applyHumateckPlan(plan, getHumateckPlanLimit(plan));
         syncOrderPlanPicker(plan);
       }
+
+      var gate = window.HumateckMemberGate;
+      if(gate && !gate.hasMembership()){
+        gate.open({
+          plan: plan,
+          planLabel: gate.planLabel(plan),
+          next: "order",
+          onReady: function(){ applyNow(); }
+        });
+        return;
+      }
+      applyNow();
     }catch(e){}
   }
 
@@ -1373,9 +1389,26 @@ A) This is because YouTube content display system fixes the default video settin
         syncOrderPlanPicker("");
         return;
       }
-      try{ localStorage.setItem("humateckSelectedPlan", plan); }catch(err){}
-      applyHumateckPlan(plan, getHumateckPlanLimit(plan));
-      syncOrderPlanPicker(plan);
+
+      function applyNow(){
+        try{ localStorage.setItem("humateckSelectedPlan", plan); }catch(err){}
+        applyHumateckPlan(plan, getHumateckPlanLimit(plan));
+        syncOrderPlanPicker(plan);
+      }
+
+      var gate = window.HumateckMemberGate;
+      if(gate && !gate.hasMembership()){
+        gate.open({
+          plan: plan,
+          planLabel: gate.planLabel(plan),
+          next: "order",
+          onReady: function(){ applyNow(); }
+        });
+        // revert select until signup completes
+        sel.value = "";
+        return;
+      }
+      applyNow();
     });
   })();
 

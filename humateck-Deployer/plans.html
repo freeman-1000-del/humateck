@@ -92,8 +92,6 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 .question{color:#ffd95a!important;font-weight:900}
 .faqSummary{cursor:pointer;color:#ffd95a;font-weight:900;margin:10px 0}
 .faqDetails{margin-top:10px}
-.blinkActive{animation:humateckPlanBlink 1.1s infinite alternate;box-shadow:0 0 26px rgba(255,217,90,.95)!important;border-color:#ffd95a!important}
-@keyframes humateckPlanBlink{from{filter:brightness(1)}to{filter:brightness(1.35)}}
 .orderMainGrid{display:grid;grid-template-columns:1fr 330px;gap:18px;align-items:start}
 .orderLeftColumn{display:grid;gap:18px}
 .orderBottomGrid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
@@ -107,6 +105,7 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 .commandCopyBtn{min-width:72px!important;min-height:38px!important;padding:8px 12px!important;font-size:14px!important}
 .yellowStrong,.yellowNotice{color:#ffd95a!important;font-weight:900}
 .copyButtonVisible{display:inline-flex;animation:humateckPlanBlink 1.1s infinite alternate}
+@keyframes humateckPlanBlink{from{filter:brightness(1)}to{filter:brightness(1.35)}}
 .oauthInfoBox{border:1px solid rgba(255,217,90,.62);border-radius:16px;padding:18px;margin:20px 0;background:rgba(255,217,90,.09);line-height:1.75}
 .oauthInfoBox h2{color:#ffd95a!important;margin-top:0}
 .guideOpenButton{animation:humateckGuideBlink 1.05s infinite alternate;border-color:#ffd95a!important;color:#fff!important;box-shadow:0 0 24px rgba(255,217,90,.75)!important}
@@ -151,7 +150,6 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 .plan{
   position:relative;
 }
-/* Selection = whole-card highlight only (.blinkActive / .current). No overlay badge. */
 </style>
 
 <script defer src="/_vercel/insights/script.js"></script>
@@ -422,11 +420,11 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
 <p style="color:#e6e0d4;font-size:16px;line-height:1.6;margin:10px 0 0">Web registration · PayPal subscription. Free 7-day trial (5 countries) · Standard $33/mo · Enterprise $91/mo · Annual 20% off.</p>
 </section>
 <section class="plans">
-<article class="plan" data-subscription-plan="free7_standard"><h2>Standard · 7-Day Free</h2><div class="price">USD 0 / 7 days</div><p>1 seat free trial · 5-country practice scope. Then upgrade to Standard $33/mo or Annual $316.80.</p><a class="btn" href="/?plan=free7_standard">Start Standard Free Trial</a></article>
-<article class="plan" data-subscription-plan="monthly_standard"><h2>Standard</h2><div class="price">USD 33 / month</div><p>1 seat · Full country scope. (≈ KRW 45,000)</p><a class="btn paypalSubBtn" href="#" data-paypal-tier="standard" aria-disabled="true">PayPal — add plan ID</a></article>
-<article class="plan" data-subscription-plan="yearly_standard"><h2>Standard Annual</h2><div class="price">USD 316.80 / year</div><p>1 seat · Billed yearly · <strong>20% off</strong> vs monthly. (≈ KRW 432,000)</p><a class="btn paypalSubBtn" href="#" data-paypal-tier="standardYearly" aria-disabled="true">PayPal — add plan ID</a></article>
-<article class="plan featured" data-subscription-plan="monthly_premium"><h2>Enterprise 5-seat</h2><div class="price">USD 91 / month</div><p>5 seats · Team web registration. (≈ KRW 125,000)</p><a class="btn paypalSubBtn" href="#" data-paypal-tier="premium" aria-disabled="true">PayPal — add plan ID</a></article>
-<article class="plan featured" data-subscription-plan="yearly_premium"><h2>Enterprise Annual</h2><div class="price">USD 873.60 / year</div><p>5 seats · Billed yearly · <strong>20% off</strong> vs monthly. (≈ KRW 1,200,000)</p><a class="btn paypalSubBtn" href="#" data-paypal-tier="premiumYearly" aria-disabled="true">PayPal — add plan ID</a></article>
+<article class="plan" data-subscription-plan="free7_standard"><h2>Standard · 7-Day Free</h2><div class="price">USD 0 / 7 days</div><p>1 seat free trial · 5-country practice scope. Then upgrade to Standard $33/mo or Annual $316.80.</p><a class="btn" href="/?plan=free7_standard" data-plan-action="free">Start Standard Free Trial</a></article>
+<article class="plan" data-subscription-plan="monthly_standard"><h2>Standard</h2><div class="price">USD 33 / month</div><p>1 seat · Full country scope. (≈ KRW 45,000)</p><a class="btn paypalSubBtn" href="#" data-paypal-tier="standard" data-plan-action="paid" aria-disabled="true">Subscribe with PayPal</a></article>
+<article class="plan" data-subscription-plan="yearly_standard"><h2>Standard Annual</h2><div class="price">USD 316.80 / year</div><p>1 seat · Billed yearly · <strong>20% off</strong> vs monthly. (≈ KRW 432,000)</p><a class="btn paypalSubBtn" href="#" data-paypal-tier="standardYearly" data-plan-action="paid" aria-disabled="true">Subscribe with PayPal</a></article>
+<article class="plan featured" data-subscription-plan="monthly_premium"><h2>Enterprise 5-seat</h2><div class="price">USD 91 / month</div><p>5 seats · Team web registration. (≈ KRW 125,000)</p><a class="btn paypalSubBtn" href="#" data-paypal-tier="premium" data-plan-action="paid" aria-disabled="true">Subscribe with PayPal</a></article>
+<article class="plan featured" data-subscription-plan="yearly_premium"><h2>Enterprise Annual</h2><div class="price">USD 873.60 / year</div><p>5 seats · Billed yearly · <strong>20% off</strong> vs monthly. (≈ KRW 1,200,000)</p><a class="btn paypalSubBtn" href="#" data-paypal-tier="premiumYearly" data-plan-action="paid" aria-disabled="true">Subscribe with PayPal</a></article>
 </section>
 <footer class="footer" style="display:flex;justify-content:center;gap:20px;margin-top:28px;color:#cfc8b9;font-size:15px;flex-wrap:wrap">
   <a href="terms.html">Terms of Service</a><span>|</span>
@@ -434,9 +432,10 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
   <a href="refund.html">Refund Policy</a><span>|</span>
   <a href="/contact-en.html">Contact us</a>
 </footer>
-</div><div class="account"><a href="#" title="Google Official Authorization">G</a><a href="#" title="Apple Official Authorization">●</a></div>
+</div>
 
-<script src="paypal-plans.js?v=20260716b"></script>
+<script src="paypal-plans.js?v=20260716c"></script>
+<script src="membership-gate.js?v=20260716a"></script>
 <script>
 (function(){
   function wirePayPalButtons(){
@@ -446,40 +445,54 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
       var tier = btn.getAttribute("data-paypal-tier");
       var plan = cfg[tier];
       if(plan && plan.subscribeUrl){
-        btn.href = plan.subscribeUrl;
-        btn.target = "_blank";
-        btn.rel = "noopener noreferrer";
+        btn.setAttribute("data-paypal-url", plan.subscribeUrl);
+        btn.href = "#";
+        btn.removeAttribute("target");
         btn.removeAttribute("aria-disabled");
         btn.textContent = "Subscribe with PayPal";
-        btn.onclick = null;
       } else {
+        btn.removeAttribute("data-paypal-url");
         btn.href = "#";
         btn.setAttribute("aria-disabled", "true");
         btn.textContent = "PayPal — plan ID pending";
-        btn.onclick = function(e){ e.preventDefault(); return false; };
       }
     });
   }
   wirePayPalButtons();
+
   document.addEventListener("click", function(e){
     var btn = e.target.closest(".plan .btn");
     if(!btn) return;
+    e.preventDefault();
+    e.stopPropagation();
+
     var planCard = btn.closest(".plan");
     var plan = planCard ? planCard.getAttribute("data-subscription-plan") : "";
-    if(plan){
-      try{ localStorage.setItem("humateckSelectedPlan", plan); }catch(err){}
-      window.humateckPaymentSubscriptionPlan = plan;
+    var h2 = planCard ? planCard.querySelector("h2") : null;
+    var label = h2 ? h2.textContent.trim() : "";
+    var paypalUrl = btn.getAttribute("data-paypal-url") || "";
+    var gate = window.HumateckMemberGate;
+    if(!gate){
+      if(plan) window.location.href = "/?plan=" + encodeURIComponent(plan);
+      return;
     }
-  }, true);
-})();
-</script>
 
-<script>
-(function(){
-  var plan = window.humateckPaymentSubscriptionPlan || (function(){try{return localStorage.getItem("humateckSelectedPlan") || "";}catch(e){return "";}})();
-  if(!plan) return;
-  var target = document.querySelector('[data-subscription-plan="'+plan+'"]');
-  if(target){ target.classList.add('blinkActive'); target.classList.add('current'); }
+    if(gate.isFreePlan(plan)){
+      gate.open({
+        plan: plan,
+        planLabel: label || gate.planLabel(plan),
+        next: "order"
+      });
+      return;
+    }
+
+    gate.open({
+      plan: plan,
+      planLabel: label || gate.planLabel(plan),
+      next: "paypal",
+      paypalUrl: paypalUrl
+    });
+  }, true);
 })();
 </script>
 
