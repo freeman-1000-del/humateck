@@ -51,7 +51,7 @@
       interval: "year",
       amountUsd: yearlyFromMonthly(91), // 873.60
       amountKrwNote: 1200000,
-      planId: "",
+      planId: "P-68N713275K742994ENJL6LRA",
       subscribeUrl: "",
     },
   };
