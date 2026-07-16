@@ -161,6 +161,7 @@ input,textarea{width:100%;padding:14px;background:#050b14;color:#f7f1e6;border:1
   border:1px solid rgba(214,176,78,.48);
   border-radius:16px;
   background:rgba(214,176,78,.08);
+  scroll-margin-top:18px;
 }
 .planPickerRow label{
   display:block;
@@ -1102,7 +1103,7 @@ Do not add review, blocking, metadata judgment, hidden/admin menu, auto-correcti
         <p>1. This program uses Google's verified security protocol, OAuth 2.0, so your personal information is <strong>never stored on our servers</strong>. For setup details, see the <a class="guideGoldLink" href="/google-oauth-setup-guide.html" target="_blank" rel="noopener noreferrer">Google OAuth Setup Guide</a>.</p>
         <p>2. Even after content is bulk-deployed to multilingual channels through this program, <strong>your desired view count or revenue may not be guaranteed</strong>. Exposure and views are determined by YouTube's internal algorithm, and visibility may be reduced or omitted in certain countries.</p>
       </div>
-      <div class="planPickerRow">
+      <div class="planPickerRow" id="planPickerSection">
         <label for="orderPlanSelect">Distribution countries</label>
         <div class="planPickerControls">
           <select id="orderPlanSelect" aria-label="Select distribution country scope">
@@ -1897,5 +1898,30 @@ Without any explanation, output only the translated registration text.`;
 </script>
 
 <script src="plan-scope-preview.js?v=20260716c"></script>
+<script>
+/* Always land first view on Distribution countries picker */
+(function(){
+  function focusPlanPicker(){
+    var el = document.getElementById("planPickerSection") || document.getElementById("orderPlanSelect");
+    if(!el) return;
+    try{
+      el.scrollIntoView({ behavior: "auto", block: "start" });
+    }catch(e){
+      el.scrollIntoView(true);
+    }
+  }
+  function run(){
+    focusPlanPicker();
+    setTimeout(focusPlanPicker, 50);
+    setTimeout(focusPlanPicker, 250);
+  }
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", run);
+  }else{
+    run();
+  }
+  window.addEventListener("load", focusPlanPicker);
+})();
+</script>
 
 </body></html>
