@@ -270,6 +270,7 @@
       "#planScopePreview .pspHead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin:0 0 8px}" +
       "#planScopePreview .pspHead .pspClose{margin-top:0;flex:0 0 auto}" +
       "#planScopePreview .pspLead{margin:0 0 14px;color:#e6e0d4;font-size:15px;line-height:1.55}" +
+      "#planScopePreview .pspRemain{display:inline-block;margin-left:10px;padding:4px 10px;border:1px solid rgba(255,217,90,.55);border-radius:999px;background:rgba(255,217,90,.12);color:#ffd95a;font-size:14px;font-weight:900;vertical-align:middle;white-space:nowrap}" +
       "#planScopePreview .pspList{margin:0;padding:0;list-style:none;display:grid;gap:8px}" +
       "#planScopePreview .pspList li{padding:10px 12px;border:1px solid rgba(214,176,78,.28);border-radius:10px;background:rgba(255,255,255,.03);color:#f4f1e8;font-size:15px;line-height:1.45}" +
       "#planScopePreview .pspClose{display:inline-flex;margin-top:18px;min-height:44px;padding:10px 18px;border:2px solid #d9b256;border-radius:12px;background:linear-gradient(180deg,#5c4315,#15110a);color:#fff;font-size:16px;font-weight:900;cursor:pointer}";
@@ -294,6 +295,30 @@
     });
   }
 
+  function isFreePlan(plan) {
+    return plan === "free7_standard" || plan === "free7";
+  }
+
+  function getFreeRemainingLabel() {
+    var endMs = 0;
+    try {
+      endMs = parseInt(localStorage.getItem("humateckFreeOnlyTrialEndMs") || "0", 10) || 0;
+    } catch (e) {
+      endMs = 0;
+    }
+    if (!endMs) {
+      return "Free remaining: 7 days (not started)";
+    }
+    var leftMs = endMs - Date.now();
+    if (leftMs <= 0) {
+      return "Free remaining: expired";
+    }
+    var dayMs = 24 * 60 * 60 * 1000;
+    var days = Math.ceil(leftMs / dayMs);
+    if (days < 1) days = 1;
+    return "Free remaining: " + days + (days === 1 ? " day" : " days");
+  }
+
   function closePreview() {
     var el = document.getElementById("planScopePreview");
     if (el) el.classList.remove("open");
@@ -305,8 +330,16 @@
     var rows = LISTS[plan];
     if (!rows || !rows.length) return;
     document.getElementById("pspTitle").textContent = TITLES[plan] || plan;
-    document.getElementById("pspLead").textContent =
-      "This distribution scope is applied. Countries (" + rows.length + "):";
+    var lead = "This distribution scope is applied. Countries (" + rows.length + "):";
+    if (isFreePlan(plan)) {
+      lead +=
+        ' <span class="pspRemain">' +
+        getFreeRemainingLabel().replace(/</g, "&lt;") +
+        "</span>";
+      document.getElementById("pspLead").innerHTML = lead;
+    } else {
+      document.getElementById("pspLead").textContent = lead;
+    }
     document.getElementById("pspList").innerHTML = rows
       .map(function (line) {
         return "<li>" + line.replace(/</g, "&lt;") + "</li>";
