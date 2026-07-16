@@ -1287,21 +1287,32 @@ A) This is because YouTube content display system fixes the default video settin
 
   function syncOrderPlanPicker(plan){
     var sel = document.getElementById("orderPlanSelect");
-    if(sel && plan){
-      var opt = sel.querySelector('option[value="'+plan+'"]');
-      if(opt) sel.value = plan;
+    if(!sel) return;
+    if(!plan){
+      sel.selectedIndex = 0;
+      sel.value = "";
+      return;
+    }
+    var opt = sel.querySelector('option[value="'+plan+'"]');
+    if(opt) sel.value = plan;
+    else {
+      sel.selectedIndex = 0;
+      sel.value = "";
     }
   }
 
   function loadPlanSelectedFromPlansPage(){
     try{
       var params = new URLSearchParams(window.location.search || "");
-      var plan = params.get("plan") || localStorage.getItem("humateckSelectedPlan") || "";
+      // Keep dropdown on the top default option.
+      // Do not restore a previous localStorage plan into the visible select.
+      var plan = params.get("plan") || "";
       if(plan === "free7") plan = "free7_standard";
       if(plan === "free7_enterprise") plan = "free7_standard";
+      syncOrderPlanPicker("");
       if(!plan) return;
       applyHumateckPlan(plan, getHumateckPlanLimit(plan));
-      syncOrderPlanPicker(plan);
+      try{ localStorage.setItem("humateckSelectedPlan", plan); }catch(err){}
     }catch(e){}
   }
 
@@ -1898,30 +1909,5 @@ Without any explanation, output only the translated registration text.`;
 </script>
 
 <script src="plan-scope-preview.js?v=20260716c"></script>
-<script>
-/* Always land first view on Distribution countries picker */
-(function(){
-  function focusPlanPicker(){
-    var el = document.getElementById("planPickerSection") || document.getElementById("orderPlanSelect");
-    if(!el) return;
-    try{
-      el.scrollIntoView({ behavior: "auto", block: "start" });
-    }catch(e){
-      el.scrollIntoView(true);
-    }
-  }
-  function run(){
-    focusPlanPicker();
-    setTimeout(focusPlanPicker, 50);
-    setTimeout(focusPlanPicker, 250);
-  }
-  if(document.readyState === "loading"){
-    document.addEventListener("DOMContentLoaded", run);
-  }else{
-    run();
-  }
-  window.addEventListener("load", focusPlanPicker);
-})();
-</script>
 
 </body></html>
