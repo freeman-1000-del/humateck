@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a1628" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>YouTube High-Speed Deployer</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <style>
+    :root {
+      --bg: #070d16;
+      --panel: #101826;
+      --line: #2a3648;
+      --txt: #f2f5fa;
+      --muted: #9aa8bc;
+      --accent: #ffd95a;
+      --nav-h: 64px;
+      --safe-b: env(safe-area-inset-bottom, 0px);
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; height: 100%;
+      background: var(--bg); color: var(--txt);
+      font-family: "Segoe UI", system-ui, sans-serif;
+      overflow: hidden;
+    }
+    .app {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    .top {
+      flex: 0 0 auto;
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--line);
+      background: #0a1320;
+    }
+    .top h1 {
+      margin: 0; font-size: 15px; font-weight: 800; letter-spacing: .02em;
+      color: var(--accent);
+    }
+    .top span { color: var(--muted); font-size: 11px; }
+    .frameWrap { flex: 1 1 auto; min-height: 0; position: relative; }
+    iframe {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      border: 0; background: #fff;
+    }
+    .nav {
+      flex: 0 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+      padding: 6px 6px calc(6px + var(--safe-b));
+      border-top: 1px solid var(--line);
+      background: #0a1320;
+      min-height: var(--nav-h);
+    }
+    .nav button {
+      appearance: none; border: 0; border-radius: 12px;
+      background: transparent; color: var(--muted);
+      padding: 8px 4px; font-size: 10px; font-weight: 700;
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      cursor: pointer;
+    }
+    .nav button .ico { font-size: 18px; line-height: 1; }
+    .nav button.on {
+      color: #0d0f14;
+      background: var(--accent);
+    }
+    .alertPane {
+      display: none;
+      position: absolute; inset: 0;
+      padding: 20px 16px;
+      overflow: auto;
+      background: var(--bg);
+    }
+    .alertPane.on { display: block; }
+    .alertPane h2 { margin: 0 0 8px; font-size: 20px; color: var(--accent); }
+    .alertPane p { color: var(--muted); line-height: 1.55; font-size: 14px; }
+    .alertPane a.btn, .alertPane button.btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      margin-top: 14px; margin-right: 8px;
+      padding: 12px 16px; border-radius: 12px;
+      background: var(--accent); color: #0d0f14;
+      font-weight: 800; text-decoration: none; border: 0; font-size: 14px;
+      cursor: pointer;
+    }
+    .alertPane .note {
+      margin-top: 18px; padding: 12px 14px; border-radius: 12px;
+      border: 1px solid var(--line); background: var(--panel);
+      font-size: 13px; color: #d7deea; line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="top">
+      <div>
+        <h1>YouTube High-Speed Deployer</h1>
+        <span>Order · Guide · Practice · Alerts · PC for live register</span>
+      </div>
+    </header>
+
+    <div class="frameWrap">
+      <iframe id="pane" title="Deployer" src="https://humateck.com/buy-en.html"></iframe>
+      <section class="alertPane" id="alertPane" aria-label="Payment alerts">
+        <h2>Payment alerts</h2>
+        <p>Get phone alerts when Deployer or Keyword Pro payments succeed or cancel.</p>
+        <p>Your topic: <b style="color:#fff">huma_12</b></p>
+        <a class="btn" href="https://ntfy.sh/huma_12" target="_blank" rel="noopener">Open ntfy topic</a>
+        <a class="btn" href="ntfy://ntfy.sh/huma_12">Open ntfy app</a>
+        <div class="note">
+          Install the free <b>ntfy</b> app, subscribe to <b>huma_12</b>, and keep notifications on.
+          Live YouTube registration (70 countries) stays on the Windows PC app — this phone app is for order, guide, practice, and alerts only.
+        </div>
+      </section>
+    </div>
+
+    <nav class="nav" aria-label="Main">
+      <button type="button" class="on" data-tab="order"><span class="ico">🛒</span>Order</button>
+      <button type="button" data-tab="guide"><span class="ico">📖</span>Guide</button>
+      <button type="button" data-tab="practice"><span class="ico">🧪</span>Practice</button>
+      <button type="button" data-tab="alerts"><span class="ico">🔔</span>Alerts</button>
+    </nav>
+  </div>
+
+  <script>
+    const TABS = {
+      order: { url: "https://humateck.com/buy-en.html", alert: false },
+      guide: { url: "https://humateck.com/google-oauth-setup-guide.html", alert: false },
+      practice: { url: "https://humateck.com/practice-embed.html", alert: false },
+      alerts: { url: null, alert: true },
+    };
+
+    const pane = document.getElementById("pane");
+    const alertPane = document.getElementById("alertPane");
+    const buttons = document.querySelectorAll(".nav button");
+
+    function setTab(id) {
+      const tab = TABS[id];
+      if (!tab) return;
+      buttons.forEach((b) => b.classList.toggle("on", b.dataset.tab === id));
+      if (tab.alert) {
+        pane.style.display = "none";
+        alertPane.classList.add("on");
+      } else {
+        alertPane.classList.remove("on");
+        pane.style.display = "block";
+        if (pane.getAttribute("src") !== tab.url) pane.src = tab.url;
+      }
+      try { localStorage.setItem("yhsd_tab", id); } catch (e) {}
+    }
+
+    buttons.forEach((b) => b.addEventListener("click", () => setTab(b.dataset.tab)));
+
+    let start = "order";
+    try {
+      const saved = localStorage.getItem("yhsd_tab");
+      if (saved && TABS[saved]) start = saved;
+    } catch (e) {}
+    setTab(start);
+
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("./sw.js").catch(() => {});
+    }
+  </script>
+</body>
+</html>

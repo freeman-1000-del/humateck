@@ -1,0 +1,18 @@
+{
+  "name": "YouTube High-Speed Deployer",
+  "short_name": "YHSD",
+  "description": "Order, OAuth guide, practice, and payment alerts. Live register stays on PC.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#070d16",
+  "theme_color": "#0a1628",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "./FINAL_LOGO01.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
