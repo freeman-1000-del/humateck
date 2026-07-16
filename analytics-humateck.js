@@ -1,8 +1,8 @@
 /**
- * Humateck — Google Analytics 4 (G-02PN0TZF9M, Content Scouter와 동일 속성)
+ * Humateck — Google Analytics 4 (다국어등록기 속성 G-QEL38T6JXL)
  * GA4 실시간 → 이벤트 이름 "humateck_ping" / "humateck_practice_view" 로 확인
  */
-window.HUMATECK_GA_MEASUREMENT_ID = "G-02PN0TZF9M";
+window.HUMATECK_GA_MEASUREMENT_ID = "G-QEL38T6JXL";
 
 (function () {
   if (window.__HUMATECK_GA_READY__) return;
@@ -16,7 +16,7 @@ window.HUMATECK_GA_MEASUREMENT_ID = "G-02PN0TZF9M";
   var siteLang = /-en\.html$|\/deployer-en|\/buy-en|\/tutor-en|practice-embed-en/.test(path)
     ? "en"
     : "ko";
-  var product = "humateck_register";
+  var product = "다국어등록기";
 
   function virtualPagePath() {
     if (window.__HUMATECK_OPEN_PRACTICE__ || document.body.classList.contains("humateck-open-practice")) {
