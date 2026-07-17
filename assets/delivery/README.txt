@@ -12,6 +12,6 @@ humateck.com/assets/delivery/ 에 올리는 파일:
   oauth-guide-en.pdf                 인증 안내 (영어) ← Google_OAuth_Setup_Guide_EN
 
 웹 가이드 HTML: /google-oauth-setup-guide.html (사이트 루트, 이미지와 함께)
-PDF 다운로드:   /assets/delivery/oauth-guide-en.pdf
+PDF 파일 위치(내부용, 고객 페이지에 경로 노출 금지): assets/delivery/oauth-guide-en.pdf
 
 PDF 없을 때: oauth-guide 웹 페이지 링크를 메시지에 백업으로 포함함.
