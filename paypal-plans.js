@@ -1,27 +1,20 @@
 /**
  * Overseas web subscription — PayPal Billing Plans
- * Standard $33/mo · $316.80/yr (20% off)
- * Enterprise 5-seat $91/mo · $873.60/yr (20% off)
- * Do NOT reuse old $12/$19/$25 or former Enterprise $98 plan IDs.
+ * Standard $19.90/mo · $191/yr
+ * Enterprise removed.
  */
 (function (global) {
-  var YEARLY_DISCOUNT = 0.2;
-
-  function yearlyFromMonthly(monthlyUsd) {
-    return Math.round(monthlyUsd * 12 * (1 - YEARLY_DISCOUNT) * 100) / 100;
-  }
-
   global.HUMATECK_PAYPAL_WEB = {
     currency: "USD",
-    yearlyDiscountRate: YEARLY_DISCOUNT,
+    yearlyDiscountRate: 0.2,
     standard: {
       id: "monthly_standard",
       label: "Standard",
       seats: 1,
       interval: "month",
-      amountUsd: 33,
-      amountKrwNote: 45000,
-      planId: "P-8PS57707AL2928019NJLB7NY",
+      amountUsd: 19.9,
+      amountKrwNote: 27000,
+      planId: "P-6N573179MC2175529NJR6JAQ",
       subscribeUrl: "",
     },
     standardYearly: {
@@ -29,29 +22,9 @@
       label: "Standard (Annual)",
       seats: 1,
       interval: "year",
-      amountUsd: yearlyFromMonthly(33), // 316.80
-      amountKrwNote: 432000,
-      planId: "P-0NJ04331VT693812JNJL56AQ",
-      subscribeUrl: "",
-    },
-    premium: {
-      id: "monthly_premium",
-      label: "Enterprise 5-seat",
-      seats: 5,
-      interval: "month",
-      amountUsd: 91,
-      amountKrwNote: 125000,
-      planId: "P-1JA19021N3174844UNJL6IAY",
-      subscribeUrl: "",
-    },
-    premiumYearly: {
-      id: "yearly_premium",
-      label: "Enterprise 5-seat (Annual)",
-      seats: 5,
-      interval: "year",
-      amountUsd: yearlyFromMonthly(91), // 873.60
-      amountKrwNote: 1200000,
-      planId: "P-68N713275K742994ENJL6LRA",
+      amountUsd: 191,
+      amountKrwNote: 260000,
+      planId: "P-9MA49375486999806NJR6JAQ",
       subscribeUrl: "",
     },
   };

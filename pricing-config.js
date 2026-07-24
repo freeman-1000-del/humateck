@@ -98,24 +98,17 @@
         url: "/",
       },
     },
-    /* Own-site web subscription — Standard $33/$316.80 · Enterprise $91/$873.60 */
+    /* Own-site web subscription — Standard $19.90/mo · $191/yr (Enterprise removed) */
     webSubscription: {
       standard: {
         seats: 1,
         labelKo: "Standard 1인",
         labelEn: "Standard",
-        monthly: { listKrw: 45000, listUsd: 33 },
-        yearly: { listKrw: 432000, listUsd: 316.8, discountRate: 0.2 },
+        monthly: { listKrw: 27000, listUsd: 19.9 },
+        yearly: { listKrw: 260000, listUsd: 191, discountRate: 0.2 },
       },
-      premium: {
-        seats: 5,
-        labelKo: "Enterprise 5인",
-        labelEn: "Enterprise 5-seat",
-        monthly: { listKrw: 125000, listUsd: 91 },
-        yearly: { listKrw: 1200000, listUsd: 873.6, discountRate: 0.2 },
-      },
-      noteKo: "자체 웹 PayPal. 월간 $33/$91 · 연간 20% 할인($316.80/$873.60). 재능마켓 PC가보다 싸게 보이게 두지 말 것.",
-      noteEn: "Own-site PayPal: $33/$91 monthly · annual 20% off ($316.80/$873.60).",
+      noteKo: "자체 웹 PayPal. 월간 $19.90 · 연간 $191. 기업플랜 없음.",
+      noteEn: "Own-site PayPal: $19.90/mo · $191/yr. No enterprise plan.",
     },
   };
 })(typeof window !== "undefined" ? window : globalThis);
