@@ -321,7 +321,7 @@ Failover principle:
 
       showResult(
         "순차등록을 시작합니다.\n" +
-        "대상: " + codes.length + "개 언어 · 국가별 1분 간격"
+        "대상: " + codes.length + "개 언어 · 1분 순차등록"
       );
       for(var i = 0; i < codes.length; i++){
         var code = codes[i];
@@ -343,7 +343,7 @@ Failover principle:
       showResult(
         "등록 결과\n" +
         "대상 언어 수: " + codes.length + "개\n" +
-        "방식: 순차등록 · 국가별 1분 간격\n" +
+        "방식: 1분 순차등록\n" +
         "소요 시간: 약 " + minutes + "분 (" + seconds + "초)"
       );
     }catch(error){
@@ -355,7 +355,7 @@ Failover principle:
   }
 
   var PACE_NOTE_KO =
-    "유튜브 알고리즘에 의해 동시다발 공격 컨텐츠로 오인되는 위험을 막기 위해 국가별로 1분 시간차 등록을 적용합니다. 수초 동시등록을 원하시는 경우 '동시등록' 버튼을 눌러 주세요.";
+    "유튜브 알고리즘에 의해 동시다발 공격 컨텐츠로 오인되는 위험을 막기 위해 국가별로 1분 순차등록을 적용합니다. 수초 동시등록을 원하시는 경우 '동시등록' 버튼을 눌러 주세요.";
 
   function ensureRegisterUi(){
     var note = $("registerPaceNote");
