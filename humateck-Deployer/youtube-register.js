@@ -278,7 +278,7 @@ Failover principle:
     showResult(
       "Starting sequential per-country registration.\n" +
       "Targets: " + codes.length + " languages · 1-minute interval\n" +
-      "(Bulk simultaneous registration is disabled to reduce algorithm false positives.)"
+      "(Bulk simultaneous registration is not used — exposure may be less favorable, so we register sequentially.)"
     );
 
     try{
