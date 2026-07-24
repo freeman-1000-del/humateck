@@ -34,11 +34,29 @@ Failover principle:
     }
   }
 
+  var BTN_LABEL = {
+    sequential: "순차등록",
+    simultaneous: "동시등록"
+  };
+
+  function registerButtons(){
+    return [
+      $("sendOrderBtnSequential"),
+      $("sendOrderBtnSimultaneous"),
+      $("sendOrderBtn"),
+      $("youtubeRegisterBtn")
+    ].filter(Boolean);
+  }
+
   function setButtonBusy(isBusy){
-    var btn = $("sendOrderBtn") || $("youtubeRegisterBtn");
-    if(!btn) return;
-    btn.disabled = !!isBusy;
-    btn.textContent = isBusy ? "Registration in Progress" : "YouTube Multilingual Registration";
+    registerButtons().forEach(function(btn){
+      btn.disabled = !!isBusy;
+      if(btn.id === "sendOrderBtnSimultaneous"){
+        btn.textContent = isBusy ? "등록 중…" : BTN_LABEL.simultaneous;
+      }else{
+        btn.textContent = isBusy ? "등록 중…" : BTN_LABEL.sequential;
+      }
+    });
   }
 
   function getValue(ids){
@@ -262,7 +280,8 @@ Failover principle:
     }
   }
 
-  async function deliver(){
+  async function deliver(mode){
+    var paceMode = mode === "simultaneous" ? "simultaneous" : "sequential";
     var started = Date.now();
     var token = getAccessToken();
     var videoId = extractVideoId(getVideoUrl());
@@ -275,36 +294,57 @@ Failover principle:
     if(!codes.length){ showResult("No multilingual text to register."); return; }
 
     setButtonBusy(true);
-    showResult(
-      "Starting sequential per-country registration.\n" +
-      "Targets: " + codes.length + " languages · 1-minute interval\n" +
-      "(Bulk simultaneous registration is not used — exposure may be less favorable, so we register sequentially.)"
-    );
 
     try{
       var accumulated = await fetchExistingLocalizations(token, videoId);
+      var seconds;
+      var minutes;
+
+      if(paceMode === "simultaneous"){
+        showResult(
+          "동시등록을 시작합니다.\n" +
+          "대상: " + codes.length + "개 언어 · 일괄 반영"
+        );
+        Object.keys(localizations).forEach(function(code){
+          accumulated[code] = localizations[code];
+        });
+        await putLocalizationsAccumulated(token, videoId, accumulated);
+        seconds = Math.max(1, Math.round((Date.now() - started) / 1000));
+        showResult(
+          "등록 결과\n" +
+          "대상 언어 수: " + codes.length + "개\n" +
+          "방식: 동시등록\n" +
+          "소요 시간: " + seconds + "초"
+        );
+        return;
+      }
+
+      showResult(
+        "순차등록을 시작합니다.\n" +
+        "대상: " + codes.length + "개 언어 · 국가별 1분 간격"
+      );
       for(var i = 0; i < codes.length; i++){
         var code = codes[i];
         accumulated[code] = localizations[code];
         showResult(
-          "Sequential register " + (i + 1) + "/" + codes.length + " · " + code + "\n" +
-          "Languages applied so far: " + Object.keys(accumulated).length
+          "순차등록 " + (i + 1) + "/" + codes.length + " · " + code + "\n" +
+          "누적 반영 언어: " + Object.keys(accumulated).length
         );
         await putLocalizationsAccumulated(token, videoId, accumulated);
         if(i < codes.length - 1){
           await sleepWithProgress(
             LOCALE_GAP_MS,
-            "Done: " + code + " (" + (i + 1) + "/" + codes.length + ")"
+            "완료: " + code + " (" + (i + 1) + "/" + codes.length + ")"
           );
         }
       }
-      var seconds = Math.max(1, Math.round((Date.now() - started) / 1000));
-      var minutes = Math.round(seconds / 60);
+      seconds = Math.max(1, Math.round((Date.now() - started) / 1000));
+      minutes = Math.round(seconds / 60);
       showResult(
-        "Registration Results\n" +
-        "Number of target registration languages: " + codes.length + " languages\n" +
-        "Mode: sequential · 1 minute between countries\n" +
-        "Registration time: about " + minutes + " minutes (" + seconds + " seconds)"
+        "등록 결과\n" +
+        "대상 언어 수: " + codes.length + "개\n" +
+        "방식: 순차등록 · 국가별 1분 간격\n" +
+        "소요 시간: 약 " + minutes + "분 (" + seconds + "초)"
       );
     }catch(error){
       var message = error && error.message ? error.message : String(error || "Temporary registration delay occurred.");
@@ -315,17 +355,42 @@ Failover principle:
   }
 
   var PACE_NOTE_KO =
-    "본 등록기의 동시처리 시간은 정상조건에서 수초 이내입니다. 다만 한꺼번에 등록할 경우 노출·추천이 불리해질 가능성이 있어, 각국 등록간격을 1분으로 두어 순차 등록합니다.";
+    "유튜브 알고리즘에 의해 동시다발 공격 컨텐츠로 오인되는 위험을 막기 위해 국가별로 1분 시간차 등록을 적용합니다. 수초 동시등록을 원하시는 경우 '동시등록' 버튼을 눌러 주세요.";
 
-  function ensurePaceNote(){
-    if($("registerPaceNote")) return;
-    var btn = $("sendOrderBtn") || $("youtubeRegisterBtn");
-    if(!btn || !btn.parentNode) return;
-    var p = document.createElement("p");
-    p.className = "serviceNote";
-    p.id = "registerPaceNote";
-    p.textContent = PACE_NOTE_KO;
-    btn.parentNode.insertBefore(p, btn);
+  function ensureRegisterUi(){
+    var note = $("registerPaceNote");
+    var actions = document.querySelector("#sendOrderBtnSequential")
+      ? document.querySelector("#sendOrderBtnSequential").closest(".actions")
+      : null;
+    var legacy = $("sendOrderBtn") || $("youtubeRegisterBtn");
+    if(!actions && legacy) actions = legacy.closest(".actions") || legacy.parentNode;
+    if(!actions) return;
+
+    if(note){
+      note.textContent = PACE_NOTE_KO;
+    }else{
+      note = document.createElement("p");
+      note.className = "serviceNote";
+      note.id = "registerPaceNote";
+      note.textContent = PACE_NOTE_KO;
+      actions.parentNode.insertBefore(note, actions);
+    }
+
+    if($("sendOrderBtnSequential") && $("sendOrderBtnSimultaneous")) return;
+
+    actions.innerHTML = "";
+    var seq = document.createElement("button");
+    seq.className = "btn humateckOnlyButton";
+    seq.type = "button";
+    seq.id = "sendOrderBtnSequential";
+    seq.textContent = BTN_LABEL.sequential;
+    var sim = document.createElement("button");
+    sim.className = "btn humateckOnlyButton";
+    sim.type = "button";
+    sim.id = "sendOrderBtnSimultaneous";
+    sim.textContent = BTN_LABEL.simultaneous;
+    actions.appendChild(seq);
+    actions.appendChild(sim);
   }
 
   window.HumateckYouTubeRegister = {
@@ -333,13 +398,16 @@ Failover principle:
     parse: chooseLocalizations
   };
 
-  document.addEventListener("DOMContentLoaded", ensurePaceNote);
-  if(document.readyState !== "loading") ensurePaceNote();
+  document.addEventListener("DOMContentLoaded", ensureRegisterUi);
+  if(document.readyState !== "loading") ensureRegisterUi();
 
   document.addEventListener("click", function(event){
-    var btn = event.target.closest("#sendOrderBtn, #youtubeRegisterBtn");
+    var btn = event.target.closest(
+      "#sendOrderBtnSequential, #sendOrderBtnSimultaneous, #sendOrderBtn, #youtubeRegisterBtn"
+    );
     if(!btn) return;
     event.preventDefault();
-    deliver();
+    var mode = btn.id === "sendOrderBtnSimultaneous" ? "simultaneous" : "sequential";
+    deliver(mode);
   }, true);
 })();

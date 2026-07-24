@@ -34,11 +34,29 @@ Failover principle:
     }
   }
 
+  var BTN_LABEL = {
+    sequential: "순차등록",
+    simultaneous: "동시등록"
+  };
+
+  function registerButtons(){
+    return [
+      $("sendOrderBtnSequential"),
+      $("sendOrderBtnSimultaneous"),
+      $("sendOrderBtn"),
+      $("youtubeRegisterBtn")
+    ].filter(Boolean);
+  }
+
   function setButtonBusy(isBusy){
-    var btn = $("sendOrderBtn") || $("youtubeRegisterBtn");
-    if(!btn) return;
-    btn.disabled = !!isBusy;
-    btn.textContent = isBusy ? "Registration in Progress" : "YouTube Multilingual Registration";
+    registerButtons().forEach(function(btn){
+      btn.disabled = !!isBusy;
+      if(btn.id === "sendOrderBtnSimultaneous"){
+        btn.textContent = isBusy ? "등록 중…" : BTN_LABEL.simultaneous;
+      }else{
+        btn.textContent = isBusy ? "등록 중…" : BTN_LABEL.sequential;
+      }
+    });
   }
 
   function getValue(ids){
@@ -177,6 +195,30 @@ Failover principle:
     return data;
   }
 
+  /** Per-locale sequential gap — avoid bulk localization spam signals */
+  var LOCALE_GAP_MS = 60 * 1000;
+
+  function sleep(ms){
+    return new Promise(function(resolve){ setTimeout(resolve, ms); });
+  }
+
+  function formatRemain(ms){
+    var sec = Math.max(0, Math.ceil(ms / 1000));
+    var m = Math.floor(sec / 60);
+    var s = sec % 60;
+    return m + "m " + (s < 10 ? "0" : "") + s + "s";
+  }
+
+  async function sleepWithProgress(ms, prefix){
+    var end = Date.now() + ms;
+    while(true){
+      var left = end - Date.now();
+      if(left <= 0) break;
+      showResult(prefix + "\nNext country in " + formatRemain(left));
+      await sleep(Math.min(1000, left));
+    }
+  }
+
   async function engineLocalizationsOnly(ctx){
     await youtubeJson("https://www.googleapis.com/youtube/v3/videos?part=localizations", {
       method: "PUT",
@@ -216,30 +258,93 @@ Failover principle:
     });
   }
 
-  async function deliver(){
+  async function putLocalizationsAccumulated(token, videoId, accumulated){
+    var ctx = { token: token, videoId: videoId, localizations: accumulated };
+    try{
+      await engineLocalizationsOnly(ctx);
+    }catch(primaryError){
+      await engineSnippetMerge(ctx);
+    }
+  }
+
+  async function fetchExistingLocalizations(token, videoId){
+    try{
+      var existing = await youtubeJson(
+        "https://www.googleapis.com/youtube/v3/videos?part=localizations&id=" + encodeURIComponent(videoId),
+        { headers: { Authorization: "Bearer " + token } }
+      );
+      var video = existing.items && existing.items[0] ? existing.items[0] : {};
+      return Object.assign({}, video.localizations || {});
+    }catch(e){
+      return {};
+    }
+  }
+
+  async function deliver(mode){
+    var paceMode = mode === "simultaneous" ? "simultaneous" : "sequential";
     var started = Date.now();
     var token = getAccessToken();
     var videoId = extractVideoId(getVideoUrl());
-    alert("VIDEO ID CHECK: [" + videoId + "]");
     var finalText = getFinalText();
     var localizations = chooseLocalizations(finalText);
     var codes = Object.keys(localizations);
-    var ctx = { token: token, videoId: videoId, localizations: localizations };
+
+    if(!token){ showResult("Google OAuth is required."); return; }
+    if(!videoId){ showResult("Enter a video URL (or ID)."); return; }
+    if(!codes.length){ showResult("No multilingual text to register."); return; }
 
     setButtonBusy(true);
-    showResult("YouTube multilingual registration is in progress.");
 
     try{
-      try{
-        await engineLocalizationsOnly(ctx);
-      }catch(primaryError){
-        await engineSnippetMerge(ctx);
+      var accumulated = await fetchExistingLocalizations(token, videoId);
+      var seconds;
+      var minutes;
+
+      if(paceMode === "simultaneous"){
+        showResult(
+          "동시등록을 시작합니다.\n" +
+          "대상: " + codes.length + "개 언어 · 일괄 반영"
+        );
+        Object.keys(localizations).forEach(function(code){
+          accumulated[code] = localizations[code];
+        });
+        await putLocalizationsAccumulated(token, videoId, accumulated);
+        seconds = Math.max(1, Math.round((Date.now() - started) / 1000));
+        showResult(
+          "등록 결과\n" +
+          "대상 언어 수: " + codes.length + "개\n" +
+          "방식: 동시등록\n" +
+          "소요 시간: " + seconds + "초"
+        );
+        return;
       }
-      var seconds = Math.max(1, Math.round((Date.now() - started) / 1000));
+
       showResult(
-        "Registration Results\n" +
-        "Number of target registration languages: " + codes.length + " languages\n" +
-        "Registration time: " + seconds + " seconds"
+        "순차등록을 시작합니다.\n" +
+        "대상: " + codes.length + "개 언어 · 국가별 1분 간격"
+      );
+      for(var i = 0; i < codes.length; i++){
+        var code = codes[i];
+        accumulated[code] = localizations[code];
+        showResult(
+          "순차등록 " + (i + 1) + "/" + codes.length + " · " + code + "\n" +
+          "누적 반영 언어: " + Object.keys(accumulated).length
+        );
+        await putLocalizationsAccumulated(token, videoId, accumulated);
+        if(i < codes.length - 1){
+          await sleepWithProgress(
+            LOCALE_GAP_MS,
+            "완료: " + code + " (" + (i + 1) + "/" + codes.length + ")"
+          );
+        }
+      }
+      seconds = Math.max(1, Math.round((Date.now() - started) / 1000));
+      minutes = Math.round(seconds / 60);
+      showResult(
+        "등록 결과\n" +
+        "대상 언어 수: " + codes.length + "개\n" +
+        "방식: 순차등록 · 국가별 1분 간격\n" +
+        "소요 시간: 약 " + minutes + "분 (" + seconds + "초)"
       );
     }catch(error){
       var message = error && error.message ? error.message : String(error || "Temporary registration delay occurred.");
@@ -249,15 +354,60 @@ Failover principle:
     }
   }
 
+  var PACE_NOTE_KO =
+    "유튜브 알고리즘에 의해 동시다발 공격 컨텐츠로 오인되는 위험을 막기 위해 국가별로 1분 시간차 등록을 적용합니다. 수초 동시등록을 원하시는 경우 '동시등록' 버튼을 눌러 주세요.";
+
+  function ensureRegisterUi(){
+    var note = $("registerPaceNote");
+    var actions = document.querySelector("#sendOrderBtnSequential")
+      ? document.querySelector("#sendOrderBtnSequential").closest(".actions")
+      : null;
+    var legacy = $("sendOrderBtn") || $("youtubeRegisterBtn");
+    if(!actions && legacy) actions = legacy.closest(".actions") || legacy.parentNode;
+    if(!actions) return;
+
+    if(note){
+      note.textContent = PACE_NOTE_KO;
+    }else{
+      note = document.createElement("p");
+      note.className = "serviceNote";
+      note.id = "registerPaceNote";
+      note.textContent = PACE_NOTE_KO;
+      actions.parentNode.insertBefore(note, actions);
+    }
+
+    if($("sendOrderBtnSequential") && $("sendOrderBtnSimultaneous")) return;
+
+    actions.innerHTML = "";
+    var seq = document.createElement("button");
+    seq.className = "btn humateckOnlyButton";
+    seq.type = "button";
+    seq.id = "sendOrderBtnSequential";
+    seq.textContent = BTN_LABEL.sequential;
+    var sim = document.createElement("button");
+    sim.className = "btn humateckOnlyButton";
+    sim.type = "button";
+    sim.id = "sendOrderBtnSimultaneous";
+    sim.textContent = BTN_LABEL.simultaneous;
+    actions.appendChild(seq);
+    actions.appendChild(sim);
+  }
+
   window.HumateckYouTubeRegister = {
     deliver: deliver,
     parse: chooseLocalizations
   };
 
+  document.addEventListener("DOMContentLoaded", ensureRegisterUi);
+  if(document.readyState !== "loading") ensureRegisterUi();
+
   document.addEventListener("click", function(event){
-    var btn = event.target.closest("#sendOrderBtn, #youtubeRegisterBtn");
+    var btn = event.target.closest(
+      "#sendOrderBtnSequential, #sendOrderBtnSimultaneous, #sendOrderBtn, #youtubeRegisterBtn"
+    );
     if(!btn) return;
     event.preventDefault();
-    deliver();
+    var mode = btn.id === "sendOrderBtnSimultaneous" ? "simultaneous" : "sequential";
+    deliver(mode);
   }, true);
 })();

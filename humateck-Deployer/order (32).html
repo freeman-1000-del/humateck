@@ -1144,8 +1144,11 @@ Output only the translation, with no explanation whatsoever.</textarea>
     </section>
 <section class="card">
       <h2>YouTube Registration</h2>
-      <p class="serviceNote" id="registerPaceNote">본 등록기의 동시처리 시간은 정상조건에서 수초 이내입니다. 다만 한꺼번에 등록할 경우 노출·추천이 불리해질 가능성이 있어, 각국 등록간격을 1분으로 두어 순차 등록합니다.</p>
-      <div class="actions"><button class="btn" type="button" id="sendOrderBtn">Register to YouTube</button></div>
+      <p class="serviceNote" id="registerPaceNote">유튜브 알고리즘에 의해 동시다발 공격 컨텐츠로 오인되는 위험을 막기 위해 국가별로 1분 시간차 등록을 적용합니다. 수초 동시등록을 원하시는 경우 '동시등록' 버튼을 눌러 주세요.</p>
+      <div class="actions">
+        <button class="btn" type="button" id="sendOrderBtnSequential">순차등록</button>
+        <button class="btn" type="button" id="sendOrderBtnSimultaneous">동시등록</button>
+      </div>
     </section>
 <section class="card registerNoticeBelow">
       <h2>YouTube Registration Notice</h2>
