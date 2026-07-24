@@ -177,6 +177,30 @@ Failover principle:
     return data;
   }
 
+  /** Per-locale sequential gap — avoid bulk localization spam signals */
+  var LOCALE_GAP_MS = 60 * 1000;
+
+  function sleep(ms){
+    return new Promise(function(resolve){ setTimeout(resolve, ms); });
+  }
+
+  function formatRemain(ms){
+    var sec = Math.max(0, Math.ceil(ms / 1000));
+    var m = Math.floor(sec / 60);
+    var s = sec % 60;
+    return m + "m " + (s < 10 ? "0" : "") + s + "s";
+  }
+
+  async function sleepWithProgress(ms, prefix){
+    var end = Date.now() + ms;
+    while(true){
+      var left = end - Date.now();
+      if(left <= 0) break;
+      showResult(prefix + "\nNext country in " + formatRemain(left));
+      await sleep(Math.min(1000, left));
+    }
+  }
+
   async function engineLocalizationsOnly(ctx){
     await youtubeJson("https://www.googleapis.com/youtube/v3/videos?part=localizations", {
       method: "PUT",
@@ -216,30 +240,71 @@ Failover principle:
     });
   }
 
+  async function putLocalizationsAccumulated(token, videoId, accumulated){
+    var ctx = { token: token, videoId: videoId, localizations: accumulated };
+    try{
+      await engineLocalizationsOnly(ctx);
+    }catch(primaryError){
+      await engineSnippetMerge(ctx);
+    }
+  }
+
+  async function fetchExistingLocalizations(token, videoId){
+    try{
+      var existing = await youtubeJson(
+        "https://www.googleapis.com/youtube/v3/videos?part=localizations&id=" + encodeURIComponent(videoId),
+        { headers: { Authorization: "Bearer " + token } }
+      );
+      var video = existing.items && existing.items[0] ? existing.items[0] : {};
+      return Object.assign({}, video.localizations || {});
+    }catch(e){
+      return {};
+    }
+  }
+
   async function deliver(){
     var started = Date.now();
     var token = getAccessToken();
     var videoId = extractVideoId(getVideoUrl());
-    alert("VIDEO ID CHECK: [" + videoId + "]");
     var finalText = getFinalText();
     var localizations = chooseLocalizations(finalText);
     var codes = Object.keys(localizations);
-    var ctx = { token: token, videoId: videoId, localizations: localizations };
+
+    if(!token){ showResult("Google OAuth is required."); return; }
+    if(!videoId){ showResult("Enter a video URL (or ID)."); return; }
+    if(!codes.length){ showResult("No multilingual text to register."); return; }
 
     setButtonBusy(true);
-    showResult("YouTube multilingual registration is in progress.");
+    showResult(
+      "Starting sequential per-country registration.\n" +
+      "Targets: " + codes.length + " languages · 1-minute interval\n" +
+      "(Bulk simultaneous registration is disabled to reduce algorithm false positives.)"
+    );
 
     try{
-      try{
-        await engineLocalizationsOnly(ctx);
-      }catch(primaryError){
-        await engineSnippetMerge(ctx);
+      var accumulated = await fetchExistingLocalizations(token, videoId);
+      for(var i = 0; i < codes.length; i++){
+        var code = codes[i];
+        accumulated[code] = localizations[code];
+        showResult(
+          "Sequential register " + (i + 1) + "/" + codes.length + " · " + code + "\n" +
+          "Languages applied so far: " + Object.keys(accumulated).length
+        );
+        await putLocalizationsAccumulated(token, videoId, accumulated);
+        if(i < codes.length - 1){
+          await sleepWithProgress(
+            LOCALE_GAP_MS,
+            "Done: " + code + " (" + (i + 1) + "/" + codes.length + ")"
+          );
+        }
       }
       var seconds = Math.max(1, Math.round((Date.now() - started) / 1000));
+      var minutes = Math.round(seconds / 60);
       showResult(
         "Registration Results\n" +
         "Number of target registration languages: " + codes.length + " languages\n" +
-        "Registration time: " + seconds + " seconds"
+        "Mode: sequential · 1 minute between countries\n" +
+        "Registration time: about " + minutes + " minutes (" + seconds + " seconds)"
       );
     }catch(error){
       var message = error && error.message ? error.message : String(error || "Temporary registration delay occurred.");
@@ -249,10 +314,27 @@ Failover principle:
     }
   }
 
+  var PACE_NOTE_KO =
+    "본 등록기의 동시처리 시간은 정상조건에서 수초 이내이나 이 경우 알고리즘에 의해 공격컨텐츠로 오인되어 차단될 수 있어 각국 등록간격을 1분으로 설정하여 순차 등록합니다.";
+
+  function ensurePaceNote(){
+    if($("registerPaceNote")) return;
+    var btn = $("sendOrderBtn") || $("youtubeRegisterBtn");
+    if(!btn || !btn.parentNode) return;
+    var p = document.createElement("p");
+    p.className = "serviceNote";
+    p.id = "registerPaceNote";
+    p.textContent = PACE_NOTE_KO;
+    btn.parentNode.insertBefore(p, btn);
+  }
+
   window.HumateckYouTubeRegister = {
     deliver: deliver,
     parse: chooseLocalizations
   };
+
+  document.addEventListener("DOMContentLoaded", ensurePaceNote);
+  if(document.readyState !== "loading") ensurePaceNote();
 
   document.addEventListener("click", function(event){
     var btn = event.target.closest("#sendOrderBtn, #youtubeRegisterBtn");
