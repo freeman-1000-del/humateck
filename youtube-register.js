@@ -228,12 +228,52 @@ Failover principle:
     return { title: title, description: description };
   }
 
+  function normalizeLocalizationItem(item){
+    var title = clean((item && item.title) || "");
+    var description = clean((item && item.description) || "");
+    if(!title && description){
+      title = description.split(/\n/)[0].slice(0, 100);
+    }
+    if(!description && title){
+      description = title;
+    }
+    if(!title && !description) return null;
+    return {
+      title: title.slice(0, 100),
+      description: description.slice(0, 5000)
+    };
+  }
+
+  function filterUsableLocalizations(map){
+    var out = {};
+    Object.keys(map || {}).forEach(function(code){
+      var normalized = normalizeLocalizationItem(map[code]);
+      if(normalized) out[code] = normalized;
+    });
+    return out;
+  }
+
+  /** Plain text / single-word fallback — never fail just because Gemini format is missing */
+  function parsePlainTextAsLocalizations(finalText){
+    var text = clean(stripNumberAndCountryName(String(finalText || "").replace(/\r/g, "")));
+    if(!text) return {};
+    var code = getNativeLanguageCode() || "en";
+    var out = {};
+    out[code] = {
+      title: text.split(/\n/)[0].slice(0, 100),
+      description: text.slice(0, 5000)
+    };
+    return out;
+  }
+
   function chooseLocalizations(finalText){
-    var first = parseLabeledCountryCode(finalText);
+    var first = filterUsableLocalizations(parseLabeledCountryCode(finalText));
     if(Object.keys(first).length) return first;
-    var second = parseCodeLineBlocks(finalText);
+    var second = filterUsableLocalizations(parseCodeLineBlocks(finalText));
     if(Object.keys(second).length) return second;
-    return parseSequentialTitleDescription(finalText);
+    var third = filterUsableLocalizations(parseSequentialTitleDescription(finalText));
+    if(Object.keys(third).length) return third;
+    return filterUsableLocalizations(parsePlainTextAsLocalizations(finalText));
   }
 
   async function youtubeJson(url, options){
@@ -360,8 +400,8 @@ Failover principle:
     if(!codes.length){
       showResult(
         isKoreanUi()
-          ? "등록할 다국어 번역문이 없습니다.\n'Paste Final Version'에 Gemini 최종 번역을 붙여 넣은 뒤 다시 시도해 주세요."
-          : "No multilingual text to register.\nPaste the final Gemini translation into 'Paste Final Version', then try again."
+          ? "Paste Final Version 칸이 비어 있습니다.\n단어 하나라도 입력한 뒤 다시 시도해 주세요."
+          : "Paste Final Version is empty.\nEnter at least one word, then try again."
       );
       return;
     }
