@@ -1307,9 +1307,9 @@ Without any explanation, output only the translated registration text.</textarea
 <section class="card" id="deliveryResultCard">
       <h2>Distribution Result</h2>
       <textarea id="deliveryLog" class="mediumTextarea" readonly placeholder="YouTube distribution results will appear here."></textarea>
-      <div id="selectedCountriesBox" aria-live="polite">
+      <div id="selectedCountriesBox" aria-live="polite" hidden>
         <h3 id="selectedCountriesHeading">Registered success countries</h3>
-        <p id="selectedCountriesLead" class="selectedCountriesLead">After distribution finishes, successfully registered country codes appear here.</p>
+        <p id="selectedCountriesLead" class="selectedCountriesLead"></p>
         <ol id="selectedCountriesList" class="selectedCountriesList"></ol>
         <p id="selectedCountriesSuccess" class="selectedCountriesSuccess" hidden></p>
       </div>
@@ -1373,6 +1373,7 @@ A) This is because YouTube content display system fixes the default video settin
     if(hidden) hidden.value = plan;
     var limitHidden = document.getElementById("humateckActiveCountryLimit");
     if(limitHidden && arguments.length > 1 && arguments[1]) limitHidden.value = String(arguments[1]);
+    // Result country list follows the visible dropdown only (not hidden/subscription restore)
     if(window.HumateckPlanScope && typeof window.HumateckPlanScope.refreshSelectedCountriesPanel === "function"){
       window.HumateckPlanScope.refreshSelectedCountriesPanel();
     }
@@ -2150,6 +2151,6 @@ Without any explanation, output only the translated registration text.`;
 })();
 </script>
 
-<script src="plan-scope-preview.js?v=20260727e"></script>
+<script src="plan-scope-preview.js?v=20260727f"></script>
 
 </body></html>

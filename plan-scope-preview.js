@@ -363,6 +363,7 @@
     return m ? m[1] : "";
   }
 
+  /** Full resolve (prompt / limits) — select, then hidden, then storage */
   function resolvePlanId() {
     var sel = document.getElementById("orderPlanSelect");
     if (sel && String(sel.value || "").trim()) return String(sel.value).trim();
@@ -372,6 +373,13 @@
       var stored = localStorage.getItem("humateckSelectedPlan") || "";
       if (String(stored).trim()) return String(stored).trim();
     } catch (e) {}
+    return "";
+  }
+
+  /** Result panel only — customer must pick from the visible dropdown */
+  function resolveVisiblePlanId() {
+    var sel = document.getElementById("orderPlanSelect");
+    if (sel && String(sel.value || "").trim()) return String(sel.value).trim();
     return "";
   }
 
@@ -403,12 +411,28 @@
     return code + " | " + code;
   }
 
+  function setResultPanelIdle() {
+    var box = document.getElementById("selectedCountriesBox");
+    var listEl = document.getElementById("selectedCountriesList");
+    var leadEl = document.getElementById("selectedCountriesLead");
+    var headingEl = document.getElementById("selectedCountriesHeading");
+    var successEl = document.getElementById("selectedCountriesSuccess");
+    if (box) box.hidden = true;
+    if (headingEl) headingEl.textContent = "Registered success countries";
+    if (leadEl) leadEl.textContent = "";
+    if (listEl) listEl.innerHTML = "";
+    if (successEl) {
+      successEl.hidden = true;
+      successEl.textContent = "";
+    }
+  }
+
   /**
-   * Distribution Result panel — full promised list with ✓ / pending marks.
-   * successCodes: registered so far
-   * options.targetCodes: optional full registration target order
+   * Distribution Result panel — shown only after customer picks country count,
+   * or while a registration run is in progress (targetCodes).
    */
   function refreshSelectedCountriesPanel(successCodes, options) {
+    var box = document.getElementById("selectedCountriesBox");
     var listEl = document.getElementById("selectedCountriesList");
     var leadEl = document.getElementById("selectedCountriesLead");
     var headingEl = document.getElementById("selectedCountriesHeading");
@@ -416,26 +440,36 @@
     if (!listEl) return;
 
     options = options || {};
-    var plan = resolvePlanId();
-    var title = getTitle(plan);
     var done = (successCodes || [])
       .map(function (c) {
         return String(c || "").trim();
       })
       .filter(Boolean);
+    var target = (options.targetCodes || [])
+      .map(function (c) {
+        return String(c || "").trim();
+      })
+      .filter(Boolean);
+    var plan = resolveVisiblePlanId();
+    var registering = !!(target.length || done.length);
+
+    // Idle: nothing in the dropdown and no active registration → hide panel
+    if (!plan && !registering) {
+      setResultPanelIdle();
+      return;
+    }
+
+    if (!plan && options.planId) plan = String(options.planId || "").trim();
+    var title = getTitle(plan);
     var okSet = {};
     done.forEach(function (c) {
       okSet[c] = true;
     });
 
-    var planCodes = getCodes(plan);
-    var target = (options.targetCodes || []).map(function (c) {
-      return String(c || "").trim();
-    }).filter(Boolean);
+    var planCodes = plan ? getCodes(plan) : [];
     if (!target.length) target = planCodes.slice();
     if (!target.length && done.length) target = done.slice();
 
-    // Keep plan order; append any extra registered codes not in plan/target
     var ordered = target.slice();
     done.forEach(function (c) {
       if (ordered.indexOf(c) < 0) ordered.push(c);
@@ -446,17 +480,11 @@
     }
 
     if (!ordered.length) {
-      if (leadEl) {
-        leadEl.textContent =
-          "Select a deployment plan, then run distribution. Success is marked with ✓ per country.";
-      }
-      listEl.innerHTML = "";
-      if (successEl) {
-        successEl.hidden = true;
-        successEl.textContent = "";
-      }
+      setResultPanelIdle();
       return;
     }
+
+    if (box) box.hidden = false;
 
     var doneCount = ordered.filter(function (c) {
       return okSet[c];
@@ -534,10 +562,12 @@
     TITLES: TITLES,
     GLOBAL70: GLOBAL70,
     resolvePlanId: resolvePlanId,
+    resolveVisiblePlanId: resolveVisiblePlanId,
     getLines: getLines,
     getCodes: getCodes,
     getTitle: getTitle,
     refreshSelectedCountriesPanel: refreshSelectedCountriesPanel,
+    setResultPanelIdle: setResultPanelIdle,
   };
 
   function bind() {
@@ -545,10 +575,12 @@
     if (!sel || sel.__planScopePreviewBound) return;
     sel.__planScopePreviewBound = true;
     sel.addEventListener("change", function () {
-      openPreview(sel.value || "");
+      var plan = sel.value || "";
+      if (plan) openPreview(plan);
       refreshSelectedCountriesPanel();
     });
-    refreshSelectedCountriesPanel();
+    // Fresh load: keep result panel empty until customer picks a plan
+    setResultPanelIdle();
   }
 
   if (document.readyState === "loading") {
