@@ -133,22 +133,41 @@ Failover principle:
   function getNativeTitle(){ return getValue(["sourceTitle"]); }
   function getNativeDescription(){ return getValue(["sourceDescription"]); }
 
+  function isVideoId(value){
+    return /^[a-zA-Z0-9_-]{11}$/.test(String(value || ""));
+  }
+
   function extractVideoId(value){
     var raw = String(value || "").trim();
     if(!raw) return "";
-    if(/^[a-zA-Z0-9_-]{8,}$/.test(raw) && raw.indexOf("http") !== 0) return raw;
+    // Paste may include extra words/lines — use the first URL-looking token when possible.
+    var token = raw.split(/\s+/).filter(Boolean)[0] || raw;
+    if(isVideoId(token)) return token;
+    if(token.indexOf("http") !== 0 && /(youtu\.be|youtube\.com)/i.test(token)){
+      token = "https://" + token.replace(/^\/+/, "");
+    }
     try{
-      var u = new URL(raw);
-      if(u.hostname.indexOf("youtu.be") >= 0) return u.pathname.replace(/^\//, "").split("/")[0].trim();
-      var v = u.searchParams.get("v");
-      if(v) return v.trim();
-      var parts = u.pathname.split("/").filter(Boolean);
-      var idx = parts.indexOf("shorts");
-      if(idx >= 0 && parts[idx + 1]) return parts[idx + 1].trim();
-      idx = parts.indexOf("live");
-      if(idx >= 0 && parts[idx + 1]) return parts[idx + 1].trim();
+      var u = new URL(token);
+      var host = String(u.hostname || "").replace(/^www\./i, "").toLowerCase();
+      if(host === "youtu.be"){
+        var shortId = u.pathname.replace(/^\//, "").split("/")[0];
+        if(isVideoId(shortId)) return shortId;
+      }
+      if(host.indexOf("youtube.com") >= 0 || host.indexOf("youtube-nocookie.com") >= 0){
+        var v = u.searchParams.get("v");
+        if(isVideoId(v)) return v;
+        var parts = u.pathname.split("/").filter(Boolean);
+        for(var i = 0; i < parts.length; i++){
+          if((parts[i] === "shorts" || parts[i] === "live" || parts[i] === "embed" || parts[i] === "v") && parts[i + 1]){
+            var cand = String(parts[i + 1]).replace(/[^a-zA-Z0-9_-].*$/, "");
+            if(isVideoId(cand)) return cand;
+          }
+        }
+      }
     }catch(e){}
-    return raw;
+    var matched = raw.match(/(?:v=|youtu\.be\/|shorts\/|embed\/|live\/)([a-zA-Z0-9_-]{11})/);
+    if(matched && isVideoId(matched[1])) return matched[1];
+    return isVideoId(token) ? token : "";
   }
 
   function clean(v){ return String(v || "").replace(/^\s+|\s+$/g, ""); }
@@ -369,8 +388,8 @@ Failover principle:
     if(!video){
       throw new Error(
         isKoreanUi()
-          ? "영상을 찾을 수 없거나 이 OAuth 계정으로 읽을 수 없습니다. URL과 로그인 계정을 확인해 주세요."
-          : "Video not found or not readable with this OAuth account. Check the URL and signed-in account."
+          ? "Video not found or not readable with this OAuth account.\n영상 ID: " + videoId + "\n\n확인:\n1) YouTube Video URL이 올바른지\n2) OAuth에 로그인한 Google 계정이 그 영상의 채널 소유/수정 계정인지\n3) 비공개 영상이면 소유 계정으로만 읽힙니다\n4) OAuth Authorization을 다시 실행"
+          : "Video not found or not readable with this OAuth account.\nVideo ID: " + videoId + "\n\nCheck:\n1) YouTube Video URL is correct\n2) The Google account used for OAuth owns/can edit that video's channel\n3) Private videos are only readable by the owner account\n4) Run OAuth Authorization again"
       );
     }
 
@@ -471,8 +490,8 @@ Failover principle:
     if(!videoId){
       showResult(
         isKoreanUi()
-          ? "YouTube 동영상 URL(또는 ID)을 입력해 주세요."
-          : "Enter a video URL (or ID)."
+          ? "YouTube 동영상 URL(또는 11자리 ID)을 인식하지 못했습니다.\n예: https://www.youtube.com/watch?v=xxxxxxxxxxx\n또는 https://youtu.be/xxxxxxxxxxx"
+          : "Could not read a YouTube video URL (or 11-character ID).\nExample: https://www.youtube.com/watch?v=xxxxxxxxxxx\nor https://youtu.be/xxxxxxxxxxx"
       );
       return;
     }
