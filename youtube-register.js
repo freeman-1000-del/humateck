@@ -276,12 +276,51 @@ Failover principle:
     return filterUsableLocalizations(parsePlainTextAsLocalizations(finalText));
   }
 
+  function explainYouTubeError(res, data){
+    var err = (data && data.error) || {};
+    var raw = String(err.message || "").trim() || "Temporary YouTube registration response was not accepted.";
+    var reasons = (err.errors || []).map(function(item){ return String((item && item.reason) || ""); }).filter(Boolean);
+    var reasonText = reasons.join(", ");
+    var lower = (raw + " " + reasonText).toLowerCase();
+    var ko = isKoreanUi();
+
+    if(res.status === 401 || /auth|invalid.?credentials|token/i.test(lower)){
+      return ko
+        ? "YouTube 인증이 만료되었거나 권한이 없습니다.\nOAuth Authorization을 다시 실행한 뒤 재시도해 주세요.\n(원문: " + raw + ")"
+        : "YouTube authorization expired or is missing permission.\nRun OAuth Authorization again, then retry.\n(Detail: " + raw + ")";
+    }
+
+    if(res.status === 403 || /forbidden/i.test(lower)){
+      if(/age.?restrict|content.?owner|forbidden/i.test(lower) || reasons.indexOf("forbidden") >= 0){
+        return ko
+          ? "Forbidden — YouTube가 등록을 거부했습니다.\n확인 사항:\n1) OAuth에 사용한 Google 계정이 해당 영상 수정 권한이 있는지\n2) 영상이 Age-restricted(연령 제한)이면 'Not age-restricted'로 변경\n3) 영상 URL이 본인 채널 영상인지\n4) OAuth Authorization을 다시 실행\n(원문: " + raw + ")"
+          : "Forbidden — YouTube rejected the registration.\nCheck:\n1) The Google account used for OAuth can edit this video\n2) If the video is Age-restricted, set it to Not age-restricted\n3) The video URL belongs to your channel\n4) Run OAuth Authorization again\n(Detail: " + raw + ")";
+      }
+      return ko
+        ? "Forbidden — 권한 부족으로 거부되었습니다.\nOAuth 계정·영상 소유권·연령 제한 설정을 확인한 뒤 다시 시도해 주세요.\n(원문: " + raw + ")"
+        : "Forbidden — permission denied.\nCheck OAuth account, video ownership, and age-restriction settings, then retry.\n(Detail: " + raw + ")";
+    }
+
+    if(res.status === 404 || /notFound|videoNotFound/i.test(lower)){
+      return ko
+        ? "영상을 찾을 수 없습니다. URL/ID를 확인해 주세요.\n(원문: " + raw + ")"
+        : "Video not found. Check the URL/ID.\n(Detail: " + raw + ")";
+    }
+
+    if(/quota/i.test(lower)){
+      return ko
+        ? "YouTube API 일일 할당량을 초과했습니다. 내일 다시 시도해 주세요.\n(원문: " + raw + ")"
+        : "YouTube API daily quota exceeded. Try again tomorrow.\n(Detail: " + raw + ")";
+    }
+
+    return raw + (reasonText ? "\nReason: " + reasonText : "");
+  }
+
   async function youtubeJson(url, options){
     var res = await fetch(url, options || {});
     var data = await res.json().catch(function(){ return {}; });
     if(!res.ok){
-      var msg = data && data.error && data.error.message ? data.error.message : "Temporary YouTube registration response was not accepted.";
-      throw new Error(msg);
+      throw new Error(explainYouTubeError(res, data));
     }
     return data;
   }
@@ -311,51 +350,91 @@ Failover principle:
     }
   }
 
-  async function engineLocalizationsOnly(ctx){
-    await youtubeJson("https://www.googleapis.com/youtube/v3/videos?part=localizations", {
-      method: "PUT",
-      headers: {
-        Authorization: "Bearer " + ctx.token,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ id: ctx.videoId, localizations: ctx.localizations })
-    });
+  function normalizeLang(code){
+    return String(code || "").trim();
   }
 
-  async function engineSnippetMerge(ctx){
+  /**
+   * YouTube rejects many localizations-only updates when defaultLanguage is unset,
+   * and Forbidden often returns for age-restricted / wrong-owner videos.
+   * Always send snippet + localizations together, keep existing snippet fields,
+   * and never put the default language inside localizations.
+   */
+  async function putLocalizationsAccumulated(token, videoId, accumulated){
     var existing = await youtubeJson(
-      "https://www.googleapis.com/youtube/v3/videos?part=snippet,localizations&id=" + encodeURIComponent(ctx.videoId),
-      { headers: { Authorization: "Bearer " + ctx.token } }
+      "https://www.googleapis.com/youtube/v3/videos?part=snippet,localizations,status&id=" + encodeURIComponent(videoId),
+      { headers: { Authorization: "Bearer " + token } }
     );
-    var video = existing.items && existing.items[0] ? existing.items[0] : {};
+    var video = existing.items && existing.items[0] ? existing.items[0] : null;
+    if(!video){
+      throw new Error(
+        isKoreanUi()
+          ? "영상을 찾을 수 없거나 이 OAuth 계정으로 읽을 수 없습니다. URL과 로그인 계정을 확인해 주세요."
+          : "Video not found or not readable with this OAuth account. Check the URL and signed-in account."
+      );
+    }
+
+    var status = video.status || {};
+    if(String(status.uploadStatus || "").toLowerCase() === "rejected" || status.rejectionReason){
+      throw new Error(
+        isKoreanUi()
+          ? "Forbidden — 영상이 YouTube에서 거절/제한 상태입니다.\nStudio에서 연령 제한·제한 사유를 해제한 뒤 다시 시도해 주세요."
+          : "Forbidden — this video is rejected/restricted on YouTube.\nClear age-restriction or rejection in YouTube Studio, then retry."
+      );
+    }
+
     var snippet = video.snippet || {};
-    var merged = Object.assign({}, video.localizations || {}, ctx.localizations || {});
+    var defaultLang = normalizeLang(getNativeLanguageCode() || snippet.defaultLanguage || "en") || "en";
+    var merged = Object.assign({}, video.localizations || {}, accumulated || {});
+    var defaultLoc = merged[defaultLang] || null;
+    delete merged[defaultLang];
+
+    // Also strip bare language matches like "en" vs "en-US" only for exact key.
+    var title = getNativeTitle() || (defaultLoc && defaultLoc.title) || snippet.title || "";
+    var description = getNativeDescription() || (defaultLoc && defaultLoc.description) || snippet.description || "";
+    if(!title){
+      throw new Error(
+        isKoreanUi()
+          ? "등록할 제목이 비어 있습니다. Native Title 또는 Final Version을 확인해 주세요."
+          : "Title is empty. Check Native Title or Final Version."
+      );
+    }
+
+    var snippetBody = {
+      title: title,
+      description: description || title,
+      categoryId: snippet.categoryId || "22",
+      defaultLanguage: defaultLang
+    };
+    if(Object.prototype.hasOwnProperty.call(snippet, "tags")){
+      snippetBody.tags = snippet.tags || [];
+    }
+
     var body = {
-      id: ctx.videoId,
-      snippet: {
-        title: getNativeTitle() || snippet.title || "",
-        description: getNativeDescription() || snippet.description || "",
-        categoryId: snippet.categoryId || "22",
-        defaultLanguage: getNativeLanguageCode() || snippet.defaultLanguage || "en"
-      },
+      id: videoId,
+      snippet: snippetBody,
       localizations: merged
     };
-    await youtubeJson("https://www.googleapis.com/youtube/v3/videos?part=snippet,localizations", {
-      method: "PUT",
-      headers: {
-        Authorization: "Bearer " + ctx.token,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(body)
-    });
-  }
 
-  async function putLocalizationsAccumulated(token, videoId, accumulated){
-    var ctx = { token: token, videoId: videoId, localizations: accumulated };
     try{
-      await engineLocalizationsOnly(ctx);
-    }catch(primaryError){
-      await engineSnippetMerge(ctx);
+      await youtubeJson("https://www.googleapis.com/youtube/v3/videos?part=snippet,localizations", {
+        method: "PUT",
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(body)
+      });
+    }catch(error){
+      var msg = error && error.message ? error.message : String(error || "");
+      if(/forbidden/i.test(msg) && !/Age-restricted|연령/i.test(msg)){
+        throw new Error(
+          isKoreanUi()
+            ? msg + "\n\n이전에 해결하셨던 경우와 같습니다.\nYouTube Studio → 해당 영상 → 연령 제한을 '제한 없음(Not age-restricted)'으로 바꾼 뒤,\nOAuth Authorization을 같은 채널 소유 계정으로 다시 실행해 주세요."
+            : msg + "\n\nSame as the earlier fix:\nYouTube Studio → this video → set Age restriction to 'Not age-restricted',\nthen run OAuth Authorization again with the channel owner account."
+        );
+      }
+      throw error;
     }
   }
 
