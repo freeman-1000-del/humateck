@@ -1589,8 +1589,8 @@ Without any explanation, output only the translated registration text.`;
     var targets = [$("authStatus"), $("authStatusSide"), $("oauthReceiveCheck")];
     targets.forEach(function(el){
       if(!el) return;
-      if("value" in el) el.value = text;
-      else el.textContent = text;
+      if("value" in el) el.value = text || "";
+      else el.textContent = text || "";
       el.classList.remove("ok","bad","oauthReceiveOk");
       if(type) el.classList.add(type);
       if(type === "ok") el.classList.add("oauthReceiveOk");
@@ -1608,24 +1608,76 @@ Without any explanation, output only the translated registration text.`;
     }
     if(btn){
       btn.classList.toggle("oauthSuccessButton", type === "ok");
-      if(type === "ok") btn.textContent = "OAuth Connected";
-      else if(btn.textContent === "OAuth Connected") btn.textContent = "OAuth Authorization";
+      btn.textContent = type === "ok" ? "OAuth Connected" : "OAuth Authorization";
     }
   }
 
-  function restoreSavedToken(){
+  function clearStoredAuth(){
+    window.humateckGoogleAccessToken = "";
+    window.humateckGoogleOAuthScope = "";
     try{
-      var saved = sessionStorage.getItem("humateckGoogleAccessToken");
-      if(saved){
-        window.humateckGoogleAccessToken = saved;
-        setAuthStatus("Google OAuth authorization has been completed. You can now proceed with YouTube registration.", "ok");
-      }
+      sessionStorage.removeItem("humateckGoogleAccessToken");
+      sessionStorage.removeItem("humateckGoogleOAuthScope");
     }catch(e){}
+    setAuthStatus("", "");
   }
 
   function getClientId(){
     var input = $("googleClientIdInput");
     return input ? String(input.value || "").trim() : "";
+  }
+
+  function restoreClientId(){
+    var input = $("googleClientIdInput");
+    if(!input) return;
+    if(String(input.value || "").trim()) return;
+    try{
+      var saved = localStorage.getItem("humateckGoogleClientId");
+      if(saved) input.value = saved;
+    }catch(e){}
+  }
+
+  function saveClientId(clientId){
+    try{
+      if(clientId) localStorage.setItem("humateckGoogleClientId", clientId);
+    }catch(e){}
+  }
+
+  function tokenHasYoutubeScope(scopeText){
+    var scope = String(scopeText || "");
+    return scope.indexOf("youtube.force-ssl") >= 0 || scope.indexOf("/auth/youtube") >= 0;
+  }
+
+  function restoreSavedToken(){
+    restoreClientId();
+    var clientId = getClientId();
+    var saved = "";
+    try{
+      saved = sessionStorage.getItem("humateckGoogleAccessToken") || "";
+    }catch(e){}
+
+    // Client ID 없고 사용자가 인증하지 않은 상태면 성공 UI를 절대 보여주지 않음
+    if(!clientId || !saved){
+      window.humateckGoogleAccessToken = saved || "";
+      setAuthStatus("", "");
+      return;
+    }
+
+    fetch("https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=" + encodeURIComponent(saved))
+      .then(function(res){ return res.json().then(function(data){ return { ok: res.ok, data: data }; }); })
+      .then(function(result){
+        var data = result.data || {};
+        if(!result.ok || data.error || !tokenHasYoutubeScope(data.scope)){
+          clearStoredAuth();
+          return;
+        }
+        window.humateckGoogleAccessToken = saved;
+        window.humateckGoogleOAuthScope = data.scope || YOUTUBE_SCOPE;
+        setAuthStatus("Google OAuth authorization has been completed. You can now proceed with YouTube registration.", "ok");
+      })
+      .catch(function(){
+        clearStoredAuth();
+      });
   }
 
   function waitForGoogleIdentity(callback){
@@ -1645,10 +1697,12 @@ Without any explanation, output only the translated registration text.`;
   function startOAuth(){
     var clientId = getClientId();
     if(!clientId){
+      clearStoredAuth();
       alert("Please enter your Google OAuth Web Client ID.");
       setAuthStatus("Google OAuth Web Client ID is empty.", "bad");
       return;
     }
+    saveClientId(clientId);
 
     if(!/^https?:$/.test(window.location.protocol)){
       alert("Google OAuth does not work properly from file://. Please run this page from your domain or localhost.");
@@ -1663,19 +1717,25 @@ Without any explanation, output only the translated registration text.`;
           scope: YOUTUBE_SCOPE,
           prompt: "consent select_account",
           callback: function(response){
-            if(response && response.access_token){
+            if(response && response.access_token && tokenHasYoutubeScope(response.scope || YOUTUBE_SCOPE)){
               window.humateckGoogleAccessToken = response.access_token;
               window.humateckGoogleOAuthScope = response.scope || YOUTUBE_SCOPE;
               try{
                 sessionStorage.setItem("humateckGoogleAccessToken", response.access_token);
                 sessionStorage.setItem("humateckGoogleOAuthScope", response.scope || YOUTUBE_SCOPE);
               }catch(e){}
+              saveClientId(clientId);
               setAuthStatus("Google OAuth authorization has been completed. You can now proceed with YouTube registration.", "ok");
+            }else if(response && response.access_token){
+              clearStoredAuth();
+              setAuthStatus("Google sign-in worked, but YouTube permission (youtube.force-ssl) was not granted. Please approve YouTube access and try again.", "bad");
             }else{
+              clearStoredAuth();
               setAuthStatus("No Google OAuth response was received. Please check Authorized JavaScript origins and Client ID. Current origin: " + window.location.origin, "bad");
             }
           },
           error_callback: function(error){
+            clearStoredAuth();
             var msg = "Google OAuth authorization failed.";
             if(error && error.type) msg += " Error: " + error.type;
             msg += " / Current origin: " + window.location.origin;
@@ -1684,8 +1744,9 @@ Without any explanation, output only the translated registration text.`;
           }
         });
         tokenClient.requestAccessToken({prompt:"consent select_account"});
-        setAuthStatus("Google OAuth authorization window has opened. Please complete approval in the Google window.");
+        setAuthStatus("Google OAuth authorization window has opened. Please complete approval in the Google window.", "");
       }catch(e){
+        clearStoredAuth();
         var msg = "An error occurred while starting Google OAuth: " + (e && e.message ? e.message : e);
         setAuthStatus(msg, "bad");
         alert(msg);
@@ -1693,17 +1754,29 @@ Without any explanation, output only the translated registration text.`;
     });
   }
 
-  document.addEventListener("DOMContentLoaded", function(){
+  function bootOAuthUi(){
     restoreSavedToken();
     var btn = $("oauthStartBtn");
-    if(btn){
+    if(btn && !btn.getAttribute("data-oauth-bound")){
+      btn.setAttribute("data-oauth-bound", "1");
       btn.addEventListener("click", function(e){
         e.preventDefault();
         startOAuth();
       }, true);
     }
-  });
-  if(document.readyState !== "loading") restoreSavedToken();
+    var input = $("googleClientIdInput");
+    if(input && !input.getAttribute("data-oauth-bound")){
+      input.setAttribute("data-oauth-bound", "1");
+      input.addEventListener("input", function(){
+        if(!String(input.value || "").trim()){
+          clearStoredAuth();
+        }
+      });
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", bootOAuthUi);
+  if(document.readyState !== "loading") bootOAuthUi();
 })();
 </script>
 
