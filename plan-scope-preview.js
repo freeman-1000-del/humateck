@@ -403,42 +403,54 @@
     return code + " | " + code;
   }
 
-  /** Distribution Result panel — lists registered success countries (code | name) */
-  function refreshSelectedCountriesPanel(successCodes) {
+  /**
+   * Distribution Result panel — full promised list with ✓ / pending marks.
+   * successCodes: registered so far
+   * options.targetCodes: optional full registration target order
+   */
+  function refreshSelectedCountriesPanel(successCodes, options) {
     var listEl = document.getElementById("selectedCountriesList");
     var leadEl = document.getElementById("selectedCountriesLead");
     var headingEl = document.getElementById("selectedCountriesHeading");
     var successEl = document.getElementById("selectedCountriesSuccess");
     if (!listEl) return;
 
+    options = options || {};
     var plan = resolvePlanId();
     var title = getTitle(plan);
-    var codes = (successCodes || [])
+    var done = (successCodes || [])
       .map(function (c) {
         return String(c || "").trim();
       })
       .filter(Boolean);
+    var okSet = {};
+    done.forEach(function (c) {
+      okSet[c] = true;
+    });
+
+    var planCodes = getCodes(plan);
+    var target = (options.targetCodes || []).map(function (c) {
+      return String(c || "").trim();
+    }).filter(Boolean);
+    if (!target.length) target = planCodes.slice();
+    if (!target.length && done.length) target = done.slice();
+
+    // Keep plan order; append any extra registered codes not in plan/target
+    var ordered = target.slice();
+    done.forEach(function (c) {
+      if (ordered.indexOf(c) < 0) ordered.push(c);
+    });
 
     if (headingEl) {
       headingEl.textContent = "Registered success countries";
     }
 
-    if (!codes.length) {
-      var promised = getLines(plan);
+    if (!ordered.length) {
       if (leadEl) {
-        leadEl.textContent = promised.length
-          ? "Waiting for distribution. Promised scope (" +
-            promised.length +
-            ")" +
-            (title ? " · " + title : "") +
-            " will be compared here after registration."
-          : "After distribution finishes, successfully registered country codes appear here.";
+        leadEl.textContent =
+          "Select a deployment plan, then run distribution. Success is marked with ✓ per country.";
       }
-      listEl.innerHTML = promised
-        .map(function (line) {
-          return "<li>" + String(line).replace(/</g, "&lt;") + "</li>";
-        })
-        .join("");
+      listEl.innerHTML = "";
       if (successEl) {
         successEl.hidden = true;
         successEl.textContent = "";
@@ -446,45 +458,74 @@
       return;
     }
 
-    var planCodes = getCodes(plan);
-    var ordered = planCodes.length
-      ? planCodes.filter(function (c) {
-          return codes.indexOf(c) >= 0;
-        }).concat(
-          codes.filter(function (c) {
-            return planCodes.indexOf(c) < 0;
-          })
-        )
-      : codes.slice();
+    var doneCount = ordered.filter(function (c) {
+      return okSet[c];
+    }).length;
 
     if (leadEl) {
-      leadEl.textContent =
-        "Registration succeeded for " +
-        ordered.length +
-        " language(s)" +
-        (title ? " · " + title : "") +
-        ". Compare with YouTube Studio.";
+      if (!doneCount) {
+        leadEl.textContent =
+          "Promised scope (" +
+          ordered.length +
+          ")" +
+          (title ? " · " + title : "") +
+          ". ✓ = registered · ○ = waiting";
+      } else if (doneCount < ordered.length) {
+        leadEl.textContent =
+          "Progress " +
+          doneCount +
+          "/" +
+          ordered.length +
+          (title ? " · " + title : "") +
+          ". ✓ = registered · ○ = waiting";
+      } else {
+        leadEl.textContent =
+          "All " +
+          doneCount +
+          " language(s) registered" +
+          (title ? " · " + title : "") +
+          ". Compare with YouTube Studio.";
+      }
     }
 
     listEl.innerHTML = ordered
       .map(function (code, idx) {
+        var ok = !!okSet[code];
         var line = lineForCode(code, plan);
-        var safe = String(line).replace(/</g, "&lt;");
+        // Drop leading "N. " from plan line — we renumber
+        var label = String(line).replace(/^\s*\d+\.\s*/, "");
+        var safe = label.replace(/</g, "&lt;");
         return (
-          '<li class="isRegistered" data-code="' +
+          '<li class="' +
+          (ok ? "isRegistered" : "isPending") +
+          '" data-code="' +
           String(code).replace(/"/g, "") +
           '">' +
+          '<span class="regCheck" aria-hidden="true">' +
+          (ok ? "✓" : "○") +
+          "</span>" +
+          '<span class="regText">' +
           (idx + 1) +
           ". " +
           safe +
-          ' <span class="regMark">registered</span></li>'
+          "</span>" +
+          (ok
+            ? '<span class="regMark">OK</span>'
+            : '<span class="regMark pending">wait</span>') +
+          "</li>"
         );
       })
       .join("");
 
     if (successEl) {
-      successEl.hidden = false;
-      successEl.textContent = "Registered country codes: " + ordered.join(", ");
+      if (doneCount) {
+        successEl.hidden = false;
+        successEl.textContent =
+          "Registered (" + doneCount + "/" + ordered.length + "): " + done.join(", ");
+      } else {
+        successEl.hidden = true;
+        successEl.textContent = "";
+      }
     }
   }
 

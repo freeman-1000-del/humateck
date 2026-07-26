@@ -106,9 +106,11 @@ Failover principle:
     return list.join(", ");
   }
 
-  function noteRegisteredCountries(codes){
+  function noteRegisteredCountries(codes, targetCodes){
     if(window.HumateckPlanScope && typeof window.HumateckPlanScope.refreshSelectedCountriesPanel === "function"){
-      window.HumateckPlanScope.refreshSelectedCountriesPanel(codes || []);
+      window.HumateckPlanScope.refreshSelectedCountriesPanel(codes || [], {
+        targetCodes: targetCodes || codes || []
+      });
     }
   }
 
@@ -534,17 +536,20 @@ Failover principle:
 
       if(paceMode === "simultaneous"){
         showResult(copy.simStart(codes.length));
+        noteRegisteredCountries([], codes);
         Object.keys(localizations).forEach(function(code){
           accumulated[code] = localizations[code];
         });
         await putLocalizationsAccumulated(token, videoId, accumulated);
         seconds = Math.max(1, Math.round((Date.now() - started) / 1000));
         showResult(copy.simDone(codes.length, seconds, formatRegisteredCodeList(codes)));
-        noteRegisteredCountries(codes);
+        noteRegisteredCountries(codes, codes);
         return;
       }
 
       showResult(copy.seqStart(codes.length));
+      noteRegisteredCountries([], codes);
+      var doneCodes = [];
       for(var i = 0; i < codes.length; i++){
         var code = codes[i];
         accumulated[code] = localizations[code];
@@ -552,6 +557,8 @@ Failover principle:
           copy.seqProgress(i + 1, codes.length, code, Object.keys(accumulated).length)
         );
         await putLocalizationsAccumulated(token, videoId, accumulated);
+        doneCodes.push(code);
+        noteRegisteredCountries(doneCodes, codes);
         if(i < codes.length - 1){
           await sleepWithProgress(
             LOCALE_GAP_MS,
@@ -562,7 +569,7 @@ Failover principle:
       seconds = Math.max(1, Math.round((Date.now() - started) / 1000));
       minutes = Math.round(seconds / 60);
       showResult(copy.seqDone(codes.length, minutes, seconds, formatRegisteredCodeList(codes)));
-      noteRegisteredCountries(codes);
+      noteRegisteredCountries(doneCodes, codes);
     }catch(error){
       var message = error && error.message ? error.message : String(error || "Temporary registration delay occurred.");
       showResult(message);

@@ -982,6 +982,9 @@ input,textarea{font-size:16px!important;}
   overflow:auto;
 }
 #selectedCountriesList li{
+  display:flex;
+  align-items:center;
+  gap:10px;
   padding:8px 10px;
   border:1px solid rgba(214,176,78,.28);
   border-radius:10px;
@@ -994,11 +997,44 @@ input,textarea{font-size:16px!important;}
   border-color:rgba(120,220,150,.55);
   background:rgba(80,180,120,.12);
 }
+#selectedCountriesList li.isPending{
+  opacity:.78;
+}
+#selectedCountriesList .regCheck{
+  flex:0 0 22px;
+  width:22px;
+  height:22px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  font-size:14px;
+  font-weight:900;
+  line-height:1;
+}
+#selectedCountriesList li.isRegistered .regCheck{
+  color:#0b1a10;
+  background:#8dffb0;
+  box-shadow:0 0 10px rgba(141,255,176,.45);
+}
+#selectedCountriesList li.isPending .regCheck{
+  color:#c9c2b0;
+  border:1px solid rgba(214,176,78,.45);
+  background:rgba(0,0,0,.2);
+}
+#selectedCountriesList .regText{
+  flex:1 1 auto;
+  min-width:0;
+}
 #selectedCountriesList .regMark{
-  margin-left:8px;
+  flex:0 0 auto;
+  margin-left:auto;
   color:#8dffb0;
   font-size:12px;
   font-weight:800;
+}
+#selectedCountriesList .regMark.pending{
+  color:#b8b09a;
 }
 #selectedCountriesSuccess{
   margin:10px 0 0;
@@ -1884,7 +1920,7 @@ Without any explanation, output only the translated registration text.`;
 
 
 
-<script src="youtube-register.js?v=20260727d"></script>
+<script src="youtube-register.js?v=20260727e"></script>
 
 
 <div id="nativeCodeModal" class="nativeCodeModal" aria-hidden="true">
@@ -2114,6 +2150,6 @@ Without any explanation, output only the translated registration text.`;
 })();
 </script>
 
-<script src="plan-scope-preview.js?v=20260727c"></script>
+<script src="plan-scope-preview.js?v=20260727e"></script>
 
 </body></html>
