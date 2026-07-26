@@ -953,6 +953,61 @@ input,textarea{font-size:16px!important;}
   white-space:pre-wrap!important;
   line-height:1.65!important;
 }
+#selectedCountriesBox{
+  margin:0 0 14px;
+  padding:14px 14px 12px;
+  border:1px solid rgba(214,176,78,.45);
+  border-radius:14px;
+  background:rgba(255,217,90,.06);
+}
+#selectedCountriesHeading{
+  margin:0 0 8px;
+  color:#ffd95a;
+  font-size:18px;
+  font-weight:900;
+}
+#selectedCountriesLead{
+  margin:0 0 10px;
+  color:#e6e0d4;
+  font-size:14px;
+  line-height:1.55;
+}
+#selectedCountriesList{
+  margin:0;
+  padding:0;
+  list-style:none;
+  display:grid;
+  gap:6px;
+  max-height:220px;
+  overflow:auto;
+}
+#selectedCountriesList li{
+  padding:8px 10px;
+  border:1px solid rgba(214,176,78,.28);
+  border-radius:10px;
+  background:rgba(255,255,255,.03);
+  color:#f4f1e8;
+  font-size:14px;
+  line-height:1.4;
+}
+#selectedCountriesList li.isRegistered{
+  border-color:rgba(120,220,150,.55);
+  background:rgba(80,180,120,.12);
+}
+#selectedCountriesList .regMark{
+  margin-left:8px;
+  color:#8dffb0;
+  font-size:12px;
+  font-weight:800;
+}
+#selectedCountriesSuccess{
+  margin:10px 0 0;
+  color:#ffd95a;
+  font-size:14px;
+  font-weight:800;
+  line-height:1.5;
+  word-break:break-word;
+}
 </style>
 
 
@@ -1215,6 +1270,12 @@ Without any explanation, output only the translated registration text.</textarea
 <p>All translations are registered to the YouTube channel immediately. But Humateck does not review, block, change, or add anything to the customer-approved translation. The approved content is sent as-is.</p>
 <section class="card" id="deliveryResultCard">
       <h2>Distribution Result</h2>
+      <div id="selectedCountriesBox" aria-live="polite">
+        <h3 id="selectedCountriesHeading">Selected deployment countries</h3>
+        <p id="selectedCountriesLead" class="selectedCountriesLead">Select Number of Deployment Countries above. The promised country list will appear here for comparison with YouTube Studio.</p>
+        <ol id="selectedCountriesList" class="selectedCountriesList"></ol>
+        <p id="selectedCountriesSuccess" class="selectedCountriesSuccess" hidden></p>
+      </div>
       <textarea id="deliveryLog" class="mediumTextarea" readonly placeholder="YouTube distribution results will appear here."></textarea>
     </section>
     <section class="card" id="customerComplaintCard">
@@ -1276,6 +1337,9 @@ A) This is because YouTube content display system fixes the default video settin
     if(hidden) hidden.value = plan;
     var limitHidden = document.getElementById("humateckActiveCountryLimit");
     if(limitHidden && arguments.length > 1 && arguments[1]) limitHidden.value = String(arguments[1]);
+    if(window.HumateckPlanScope && typeof window.HumateckPlanScope.refreshSelectedCountriesPanel === "function"){
+      window.HumateckPlanScope.refreshSelectedCountriesPanel();
+    }
   }
 
   function getHumateckPlanLimit(plan){
@@ -1403,85 +1467,110 @@ A) This is because YouTube content display system fixes the default video settin
     return 30;
   }
 
+  function getOrderPlanId(){
+    var sel = document.getElementById("orderPlanSelect");
+    if(sel && String(sel.value || "").trim()) return String(sel.value).trim();
+    var hidden = document.getElementById("humateckActivePlanValue");
+    if(hidden && String(hidden.value || "").trim()) return String(hidden.value).trim();
+    try{
+      var stored = localStorage.getItem("humateckSelectedPlan") || "";
+      if(String(stored).trim()) return String(stored).trim();
+    }catch(e){}
+    if(window.humateckPaymentSubscriptionPlan) return String(window.humateckPaymentSubscriptionPlan);
+    return "";
+  }
+
   function buildGeminiPrompt(){
     var activeCount = getActiveCount();
     var sourceTitle = getValue("sourceTitle");
     var sourceDescription = getValue("sourceDescription");
+    var planId = getOrderPlanId();
+    var planRows = null;
+    if(window.HumateckPlanScope && typeof window.HumateckPlanScope.getLines === "function"){
+      planRows = window.HumateckPlanScope.getLines(planId);
+    }
 
-    var countryBlock = [
-      "Country Code / Country Name Mapping Table",
-      "",
-      "1. en | English",
-      "2. es | Spanish",
-      "3. es-419 | Spanish (Latin America)",
-      "4. es-US | Spanish (United States)",
-      "5. pt | Portuguese",
-      "6. pt-PT | Portuguese (Portugal)",
-      "7. fr | French",
-      "8. fr-CA | French (Canada)",
-      "9. de | German",
-      "10. ja | Japanese",
-      "11. ko | Korean",
-      "12. zh-CN | Chinese (China)",
-      "13. zh-TW | Chinese (Taiwan)",
-      "14. zh-HK | Chinese (Hong Kong)",
-      "15. hi | Hindi",
-      "16. id | Indonesian",
-      "17. ar | Arabic",
-      "18. ru | Russian",
-      "19. it | Italian",
-      "20. tr | Turkish",
-      "21. vi | Vietnamese",
-      "22. th | Thai",
-      "23. fil | Filipino",
-      "24. ms | Malay",
-      "25. nl | Dutch",
-      "26. pl | Polish",
-      "27. uk | Ukrainian",
-      "28. sv | Swedish",
-      "29. no | Norwegian",
-      "30. da | Danish",
-      "31. fi | Finnish",
-      "32. el | Greek",
-      "33. ro | Romanian",
-      "34. hu | Hungarian",
-      "35. cs | Czech",
-      "36. sk | Slovak",
-      "37. bg | Bulgarian",
-      "38. hr | Croatian",
-      "39. sr | Serbian",
-      "40. sr-Latn | Serbian (Latin)",
-      "41. sq | Albanian",
-      "42. mk | Macedonian",
-      "43. et | Estonian",
-      "44. lv | Latvian",
-      "45. lt | Lithuanian",
-      "46. iw | Hebrew",
-      "47. fa | Persian",
-      "48. ur | Urdu",
-      "49. bn | Bengali",
-      "50. ta | Tamil",
-      "51. te | Telugu",
-      "52. mr | Marathi",
-      "53. gu | Gujarati",
-      "54. kn | Kannada",
-      "55. ml | Malayalam",
-      "56. pa | Punjabi",
-      "57. ne | Nepali",
-      "58. my | Burmese",
-      "59. km | Khmer",
-      "60. lo | Lao",
-      "61. am | Amharic",
-      "62. sw | Swahili",
-      "63. af | Afrikaans",
-      "64. az | Azerbaijani",
-      "65. be | Belarusian",
-      "66. bs | Bosnian",
-      "67. ca | Catalan",
-      "68. eu | Basque",
-      "69. gl | Galician",
-      "70. ka | Georgian"
-    ].slice(0, activeCount + 2).join("\n");
+    /* Must match plan-scope promised countries (e.g. Global 16), not a separate ad-hoc table */
+    var countryBlock;
+    if(planRows && planRows.length){
+      activeCount = planRows.length;
+      countryBlock = ["Country Code / Country Name Mapping Table", ""].concat(planRows).join("\n");
+    }else{
+      countryBlock = [
+        "Country Code / Country Name Mapping Table",
+        "",
+        "1. en | English (US/UK/Australia, etc.)",
+        "2. hi | Hindi (India)",
+        "3. pt | Portuguese (Brazil)",
+        "4. id | Indonesian",
+        "5. es-419 | Spanish (Latin America)",
+        "6. ja | Japanese",
+        "7. ru | Russian",
+        "8. de | German",
+        "9. tr | Turkish",
+        "10. ko | Korean",
+        "11. fr | French",
+        "12. vi | Vietnamese",
+        "13. th | Thai",
+        "14. fil | Filipino",
+        "15. ar | Arabic (Middle East/North Africa)",
+        "16. it | Italian",
+        "17. ms | Malay",
+        "18. zh-TW | Chinese (Taiwan)",
+        "19. uk | Ukrainian",
+        "20. pl | Polish",
+        "21. nl | Dutch",
+        "22. es | Spanish (Spain)",
+        "23. sv | Swedish",
+        "24. ro | Romanian",
+        "25. cs | Czech",
+        "26. hu | Hungarian",
+        "27. el | Greek",
+        "28. zh-HK | Chinese (Hong Kong)",
+        "29. ur | Urdu (Pakistan)",
+        "30. bn | Bengali (Bangladesh)",
+        "31. pt-PT | Portuguese (Portugal)",
+        "32. fa | Persian (Iran)",
+        "33. iw | Hebrew (Israel)",
+        "34. sw | Swahili (East Africa)",
+        "35. am | Amharic (Ethiopia)",
+        "36. af | Afrikaans (South Africa)",
+        "37. ta | Tamil (India/Sri Lanka)",
+        "38. te | Telugu (India)",
+        "39. mr | Marathi (India)",
+        "40. my | Burmese (Myanmar)",
+        "41. km | Khmer (Cambodia)",
+        "42. ne | Nepali",
+        "43. lo | Lao (Laos)",
+        "44. gu | Gujarati (India)",
+        "45. kn | Kannada (India)",
+        "46. ml | Malayalam (India)",
+        "47. pa | Punjabi (India/Pakistan)",
+        "48. no | Norwegian",
+        "49. da | Danish",
+        "50. fi | Finnish",
+        "51. sk | Slovak",
+        "52. bg | Bulgarian",
+        "53. hr | Croatian",
+        "54. sr | Serbian",
+        "55. lt | Lithuanian",
+        "56. lv | Latvian",
+        "57. et | Estonian",
+        "58. az | Azerbaijani",
+        "59. ka | Georgian",
+        "60. be | Belarusian",
+        "61. bs | Bosnian",
+        "62. mk | Macedonian",
+        "63. sq | Albanian",
+        "64. fr-CA | French (Canada)",
+        "65. es-US | Spanish (US)",
+        "66. sr-Latn | Serbian (Latin)",
+        "67. ca | Catalan",
+        "68. eu | Basque",
+        "69. gl | Galician",
+        "70. zh-CN | Chinese (Mainland China)"
+      ].slice(0, activeCount + 2).join("\n");
+    }
 
     var prompt =
 `Hello Gemini!
@@ -1782,7 +1871,7 @@ Without any explanation, output only the translated registration text.`;
 
 
 
-<script src="youtube-register.js"></script>
+<script src="youtube-register.js?v=20260727a"></script>
 
 
 <div id="nativeCodeModal" class="nativeCodeModal" aria-hidden="true">
@@ -2012,6 +2101,6 @@ Without any explanation, output only the translated registration text.`;
 })();
 </script>
 
-<script src="plan-scope-preview.js?v=20260716c"></script>
+<script src="plan-scope-preview.js?v=20260727a"></script>
 
 </body></html>

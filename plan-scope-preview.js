@@ -348,13 +348,137 @@
     document.getElementById("planScopePreview").classList.add("open");
   }
 
+  function parseLineCode(line) {
+    var m = String(line || "").match(/^\s*\d+\.\s*([a-zA-Z0-9-]+)\s*\|/);
+    return m ? m[1] : "";
+  }
+
+  function resolvePlanId() {
+    var sel = document.getElementById("orderPlanSelect");
+    if (sel && String(sel.value || "").trim()) return String(sel.value).trim();
+    var hidden = document.getElementById("humateckActivePlanValue");
+    if (hidden && String(hidden.value || "").trim()) return String(hidden.value).trim();
+    try {
+      var stored = localStorage.getItem("humateckSelectedPlan") || "";
+      if (String(stored).trim()) return String(stored).trim();
+    } catch (e) {}
+    return "";
+  }
+
+  function getLines(plan) {
+    var key = plan || resolvePlanId();
+    return key && LISTS[key] ? LISTS[key].slice() : [];
+  }
+
+  function getCodes(plan) {
+    return getLines(plan)
+      .map(parseLineCode)
+      .filter(Boolean);
+  }
+
+  function getTitle(plan) {
+    var key = plan || resolvePlanId();
+    return TITLES[key] || key || "";
+  }
+
+  /** Inline panel next to Distribution Result — shows promised countries + optional success codes */
+  function refreshSelectedCountriesPanel(successCodes) {
+    var listEl = document.getElementById("selectedCountriesList");
+    var leadEl = document.getElementById("selectedCountriesLead");
+    var headingEl = document.getElementById("selectedCountriesHeading");
+    var successEl = document.getElementById("selectedCountriesSuccess");
+    if (!listEl) return;
+
+    var plan = resolvePlanId();
+    var rows = getLines(plan);
+    var title = getTitle(plan);
+    var okSet = {};
+    (successCodes || []).forEach(function (c) {
+      okSet[String(c || "").trim()] = true;
+    });
+
+    if (headingEl) {
+      headingEl.textContent = title
+        ? "Selected deployment countries · " + title
+        : "Selected deployment countries";
+    }
+
+    if (!rows.length) {
+      if (leadEl) {
+        leadEl.textContent =
+          "Select Number of Deployment Countries above. The promised country list will appear here for comparison with YouTube Studio.";
+      }
+      listEl.innerHTML = "";
+      if (successEl) {
+        successEl.hidden = true;
+        successEl.textContent = "";
+      }
+      return;
+    }
+
+    if (leadEl) {
+      leadEl.textContent =
+        "Promised registration scope (" +
+        rows.length +
+        "): country code | name. After distribution, registered codes are marked.";
+    }
+
+    listEl.innerHTML = rows
+      .map(function (line) {
+        var code = parseLineCode(line);
+        var ok = code && okSet[code];
+        var safe = String(line).replace(/</g, "&lt;");
+        return (
+          '<li data-code="' +
+          String(code).replace(/"/g, "") +
+          '"' +
+          (ok ? ' class="isRegistered"' : "") +
+          ">" +
+          safe +
+          (ok ? ' <span class="regMark">registered</span>' : "") +
+          "</li>"
+        );
+      })
+      .join("");
+
+    if (successEl) {
+      var ordered = getCodes(plan).filter(function (c) {
+        return okSet[c];
+      });
+      var extras = (successCodes || []).filter(function (c) {
+        return ordered.indexOf(c) < 0;
+      });
+      var all = ordered.concat(extras);
+      if (all.length) {
+        successEl.hidden = false;
+        successEl.textContent = "Registered country codes: " + all.join(", ");
+      } else {
+        successEl.hidden = true;
+        successEl.textContent = "";
+      }
+    }
+  }
+
+  window.HumateckPlanScope = {
+    LISTS: LISTS,
+    TITLES: TITLES,
+    GLOBAL70: GLOBAL70,
+    resolvePlanId: resolvePlanId,
+    getLines: getLines,
+    getCodes: getCodes,
+    getTitle: getTitle,
+    refreshSelectedCountriesPanel: refreshSelectedCountriesPanel,
+  };
+
   function bind() {
     var sel = document.getElementById("orderPlanSelect");
     if (!sel || sel.__planScopePreviewBound) return;
     sel.__planScopePreviewBound = true;
     sel.addEventListener("change", function () {
       openPreview(sel.value || "");
+      refreshSelectedCountriesPanel();
     });
+    refreshSelectedCountriesPanel();
   }
 
   if (document.readyState === "loading") {
