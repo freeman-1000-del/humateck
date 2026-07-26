@@ -32,11 +32,7 @@ Failover principle:
     if(box){
       box.value = message;
       box.scrollTop = box.scrollHeight;
-      try{
-        box.scrollIntoView({ behavior: "smooth", block: "center" });
-      }catch(e){
-        box.scrollIntoView(true);
-      }
+      // Do not scroll the page — result lives in the sticky right column
     }
   }
 
@@ -112,6 +108,179 @@ Failover principle:
         targetCodes: targetCodes || codes || []
       });
     }
+  }
+
+  var completionAudioCtx = null;
+  var audioKeepAliveTimer = null;
+  var titleFlashTimer = null;
+  var titleFlashBase = "";
+
+  function tickSilentAudio(){
+    try{
+      if(!completionAudioCtx) return;
+      var ctx = completionAudioCtx;
+      if(ctx.state === "suspended"){
+        ctx.resume().catch(function(){});
+        return;
+      }
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
+      gain.gain.value = 0.00001;
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.02);
+    }catch(e){}
+  }
+
+  /** Unlock + keep AudioContext alive during long sequential waits */
+  function unlockCompletionAudio(){
+    try{
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if(!AC) return;
+      if(!completionAudioCtx) completionAudioCtx = new AC();
+      var ctx = completionAudioCtx;
+      var arm = function(){
+        tickSilentAudio();
+      };
+      if(ctx.state === "suspended"){
+        ctx.resume().then(arm).catch(function(){});
+      }else{
+        arm();
+      }
+    }catch(e){}
+    if(audioKeepAliveTimer) clearInterval(audioKeepAliveTimer);
+    audioKeepAliveTimer = setInterval(tickSilentAudio, 12000);
+  }
+
+  function stopAudioKeepAlive(){
+    if(audioKeepAliveTimer){
+      clearInterval(audioKeepAliveTimer);
+      audioKeepAliveTimer = null;
+    }
+  }
+
+  function buildBeepWavDataUri(){
+    var sampleRate = 22050;
+    var duration = 0.9;
+    var n = Math.floor(sampleRate * duration);
+    var dataSize = n * 2;
+    var buf = new ArrayBuffer(44 + dataSize);
+    var view = new DataView(buf);
+    function str(offset, s){
+      for(var i = 0; i < s.length; i++) view.setUint8(offset + i, s.charCodeAt(i));
+    }
+    str(0, "RIFF");
+    view.setUint32(4, 36 + dataSize, true);
+    str(8, "WAVE");
+    str(12, "fmt ");
+    view.setUint32(16, 16, true);
+    view.setUint16(20, 1, true);
+    view.setUint16(22, 1, true);
+    view.setUint32(24, sampleRate, true);
+    view.setUint32(28, sampleRate * 2, true);
+    view.setUint16(32, 2, true);
+    view.setUint16(34, 16, true);
+    str(36, "data");
+    view.setUint32(40, dataSize, true);
+    var freqs = [880, 1175, 1480];
+    for(var i = 0; i < n; i++){
+      var t = i / sampleRate;
+      var seg = Math.min(freqs.length - 1, Math.floor(t / 0.28));
+      var localT = t - seg * 0.28;
+      var env = Math.max(0, 1 - localT / 0.26);
+      var sample = Math.sin(2 * Math.PI * freqs[seg] * t) * env * 0.55;
+      view.setInt16(44 + i * 2, sample < 0 ? sample * 0x8000 : sample * 0x7fff, true);
+    }
+    var bytes = new Uint8Array(buf);
+    var binary = "";
+    for(var j = 0; j < bytes.length; j++) binary += String.fromCharCode(bytes[j]);
+    return "data:audio/wav;base64," + btoa(binary);
+  }
+
+  function playCompletionChime(){
+    stopAudioKeepAlive();
+    var played = false;
+    try{
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if(AC){
+        if(!completionAudioCtx) completionAudioCtx = new AC();
+        var ctx = completionAudioCtx;
+        var tone = function(){
+          var now = ctx.currentTime;
+          [880, 1175, 1480, 1175].forEach(function(freq, i){
+            var osc = ctx.createOscillator();
+            var gain = ctx.createGain();
+            osc.type = "square";
+            osc.frequency.value = freq;
+            var t0 = now + i * 0.16;
+            gain.gain.setValueAtTime(0.0001, t0);
+            gain.gain.exponentialRampToValueAtTime(0.28, t0 + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.38);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(t0);
+            osc.stop(t0 + 0.4);
+          });
+          played = true;
+        };
+        if(ctx.state === "suspended"){
+          ctx.resume().then(tone).catch(function(){});
+        }else{
+          tone();
+        }
+      }
+    }catch(e){}
+    // HTMLAudio fallback (often works when oscillator path is blocked)
+    try{
+      var audio = new Audio(buildBeepWavDataUri());
+      audio.volume = 0.85;
+      var p = audio.play();
+      if(p && typeof p.catch === "function") p.catch(function(){});
+    }catch(e2){}
+    return played;
+  }
+
+  function flashDocumentTitle(){
+    try{
+      if(titleFlashTimer) clearInterval(titleFlashTimer);
+      titleFlashBase = document.title || "Humateck";
+      var on = true;
+      var n = 0;
+      titleFlashTimer = setInterval(function(){
+        document.title = on ? "✓ Registration complete" : titleFlashBase;
+        on = !on;
+        n++;
+        if(n > 14){
+          clearInterval(titleFlashTimer);
+          titleFlashTimer = null;
+          document.title = titleFlashBase;
+        }
+      }, 500);
+    }catch(e){}
+  }
+
+  function flashResultPanel(){
+    var card = $("deliveryResultCard");
+    var log = $("deliveryLog");
+    var listBox = $("selectedCountriesBox");
+    function bump(el){
+      if(!el) return;
+      el.classList.remove("regCompleteFlash");
+      try{ void el.offsetWidth; }catch(e){}
+      el.classList.add("regCompleteFlash");
+      setTimeout(function(){ el.classList.remove("regCompleteFlash"); }, 4200);
+    }
+    bump(card);
+    bump(log);
+    bump(listBox);
+    // Never scroll the page — keeps mouse/view on the left form
+  }
+
+  function signalRegistrationComplete(){
+    flashResultPanel();
+    playCompletionChime();
+    flashDocumentTitle();
   }
 
   function registerButtons(){
@@ -527,6 +696,7 @@ Failover principle:
     }
 
     setButtonBusy(true);
+    unlockCompletionAudio();
 
     var copy = uiCopy();
     try{
@@ -544,6 +714,7 @@ Failover principle:
         seconds = Math.max(1, Math.round((Date.now() - started) / 1000));
         showResult(copy.simDone(codes.length, seconds, formatRegisteredCodeList(codes)));
         noteRegisteredCountries(codes, codes);
+        signalRegistrationComplete();
         return;
       }
 
@@ -570,7 +741,9 @@ Failover principle:
       minutes = Math.round(seconds / 60);
       showResult(copy.seqDone(codes.length, minutes, seconds, formatRegisteredCodeList(codes)));
       noteRegisteredCountries(doneCodes, codes);
+      signalRegistrationComplete();
     }catch(error){
+      stopAudioKeepAlive();
       var message = error && error.message ? error.message : String(error || "Temporary registration delay occurred.");
       showResult(message);
     }finally{
