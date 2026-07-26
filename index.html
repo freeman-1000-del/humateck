@@ -1595,6 +1595,32 @@ Without any explanation, output only the translated registration text.`;
       if(type) el.classList.add(type);
       if(type === "ok") el.classList.add("oauthReceiveOk");
     });
+
+    var badge = $("oauthSuccessBadge");
+    var btn = $("oauthStartBtn");
+    if(badge){
+      if(type === "ok"){
+        badge.classList.add("show");
+        badge.textContent = "Authentication Successful";
+      }else{
+        badge.classList.remove("show");
+      }
+    }
+    if(btn){
+      btn.classList.toggle("oauthSuccessButton", type === "ok");
+      if(type === "ok") btn.textContent = "OAuth Connected";
+      else if(btn.textContent === "OAuth Connected") btn.textContent = "OAuth Authorization";
+    }
+  }
+
+  function restoreSavedToken(){
+    try{
+      var saved = sessionStorage.getItem("humateckGoogleAccessToken");
+      if(saved){
+        window.humateckGoogleAccessToken = saved;
+        setAuthStatus("Google OAuth authorization has been completed. You can now proceed with YouTube registration.", "ok");
+      }
+    }catch(e){}
   }
 
   function getClientId(){
@@ -1644,7 +1670,6 @@ Without any explanation, output only the translated registration text.`;
                 sessionStorage.setItem("humateckGoogleAccessToken", response.access_token);
                 sessionStorage.setItem("humateckGoogleOAuthScope", response.scope || YOUTUBE_SCOPE);
               }catch(e){}
-              alert("SCOPE CHECK: " + (response.scope || "NONE"));
               setAuthStatus("Google OAuth authorization has been completed. You can now proceed with YouTube registration.", "ok");
             }else{
               setAuthStatus("No Google OAuth response was received. Please check Authorized JavaScript origins and Client ID. Current origin: " + window.location.origin, "bad");
@@ -1669,6 +1694,7 @@ Without any explanation, output only the translated registration text.`;
   }
 
   document.addEventListener("DOMContentLoaded", function(){
+    restoreSavedToken();
     var btn = $("oauthStartBtn");
     if(btn){
       btn.addEventListener("click", function(e){
@@ -1677,6 +1703,7 @@ Without any explanation, output only the translated registration text.`;
       }, true);
     }
   });
+  if(document.readyState !== "loading") restoreSavedToken();
 })();
 </script>
 

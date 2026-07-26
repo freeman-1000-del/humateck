@@ -31,6 +31,11 @@ Failover principle:
     if(box){
       box.value = message;
       box.scrollTop = box.scrollHeight;
+      try{
+        box.scrollIntoView({ behavior: "smooth", block: "center" });
+      }catch(e){
+        box.scrollIntoView(true);
+      }
     }
   }
 
@@ -336,9 +341,30 @@ Failover principle:
     var localizations = chooseLocalizations(finalText);
     var codes = Object.keys(localizations);
 
-    if(!token){ showResult("Google OAuth is required."); return; }
-    if(!videoId){ showResult("Enter a video URL (or ID)."); return; }
-    if(!codes.length){ showResult("No multilingual text to register."); return; }
+    if(!token){
+      showResult(
+        isKoreanUi()
+          ? "Google OAuth 인증이 필요합니다.\nClient ID만 입력한 상태로는 등록되지 않습니다.\n위의 'OAuth Authorization' 버튼을 눌러 Google 승인을 완료한 뒤 다시 시도해 주세요."
+          : "Google OAuth is required.\nEntering the Client ID alone is not enough.\nClick 'OAuth Authorization' above, finish Google approval, then try again."
+      );
+      return;
+    }
+    if(!videoId){
+      showResult(
+        isKoreanUi()
+          ? "YouTube 동영상 URL(또는 ID)을 입력해 주세요."
+          : "Enter a video URL (or ID)."
+      );
+      return;
+    }
+    if(!codes.length){
+      showResult(
+        isKoreanUi()
+          ? "등록할 다국어 번역문이 없습니다.\n'Paste Final Version'에 Gemini 최종 번역을 붙여 넣은 뒤 다시 시도해 주세요."
+          : "No multilingual text to register.\nPaste the final Gemini translation into 'Paste Final Version', then try again."
+      );
+      return;
+    }
 
     setButtonBusy(true);
 
