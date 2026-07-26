@@ -52,18 +52,18 @@ Failover principle:
         simultaneous: "동시등록",
         busy: "등록 중…",
         paceNote:
-          "유튜브 알고리즘에 의해 동시다발 공격 컨텐츠로 오인되는 위험을 막기 위해 국가별로 1분 순차등록을 적용합니다. 수초 동시등록을 원하시는 경우 '동시등록' 버튼을 눌러 주세요.",
+          "유튜브 알고리즘에 의해 동시다발 공격 컨텐츠로 오인되는 위험을 막기 위해 국가별로 30초 순차등록을 적용합니다. 수초 동시등록을 원하시는 경우 '동시등록' 버튼을 눌러 주세요.",
         simStart: function(n){ return "동시등록을 시작합니다.\n대상: " + n + "개 언어 · 일괄 반영"; },
         simDone: function(n, sec, codeList){
           return "등록 결과\n대상 언어 수: " + n + "개\n방식: 동시등록\n소요 시간: " + sec + "초\n등록 성공 국가코드:\n" + codeList;
         },
-        seqStart: function(n){ return "순차등록을 시작합니다.\n대상: " + n + "개 언어 · 1분 순차등록"; },
+        seqStart: function(n){ return "순차등록을 시작합니다.\n대상: " + n + "개 언어 · 30초 순차등록"; },
         seqProgress: function(i, total, code, count){
           return "순차등록 " + i + "/" + total + " · " + code + "\n누적 반영 언어: " + count;
         },
         seqWait: function(code, i, total){ return "완료: " + code + " (" + i + "/" + total + ")"; },
         seqDone: function(n, min, sec, codeList){
-          return "등록 결과\n대상 언어 수: " + n + "개\n방식: 1분 순차등록\n소요 시간: 약 " + min + "분 (" + sec + "초)\n등록 성공 국가코드:\n" + codeList;
+          return "등록 결과\n대상 언어 수: " + n + "개\n방식: 30초 순차등록\n소요 시간: 약 " + min + "분 (" + sec + "초)\n등록 성공 국가코드:\n" + codeList;
         },
         nextIn: "다음 국가까지 "
       };
@@ -73,18 +73,18 @@ Failover principle:
       simultaneous: "Simultaneous Registration",
       busy: "Registration in Progress",
       paceNote:
-        "To reduce the risk of YouTube's algorithm mistaking bulk uploads for simultaneous attack content, we apply 1-minute sequential registration per country. If you want registration within seconds, press the Simultaneous Registration button.",
+        "To reduce the risk of YouTube's algorithm mistaking bulk uploads for simultaneous attack content, we apply 30-second sequential registration per country. If you want registration within seconds, press the Simultaneous Registration button.",
       simStart: function(n){ return "Starting simultaneous registration.\nTargets: " + n + " languages · bulk apply"; },
       simDone: function(n, sec, codeList){
         return "Registration Results\nNumber of target languages: " + n + "\nMode: simultaneous registration\nRegistration time: " + sec + " seconds\nRegistered country codes:\n" + codeList;
       },
-      seqStart: function(n){ return "Starting sequential registration.\nTargets: " + n + " languages · 1-minute sequential registration"; },
+      seqStart: function(n){ return "Starting sequential registration.\nTargets: " + n + " languages · 30-second sequential registration"; },
       seqProgress: function(i, total, code, count){
         return "Sequential registration " + i + "/" + total + " · " + code + "\nLanguages applied so far: " + count;
       },
       seqWait: function(code, i, total){ return "Done: " + code + " (" + i + "/" + total + ")"; },
       seqDone: function(n, min, sec, codeList){
-        return "Registration Results\nNumber of target languages: " + n + "\nMode: 1-minute sequential registration\nRegistration time: about " + min + " minutes (" + sec + " seconds)\nRegistered country codes:\n" + codeList;
+        return "Registration Results\nNumber of target languages: " + n + "\nMode: 30-second sequential registration\nRegistration time: about " + min + " minutes (" + sec + " seconds)\nRegistered country codes:\n" + codeList;
       },
       nextIn: "Next country in "
     };
@@ -142,11 +142,8 @@ Failover principle:
   }
 
   function getAccessToken(){
+    // Only the in-memory token from a live OAuth callback on this page
     if(window.humateckGoogleAccessToken) return window.humateckGoogleAccessToken;
-    try{
-      var saved = sessionStorage.getItem("humateckGoogleAccessToken");
-      if(saved) return saved;
-    }catch(e){}
     return getValue(["googleAccessToken","accessToken","oauthAccessToken","authToken"]);
   }
 
@@ -368,7 +365,7 @@ Failover principle:
   }
 
   /** Per-locale sequential gap — avoid bulk localization spam signals */
-  var LOCALE_GAP_MS = 60 * 1000;
+  var LOCALE_GAP_MS = 30 * 1000;
 
   function sleep(ms){
     return new Promise(function(resolve){ setTimeout(resolve, ms); });

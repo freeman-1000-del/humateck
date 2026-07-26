@@ -954,7 +954,7 @@ input,textarea{font-size:16px!important;}
   line-height:1.65!important;
 }
 #selectedCountriesBox{
-  margin:0 0 14px;
+  margin:14px 0 0;
   padding:14px 14px 12px;
   border:1px solid rgba(214,176,78,.45);
   border-radius:14px;
@@ -978,7 +978,7 @@ input,textarea{font-size:16px!important;}
   list-style:none;
   display:grid;
   gap:6px;
-  max-height:220px;
+  max-height:320px;
   overflow:auto;
 }
 #selectedCountriesList li{
@@ -1250,16 +1250,16 @@ Without any explanation, output only the translated registration text.</textarea
         <h2>Google OAuth Setup Guide</h2>
         <p class="oauthLaunchNotice">This authentication allows visitors to experience the reality of AI chat translation and YouTube registration. However, actual registration is available only to subscribers. Please do not misunderstand this point.</p>
         <label for="googleClientIdInput">Google OAuth Web Client ID</label>
-        <input id="googleClientIdInput" type="password" autocomplete="off" placeholder="Paste your Google OAuth Web Client ID">
+        <input id="googleClientIdInput" type="password" name="humateck-oauth-client-id" autocomplete="off" readonly placeholder="Paste your Google OAuth Web Client ID" data-lpignore="true" data-1p-ignore="true" data-form-type="other">
         <div class="oauthCenterButton">
   <button id="oauthStartBtn" class="btn" type="button">OAuth Authorization</button>
 </div>
-<div id="oauthSuccessBadge" class="oauthSuccessBadge">Authentication Successful</div>
+<div id="oauthSuccessBadge" class="oauthSuccessBadge" aria-hidden="true">Authentication Successful</div>
 </div>
     </section>
 <section class="card">
       <h2>YouTube Video Distribution</h2>
-      <p class="serviceNote" id="registerPaceNote">To reduce the risk of YouTube's algorithm mistaking bulk uploads for simultaneous attack content, we apply 1-minute sequential registration per country. If you want registration within seconds, press the Simultaneous Registration button.</p>
+      <p class="serviceNote" id="registerPaceNote">To reduce the risk of YouTube's algorithm mistaking bulk uploads for simultaneous attack content, we apply 30-second sequential registration per country. If you want registration within seconds, press the Simultaneous Registration button.</p>
       <div class="actions">
         <button class="btn humateckOnlyButton" type="button" id="sendOrderBtnSequential">Sequential Registration</button>
         <button class="btn humateckOnlyButton" type="button" id="sendOrderBtnSimultaneous">Simultaneous Registration</button>
@@ -1270,13 +1270,13 @@ Without any explanation, output only the translated registration text.</textarea
 <p>All translations are registered to the YouTube channel immediately. But Humateck does not review, block, change, or add anything to the customer-approved translation. The approved content is sent as-is.</p>
 <section class="card" id="deliveryResultCard">
       <h2>Distribution Result</h2>
+      <textarea id="deliveryLog" class="mediumTextarea" readonly placeholder="YouTube distribution results will appear here."></textarea>
       <div id="selectedCountriesBox" aria-live="polite">
-        <h3 id="selectedCountriesHeading">Selected deployment countries</h3>
-        <p id="selectedCountriesLead" class="selectedCountriesLead">Select Number of Deployment Countries above. The promised country list will appear here for comparison with YouTube Studio.</p>
+        <h3 id="selectedCountriesHeading">Registered success countries</h3>
+        <p id="selectedCountriesLead" class="selectedCountriesLead">After distribution finishes, successfully registered country codes appear here.</p>
         <ol id="selectedCountriesList" class="selectedCountriesList"></ol>
         <p id="selectedCountriesSuccess" class="selectedCountriesSuccess" hidden></p>
       </div>
-      <textarea id="deliveryLog" class="mediumTextarea" readonly placeholder="YouTube distribution results will appear here."></textarea>
     </section>
     <section class="card" id="customerComplaintCard">
       <h2>Customer Feedback</h2>
@@ -1667,14 +1667,35 @@ Without any explanation, output only the translated registration text.`;
 
 
 <script>
-/* Humateck_New009 direct Google OAuth token restore only - EN */
+/* Humateck OAuth: success UI only after live Google callback on this page load */
 (function(){
   function $(id){ return document.getElementById(id); }
 
   var YOUTUBE_SCOPE = "https://www.googleapis.com/auth/youtube.force-ssl";
   var tokenClient = null;
+  /* true only after Google returns access_token in this page session */
+  var oauthVerifiedThisPage = false;
+
+  function forceIdleOAuthUi(){
+    var badge = $("oauthSuccessBadge");
+    var btn = $("oauthStartBtn");
+    if(badge){
+      badge.classList.remove("show");
+      badge.setAttribute("aria-hidden", "true");
+      badge.textContent = "Authentication Successful";
+    }
+    if(btn){
+      btn.classList.remove("oauthSuccessButton");
+      btn.textContent = "OAuth Authorization";
+    }
+  }
 
   function setAuthStatus(text, type){
+    // Never show Connected / Authentication Successful unless verified this page
+    if(type === "ok" && !oauthVerifiedThisPage){
+      type = "";
+    }
+
     var targets = [$("authStatus"), $("authStatusSide"), $("oauthReceiveCheck")];
     targets.forEach(function(el){
       if(!el) return;
@@ -1690,9 +1711,11 @@ Without any explanation, output only the translated registration text.`;
     if(badge){
       if(type === "ok"){
         badge.classList.add("show");
+        badge.setAttribute("aria-hidden", "false");
         badge.textContent = "Authentication Successful";
       }else{
         badge.classList.remove("show");
+        badge.setAttribute("aria-hidden", "true");
       }
     }
     if(btn){
@@ -1702,12 +1725,17 @@ Without any explanation, output only the translated registration text.`;
   }
 
   function clearStoredAuth(){
+    oauthVerifiedThisPage = false;
     window.humateckGoogleAccessToken = "";
     window.humateckGoogleOAuthScope = "";
     try{
       sessionStorage.removeItem("humateckGoogleAccessToken");
       sessionStorage.removeItem("humateckGoogleOAuthScope");
+      localStorage.removeItem("humateckGoogleAccessToken");
+      localStorage.removeItem("humateckGoogleOAuthScope");
+      localStorage.removeItem("humateckGoogleClientId");
     }catch(e){}
+    forceIdleOAuthUi();
     setAuthStatus("", "");
   }
 
@@ -1716,19 +1744,15 @@ Without any explanation, output only the translated registration text.`;
     return input ? String(input.value || "").trim() : "";
   }
 
-  function restoreClientId(){
+  /** Clear Client ID field; re-run after browser autofill */
+  function clearClientIdField(){
     var input = $("googleClientIdInput");
-    if(!input) return;
-    if(String(input.value || "").trim()) return;
+    if(input){
+      input.value = "";
+      input.setAttribute("readonly", "readonly");
+    }
     try{
-      var saved = localStorage.getItem("humateckGoogleClientId");
-      if(saved) input.value = saved;
-    }catch(e){}
-  }
-
-  function saveClientId(clientId){
-    try{
-      if(clientId) localStorage.setItem("humateckGoogleClientId", clientId);
+      localStorage.removeItem("humateckGoogleClientId");
     }catch(e){}
   }
 
@@ -1737,36 +1761,17 @@ Without any explanation, output only the translated registration text.`;
     return scope.indexOf("youtube.force-ssl") >= 0 || scope.indexOf("/auth/youtube") >= 0;
   }
 
-  function restoreSavedToken(){
-    restoreClientId();
-    var clientId = getClientId();
-    var saved = "";
-    try{
-      saved = sessionStorage.getItem("humateckGoogleAccessToken") || "";
-    }catch(e){}
-
-    // Client ID 없고 사용자가 인증하지 않은 상태면 성공 UI를 절대 보여주지 않음
-    if(!clientId || !saved){
-      window.humateckGoogleAccessToken = saved || "";
-      setAuthStatus("", "");
-      return;
-    }
-
-    fetch("https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=" + encodeURIComponent(saved))
-      .then(function(res){ return res.json().then(function(data){ return { ok: res.ok, data: data }; }); })
-      .then(function(result){
-        var data = result.data || {};
-        if(!result.ok || data.error || !tokenHasYoutubeScope(data.scope)){
-          clearStoredAuth();
-          return;
-        }
-        window.humateckGoogleAccessToken = saved;
-        window.humateckGoogleOAuthScope = data.scope || YOUTUBE_SCOPE;
-        setAuthStatus("Google OAuth authorization has been completed. You can now proceed with YouTube registration.", "ok");
-      })
-      .catch(function(){
-        clearStoredAuth();
-      });
+  function resetOAuthOnLoad(){
+    clearClientIdField();
+    clearStoredAuth();
+    // Browser password managers often fill after DOMContentLoaded
+    [0, 50, 200, 500, 1200].forEach(function(ms){
+      setTimeout(function(){
+        if(oauthVerifiedThisPage) return;
+        clearClientIdField();
+        forceIdleOAuthUi();
+      }, ms);
+    });
   }
 
   function waitForGoogleIdentity(callback){
@@ -1791,8 +1796,6 @@ Without any explanation, output only the translated registration text.`;
       setAuthStatus("Google OAuth Web Client ID is empty.", "bad");
       return;
     }
-    saveClientId(clientId);
-
     if(!/^https?:$/.test(window.location.protocol)){
       alert("Google OAuth does not work properly from file://. Please run this page from your domain or localhost.");
       setAuthStatus("Google OAuth may be limited from the current origin: " + window.location.origin, "bad");
@@ -1809,11 +1812,12 @@ Without any explanation, output only the translated registration text.`;
             if(response && response.access_token && tokenHasYoutubeScope(response.scope || YOUTUBE_SCOPE)){
               window.humateckGoogleAccessToken = response.access_token;
               window.humateckGoogleOAuthScope = response.scope || YOUTUBE_SCOPE;
+              // Memory only for this page — do not revive Connected after refresh
               try{
-                sessionStorage.setItem("humateckGoogleAccessToken", response.access_token);
-                sessionStorage.setItem("humateckGoogleOAuthScope", response.scope || YOUTUBE_SCOPE);
+                sessionStorage.removeItem("humateckGoogleAccessToken");
+                sessionStorage.removeItem("humateckGoogleOAuthScope");
               }catch(e){}
-              saveClientId(clientId);
+              oauthVerifiedThisPage = true;
               setAuthStatus("Google OAuth authorization has been completed. You can now proceed with YouTube registration.", "ok");
             }else if(response && response.access_token){
               clearStoredAuth();
@@ -1844,7 +1848,7 @@ Without any explanation, output only the translated registration text.`;
   }
 
   function bootOAuthUi(){
-    restoreSavedToken();
+    resetOAuthOnLoad();
     var btn = $("oauthStartBtn");
     if(btn && !btn.getAttribute("data-oauth-bound")){
       btn.setAttribute("data-oauth-bound", "1");
@@ -1856,6 +1860,9 @@ Without any explanation, output only the translated registration text.`;
     var input = $("googleClientIdInput");
     if(input && !input.getAttribute("data-oauth-bound")){
       input.setAttribute("data-oauth-bound", "1");
+      input.addEventListener("focus", function(){
+        input.removeAttribute("readonly");
+      });
       input.addEventListener("input", function(){
         if(!String(input.value || "").trim()){
           clearStoredAuth();
@@ -1865,13 +1872,19 @@ Without any explanation, output only the translated registration text.`;
   }
 
   document.addEventListener("DOMContentLoaded", bootOAuthUi);
+  window.addEventListener("pageshow", function(ev){
+    // Back/forward cache can restore a previous "Connected" paint
+    if(ev.persisted || !oauthVerifiedThisPage){
+      resetOAuthOnLoad();
+    }
+  });
   if(document.readyState !== "loading") bootOAuthUi();
 })();
 </script>
 
 
 
-<script src="youtube-register.js?v=20260727a"></script>
+<script src="youtube-register.js?v=20260727d"></script>
 
 
 <div id="nativeCodeModal" class="nativeCodeModal" aria-hidden="true">
@@ -2101,6 +2114,6 @@ Without any explanation, output only the translated registration text.`;
 })();
 </script>
 
-<script src="plan-scope-preview.js?v=20260727a"></script>
+<script src="plan-scope-preview.js?v=20260727c"></script>
 
 </body></html>

@@ -83,6 +83,16 @@
     global16: GLOBAL70.slice(0, 16),
     global50: GLOBAL70.slice(0, 50),
     global70: GLOBAL70.slice(),
+    /* Subscription / payment aliases → same promised country sets */
+    custom50: GLOBAL70.slice(0, 50),
+    monthly30: GLOBAL70.slice(0, 30),
+    monthly50: GLOBAL70.slice(0, 50),
+    monthly70: GLOBAL70.slice(),
+    yearly70: GLOBAL70.slice(),
+    monthly_standard: GLOBAL70.slice(),
+    yearly_standard: GLOBAL70.slice(),
+    monthly_premium: GLOBAL70.slice(),
+    yearly_premium: GLOBAL70.slice(),
     asia30: [
       "1. hi | Hindi (India)",
       "2. id | Indonesian",
@@ -381,7 +391,19 @@
     return TITLES[key] || key || "";
   }
 
-  /** Inline panel next to Distribution Result — shows promised countries + optional success codes */
+  function lineForCode(code, plan) {
+    var rows = getLines(plan);
+    var i;
+    for (i = 0; i < rows.length; i++) {
+      if (parseLineCode(rows[i]) === code) return rows[i];
+    }
+    for (i = 0; i < GLOBAL70.length; i++) {
+      if (parseLineCode(GLOBAL70[i]) === code) return GLOBAL70[i];
+    }
+    return code + " | " + code;
+  }
+
+  /** Distribution Result panel — lists registered success countries (code | name) */
   function refreshSelectedCountriesPanel(successCodes) {
     var listEl = document.getElementById("selectedCountriesList");
     var leadEl = document.getElementById("selectedCountriesLead");
@@ -390,25 +412,33 @@
     if (!listEl) return;
 
     var plan = resolvePlanId();
-    var rows = getLines(plan);
     var title = getTitle(plan);
-    var okSet = {};
-    (successCodes || []).forEach(function (c) {
-      okSet[String(c || "").trim()] = true;
-    });
+    var codes = (successCodes || [])
+      .map(function (c) {
+        return String(c || "").trim();
+      })
+      .filter(Boolean);
 
     if (headingEl) {
-      headingEl.textContent = title
-        ? "Selected deployment countries · " + title
-        : "Selected deployment countries";
+      headingEl.textContent = "Registered success countries";
     }
 
-    if (!rows.length) {
+    if (!codes.length) {
+      var promised = getLines(plan);
       if (leadEl) {
-        leadEl.textContent =
-          "Select Number of Deployment Countries above. The promised country list will appear here for comparison with YouTube Studio.";
+        leadEl.textContent = promised.length
+          ? "Waiting for distribution. Promised scope (" +
+            promised.length +
+            ")" +
+            (title ? " · " + title : "") +
+            " will be compared here after registration."
+          : "After distribution finishes, successfully registered country codes appear here.";
       }
-      listEl.innerHTML = "";
+      listEl.innerHTML = promised
+        .map(function (line) {
+          return "<li>" + String(line).replace(/</g, "&lt;") + "</li>";
+        })
+        .join("");
       if (successEl) {
         successEl.hidden = true;
         successEl.textContent = "";
@@ -416,46 +446,45 @@
       return;
     }
 
+    var planCodes = getCodes(plan);
+    var ordered = planCodes.length
+      ? planCodes.filter(function (c) {
+          return codes.indexOf(c) >= 0;
+        }).concat(
+          codes.filter(function (c) {
+            return planCodes.indexOf(c) < 0;
+          })
+        )
+      : codes.slice();
+
     if (leadEl) {
       leadEl.textContent =
-        "Promised registration scope (" +
-        rows.length +
-        "): country code | name. After distribution, registered codes are marked.";
+        "Registration succeeded for " +
+        ordered.length +
+        " language(s)" +
+        (title ? " · " + title : "") +
+        ". Compare with YouTube Studio.";
     }
 
-    listEl.innerHTML = rows
-      .map(function (line) {
-        var code = parseLineCode(line);
-        var ok = code && okSet[code];
+    listEl.innerHTML = ordered
+      .map(function (code, idx) {
+        var line = lineForCode(code, plan);
         var safe = String(line).replace(/</g, "&lt;");
         return (
-          '<li data-code="' +
+          '<li class="isRegistered" data-code="' +
           String(code).replace(/"/g, "") +
-          '"' +
-          (ok ? ' class="isRegistered"' : "") +
-          ">" +
+          '">' +
+          (idx + 1) +
+          ". " +
           safe +
-          (ok ? ' <span class="regMark">registered</span>' : "") +
-          "</li>"
+          ' <span class="regMark">registered</span></li>'
         );
       })
       .join("");
 
     if (successEl) {
-      var ordered = getCodes(plan).filter(function (c) {
-        return okSet[c];
-      });
-      var extras = (successCodes || []).filter(function (c) {
-        return ordered.indexOf(c) < 0;
-      });
-      var all = ordered.concat(extras);
-      if (all.length) {
-        successEl.hidden = false;
-        successEl.textContent = "Registered country codes: " + all.join(", ");
-      } else {
-        successEl.hidden = true;
-        successEl.textContent = "";
-      }
+      successEl.hidden = false;
+      successEl.textContent = "Registered country codes: " + ordered.join(", ");
     }
   }
 
