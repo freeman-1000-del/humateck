@@ -45,10 +45,10 @@ textarea{min-height:160px;line-height:1.72;resize:vertical}
 <div class="wrap">
   <section class="card">
     <h1>제미나이 AI 다국어 챗번역</h1>
-    <label for="orderPlanSelect">배포 국가 수 선택</label>
+    <label for="orderPlanSelect">번역국가 선택 (최대 70개국)</label>
     <div class="planPickerControls" id="planPickerSection">
-      <select id="orderPlanSelect" aria-label="배포 국가 수 선택">
-        <option value="">배포 국가 수를 선택하세요…</option>
+      <select id="orderPlanSelect" aria-label="번역국가 선택 (최대 70개국)">
+        <option value="">번역 국가 수를 선택하세요…</option>
         <option value="asia30">아시아 플랜 (30개국)</option>
         <option value="europe30">유럽 플랜 (30개국)</option>
         <option value="africa30">아프리카 플랜 (30개국)</option>
@@ -336,7 +336,7 @@ ${countryBlock}
     if(generate){
       e.preventDefault();
       if(!getOrderPlanId()){
-        alert("먼저 배포 국가 수를 선택하세요.");
+        alert("먼저 번역 국가 수를 선택하세요.");
         return;
       }
       if(!String(getValue("sourceTitle") || "").trim()){

@@ -45,10 +45,10 @@ textarea{min-height:160px;line-height:1.72;resize:vertical}
 <div class="wrap">
   <section class="card">
     <h1>제미나이 AI 다국어 챗번역</h1>
-    <label for="orderPlanSelect">Select Number of Deployment Countries</label>
+    <label for="orderPlanSelect">Select translation countries (max 70)</label>
     <div class="planPickerControls" id="planPickerSection">
-      <select id="orderPlanSelect" aria-label="Select Number of Deployment Countries">
-        <option value="">Select Number of Deployment Countries…</option>
+      <select id="orderPlanSelect" aria-label="Select translation countries (max 70)">
+        <option value="">Select translation countries…</option>
         <option value="asia30">Asia Plan (30 countries)</option>
         <option value="europe30">Europe Plan (30 countries)</option>
         <option value="africa30">Africa Plan (30 countries)</option>
@@ -338,7 +338,7 @@ Without any explanation, output only the translated registration text.`;
     if(generate){
       e.preventDefault();
       if(!getOrderPlanId()){
-        alert("Please select the number of deployment countries first.");
+        alert("Please select translation countries first.");
         return;
       }
       if(!String(getValue("sourceTitle") || "").trim()){
