@@ -100,6 +100,11 @@ textarea{min-height:160px;line-height:1.72;resize:vertical}
 .commandFullTop label{margin:0}
 .commandFullTop .btn{min-width:90px;min-height:40px;font-size:14px;padding:8px 12px}
 .commandFullItem textarea{min-height:72px;margin-bottom:0}
+.commandWarningOutside{
+  margin:14px 0 4px;padding:14px 16px;border:1px solid rgba(214,176,78,.55);border-radius:12px;
+  background:rgba(201,170,99,.08);color:#e7dfcf;font-size:14px;line-height:1.7;
+}
+.commandWarningOutside .softStrong{color:#ffd95a;font-weight:900}
 .planPickerControls select{margin-bottom:0}
 </style>
 </head>
@@ -186,6 +191,7 @@ Without any explanation, output only the translated registration text.</textarea
       <div class="commandFullItem"><div class="commandFullTop"><label>Command 3</label><button class="btn" type="button" data-copy-target="commandText4">Copy</button></div><textarea id="commandText4" readonly>Carefully check once more for mixed-in other languages, unnatural context, and any other issues.</textarea></div>
       <div class="commandFullItem"><div class="commandFullTop"><label>Command 4</label><button class="btn" type="button" data-copy-target="commandText5">Copy</button></div><textarea id="commandText5" readonly>Please remove all of Gemini's explanations and commentaries, and output it again.</textarea></div>
       <div class="commandFullItem"><div class="commandFullTop"><label>Command 5</label><button class="btn" type="button" data-copy-target="commandText7">Copy</button></div><textarea id="commandText7" readonly>Please move to the bottom.</textarea></div>
+      <div class="commandWarningOutside"><span class="softStrong">⚠️ Important</span> After sending "Please move to the bottom.", click the ⧉ [Copy response] button at the end of the translation above, wait until it's fully copied to your clipboard, then paste it into <span class="softStrong">Final Translation Result</span>.<br><br><span class="softStrong">⚠️ Important</span> If anything other than the translation itself — Gemini's own commentary, explanations, or extra text — gets mixed in, errors can occur. Please paste only the translation.</div>
     </div>
   </section>
 
