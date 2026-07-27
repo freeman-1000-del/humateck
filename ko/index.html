@@ -127,8 +127,7 @@ textarea{min-height:160px;line-height:1.72;resize:vertical}
 
   <section id="gemini" class="card">
     <h2>제미나이 명령문 복사</h2>
-    <textarea id="geminiPromptText" readonly>Hello Gemini!
-아무런 설명없이 오직 번역문만 출력해 줘.
+    <textarea id="geminiPromptText" readonly>아무런 설명없이 오직 번역문만 출력해 줘.
 
 아래 제목과 설명문을 {activeCount}개 국가 세트에 맞춰 번역해 줘.
 처음부터 끝까지 중간에 끊지 말고 계속 번역해 줘.
@@ -346,8 +345,7 @@ initNativeLanguageCodePicker("ko");
     var countryBlock = ["Country Code / 국가명 매핑표", ""].concat(planList).join("\n");
 
     var prompt =
-`Hello Gemini!
-아무런 설명없이 오직 번역문만 출력해 줘.
+`아무런 설명없이 오직 번역문만 출력해 줘.
 
 아래 제목과 설명문을 ${activeCount}개 국가 세트에 맞춰 번역해 줘.
 처음부터 끝까지 중간에 끊지 말고 계속 번역해 줘.
