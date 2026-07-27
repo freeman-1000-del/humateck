@@ -16,9 +16,18 @@ button,input,textarea,select{font-family:inherit}
   background:linear-gradient(180deg,rgba(20,28,37,.96),rgba(13,19,26,.98));
   padding:28px 30px;margin-bottom:20px;box-shadow:0 18px 46px rgba(0,0,0,.28);
 }
-.card h1{color:#7ec8ff;margin:0 0 22px;font-size:40px;line-height:1.25;text-align:center;font-weight:900}
+.card h1{color:#7ec8ff;margin:0 0 22px;font-size:44px;line-height:1.25;text-align:center;font-weight:900}
 .card h2{color:#f4c95c;margin:0 0 14px;font-size:20px}
 label{display:block;margin:10px 0 6px;color:#ffd95a;font-weight:800}
+.planRow{display:grid;grid-template-columns:minmax(0,1fr) minmax(180px,240px);gap:14px 18px;align-items:start;margin-bottom:12px}
+.planRow label{grid-column:1 / -1;margin-bottom:0}
+.planPickerControls{min-width:0}
+.planPickerControls select{margin-bottom:0}
+.planTip{margin:0;padding-top:2px;color:#ffd95a;font-size:13px;line-height:1.55;font-weight:700}
+@media(max-width:720px){
+  .card h1{font-size:32px}
+  .planRow{grid-template-columns:1fr}
+}
 input,textarea,select{
   width:100%;padding:14px;background:#050b14;color:#f7f1e6;
   border:1px solid #4b5d6d;border-radius:12px;font-size:15px;margin:0 0 12px;
@@ -45,19 +54,22 @@ textarea{min-height:160px;line-height:1.72;resize:vertical}
 <div class="wrap">
   <section class="card">
     <h1>제미나이 AI 다국어 챗번역</h1>
-    <label for="orderPlanSelect">Select translation countries (max 70)</label>
-    <div class="planPickerControls" id="planPickerSection">
-      <select id="orderPlanSelect" aria-label="Select translation countries (max 70)">
-        <option value="">Select translation countries…</option>
-        <option value="asia30">Asia Plan (30 countries)</option>
-        <option value="europe30">Europe Plan (30 countries)</option>
-        <option value="africa30">Africa Plan (30 countries)</option>
-        <option value="america30">Americas Plan (30 countries)</option>
-        <option value="oceania30">Oceania Plan (30 countries)</option>
-        <option value="global16">Global 16 Countries</option>
-        <option value="global50">Global 50 Countries</option>
-        <option value="global70">Global 70 Countries</option>
-      </select>
+    <div class="planRow">
+      <label for="orderPlanSelect">Select translation countries (max 70)</label>
+      <div class="planPickerControls" id="planPickerSection">
+        <select id="orderPlanSelect" aria-label="Select translation countries (max 70)">
+          <option value="">Select translation countries…</option>
+          <option value="asia30">Asia Plan (30 countries)</option>
+          <option value="europe30">Europe Plan (30 countries)</option>
+          <option value="africa30">Africa Plan (30 countries)</option>
+          <option value="america30">Americas Plan (30 countries)</option>
+          <option value="oceania30">Oceania Plan (30 countries)</option>
+          <option value="global16">Global 16 Countries</option>
+          <option value="global50">Global 50 Countries</option>
+          <option value="global70">Global 70 Countries</option>
+        </select>
+      </div>
+      <p class="planTip">Keep translation text within about 5,000 characters when possible. Longer text can slow bulk processing.</p>
     </div>
     <input type="hidden" id="humateckActivePlanValue" value="">
     <input type="hidden" id="humateckActiveCountryLimit" value="">
