@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gemini Multilingual Translation</title>
-<meta name="description" content="Select countries, generate a Gemini prompt, copy into Gemini, paste the result back.">
+<title>제미나이 다국어 번역</title>
+<meta name="description" content="국가를 선택하고 제미나이 프롬프트를 생성·복사한 뒤, 결과를 붙여넣으세요.">
 <style>
 *{box-sizing:border-box}
-html,body{margin:0;padding:0;background:#050b14;color:#f4f1e8;font-family:Arial,"Noto Sans KR",sans-serif}
+html,body{margin:0;padding:0;background:#050b14;color:#f4f1e8;font-family:"Noto Sans KR",Arial,sans-serif}
 a{color:inherit;text-decoration:none}
 button,input,textarea,select{font-family:inherit}
 .wrap{width:900px;max-width:calc(100vw - 32px);margin:0 auto;padding:24px 0 80px}
@@ -45,51 +45,53 @@ textarea{min-height:160px;line-height:1.72;resize:vertical}
 .commandFullTop .btn{min-width:90px;min-height:40px;font-size:14px;padding:8px 12px}
 .commandFullItem textarea{min-height:72px;margin-bottom:0}
 .planPickerControls select{margin-bottom:0}
+.hint{margin:0 0 12px;color:#aeb6c4;font-size:13px;line-height:1.5}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="top">
-    <a class="brand" href="/">Gemini Translation</a>
-    <nav class="langSwitch" aria-label="Language">
-      <a class="on" href="/" hreflang="en">EN</a>
+    <a class="brand" href="/ko/">제미나이 번역</a>
+    <nav class="langSwitch" aria-label="언어">
+      <a href="/" hreflang="en">EN</a>
       <span>|</span>
-      <a href="/ko/" hreflang="ko">한국어</a>
+      <a class="on" href="/ko/" hreflang="ko">한국어</a>
     </nav>
   </div>
 
   <section class="card">
-    <h1>Gemini Multilingual Translation</h1>
-    <label for="orderPlanSelect">Select Number of Deployment Countries</label>
+    <h1>제미나이 다국어 번역</h1>
+    <label for="orderPlanSelect">배포 국가 수 선택</label>
     <div class="planPickerControls" id="planPickerSection">
-      <select id="orderPlanSelect" aria-label="Select Number of Deployment Countries">
-        <option value="">Select Number of Deployment Countries…</option>
-        <option value="asia30">Asia Plan (30 countries)</option>
-        <option value="europe30">Europe Plan (30 countries)</option>
-        <option value="africa30">Africa Plan (30 countries)</option>
-        <option value="america30">Americas Plan (30 countries)</option>
-        <option value="oceania30">Oceania Plan (30 countries)</option>
-        <option value="global16">Global 16 Countries</option>
-        <option value="global50">Global 50 Countries</option>
-        <option value="global70">Global 70 Countries</option>
+      <select id="orderPlanSelect" aria-label="배포 국가 수 선택">
+        <option value="">배포 국가 수를 선택하세요…</option>
+        <option value="asia30">아시아 플랜 (30개국)</option>
+        <option value="europe30">유럽 플랜 (30개국)</option>
+        <option value="africa30">아프리카 플랜 (30개국)</option>
+        <option value="america30">아메리카 플랜 (30개국)</option>
+        <option value="oceania30">오세아니아 플랜 (30개국)</option>
+        <option value="global16">글로벌 16개국</option>
+        <option value="global50">글로벌 50개국</option>
+        <option value="global70">글로벌 70개국</option>
       </select>
     </div>
     <input type="hidden" id="humateckActivePlanValue" value="">
     <input type="hidden" id="humateckActiveCountryLimit" value="">
 
-    <label for="sourceTitle">Native Language Title</label>
-    <input id="sourceTitle" type="text" placeholder="Enter the native language title">
+    <label for="sourceTitle">원문 제목</label>
+    <input id="sourceTitle" type="text" placeholder="원문 제목을 입력하세요">
 
-    <label for="sourceDescription">Native Language Description</label>
-    <textarea id="sourceDescription" placeholder="Enter the native language description"></textarea>
+    <label for="sourceDescription">원문 설명</label>
+    <textarea id="sourceDescription" placeholder="원문 설명을 입력하세요"></textarea>
 
     <div class="actions">
-      <button class="btn" type="button" id="generateGeminiPrompt">Generate Gemini Request Prompt</button>
+      <button class="btn" type="button" id="generateGeminiPrompt">제미나이 요청 프롬프트 생성</button>
     </div>
   </section>
 
   <section id="gemini" class="card">
-    <h2>Gemini Request Prompt</h2>
+    <h2>제미나이 요청 프롬프트</h2>
+    <p class="hint">프롬프트·커맨드 본문은 검증된 영문 그대로입니다. 복사해서 제미나이에 붙여넣으세요.</p>
     <textarea id="geminiPromptText" readonly>Hello Gemini!
 Without any explanation, output only the translated registration text.
 
@@ -117,30 +119,30 @@ Without any explanation, output only the translated registration text.
 
 Without any explanation, output only the translated registration text.</textarea>
     <div class="actions">
-      <button class="btn" type="button" data-copy-target="geminiPromptText">Copy Gemini Prompt</button>
-      <a class="btn secondary" href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer">Open Gemini</a>
+      <button class="btn" type="button" data-copy-target="geminiPromptText">프롬프트 복사</button>
+      <a class="btn secondary" href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer">제미나이 열기</a>
     </div>
     <p id="geminiCopyStatus" class="copyStatus"></p>
   </section>
 
   <section class="card" id="geminiCommandCard">
-    <h2>Gemini Commands</h2>
+    <h2>제미나이 커맨드</h2>
     <div class="commandFullRows">
-      <div class="commandFullItem"><div class="commandFullTop"><label>Command 1</label><button class="btn" type="button" data-copy-target="commandText1">Copy</button></div><textarea id="commandText1" readonly>Please automatically and carefully check for mixed-in other languages, unnatural context, and any other issues.</textarea></div>
-      <div class="commandFullItem"><div class="commandFullTop"><label>Command 2</label><button class="btn" type="button" data-copy-target="commandText2">Copy</button></div><textarea id="commandText2" readonly>Please delete the Number: , Country Name:.</textarea></div>
-      <div class="commandFullItem"><div class="commandFullTop"><label>Command 3</label><button class="btn" type="button" data-copy-target="commandText4">Copy</button></div><textarea id="commandText4" readonly>Carefully check once more for mixed-in other languages, unnatural context, and any other issues.</textarea></div>
-      <div class="commandFullItem"><div class="commandFullTop"><label>Command 4</label><button class="btn" type="button" data-copy-target="commandText5">Copy</button></div><textarea id="commandText5" readonly>Please remove all of Gemini's explanations and commentaries, and output it again.</textarea></div>
-      <div class="commandFullItem"><div class="commandFullTop"><label>Command 5</label><button class="btn" type="button" data-copy-target="commandText7">Copy</button></div><textarea id="commandText7" readonly>Please move to the bottom.</textarea></div>
+      <div class="commandFullItem"><div class="commandFullTop"><label>커맨드 1</label><button class="btn" type="button" data-copy-target="commandText1">복사</button></div><textarea id="commandText1" readonly>Please automatically and carefully check for mixed-in other languages, unnatural context, and any other issues.</textarea></div>
+      <div class="commandFullItem"><div class="commandFullTop"><label>커맨드 2</label><button class="btn" type="button" data-copy-target="commandText2">복사</button></div><textarea id="commandText2" readonly>Please delete the Number: , Country Name:.</textarea></div>
+      <div class="commandFullItem"><div class="commandFullTop"><label>커맨드 3</label><button class="btn" type="button" data-copy-target="commandText4">복사</button></div><textarea id="commandText4" readonly>Carefully check once more for mixed-in other languages, unnatural context, and any other issues.</textarea></div>
+      <div class="commandFullItem"><div class="commandFullTop"><label>커맨드 4</label><button class="btn" type="button" data-copy-target="commandText5">복사</button></div><textarea id="commandText5" readonly>Please remove all of Gemini's explanations and commentaries, and output it again.</textarea></div>
+      <div class="commandFullItem"><div class="commandFullTop"><label>커맨드 5</label><button class="btn" type="button" data-copy-target="commandText7">복사</button></div><textarea id="commandText7" readonly>Please move to the bottom.</textarea></div>
     </div>
   </section>
 
   <section class="card">
-    <h2>Paste Final Version</h2>
-    <textarea id="finalOutput" placeholder="Paste the final Gemini translation result."></textarea>
+    <h2>최종본 붙여넣기</h2>
+    <textarea id="finalOutput" placeholder="제미나이 최종 번역 결과를 붙여넣으세요."></textarea>
   </section>
 </div>
 
-<script src="plan-scope-preview.js?v=20260727g"></script>
+<script src="../plan-scope-preview.js?v=20260727g"></script>
 <script>
 /* Prompt text/structure MUST stay identical to the proven Gemini prompt. Do not rewrite. */
 (function(){
@@ -328,7 +330,7 @@ Without any explanation, output only the translated registration text.`;
     var gemini = $("gemini");
     if(gemini) gemini.scrollIntoView({behavior:"smooth", block:"start"});
     var status = $("geminiCopyStatus");
-    if(status) status.textContent = "Copied ready — press Copy Gemini Prompt.";
+    if(status) status.textContent = "복사 준비됨 — 프롬프트 복사를 누르세요.";
   }
 
   function copyText(targetId){
@@ -345,7 +347,7 @@ Without any explanation, output only the translated registration text.`;
     }
     var status = $("geminiCopyStatus");
     if(status && targetId === "geminiPromptText"){
-      status.textContent = done ? "Copied." : "Select the field and copy manually.";
+      status.textContent = done ? "복사됨." : "필드를 선택한 뒤 직접 복사하세요.";
     }
   }
 
@@ -354,11 +356,11 @@ Without any explanation, output only the translated registration text.`;
     if(generate){
       e.preventDefault();
       if(!getOrderPlanId()){
-        alert("Please select the number of deployment countries first.");
+        alert("먼저 배포 국가 수를 선택하세요.");
         return;
       }
       if(!String(getValue("sourceTitle") || "").trim()){
-        alert("Please enter the native language title.");
+        alert("원문 제목을 입력하세요.");
         return;
       }
       buildGeminiPrompt();
