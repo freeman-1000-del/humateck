@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Korea Abroad Scouter — Foreign YouTube about Korea</title>
-<meta name="description" content="Find YouTube videos about Korea from foreign markets (US, JP, EU, and more). Long-form and Shorts search by region.">
+<meta name="description" content="Daily catalog of ~500 unique YouTube videos about Korea from foreign markets. Deduped. Live search available.">
 <link rel="canonical" href="https://contentscouter.com/korea-abroad.html">
 <script>
   window.HUMATECK_CONFIG = {
@@ -44,6 +44,12 @@
     border-radius:999px;padding:7px 12px;font-size:13px;font-weight:700;cursor:pointer;
   }
   .chip:hover,.chip.on{border-color:var(--accent);color:var(--accent)}
+  .tabs{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+  .tab{
+    border:1px solid var(--line);background:#121722;color:var(--txt);
+    border-radius:12px;padding:10px 14px;font-weight:800;cursor:pointer;font-size:14px;
+  }
+  .tab.on{border-color:var(--accent);color:var(--accent)}
   .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
   .btn{
     border:1px solid var(--accent);background:linear-gradient(180deg,#5c4315,#1a140a);
@@ -53,9 +59,7 @@
   .note{margin-top:10px;font-size:13px;color:var(--sub)}
   .note b{color:var(--accent)}
   .err{color:var(--bad)}
-  .grid{
-    display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;
-  }
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
   .card{
     display:block;text-decoration:none;color:inherit;
     border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#121722;
@@ -72,15 +76,30 @@
   @keyframes sp{to{transform:rotate(360deg)}}
   .topnav{margin-bottom:10px}
   .topnav a{color:var(--accent);font-weight:800;text-decoration:none;font-size:14px}
+  #livePanel{display:none}
+  #livePanel.on{display:block}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="topnav"><a href="/scouter.html">← Content Scouter</a></div>
   <h1>Korea Abroad Scouter</h1>
-  <p class="lead">YouTube only — find videos about Korea that surface in foreign markets (not a full web/blog crawl). Each search uses about 101 API units.</p>
+  <p class="lead">YouTube only. Daily catalog targets <b style="color:var(--accent)">~500 unique</b> Korea-related videos from foreign markets (duplicates removed). Live search is optional.</p>
 
-  <div class="panel">
+  <div class="tabs">
+    <button type="button" class="tab on" data-view="catalog">Daily catalog</button>
+    <button type="button" class="tab" data-view="live">Live search</button>
+  </div>
+
+  <div class="panel" id="catalogMeta">
+    <p class="note" id="catalogNote">Loading latest daily catalog…</p>
+    <div class="actions">
+      <button class="btn secondary" type="button" id="btnReloadCatalog">Reload catalog</button>
+      <button class="btn secondary" type="button" id="btnCsv">Download CSV</button>
+    </div>
+  </div>
+
+  <div class="panel" id="livePanel">
     <div class="row">
       <div>
         <label for="pin">Access PIN (4 digits)</label>
@@ -96,13 +115,9 @@
           <option value="JP">Japan</option>
           <option value="DE">Germany</option>
           <option value="FR">France</option>
-          <option value="ES">Spain</option>
-          <option value="IT">Italy</option>
           <option value="BR">Brazil</option>
           <option value="IN">India</option>
           <option value="ID">Indonesia</option>
-          <option value="VN">Vietnam</option>
-          <option value="MX">Mexico</option>
         </select>
       </div>
       <div>
@@ -116,157 +131,224 @@
       </div>
     </div>
     <div style="margin-top:12px">
-      <label for="q">Keyword (Korea-related)</label>
-      <input id="q" type="text" value="Korea" placeholder="e.g. Korean food, Seoul travel, K-pop">
+      <label for="q">Keyword</label>
+      <input id="q" type="text" value="Korea" placeholder="e.g. Korean food">
     </div>
     <div class="chips" id="presets"></div>
     <div class="actions">
       <button class="btn" type="button" id="btnLong">Search Long-form</button>
       <button class="btn secondary" type="button" id="btnShorts">Search Shorts</button>
-      <button class="btn secondary" type="button" id="btnCsv">Download CSV</button>
     </div>
-    <p class="note" id="apiNote">Ready. Pick a foreign region + keyword, then search.</p>
+    <p class="note" id="apiNote">Live search uses ~101 units per call (not the daily 500 job).</p>
   </div>
 
-  <div id="content"><div class="state">No results yet.</div></div>
+  <div id="content"><div class="state"><div class="spin"></div><div>Loading…</div></div></div>
 </div>
 
-<script>
-(function(){
-  var CFG = window.HUMATECK_CONFIG || {};
-  var SEARCH_URL = CFG.KOREA_ABROAD_SEARCH_URL || (CFG.SUPABASE_URL + '/functions/v1/korea-abroad-search');
-  var ANON = CFG.SUPABASE_ANON_KEY || '';
-  var lastRows = [];
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-  var PRESETS = [
-    'Korea','Korean food','Seoul travel','K-pop','Korean culture',
-    'Visit Korea','Korean street food','Life in Korea','Korean drama','Hangul'
-  ];
+const CFG = window.HUMATECK_CONFIG || {};
+const SUPABASE_URL = CFG.SUPABASE_URL;
+const SUPABASE_ANON_KEY = CFG.SUPABASE_ANON_KEY;
+const SEARCH_URL = CFG.KOREA_ABROAD_SEARCH_URL || (SUPABASE_URL + '/functions/v1/korea-abroad-search');
+const KIND = 'korea_abroad';
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  var presetsEl = document.getElementById('presets');
-  PRESETS.forEach(function(p){
-    var b = document.createElement('button');
-    b.type = 'button';
-    b.className = 'chip';
-    b.textContent = p;
-    b.addEventListener('click', function(){
-      document.getElementById('q').value = p;
-      presetsEl.querySelectorAll('.chip').forEach(function(c){ c.classList.remove('on'); });
-      b.classList.add('on');
-    });
-    presetsEl.appendChild(b);
+let lastRows = [];
+let view = 'catalog';
+
+const PRESETS = [
+  'Korea','Korean food','Seoul travel','K-pop','Korean culture',
+  'Visit Korea','Korean street food','Life in Korea','Korean drama','Hangul'
+];
+
+const presetsEl = document.getElementById('presets');
+PRESETS.forEach((p) => {
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.className = 'chip';
+  b.textContent = p;
+  b.addEventListener('click', () => {
+    document.getElementById('q').value = p;
+    presetsEl.querySelectorAll('.chip').forEach((c) => c.classList.remove('on'));
+    b.classList.add('on');
   });
+  presetsEl.appendChild(b);
+});
 
-  function fmt(n){
-    n = Number(n) || 0;
-    if(n >= 1e9) return (n/1e9).toFixed(1) + 'B';
-    if(n >= 1e6) return (n/1e6).toFixed(1) + 'M';
-    if(n >= 1e3) return (n/1e3).toFixed(1) + 'K';
-    return String(n);
+function fmt(n){
+  n = Number(n) || 0;
+  if(n >= 1e9) return (n/1e9).toFixed(1) + 'B';
+  if(n >= 1e6) return (n/1e6).toFixed(1) + 'M';
+  if(n >= 1e3) return (n/1e3).toFixed(1) + 'K';
+  return String(n);
+}
+function esc(s){
+  return String(s || '').replace(/[&<>"']/g, (ch) => (
+    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[ch]
+  ));
+}
+function setCatalogNote(html, isErr){
+  const el = document.getElementById('catalogNote');
+  el.className = 'note' + (isErr ? ' err' : '');
+  el.innerHTML = html;
+}
+function setApiNote(html, isErr){
+  const el = document.getElementById('apiNote');
+  el.className = 'note' + (isErr ? ' err' : '');
+  el.innerHTML = html;
+}
+
+function render(rows){
+  lastRows = rows || [];
+  const box = document.getElementById('content');
+  if(!lastRows.length){
+    box.innerHTML = '<div class="state">No videos yet.</div>';
+    return;
   }
-  function esc(s){
-    return String(s || '').replace(/[&<>"']/g, function(ch){
-      return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[ch];
+  box.innerHTML = '<div class="grid">' + lastRows.map((v) => (
+    '<a class="card" href="' + esc(v.youtube_url) + '" target="_blank" rel="noopener">' +
+    '<img src="' + esc(v.thumbnail_url) + '" alt="">' +
+    '<div class="body"><div class="t">' + esc(v.title) + '</div>' +
+    '<div class="m">' + esc(v.channel) + ' · ' + fmt(v.view_count) + ' views · ' + esc(v.country_code || '') + '</div></div></a>'
+  )).join('') + '</div>';
+}
+
+async function loadCatalog(){
+  const content = document.getElementById('content');
+  content.innerHTML = '<div class="state"><div class="spin"></div><div>Loading daily catalog…</div></div>';
+  setCatalogNote('Loading latest <b>korea_abroad</b> snapshot…');
+  try{
+    const { data: snaps, error: sErr } = await sb
+      .from('scout_snapshots')
+      .select('id,collected_at,note,kind')
+      .eq('kind', KIND)
+      .order('collected_at', { ascending: false })
+      .limit(1);
+    if(sErr) throw sErr;
+    if(!snaps || !snaps.length){
+      content.innerHTML = '<div class="state">No daily catalog yet. Run korea-abroad-collect (cron) first.</div>';
+      setCatalogNote('No snapshot. Deploy/run <b>korea-abroad-collect</b> to fill ~500/day.', true);
+      return;
+    }
+    const snap = snaps[0];
+    const { data: vids, error: vErr } = await sb
+      .from('scout_videos')
+      .select('video_id,title,channel,thumbnail_url,view_count,country_code,youtube_url,rank')
+      .eq('snapshot_id', snap.id)
+      .order('view_count', { ascending: false })
+      .limit(500);
+    if(vErr) throw vErr;
+
+    // Extra client-side dedupe by video_id
+    const seen = new Set();
+    const unique = [];
+    for(const v of (vids || [])){
+      if(!v.video_id || seen.has(v.video_id)) continue;
+      seen.add(v.video_id);
+      unique.push(v);
+    }
+
+    const when = snap.collected_at ? new Date(snap.collected_at).toLocaleString() : '';
+    setCatalogNote(
+      '<b>' + unique.length + ' unique videos</b> · collected ' + esc(when) +
+      (snap.note ? ' · ' + esc(snap.note) : '')
+    );
+    render(unique);
+  }catch(e){
+    content.innerHTML = '<div class="state">Failed to load catalog.</div>';
+    setCatalogNote(esc(e.message || String(e)), true);
+  }
+}
+
+async function runSearch(format){
+  const pin = String(document.getElementById('pin').value || '').trim();
+  if(!/^\d{4}$/.test(pin)){
+    setApiNote('Enter a valid 4-digit Access PIN.', true);
+    return;
+  }
+  const q = String(document.getElementById('q').value || '').trim() || 'Korea';
+  const regionCode = document.getElementById('region').value;
+  const periodDays = parseInt(document.getElementById('period').value, 10) || 0;
+  const content = document.getElementById('content');
+  content.innerHTML = '<div class="state"><div class="spin"></div><div>Searching YouTube…</div></div>';
+  setApiNote('Searching… (~101 units)');
+  try{
+    const res = await fetch(SEARCH_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+        'x-scouter-pin': pin
+      },
+      body: JSON.stringify({
+        pin, q, format, regionCode, periodDays, maxResults: 25
+      }),
+      cache: 'no-store'
     });
-  }
-  function setNote(html, isErr){
-    var el = document.getElementById('apiNote');
-    el.className = 'note' + (isErr ? ' err' : '');
-    el.innerHTML = html;
-  }
-  function getPin(){
-    return String(document.getElementById('pin').value || '').trim();
-  }
-
-  function render(rows){
-    lastRows = rows || [];
-    var box = document.getElementById('content');
-    if(!lastRows.length){
-      box.innerHTML = '<div class="state">No videos matched.</div>';
+    const data = await res.json();
+    if(!res.ok || !data.ok){
+      content.innerHTML = '<div class="state">Search failed.</div>';
+      setApiNote(esc(data.error || res.statusText), true);
       return;
     }
-    box.innerHTML = '<div class="grid">' + lastRows.map(function(v){
-      return '<a class="card" href="' + esc(v.youtube_url) + '" target="_blank" rel="noopener">' +
-        '<img src="' + esc(v.thumbnail_url) + '" alt="">' +
-        '<div class="body"><div class="t">' + esc(v.title) + '</div>' +
-        '<div class="m">' + esc(v.channel) + ' · ' + fmt(v.view_count) + ' views · ' + esc(v.country_code) + '</div></div></a>';
-    }).join('') + '</div>';
+    setApiNote('<b>Used ~' + (data.apiUnits || 101) + ' units</b> · ' + esc(data.apiNote || '') + ' · ' + (data.results||[]).length + ' videos');
+    render(data.results || []);
+  }catch(e){
+    content.innerHTML = '<div class="state">Network error.</div>';
+    setApiNote(esc(e.message || String(e)), true);
   }
+}
 
-  async function runSearch(format){
-    var pin = getPin();
-    if(!/^\d{4}$/.test(pin)){
-      setNote('Enter a valid 4-digit Access PIN.', true);
-      return;
-    }
-    var q = String(document.getElementById('q').value || '').trim() || 'Korea';
-    var regionCode = document.getElementById('region').value;
-    var periodDays = parseInt(document.getElementById('period').value, 10) || 0;
-    var content = document.getElementById('content');
-    content.innerHTML = '<div class="state"><div class="spin"></div><div>Searching YouTube…</div></div>';
-    setNote('Searching… (~101 units)');
-    try{
-      var res = await fetch(SEARCH_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': ANON,
-          'Authorization': 'Bearer ' + ANON,
-          'x-scouter-pin': pin
-        },
-        body: JSON.stringify({
-          pin: pin,
-          q: q,
-          format: format,
-          regionCode: regionCode,
-          periodDays: periodDays,
-          maxResults: 25
-        }),
-        cache: 'no-store'
-      });
-      var data = await res.json();
-      if(!res.ok || !data.ok){
-        content.innerHTML = '<div class="state">Search failed.</div>';
-        setNote(esc(data.error || res.statusText), true);
-        return;
-      }
-      setNote('<b>Used ~' + (data.apiUnits || 101) + ' units</b> · ' + esc(data.apiNote || '') + ' · ' + (data.results||[]).length + ' videos');
-      render(data.results || []);
-    }catch(e){
-      content.innerHTML = '<div class="state">Network error.</div>';
-      setNote(esc(e.message || String(e)), true);
-    }
+function downloadCsv(){
+  if(!lastRows.length){
+    setCatalogNote('No rows to export.', true);
+    return;
   }
+  const lines = [['rank','video_id','title','channel','views','region','url'].join(',')];
+  lastRows.forEach((v, i) => {
+    lines.push([
+      v.rank || (i + 1),
+      v.video_id,
+      '"' + String(v.title||'').replace(/"/g,'""') + '"',
+      '"' + String(v.channel||'').replace(/"/g,'""') + '"',
+      v.view_count,
+      v.country_code || '',
+      v.youtube_url
+    ].join(','));
+  });
+  const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'korea-abroad-youtube.csv';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
 
-  function downloadCsv(){
-    if(!lastRows.length){
-      setNote('No rows to export. Run a search first.', true);
-      return;
-    }
-    var lines = [['rank','video_id','title','channel','views','region','url'].join(',')];
-    lastRows.forEach(function(v){
-      lines.push([
-        v.rank,
-        v.video_id,
-        '"' + String(v.title||'').replace(/"/g,'""') + '"',
-        '"' + String(v.channel||'').replace(/"/g,'""') + '"',
-        v.view_count,
-        v.country_code,
-        v.youtube_url
-      ].join(','));
-    });
-    var blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8' });
-    var a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'korea-abroad-youtube.csv';
-    a.click();
-    URL.revokeObjectURL(a.href);
+function setView(next){
+  view = next;
+  document.querySelectorAll('.tab').forEach((t) => {
+    t.classList.toggle('on', t.getAttribute('data-view') === view);
+  });
+  document.getElementById('livePanel').classList.toggle('on', view === 'live');
+  document.getElementById('catalogMeta').style.display = view === 'catalog' ? 'block' : 'none';
+  if(view === 'catalog') loadCatalog();
+  else {
+    document.getElementById('content').innerHTML = '<div class="state">Run a live search.</div>';
   }
+}
 
-  document.getElementById('btnLong').addEventListener('click', function(){ runSearch('long'); });
-  document.getElementById('btnShorts').addEventListener('click', function(){ runSearch('shorts'); });
-  document.getElementById('btnCsv').addEventListener('click', downloadCsv);
-})();
+document.querySelectorAll('.tab').forEach((t) => {
+  t.addEventListener('click', () => setView(t.getAttribute('data-view')));
+});
+document.getElementById('btnReloadCatalog').addEventListener('click', loadCatalog);
+document.getElementById('btnCsv').addEventListener('click', downloadCsv);
+document.getElementById('btnLong').addEventListener('click', () => runSearch('long'));
+document.getElementById('btnShorts').addEventListener('click', () => runSearch('shorts'));
+
+loadCatalog();
 </script>
 </body>
 </html>
