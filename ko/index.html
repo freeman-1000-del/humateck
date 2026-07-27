@@ -172,7 +172,10 @@ Description:
 
   <section class="card">
     <h2>최종 번역 결과</h2>
-    <textarea id="finalOutput" placeholder="제미나이 최종 번역 결과를 붙여넣어 주세요."></textarea>
+    <textarea id="finalOutput" placeholder="제미나이 최종 번역 결과를 붙여넣어 주세요." autocomplete="off" spellcheck="false"></textarea>
+    <div class="actions">
+      <button class="btn" type="button" id="saveFinalOutput">내컴퓨터로 저장하기</button>
+    </div>
   </section>
 </div>
 
@@ -398,6 +401,33 @@ ${countryBlock}
     }
   }
 
+  function saveFinalToComputer(){
+    var text = String(getValue("finalOutput") || "");
+    if(!text.trim()){
+      alert("저장할 최종 번역 결과가 없습니다.");
+      return;
+    }
+    var stamp = new Date();
+    var pad = function(n){ return String(n).padStart(2, "0"); };
+    var name = "gemini-translation-" +
+      stamp.getFullYear() +
+      pad(stamp.getMonth() + 1) +
+      pad(stamp.getDate()) + "-" +
+      pad(stamp.getHours()) +
+      pad(stamp.getMinutes()) +
+      pad(stamp.getSeconds()) +
+      ".txt";
+    var blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+  }
+
   document.addEventListener("click", function(e){
     var generate = e.target.closest("#generateGeminiPrompt");
     if(generate){
@@ -411,6 +441,12 @@ ${countryBlock}
         return;
       }
       buildGeminiPrompt();
+      return;
+    }
+    var saveBtn = e.target.closest("#saveFinalOutput");
+    if(saveBtn){
+      e.preventDefault();
+      saveFinalToComputer();
       return;
     }
     var copyBtn = e.target.closest("[data-copy-target]");
