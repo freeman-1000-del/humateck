@@ -18,6 +18,7 @@ button,input,textarea,select{font-family:inherit}
 }
 .card h1{color:#7ec8ff;margin:0 0 22px;font-size:44px;line-height:1.25;text-align:center;font-weight:900}
 .card h2{color:#f4c95c;margin:0 0 14px;font-size:20px}
+.card h2 .titleHint{display:inline;margin-left:8px;color:#cfc8b9;font-size:14px;font-weight:600}
 label{display:block;margin:10px 0 6px;color:#ffd95a;font-weight:800}
 .planRow{display:grid;grid-template-columns:minmax(0,1fr) minmax(180px,240px);gap:14px 18px;align-items:start;margin-bottom:12px}
 .planRow label{grid-column:1 / -1;margin-bottom:0}
@@ -171,10 +172,13 @@ Description:
   </section>
 
   <section class="card">
-    <h2>최종 번역 결과</h2>
+    <h2>최종 번역 결과 <span class="titleHint">(제미나이 번역결과를 이곳에 붙여 넣어 주세요.)</span></h2>
     <textarea id="finalOutput" placeholder="제미나이 최종 번역 결과를 붙여넣어 주세요." autocomplete="off" spellcheck="false"></textarea>
-    <div class="actions">
-      <button class="btn" type="button" id="saveFinalOutput">내컴퓨터로 저장하기</button>
+    <div class="actions saveFormats">
+      <button class="btn" type="button" data-save-format="hwp">HWP</button>
+      <button class="btn" type="button" data-save-format="txt">TXT</button>
+      <button class="btn" type="button" data-save-format="word">MS 워드</button>
+      <button class="btn" type="button" data-save-format="pdf">PDF</button>
     </div>
   </section>
 </div>
@@ -190,6 +194,7 @@ Description:
   </div>
 </div>
 
+<script src="../save-final-formats.js?v=20260728a"></script>
 <script src="../native-language-codes.js?v=20260728b"></script>
 <script>
 initNativeLanguageCodePicker("ko");
@@ -401,31 +406,16 @@ ${countryBlock}
     }
   }
 
-  function saveFinalToComputer(){
-    var text = String(getValue("finalOutput") || "");
-    if(!text.trim()){
-      alert("저장할 최종 번역 결과가 없습니다.");
+  function saveFinalToComputer(format){
+    if(typeof window.saveFinalTranslationFormat === "function"){
+      window.saveFinalTranslationFormat(format, {
+        emptyMsg: "저장할 최종 번역 결과가 없습니다.",
+        popupBlocked: "PDF 저장을 위해 팝업을 허용해 주세요.",
+        unknownMsg: "지원하지 않는 저장 형식입니다."
+      });
       return;
     }
-    var stamp = new Date();
-    var pad = function(n){ return String(n).padStart(2, "0"); };
-    var name = "gemini-translation-" +
-      stamp.getFullYear() +
-      pad(stamp.getMonth() + 1) +
-      pad(stamp.getDate()) + "-" +
-      pad(stamp.getHours()) +
-      pad(stamp.getMinutes()) +
-      pad(stamp.getSeconds()) +
-      ".txt";
-    var blob = new Blob([text], { type: "text/plain;charset=utf-8" });
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement("a");
-    a.href = url;
-    a.download = name;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+    alert("저장 기능을 불러오지 못했습니다.");
   }
 
   document.addEventListener("click", function(e){
@@ -443,10 +433,10 @@ ${countryBlock}
       buildGeminiPrompt();
       return;
     }
-    var saveBtn = e.target.closest("#saveFinalOutput");
-    if(saveBtn){
+    var formatBtn = e.target.closest("[data-save-format]");
+    if(formatBtn){
       e.preventDefault();
-      saveFinalToComputer();
+      saveFinalToComputer(formatBtn.getAttribute("data-save-format"));
       return;
     }
     var copyBtn = e.target.closest("[data-copy-target]");
