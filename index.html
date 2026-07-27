@@ -41,6 +41,8 @@ label{display:block;margin:10px 0 6px;color:#ffd95a;font-weight:800}
 }
 .nativeCodeModalHeader{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
 .nativeCodeModalHeader h2{margin:0;color:#ffd95a;font-size:18px}
+.nativeCodePinnedHint{margin:0 0 12px;color:#7ec8ff;font-size:16px;font-weight:900;text-align:center}
+.nativeCodeItemPinned{border-color:#7ec8ff;box-shadow:0 0 0 1px rgba(126,200,255,.35)}
 .nativeCodeCloseBtn{
   min-width:72px;min-height:40px;border:1px solid #4b5d6d;border-radius:10px;background:#050b14;color:#f4f1e8;font-weight:800;cursor:pointer;
 }
@@ -180,6 +182,7 @@ Without any explanation, output only the translated registration text.</textarea
       <h2>Source Language Codes</h2>
       <button id="closeNativeCodeListBtn" class="nativeCodeCloseBtn" type="button">Close</button>
     </div>
+    <p id="nativeCodePinnedHint" class="nativeCodePinnedHint">English : en</p>
     <div id="nativeCodeGrid" class="nativeCodeGrid"></div>
   </div>
 </div>

@@ -5,6 +5,22 @@
 
   function $(id) { return document.getElementById(id); }
 
+  function pinCodeFirst(codes, code) {
+    var list = codes.slice();
+    var idx = -1;
+    for (var i = 0; i < list.length; i++) {
+      if (list[i][0] === code) {
+        idx = i;
+        break;
+      }
+    }
+    if (idx > 0) {
+      var item = list.splice(idx, 1)[0];
+      list.unshift(item);
+    }
+    return list;
+  }
+
   function buildGrid(codes, selectLabel) {
     var grid = $("nativeCodeGrid");
     if (!grid) return;
@@ -13,7 +29,7 @@
       var code = pair[0];
       var name = pair[1];
       var item = document.createElement("div");
-      item.className = "nativeCodeItem";
+      item.className = "nativeCodeItem" + (code === "ko" || code === "en" ? " nativeCodeItemPinned" : "");
       item.innerHTML =
         '<div class="nativeCodeText"><strong>' + code + "</strong> | " + name + "</div>" +
         '<button type="button" data-native-code="' + code + '">' + selectLabel + "</button>";
@@ -37,7 +53,12 @@
 
   global.initNativeLanguageCodePicker = function (locale) {
     var isKo = locale === "ko";
-    buildGrid(isKo ? CODES_KO : CODES_EN, isKo ? "선택" : "Select");
+    var codes = pinCodeFirst(isKo ? CODES_KO : CODES_EN, isKo ? "ko" : "en");
+    buildGrid(codes, isKo ? "선택" : "Select");
+    var hint = $("nativeCodePinnedHint");
+    if (hint) {
+      hint.textContent = isKo ? "한국 : ko" : "English : en";
+    }
     document.addEventListener("click", function (event) {
       if (event.target.closest("#openNativeCodeListBtn")) {
         event.preventDefault();
