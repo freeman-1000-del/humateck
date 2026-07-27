@@ -19,6 +19,24 @@ button,input,textarea,select{font-family:inherit}
 .card h1{color:#7ec8ff;margin:0 0 22px;font-size:44px;line-height:1.25;text-align:center;font-weight:900}
 .card h2{color:#f4c95c;margin:0 0 14px;font-size:20px}
 .card h2 .titleHint{display:inline;margin-left:8px;color:#cfc8b9;font-size:14px;font-weight:600}
+.saveMenu{position:relative;display:inline-flex;flex-direction:column;align-items:center}
+.saveMenuSummary{
+  list-style:none;cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;min-width:200px;min-height:52px;
+  padding:12px 20px;border:2px solid #d9b256;border-radius:14px;color:#fff;font-size:17px;font-weight:900;
+  background:linear-gradient(180deg,#5c4315,#15110a);
+}
+.saveMenuSummary::-webkit-details-marker{display:none}
+.saveMenu[open] .saveMenuSummary{filter:brightness(1.08)}
+.saveMenuList{
+  position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);
+  z-index:20;min-width:220px;padding:8px;border:1px solid rgba(214,176,78,.72);border-radius:12px;
+  background:#121a23;box-shadow:0 16px 40px rgba(0,0,0,.45);
+}
+.saveMenuList button{
+  display:block;width:100%;margin:0 0 6px;min-width:0;min-height:44px;font-size:15px;
+}
+.saveMenuList button:last-child{margin-bottom:0}
 label{display:block;margin:10px 0 6px;color:#ffd95a;font-weight:800}
 .planRow{display:grid;grid-template-columns:minmax(0,1fr) minmax(180px,240px);gap:14px 18px;align-items:start;margin-bottom:12px}
 .planRow label{grid-column:1 / -1;margin-bottom:0}
@@ -174,11 +192,16 @@ Description:
   <section class="card">
     <h2>최종 번역 결과 <span class="titleHint">(제미나이 번역결과를 이곳에 붙여 넣어 주세요.)</span></h2>
     <textarea id="finalOutput" placeholder="제미나이 최종 번역 결과를 붙여넣어 주세요." autocomplete="off" spellcheck="false"></textarea>
-    <div class="actions saveFormats">
-      <button class="btn" type="button" data-save-format="hwp">HWP</button>
-      <button class="btn" type="button" data-save-format="txt">TXT</button>
-      <button class="btn" type="button" data-save-format="word">MS 워드</button>
-      <button class="btn" type="button" data-save-format="pdf">PDF</button>
+    <div class="actions">
+      <details class="saveMenu" id="saveFinalMenu">
+        <summary class="saveMenuSummary">내 컴퓨터에 저장</summary>
+        <div class="saveMenuList">
+          <button class="btn" type="button" data-save-format="hwp">HWP</button>
+          <button class="btn" type="button" data-save-format="txt">TXT</button>
+          <button class="btn" type="button" data-save-format="word">MS 워드</button>
+          <button class="btn" type="button" data-save-format="pdf">PDF</button>
+        </div>
+      </details>
     </div>
   </section>
 </div>
@@ -437,6 +460,8 @@ ${countryBlock}
     if(formatBtn){
       e.preventDefault();
       saveFinalToComputer(formatBtn.getAttribute("data-save-format"));
+      var menu = $("saveFinalMenu");
+      if(menu) menu.open = false;
       return;
     }
     var copyBtn = e.target.closest("[data-copy-target]");
