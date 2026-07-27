@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>제미나이 다국어 번역</title>
+<title>제미나이 AI 다국어 챗번역</title>
 <meta name="description" content="국가를 선택하고 제미나이 프롬프트를 생성·복사한 뒤, 결과를 붙여넣으세요.">
 <style>
 *{box-sizing:border-box}
@@ -45,13 +45,12 @@ textarea{min-height:160px;line-height:1.72;resize:vertical}
 .commandFullTop .btn{min-width:90px;min-height:40px;font-size:14px;padding:8px 12px}
 .commandFullItem textarea{min-height:72px;margin-bottom:0}
 .planPickerControls select{margin-bottom:0}
-.hint{margin:0 0 12px;color:#aeb6c4;font-size:13px;line-height:1.5}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="top">
-    <a class="brand" href="/ko/">제미나이 번역</a>
+    <a class="brand" href="/ko/">제미나이 AI 다국어 챗번역</a>
     <nav class="langSwitch" aria-label="언어">
       <a href="/" hreflang="en">EN</a>
       <span>|</span>
@@ -60,7 +59,7 @@ textarea{min-height:160px;line-height:1.72;resize:vertical}
   </div>
 
   <section class="card">
-    <h1>제미나이 다국어 번역</h1>
+    <h1>제미나이 AI 다국어 챗번역</h1>
     <label for="orderPlanSelect">배포 국가 수 선택</label>
     <div class="planPickerControls" id="planPickerSection">
       <select id="orderPlanSelect" aria-label="배포 국가 수 선택">
@@ -85,66 +84,64 @@ textarea{min-height:160px;line-height:1.72;resize:vertical}
     <textarea id="sourceDescription" placeholder="원문 설명을 입력하세요"></textarea>
 
     <div class="actions">
-      <button class="btn" type="button" id="generateGeminiPrompt">제미나이 요청 프롬프트 생성</button>
+      <button class="btn" type="button" id="generateGeminiPrompt">제미나이 명령문 생성</button>
     </div>
   </section>
 
   <section id="gemini" class="card">
-    <h2>제미나이 요청 프롬프트</h2>
-    <p class="hint">프롬프트·커맨드 본문은 검증된 영문 그대로입니다. 복사해서 제미나이에 붙여넣으세요.</p>
+    <h2>제미나이 명령문 복사</h2>
     <textarea id="geminiPromptText" readonly>Hello Gemini!
-Without any explanation, output only the translated registration text.
+아무런 설명없이 오직 번역문만 출력해 줘.
 
-Translate the following YouTube title and description for the {activeCount}-country set.
-Continue from beginning to end without stopping.
+아래 유튜브 제목과 설명문을 {activeCount}개 국가 세트에 맞춰 번역해 줘.
+처음부터 끝까지 중간에 끊지 말고 계속 번역해 줘.
 
-[Source Text]
+[원문]
 Title:
 {sourceTitle}
 
 Description:
 {sourceDescription}
 
-[Output Format]
+[출력 형식]
 Number:
 Country Code:
 Country Name:
 Title:
 Description:
 
-Without any explanation, output only the translated registration text.
+아무런 설명없이 오직 번역문만 출력해 줘.
 
 [Country Code List]
 {countryBlock}
 
-Without any explanation, output only the translated registration text.</textarea>
+아무런 설명없이 오직 번역문만 출력해 줘.</textarea>
     <div class="actions">
-      <button class="btn" type="button" data-copy-target="geminiPromptText">프롬프트 복사</button>
-      <a class="btn secondary" href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer">제미나이 열기</a>
+      <button class="btn" type="button" data-copy-target="geminiPromptText">제미나이 명령문 복사</button>
+      <a class="btn secondary" href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer">제미나이 챗번역 하러 가기</a>
     </div>
     <p id="geminiCopyStatus" class="copyStatus"></p>
   </section>
 
   <section class="card" id="geminiCommandCard">
-    <h2>제미나이 커맨드</h2>
+    <h2>제미나이 복붙 명령 순서</h2>
     <div class="commandFullRows">
-      <div class="commandFullItem"><div class="commandFullTop"><label>커맨드 1</label><button class="btn" type="button" data-copy-target="commandText1">복사</button></div><textarea id="commandText1" readonly>Please automatically and carefully check for mixed-in other languages, unnatural context, and any other issues.</textarea></div>
-      <div class="commandFullItem"><div class="commandFullTop"><label>커맨드 2</label><button class="btn" type="button" data-copy-target="commandText2">복사</button></div><textarea id="commandText2" readonly>Please delete the Number: , Country Name:.</textarea></div>
-      <div class="commandFullItem"><div class="commandFullTop"><label>커맨드 3</label><button class="btn" type="button" data-copy-target="commandText4">복사</button></div><textarea id="commandText4" readonly>Carefully check once more for mixed-in other languages, unnatural context, and any other issues.</textarea></div>
-      <div class="commandFullItem"><div class="commandFullTop"><label>커맨드 4</label><button class="btn" type="button" data-copy-target="commandText5">복사</button></div><textarea id="commandText5" readonly>Please remove all of Gemini's explanations and commentaries, and output it again.</textarea></div>
-      <div class="commandFullItem"><div class="commandFullTop"><label>커맨드 5</label><button class="btn" type="button" data-copy-target="commandText7">복사</button></div><textarea id="commandText7" readonly>Please move to the bottom.</textarea></div>
+      <div class="commandFullItem"><div class="commandFullTop"><label>명령 1</label><button class="btn" type="button" data-copy-target="commandText1">복사</button></div><textarea id="commandText1" readonly>다른 언어의 혼입, 부자연스러운 문맥, 기타 문제가 없는지 자동으로 신중하게 확인해 줘.</textarea></div>
+      <div class="commandFullItem"><div class="commandFullTop"><label>명령 2</label><button class="btn" type="button" data-copy-target="commandText2">복사</button></div><textarea id="commandText2" readonly>Number: , Country Name:를 삭제해 줘.</textarea></div>
+      <div class="commandFullItem"><div class="commandFullTop"><label>명령 3</label><button class="btn" type="button" data-copy-target="commandText4">복사</button></div><textarea id="commandText4" readonly>다른 언어, 부자연스러운 문맥, 기타 문제가 없는지 다시 한 번 주의 깊게 확인해 줘.</textarea></div>
+      <div class="commandFullItem"><div class="commandFullTop"><label>명령 4</label><button class="btn" type="button" data-copy-target="commandText5">복사</button></div><textarea id="commandText5" readonly>제미나이의 설명문이나 해설 등을 모두 빼고 다시 출력해 줘.</textarea></div>
+      <div class="commandFullItem"><div class="commandFullTop"><label>명령 5</label><button class="btn" type="button" data-copy-target="commandText7">복사</button></div><textarea id="commandText7" readonly>아래로 이동해 줘</textarea></div>
     </div>
   </section>
 
   <section class="card">
-    <h2>최종본 붙여넣기</h2>
-    <textarea id="finalOutput" placeholder="제미나이 최종 번역 결과를 붙여넣으세요."></textarea>
+    <h2>최종등록명령</h2>
+    <textarea id="finalOutput" placeholder="유튜브 등록용 제미나이 최종 번역 결과를 붙여넣어 주세요."></textarea>
   </section>
 </div>
 
-<script src="../plan-scope-preview.js?v=20260727g"></script>
 <script>
-/* Prompt text/structure MUST stay identical to the proven Gemini prompt. Do not rewrite. */
+/* 한글판 프롬프트·명령·국가목록: order-ko.html 원문 그대로. 수정 금지. */
 (function(){
   function $(id){ return document.getElementById(id); }
   function getValue(id){
@@ -155,6 +152,91 @@ Without any explanation, output only the translated registration text.</textarea
     var el = $(id);
     if(el) el.value = value;
   }
+
+  var GLOBAL70 = [
+    "1. en | 영어(미국/영국/호주 등)","2. hi | 힌디어(인도)","3. pt | 포르투갈어(브라질)",
+    "4. id | 인도네시아어","5. es-419 | 스페인어(라틴아메리카)","6. ja | 일본어",
+    "7. ru | 러시아어","8. de | 독일어","9. tr | 튀르키예어","10. ko | 한국어",
+    "11. fr | 프랑스어","12. vi | 베트남어","13. th | 태국어","14. fil | 필리핀어",
+    "15. ar | 아랍어(중동/북아프리카)","16. it | 이탈리아어","17. ms | 말레이어",
+    "18. zh-TW | 중국어(대만)","19. uk | 우크라이나어","20. pl | 폴란드어",
+    "21. nl | 네덜란드어","22. es | 스페인어(스페인)","23. sv | 스웨덴어",
+    "24. ro | 루마니아어","25. cs | 체코어","26. hu | 헝가리어","27. el | 그리스어",
+    "28. zh-HK | 중국어(홍콩)","29. ur | 우르두어(파키스탄)","30. bn | 벵골어(방글라데시)",
+    "31. pt-PT | 포르투갈어(포르투갈)","32. fa | 페르시아어(이란)","33. iw | 히브리어(이스라엘)",
+    "34. sw | 스와힐리어(동아프리카)","35. am | 암하라어(에티오피아)","36. af | 아프리칸스어(남아공)",
+    "37. ta | 타밀어(인도/스리랑카)","38. te | 텔루구어(인도)","39. mr | 마라티어(인도)",
+    "40. my | 버마어(미얀마)","41. km | 크메르어(캄보디아)","42. ne | 네팔어",
+    "43. lo | 라오어(라오스)","44. gu | 구자라트어(인도)","45. kn | 칸나다어(인도)",
+    "46. ml | 말라얄람어(인도)","47. pa | 펀자브어(인도/파키스탄)","48. no | 노르웨이어",
+    "49. da | 덴마크어","50. fi | 핀란드어","51. sk | 슬로바키아어","52. bg | 불가리아어",
+    "53. hr | 크로아티아어","54. sr | 세르비아어","55. lt | 리투아니아어","56. lv | 라트비아어",
+    "57. et | 에스토니아어","58. az | 아제르바이잔어","59. ka | 조지아어","60. be | 벨라루스어",
+    "61. bs | 보스니아어","62. mk | 마케도니아어","63. sq | 알바니아어","64. fr-CA | 프랑스어(캐나다)",
+    "65. es-US | 스페인어(미국)","66. sr-Latn | 세르비아어(라틴)","67. ca | 카탈로니아어",
+    "68. eu | 바스크어","69. gl | 갈리시아어","70. zh-CN | 중국어(중국본토)"
+  ];
+
+  var PLAN_COUNTRY_LISTS = {
+    global70: GLOBAL70.slice(),
+    global50: GLOBAL70.slice(0, 50),
+    global16: GLOBAL70.slice(0, 16),
+    asia30: [
+      "1. hi | 힌디어(인도)","2. id | 인도네시아어","3. ja | 일본어","4. ko | 한국어",
+      "5. vi | 베트남어","6. th | 태국어","7. fil | 필리핀어","8. ms | 말레이어",
+      "9. zh-TW | 중국어(대만)","10. zh-HK | 중국어(홍콩)","11. ur | 우르두어(파키스탄)",
+      "12. bn | 벵골어(방글라데시)","13. fa | 페르시아어(이란)","14. iw | 히브리어(이스라엘)",
+      "15. ar | 아랍어(중동)","16. ta | 타밀어(인도/스리랑카)","17. te | 텔루구어(인도)",
+      "18. mr | 마라티어(인도)","19. my | 버마어(미얀마)","20. km | 크메르어(캄보디아)",
+      "21. ne | 네팔어","22. lo | 라오어(라오스)","23. gu | 구자라트어(인도)",
+      "24. kn | 칸나다어(인도)","25. ml | 말라얄람어(인도)","26. pa | 펀자브어(인도/파키스탄)",
+      "27. az | 아제르바이잔어","28. ka | 조지아어","29. en | 영어","30. ru | 러시아어"
+    ],
+    europe30: [
+      "1. ru | 러시아어","2. de | 독일어","3. fr | 프랑스어","4. tr | 튀르키예어",
+      "5. it | 이탈리아어","6. es | 스페인어(스페인)","7. pl | 폴란드어","8. uk | 우크라이나어",
+      "9. nl | 네덜란드어","10. sv | 스웨덴어","11. ro | 루마니아어","12. cs | 체코어",
+      "13. hu | 헝가리어","14. el | 그리스어","15. pt-PT | 포르투갈어(포르투갈)",
+      "16. no | 노르웨이어","17. da | 덴마크어","18. fi | 핀란드어","19. sk | 슬로바키아어",
+      "20. bg | 불가리아어","21. hr | 크로아티아어","22. sr | 세르비아어","23. lt | 리투아니아어",
+      "24. lv | 라트비아어","25. et | 에스토니아어","26. be | 벨라루스어","27. bs | 보스니아어",
+      "28. mk | 마케도니아어","29. sq | 알바니아어","30. ka | 조지아어"
+    ],
+    africa30: [
+      "1. ar | 아랍어(이집트/북아프리카)","2. en | 영어(나이지리아/가나/케냐/남아공)",
+      "3. fr | 프랑스어(서/중앙아프리카)","4. sw | 스와힐리어(케냐/탄자니아)",
+      "5. am | 암하라어(에티오피아)","6. af | 아프리칸스어(남아공)","7. pt | 포르투갈어(앙골라/모잠비크)",
+      "8. hi | 힌디어(인도)","9. id | 인도네시아어","10. ja | 일본어","11. ko | 한국어",
+      "12. vi | 베트남어","13. th | 태국어","14. fil | 필리핀어","15. ms | 말레이어",
+      "16. zh-TW | 중국어(대만)","17. zh-HK | 중국어(홍콩)","18. ur | 우르두어(파키스탄)",
+      "19. bn | 벵골어(방글라데시)","20. fa | 페르시아어(이란)","21. iw | 히브리어(이스라엘)",
+      "22. ru | 러시아어","23. de | 독일어","24. tr | 튀르키예어","25. it | 이탈리아어",
+      "26. es | 스페인어","27. pl | 폴란드어","28. nl | 네덜란드어","29. uk | 우크라이나어",
+      "30. sv | 스웨덴어"
+    ],
+    america30: [
+      "1. en | 영어(미국/캐나다)","2. es-419 | 스페인어(라틴아메리카)","3. pt | 포르투갈어(브라질)",
+      "4. es | 스페인어","5. es-US | 스페인어(미국)","6. fr-CA | 프랑스어(캐나다)",
+      "7. hi | 힌디어(인도)","8. id | 인도네시아어","9. ja | 일본어","10. ko | 한국어",
+      "11. vi | 베트남어","12. th | 태국어","13. fil | 필리핀어","14. ms | 말레이어",
+      "15. zh-TW | 중국어(대만)","16. zh-HK | 중국어(홍콩)","17. ur | 우르두어(파키스탄)",
+      "18. bn | 벵골어(방글라데시)","19. fa | 페르시아어(이란)","20. iw | 히브리어(이스라엘)",
+      "21. ar | 아랍어","22. ru | 러시아어","23. de | 독일어","24. tr | 튀르키예어",
+      "25. fr | 프랑스어","26. it | 이탈리아어","27. nl | 네덜란드어","28. pl | 폴란드어",
+      "29. uk | 우크라이나어","30. sv | 스웨덴어"
+    ],
+    oceania30: [
+      "1. en | 영어(호주/뉴질랜드/태평양)","2. fil | 필리핀어(태평양 필리핀계)",
+      "3. hi | 힌디어(인도)","4. id | 인도네시아어","5. ja | 일본어","6. ko | 한국어",
+      "7. vi | 베트남어","8. th | 태국어","9. ms | 말레이어","10. zh-TW | 중국어(대만)",
+      "11. zh-HK | 중국어(홍콩)","12. ur | 우르두어(파키스탄)","13. bn | 벵골어(방글라데시)",
+      "14. fa | 페르시아어(이란)","15. iw | 히브리어(이스라엘)","16. ar | 아랍어",
+      "17. ru | 러시아어","18. de | 독일어","19. tr | 튀르키예어","20. fr | 프랑스어",
+      "21. it | 이탈리아어","22. es | 스페인어","23. nl | 네덜란드어","24. pl | 폴란드어",
+      "25. uk | 우크라이나어","26. sv | 스웨덴어","27. ro | 루마니아어","28. cs | 체코어",
+      "29. hu | 헝가리어","30. el | 그리스어"
+    ]
+  };
 
   function getPlanLimit(plan){
     if(plan === "free7" || plan === "free7_standard") return 5;
@@ -184,14 +266,8 @@ Without any explanation, output only the translated registration text.</textarea
     var plan = hidden ? hidden.value : "";
     if(!plan && window.humateckPaymentSubscriptionPlan) plan = window.humateckPaymentSubscriptionPlan;
 
-    if(plan === "free7" || plan === "free7_standard") return 5;
-    if(plan === "asia30" || plan === "europe30" || plan === "africa30" || plan === "america30" || plan === "oceania30" || plan === "monthly30") return 30;
-    if(plan === "global16") return 16;
-    if(plan === "global50" || plan === "custom50" || plan === "monthly50") return 50;
-    if(plan === "global70" || plan === "monthly70" || plan === "yearly70") return 70;
-    if(plan === "monthly_standard" || plan === "yearly_standard" || plan === "monthly_premium" || plan === "yearly_premium") return 70;
-
-    return 30;
+    var limit = getPlanLimit(plan);
+    return limit > 0 ? limit : 30;
   }
 
   function getOrderPlanId(){
@@ -211,126 +287,46 @@ Without any explanation, output only the translated registration text.</textarea
     var activeCount = getActiveCount();
     var sourceTitle = getValue("sourceTitle");
     var sourceDescription = getValue("sourceDescription");
-    var planId = getOrderPlanId();
-    var planRows = null;
-    if(window.HumateckPlanScope && typeof window.HumateckPlanScope.getLines === "function"){
-      planRows = window.HumateckPlanScope.getLines(planId);
+    var activePlan = getOrderPlanId();
+    var planList = PLAN_COUNTRY_LISTS[activePlan] || PLAN_COUNTRY_LISTS.global70;
+    if(planList && planList.length){
+      activeCount = planList.length;
     }
-
-    var countryBlock;
-    if(planRows && planRows.length){
-      activeCount = planRows.length;
-      countryBlock = ["Country Code / Country Name Mapping Table", ""].concat(planRows).join("\n");
-    }else{
-      countryBlock = [
-        "Country Code / Country Name Mapping Table",
-        "",
-        "1. en | English (US/UK/Australia, etc.)",
-        "2. hi | Hindi (India)",
-        "3. pt | Portuguese (Brazil)",
-        "4. id | Indonesian",
-        "5. es-419 | Spanish (Latin America)",
-        "6. ja | Japanese",
-        "7. ru | Russian",
-        "8. de | German",
-        "9. tr | Turkish",
-        "10. ko | Korean",
-        "11. fr | French",
-        "12. vi | Vietnamese",
-        "13. th | Thai",
-        "14. fil | Filipino",
-        "15. ar | Arabic (Middle East/North Africa)",
-        "16. it | Italian",
-        "17. ms | Malay",
-        "18. zh-TW | Chinese (Taiwan)",
-        "19. uk | Ukrainian",
-        "20. pl | Polish",
-        "21. nl | Dutch",
-        "22. es | Spanish (Spain)",
-        "23. sv | Swedish",
-        "24. ro | Romanian",
-        "25. cs | Czech",
-        "26. hu | Hungarian",
-        "27. el | Greek",
-        "28. zh-HK | Chinese (Hong Kong)",
-        "29. ur | Urdu (Pakistan)",
-        "30. bn | Bengali (Bangladesh)",
-        "31. pt-PT | Portuguese (Portugal)",
-        "32. fa | Persian (Iran)",
-        "33. iw | Hebrew (Israel)",
-        "34. sw | Swahili (East Africa)",
-        "35. am | Amharic (Ethiopia)",
-        "36. af | Afrikaans (South Africa)",
-        "37. ta | Tamil (India/Sri Lanka)",
-        "38. te | Telugu (India)",
-        "39. mr | Marathi (India)",
-        "40. my | Burmese (Myanmar)",
-        "41. km | Khmer (Cambodia)",
-        "42. ne | Nepali",
-        "43. lo | Lao (Laos)",
-        "44. gu | Gujarati (India)",
-        "45. kn | Kannada (India)",
-        "46. ml | Malayalam (India)",
-        "47. pa | Punjabi (India/Pakistan)",
-        "48. no | Norwegian",
-        "49. da | Danish",
-        "50. fi | Finnish",
-        "51. sk | Slovak",
-        "52. bg | Bulgarian",
-        "53. hr | Croatian",
-        "54. sr | Serbian",
-        "55. lt | Lithuanian",
-        "56. lv | Latvian",
-        "57. et | Estonian",
-        "58. az | Azerbaijani",
-        "59. ka | Georgian",
-        "60. be | Belarusian",
-        "61. bs | Bosnian",
-        "62. mk | Macedonian",
-        "63. sq | Albanian",
-        "64. fr-CA | French (Canada)",
-        "65. es-US | Spanish (US)",
-        "66. sr-Latn | Serbian (Latin)",
-        "67. ca | Catalan",
-        "68. eu | Basque",
-        "69. gl | Galician",
-        "70. zh-CN | Chinese (Mainland China)"
-      ].slice(0, activeCount + 2).join("\n");
-    }
+    var countryBlock = ["Country Code / 국가명 매핑표", ""].concat(planList).join("\n");
 
     var prompt =
 `Hello Gemini!
-Without any explanation, output only the translated registration text.
+아무런 설명없이 오직 번역문만 출력해 줘.
 
-Translate the following YouTube title and description for the ${activeCount}-country set.
-Continue from beginning to end without stopping.
+아래 유튜브 제목과 설명문을 ${activeCount}개 국가 세트에 맞춰 번역해 줘.
+처음부터 끝까지 중간에 끊지 말고 계속 번역해 줘.
 
-[Source Text]
+[원문]
 Title:
 ${sourceTitle}
 
 Description:
 ${sourceDescription}
 
-[Output Format]
+[출력 형식]
 Number:
 Country Code:
 Country Name:
 Title:
 Description:
 
-Without any explanation, output only the translated registration text.
+아무런 설명없이 오직 번역문만 출력해 줘.
 
 [Country Code List]
 ${countryBlock}
 
-Without any explanation, output only the translated registration text.`;
+아무런 설명없이 오직 번역문만 출력해 줘.`;
 
     setValue("geminiPromptText", prompt);
     var gemini = $("gemini");
     if(gemini) gemini.scrollIntoView({behavior:"smooth", block:"start"});
     var status = $("geminiCopyStatus");
-    if(status) status.textContent = "복사 준비됨 — 프롬프트 복사를 누르세요.";
+    if(status) status.textContent = "제미나이 의뢰문이 생성되었습니다. 복사 버튼을 눌러 주세요.";
   }
 
   function copyText(targetId){
