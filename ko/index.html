@@ -110,13 +110,13 @@ textarea{min-height:160px;line-height:1.72;resize:vertical}
       <label for="nativeLanguageCode">자국어 코드</label>
       <button id="openNativeCodeListBtn" class="nativeCodeListBtn" type="button">70개 국가명/언어코드 목록</button>
     </div>
-    <input id="nativeLanguageCode" type="text" placeholder="예: ko, ja, de, fr, es">
+    <input id="nativeLanguageCode" type="text" placeholder="예: ko, ja, de, fr, es" autocomplete="off" spellcheck="false">
 
     <label for="sourceTitle">원문 제목</label>
-    <input id="sourceTitle" type="text" placeholder="원문 제목을 입력하세요">
+    <input id="sourceTitle" type="text" placeholder="원문 제목을 입력하세요" autocomplete="off" spellcheck="false">
 
     <label for="sourceDescription">원문 설명</label>
-    <textarea id="sourceDescription" placeholder="원문 설명을 입력하세요"></textarea>
+    <textarea id="sourceDescription" placeholder="원문 설명을 입력하세요" autocomplete="off" spellcheck="false"></textarea>
 
     <div class="actions">
       <button class="btn" type="button" id="generateGeminiPrompt">제미나이 명령문 생성</button>

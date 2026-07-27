@@ -110,13 +110,13 @@ textarea{min-height:160px;line-height:1.72;resize:vertical}
       <label for="nativeLanguageCode">Source Language Code</label>
       <button id="openNativeCodeListBtn" class="nativeCodeListBtn" type="button">List of 70 Countries / Language Codes</button>
     </div>
-    <input id="nativeLanguageCode" type="text" placeholder="e.g. ko, ja, de, fr, es">
+    <input id="nativeLanguageCode" type="text" placeholder="e.g. ko, ja, de, fr, es" autocomplete="off" spellcheck="false">
 
     <label for="sourceTitle">Native Language Title</label>
-    <input id="sourceTitle" type="text" placeholder="Enter the native language title">
+    <input id="sourceTitle" type="text" placeholder="Enter the native language title" autocomplete="off" spellcheck="false">
 
     <label for="sourceDescription">Native Language Description</label>
-    <textarea id="sourceDescription" placeholder="Enter the native language description"></textarea>
+    <textarea id="sourceDescription" placeholder="Enter the native language description" autocomplete="off" spellcheck="false"></textarea>
 
     <div class="actions">
       <button class="btn" type="button" id="generateGeminiPrompt">Generate Gemini Request Prompt</button>
