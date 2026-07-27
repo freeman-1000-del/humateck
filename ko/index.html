@@ -24,9 +24,41 @@ label{display:block;margin:10px 0 6px;color:#ffd95a;font-weight:800}
 .planPickerControls{min-width:0}
 .planPickerControls select{margin-bottom:0}
 .planTip{margin:0;padding-top:2px;color:#ffd95a;font-size:13px;line-height:1.55;font-weight:700}
+.nativeCodeLabelRow{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:10px 0 6px}
+.nativeCodeLabelRow label{margin:0}
+.nativeCodeListBtn{
+  display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:8px 14px;
+  border:1px solid #d9b256;border-radius:10px;background:#121722;color:#ffd95a;font-size:13px;font-weight:800;cursor:pointer;
+}
+.nativeCodeModal{
+  position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;
+  padding:20px;background:rgba(0,0,0,.72);
+}
+.nativeCodeModal.open{display:flex}
+.nativeCodeModalBox{
+  width:720px;max-width:100%;max-height:min(80vh,720px);overflow:auto;
+  border:1px solid rgba(214,176,78,.72);border-radius:18px;background:#121a23;padding:18px 18px 22px;
+}
+.nativeCodeModalHeader{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.nativeCodeModalHeader h2{margin:0;color:#ffd95a;font-size:18px}
+.nativeCodeCloseBtn{
+  min-width:72px;min-height:40px;border:1px solid #4b5d6d;border-radius:10px;background:#050b14;color:#f4f1e8;font-weight:800;cursor:pointer;
+}
+.nativeCodeGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.nativeCodeItem{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  padding:10px 12px;border:1px solid #4b5d6d;border-radius:10px;background:#050b14;
+}
+.nativeCodeText{color:#eef1f6;font-size:13px;line-height:1.4}
+.nativeCodeText strong{color:#ffd95a}
+.nativeCodeItem button{
+  flex:0 0 auto;min-width:64px;min-height:34px;border:1px solid #d9b256;border-radius:8px;
+  background:#1a1408;color:#ffd95a;font-size:12px;font-weight:800;cursor:pointer;
+}
 @media(max-width:720px){
   .card h1{font-size:32px}
   .planRow{grid-template-columns:1fr}
+  .nativeCodeGrid{grid-template-columns:1fr}
 }
 input,textarea,select{
   width:100%;padding:14px;background:#050b14;color:#f7f1e6;
@@ -73,6 +105,12 @@ textarea{min-height:160px;line-height:1.72;resize:vertical}
     </div>
     <input type="hidden" id="humateckActivePlanValue" value="">
     <input type="hidden" id="humateckActiveCountryLimit" value="">
+
+    <div class="nativeCodeLabelRow">
+      <label for="nativeLanguageCode">자국어 코드</label>
+      <button id="openNativeCodeListBtn" class="nativeCodeListBtn" type="button">70개 국가명/언어코드 목록</button>
+    </div>
+    <input id="nativeLanguageCode" type="text" placeholder="예: ko, ja, de, fr, es">
 
     <label for="sourceTitle">원문 제목</label>
     <input id="sourceTitle" type="text" placeholder="원문 제목을 입력하세요">
@@ -136,6 +174,20 @@ Description:
   </section>
 </div>
 
+<div id="nativeCodeModal" class="nativeCodeModal" aria-hidden="true">
+  <div class="nativeCodeModalBox">
+    <div class="nativeCodeModalHeader">
+      <h2>자국어 코드 목록</h2>
+      <button id="closeNativeCodeListBtn" class="nativeCodeCloseBtn" type="button">닫기</button>
+    </div>
+    <div id="nativeCodeGrid" class="nativeCodeGrid"></div>
+  </div>
+</div>
+
+<script src="../native-language-codes.js?v=20260728a"></script>
+<script>
+initNativeLanguageCodePicker("ko");
+</script>
 <script>
 /* 한글판 프롬프트·명령·국가목록: order-ko.html 원문 그대로. 수정 금지. */
 (function(){
