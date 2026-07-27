@@ -134,7 +134,7 @@
 <script>
 (function(){
   var CFG = window.HUMATECK_CONFIG || {};
-  var URL = CFG.KOREA_ABROAD_SEARCH_URL || (CFG.SUPABASE_URL + '/functions/v1/korea-abroad-search');
+  var SEARCH_URL = CFG.KOREA_ABROAD_SEARCH_URL || (CFG.SUPABASE_URL + '/functions/v1/korea-abroad-search');
   var ANON = CFG.SUPABASE_ANON_KEY || '';
   var lastRows = [];
 
@@ -206,7 +206,7 @@
     content.innerHTML = '<div class="state"><div class="spin"></div><div>Searching YouTube…</div></div>';
     setNote('Searching… (~101 units)');
     try{
-      var res = await fetch(URL, {
+      var res = await fetch(SEARCH_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
