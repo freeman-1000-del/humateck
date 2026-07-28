@@ -43,9 +43,11 @@ html.embed .card{margin-bottom:14px}
 label{display:block;margin:10px 0 6px;color:#ffd95a;font-weight:800}
 .planRow{display:grid;grid-template-columns:minmax(0,1fr) minmax(180px,240px);gap:14px 18px;align-items:start;margin-bottom:12px}
 .planRow label{grid-column:1 / -1;margin-bottom:0}
-.planPickerControls{min-width:0}
-.planPickerControls select{margin-bottom:0}
-.planTip{margin:0;padding-top:2px;color:#ffd95a;font-size:13px;line-height:1.55;font-weight:700}
+.planPickerControls,.planTip{min-width:0}
+.planPickerControls select{margin-bottom:0;min-width:0;max-width:100%}
+.planTip{margin:0;padding-top:2px;color:#ffd95a;font-size:13px;line-height:1.55;font-weight:700;overflow-wrap:anywhere;word-break:keep-all}
+html.embed .planRow{grid-template-columns:1fr}
+html.embed .planTip{padding-top:0;margin-top:-2px}
 .nativeCodeLabelRow{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:10px 0 6px}
 .nativeCodeLabelRow label{margin:0}
 .nativeCodeListBtn{
@@ -79,7 +81,7 @@ label{display:block;margin:10px 0 6px;color:#ffd95a;font-weight:800}
   flex:0 0 auto;min-width:64px;min-height:34px;border:1px solid #d9b256;border-radius:8px;
   background:#1a1408;color:#ffd95a;font-size:12px;font-weight:800;cursor:pointer;
 }
-@media(max-width:720px){
+@media(max-width:900px){
   .card h1{font-size:32px}
   .planRow{grid-template-columns:1fr}
   .nativeCodeGrid{grid-template-columns:1fr}
