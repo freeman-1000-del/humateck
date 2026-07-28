@@ -18,6 +18,9 @@ button,input,textarea,select{font-family:inherit}
 }
 .card h1{color:#7ec8ff;margin:0 0 22px;font-size:44px;line-height:1.25;text-align:center;font-weight:900}
 .card h2{color:#f4c95c;margin:0 0 14px;font-size:20px}
+html.embed .wrap{padding:12px 0 24px}
+html.embed .card > h1{display:none !important}
+html.embed .card{margin-bottom:14px}
 .card h2 .titleHint{display:inline;margin-left:8px;color:#cfc8b9;font-size:14px;font-weight:600}
 .saveMenu{position:relative;display:inline-flex;flex-direction:column;align-items:center}
 .saveMenuSummary{
@@ -109,6 +112,7 @@ textarea{min-height:160px;line-height:1.72;resize:vertical}
 </style>
 </head>
 <body>
+<script>if(/(?:^|[?&])embed=1(?:&|$)/.test(location.search))document.documentElement.classList.add("embed");</script>
 <div class="wrap">
   <section class="card">
     <h1>제미나이 AI 다국어 챗번역</h1>
